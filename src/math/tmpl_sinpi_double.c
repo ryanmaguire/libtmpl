@@ -15,23 +15,212 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                             tmpl_sinpi_double                              *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the normalized sine function, f(x) = sin(pi x).              *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Double_SinPi                                                     *
+ *  Purpose:                                                                  *
+ *      Computes sin(pi x), the normalized sine function.                     *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      sin_pi_x (double):                                                    *
+ *          The sine of pi * x.                                               *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          src/math/auxiliary/                                               *
+ *              tmpl_Double_SinPi_Maclaurin:                                  *
+ *                  Computes sin(pi x) for small x using a MacLaurin series.  *
+ *              tmpl_Double_CosPi_Maclaurin:                                  *
+ *                  Computes cos(pi x) for small x using a MacLaurin series.  *
+ *              tmpl_Double_SinPi_Remez:                                      *
+ *                  Computes sin(pi x) via a Remez polynomial for |x| < 1/16. *
+ *              tmpl_Double_SinPi_Rat_Remez:                                  *
+ *                  Computes acos via a minimax approximation for |x| < 1/2.  *
+ *              tmpl_Double_Mod_2:                                            *
+ *                  Computes the real remainder after division by 2.          *
+ *      Method:                                                               *
+ *          If x is NaN or +/- infinity:                                      *
+ *              Return NaN (not-a-number).                                    *
+ *          0 <= |x| < 2^-27:                                                 *
+ *              Return pi * x, avoiding underflow. The error is O(x^3).       *
+ *          2^-27 <= |x| < 2^-4:                                              *
+ *              Use a degree 8 Remez polynomial for the function:             *
+ *                                                                            *
+ *                         sin(pi x)                                          *
+ *                  g(x) = ---------                                          *
+ *                             x                                              *
+ *                                                                            *
+ *              This function is even, meaning the degree 8 Remez polynomial  *
+ *              needs only 5 non-zero terms. We evaluate sin(pi x) via:       *
+ *                                                                            *
+ *                  sin(pi x) = x * p(x)                                      *
+ *                                                                            *
+ *              where p is the degree 8 Remez polynomial for g.               *
+ *          2^-4 <= |x| < 2^-1:                                               *
+ *              Use a degree (8, 6) rational minimax approximation for the    *
+ *              function g given above, g(x) = sin(pi x) / x. sin(pi x) is    *
+ *              then computed via:                                            *
+ *                                                                            *
+ *                                  p(x)                                      *
+ *                  sin(pi x) = x * ----                                      *
+ *                                  q(x)                                      *
+ *                                                                            *
+ *              where p is the numerator and q is the denominator for the     *
+ *              minimax approximation, respectively. Since sin(pi x) / x is   *
+ *              an even function, the degree (8, 6) rational minimax          *
+ *              approximation needs 5 non-zero terms for the numerator and 4  *
+ *              non-zero terms for the denominator, and one division. The     *
+ *              evaluation is quite fast, giving us a speed boost for values  *
+ *              in this range.                                                *
+ *          2^-1 <= |x| < infinity:                                           *
+ *              sin(pi x) is an odd function, sin(-pi x) = -sin(pi x). Reduce *
+ *              x to positive. sin(pi x) is also periodic with period 2,      *
+ *              reduce x to x mod 2. With 0 <= x < 2, we compute using a      *
+ *              lookup table and the angle sum formula. We split x into       *
+ *              r + dr with |dr| < 2^-7, and then evaluate the following:     *
+ *                                                                            *
+ *                  sin(r + dr) = sin(r) cos(dr) + cos(r) sin(dr)             *
+ *                                                                            *
+ *              sin(r) and cos(r) are computed using a lookup table, and      *
+ *              sin(dr) and cos(dr) are computed using a small MacLaurin      *
+ *              polynomial. This allows us to obtain sin(pi n) = 0 for        *
+ *              integer n. The index r for the table is obtained by summing   *
+ *              together x and 2^(53 - 8). By reading the lowest 8 bits of    *
+ *              this sum we get the index for the lookup table. This assumes  *
+ *              round-to-nearest IEEE-754 double precision addition.          *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          src/math/                                                         *
+ *              tmpl_Double_Abs:                                              *
+ *                  Computes the absolute value of a real number.             *
+ *          src/math/auxiliary/                                               *
+ *              tmpl_Double_SinPi_Maclaurin:                                  *
+ *                  Computes sin(pi x) for small x using a MacLaurin series.  *
+ *              tmpl_Double_CosPi_Maclaurin:                                  *
+ *                  Computes cos(pi x) for small x using a MacLaurin series.  *
+ *              tmpl_Double_SinPi_Remez:                                      *
+ *                  Computes sin(pi x) via a Remez polynomial for |x| < 1/16. *
+ *              tmpl_Double_SinPi_Rat_Remez:                                  *
+ *                  Computes acos via a minimax approximation for |x| < 1/2.  *
+ *              tmpl_Double_Mod_2:                                            *
+ *                  Computes the real remainder after division by 2.          *
+ *      Method:                                                               *
+ *          Similar to the IEEE-754 version, but determine the index for the  *
+ *          lookup table using casting, instead of round-to-nearest addition. *
+ *  Notes:                                                                    *
+ *  References:                                                               *
+ *      1.) Maguire, Ryan (2024)                                              *
+ *          tmpld                                                             *
+ *          https://github.com/ryanmaguire/libtmpl_data                       *
+ *                                                                            *
+ *          Python library providing an implementation of the rational        *
+ *          Remez exchange algorithm. The coefficients for the                *
+ *          approximations used by this function were computed using this.    *
+ *                                                                            *
+ *      2.) Tasissa, Abiy (2019)                                              *
+ *          Function Approximation and the Remez Exchange Algorithm.          *
+ *          https://sites.tufts.edu/atasissa/files/2019/09/remez.pdf          *
+ *                                                                            *
+ *          Survey of the Remez polynomial and Remez exchange algorithm,      *
+ *          including an excellent discussion on the rational Remez exchange  *
+ *          algorithm. The implementation in tmpld is based on these notes.   *
+ *                                                                            *
+ *      3.) Abramowitz, Milton and Stegun, Irene (1964)                       *
+ *          Handbook of Mathematical Functions                                *
+ *          Applied Mathematics Series Volume 55,                             *
+ *          National Bureau of Standards                                      *
+ *                                                                            *
+ *          Standard reference for formulas on mathematical functions. The    *
+ *          trigonometric functions are found in chapter 4 section 3.         *
+ *                                                                            *
+ *      4.) C23 standard (2024)                                               *
+ *          ISO/IEC 9899:2024                                                 *
+ *          Section 7.12.4.13, pages 247 - 248.                               *
+ *                                                                            *
+ *          The sinpi function was introduced to libm with the C23 standard.  *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
+ *  2.) tmpl_nan_double.h:                                                    *
+ *          Header file providing double precision NaN (Not-a-Number).        *
+ *  3.) tmpl_math_constants.h:                                                *
+ *          Header file providing pi and pi / 2.                              *
+ *  4.) tmpl_ieee754_double.h:                                                *
+ *          Header file where the tmpl_IEEE754_Double type is defined.        *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       October 25, 2022                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/12/27: Ryan Maguire                                                  *
+ *      Rewrite of sinpi using IEEE-754 tricks and round-to-nearest addition. *
+ *  2025/12/29: Ryan Maguire                                                  *
+ *      Added docstring with comments, license, and references.               *
  ******************************************************************************/
-#include <libtmpl/include/tmpl_math.h>
+
+/*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  TMPL_NAN macro found here which provides double precision NaN.            */
+#include <libtmpl/include/nan/tmpl_nan_double.h>
+
+/*  Mathematical constants like pi and pi / 2 are found here.                 */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
+/*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  Forward declaration for the function, also found in tmpl_math.h.          */
+extern double tmpl_Double_SinPi(const double x);
+
+/*  Tell the compiler about the mod 2 function, used for argument reduction.  */
+extern double tmpl_Double_Mod_2(const double x);
+
+/******************************************************************************
+ *                                   Tables                                   *
+ ******************************************************************************/
+
+/*  The values cos(pi * k / 128) and sin(pi * k / 128) for k = 0, 1, ..., 127.*/
+extern const double tmpl_double_cospi_table[128];
+extern const double tmpl_double_sinpi_table[128];
+
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
 
 /*  Maclaurin series for sin(pi x) and cos(pi x), accurate for |x| < 2^-7.    */
 #include "auxiliary/tmpl_cospi_maclaurin_double.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_double.h"
+
+/*  Remez polynomial for sin(pi x), accurate for |x| < 2^-4.                  */
 #include "auxiliary/tmpl_sinpi_remez_double.h"
+
+/*  Rational minimax approximation for sin(pi x), accurate for |x| < 2^-1.    */
 #include "auxiliary/tmpl_sinpi_rat_remez_double.h"
 
 /*  Significantly faster, and more accurate near integers, using IEEE-754.    */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
 /*  Computes sin(pi x) at double precision.                                   */
-double tmpl_Double_SinPi(double x)
+double tmpl_Double_SinPi(const double x)
 {
     /*  We compute using the angle sum formula for sin(pi(r + dr)). Set aside *
-     *  four variables for the right hand side of that equation.              */
+     *  four variables for the right-hand side of that equation.              */
     double cos_pi_r, cos_pi_dr, sin_pi_r, sin_pi_dr;
 
     /*  We will write y = |x| mod 2 = r + dr, and compute sin(pi(r + dr)).    *
@@ -146,8 +335,9 @@ double tmpl_Double_SinPi(double x)
      *  cos(pi r) and sin(pi r) are computed by a lookup table. The index for *
      *  this lookup table is the integer n such that r = n / 128. This is     *
      *  the lower 7 bits of the "shifted" word. That is, shifted is equal to  *
-     *  y + 2^45. Since floating point arithmetic truncates, the lowest       *
-     *  8 bits of shifted are equal to the most significant 8 bits of y.      *
+     *  y + 2^45. Since floating point arithmetic rounds to nearest, the      *
+     *  lowest 8 bits of shifted are equal to the most significant 8 bits of  *
+     *  y rounded to nearest.                                                 *
      *                                                                        *
      *  If the 8th bit is one, we have 1 <= r < 2. To shift to 0 <= r < 1 we  *
      *  simply zero out the eigth bit (this is the "1's" bit in "shifted").   *
@@ -165,8 +355,8 @@ double tmpl_Double_SinPi(double x)
      **************************************************************************/
     index = (lowest_eight_bits & 0x007FU);
 
-    /*  shifted - shifter is equal to |x| mod 2 truncated to 2^-7. The dr     *
-     *  factor is then just the difference. Compute this.                     */
+    /*  shifted - shifter is equal to |x| mod 2 rounded to the nearest 2^-7.  *
+     *  The dr factor is then just the difference. Compute this.              */
     dr = w.r - (shifted.r - shifter);
 
     /*  Compute sin(pi y) using the angle sum formula.                        */
@@ -188,11 +378,15 @@ double tmpl_Double_SinPi(double x)
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
 /*  Helper macro for C vs. C++ compatibility with casting.                    */
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Computes sin(pi x) at double precision.                                   */
-double tmpl_Double_SinPi(double x)
+double tmpl_Double_SinPi(const double x)
 {
     double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
