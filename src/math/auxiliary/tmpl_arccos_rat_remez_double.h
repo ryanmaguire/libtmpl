@@ -125,7 +125,7 @@
 #define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
 /*  The constant Pi / 2.                                                      */
-extern const double tmpl_Double_Pi_By_Two;
+extern const double tmpl_double_pi_by_two;
 
 /*  Function for computing the (8, 8) minimax approximation for acos(x).      */
 TMPL_STATIC_INLINE
@@ -141,7 +141,7 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
 
     /*  p/q is the rational Remez approximation for (acos(x) - pi/2 + x)/x^3. *
      *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
-    return tmpl_Double_Pi_By_Two - (x + x*r);
+    return tmpl_double_pi_by_two - (x + x*r);
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
 

@@ -363,7 +363,7 @@ long double tmpl_LDouble_Arccos(const long double x)
     {
         /*  For very small x, acos(x) = pi / 2 to long double precision.      */
         if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_TINY_EXPONENT)
-            return tmpl_LDouble_Pi_By_Two;
+            return tmpl_ldouble_pi_by_two;
 
         /*  For small x the Maclaurin series is sufficient.                   */
         if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_SMALL_EXPONENT)
@@ -438,7 +438,7 @@ long double tmpl_LDouble_Arccos(const long double x)
     {
         /*  For very small inputs return pi / 2.                              */
         if (abs_x < 2.710505431213760E-20L)
-            return tmpl_LDouble_Pi_By_Two;
+            return tmpl_ldouble_pi_by_two;
 
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
         if (abs_x < 0.125L)

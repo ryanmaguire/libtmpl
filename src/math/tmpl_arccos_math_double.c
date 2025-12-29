@@ -255,7 +255,7 @@ double tmpl_Double_Arccos(const double x)
     {
         /*  For |x| < 2^-57, acos(x) = pi / 2 to double precision.            */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 57U)
-            return tmpl_Double_Pi_By_Two;
+            return tmpl_double_pi_by_two;
 
         /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 3U)
@@ -326,7 +326,7 @@ double tmpl_Double_Arccos(const double x)
     {
         /*  For very small inputs return pi / 2.                              */
         if (abs_x < 6.938893903907228E-18)
-            return tmpl_Double_Pi_By_Two;
+            return tmpl_double_pi_by_two;
 
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
         if (abs_x < 0.125)

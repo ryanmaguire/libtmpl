@@ -10,7 +10,7 @@ tmpl_PPM_Color tmpl_PPM_Scaled_Gradient(double val)
     if (tmpl_Double_Is_NaN(val))
         return tmpl_PPM_Black;
 
-    scaled = tmpl_Double_Pi_By_Two + tmpl_Double_Arctan(val);
+    scaled = tmpl_double_pi_by_two + tmpl_Double_Arctan(val);
 
     return tmpl_PPM_Linear_Gradient(scaled * tmpl_Double_Rcpr_Pi, 0.0, 1.0);
 }

@@ -69,7 +69,7 @@
 #define A07 (1.3964843750000000000000000000000000000000000000000E-02)
 
 /*  The constant Pi / 2.                                                      */
-extern const double tmpl_Double_Pi_By_Two;
+extern const double tmpl_double_pi_by_two;
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
@@ -86,7 +86,7 @@ double tmpl_Double_Arccos_Maclaurin(double x)
     const double poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return tmpl_Double_Pi_By_Two - x*poly;
+    return tmpl_double_pi_by_two - x*poly;
 }
 /*  End of tmpl_Double_Arccos_Maclaurin.                                      */
 

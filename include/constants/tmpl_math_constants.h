@@ -228,9 +228,9 @@ extern const long double tmpl_ldouble_eight_pi;
 /******************************************************************************
  *                          Fractional Values of Pi                           *
  ******************************************************************************/
-extern const float tmpl_Float_Pi_By_Two;
-extern const double tmpl_Double_Pi_By_Two;
-extern const long double tmpl_LDouble_Pi_By_Two;
+extern const float tmpl_float_pi_by_two;
+extern const double tmpl_double_pi_by_two;
+extern const long double tmpl_ldouble_pi_by_two;
 
 extern const float tmpl_Float_Pi_By_Three;
 extern const double tmpl_Double_Pi_By_Three;

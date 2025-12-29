@@ -253,7 +253,7 @@ float tmpl_Float_Arccos(const float x)
     {
         /*  For |x| < 2^-26, acos(x) = pi / 2 to single precision.            */
         if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 26U)
-            return tmpl_Float_Pi_By_Two;
+            return tmpl_float_pi_by_two;
 
         /*  For small x, |x| < 2^-2, the Maclaurin series is sufficient.      */
         if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 2U)
@@ -324,7 +324,7 @@ float tmpl_Float_Arccos(const float x)
     {
         /*  For very small inputs return pi / 2.                              */
         if (abs_x < 1.4901161193847656E-08F)
-            return tmpl_Float_Pi_By_Two;
+            return tmpl_float_pi_by_two;
 
         /*  Small inputs, |x| < 0.25, use the Maclaurin series.               */
         if (abs_x < 0.25F)

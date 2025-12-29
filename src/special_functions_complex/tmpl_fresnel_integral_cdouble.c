@@ -74,7 +74,7 @@ tmpl_ComplexDouble tmpl_CDouble_Fresnel_Integral_Real(double x)
     d = x*d + FRESNEL_HEALD_RATIONAL_EPS_8_D00;
 
     A = a/b-x*x;
-    A *= tmpl_Double_Pi_By_Two;
+    A *= tmpl_double_pi_by_two;
     R = c/d;
     R *= tmpl_Double_Sqrt_Pi_By_Two;
 
