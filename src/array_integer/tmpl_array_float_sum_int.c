@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Int_Array_Float_Total                                            *
+ *      tmpl_Int_Array_Float_Sum                                              *
  *  Purpose:                                                                  *
  *      Computes the sum of a signed int array.                               *
  *  Arguments:                                                                *
@@ -58,7 +58,7 @@
 #include <libtmpl/include/tmpl_array_integer.h>
 
 /*  Function for summing the elements of an int array.                        */
-float tmpl_Int_Array_Float_Total(const signed int * const arr, size_t len)
+float tmpl_Int_Array_Float_Sum(const signed int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -77,4 +77,4 @@ float tmpl_Int_Array_Float_Total(const signed int * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_Int_Array_Float_Total.                                        */
+/*  End of tmpl_Int_Array_Float_Sum.                                          */

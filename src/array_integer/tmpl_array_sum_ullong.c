@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_ULLong_Array_Total                                               *
+ *      tmpl_ULLong_Array_Sum                                                 *
  *  Purpose:                                                                  *
  *      Computes the sum of an unsigned long long array.                      *
  *  Arguments:                                                                *
@@ -69,7 +69,7 @@
 
 /*  Function for summing the elements of an unsigned long long array.         */
 unsigned long long int
-tmpl_ULLong_Array_Total(const unsigned long long int * const arr, size_t len)
+tmpl_ULLong_Array_Sum(const unsigned long long int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -88,7 +88,7 @@ tmpl_ULLong_Array_Total(const unsigned long long int * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_ULLong_Array_Total.                                           */
+/*  End of tmpl_ULLong_Array_Sum.                                             */
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */

@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_UChar_Array_Total                                                *
+ *      tmpl_UChar_Array_Sum                                                  *
  *  Purpose:                                                                  *
  *      Computes the sum of an unsigned char array.                           *
  *  Arguments:                                                                *
@@ -59,7 +59,7 @@
 
 /*  Function for summing the elements of an unsigned char array.              */
 unsigned char
-tmpl_UChar_Array_Total(const unsigned char * const arr, size_t len)
+tmpl_UChar_Array_Sum(const unsigned char * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -78,4 +78,4 @@ tmpl_UChar_Array_Total(const unsigned char * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_UChar_Array_Total.                                            */
+/*  End of tmpl_UChar_Array_Sum.                                              */

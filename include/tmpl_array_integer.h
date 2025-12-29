@@ -337,7 +337,7 @@ tmpl_ULLong_Array_Float_Average(const unsigned long long int * const arr,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Int_Array_Float_Total                                            *
+ *      tmpl_Int_Array_Float_Sum                                              *
  *  Purpose:                                                                  *
  *      Computes the sum of an array of ints outputting a float.              *
  *  Arguments:                                                                *
@@ -353,39 +353,38 @@ tmpl_ULLong_Array_Float_Average(const unsigned long long int * const arr,
  *      provided if support is available and requested by the Makefile.       *
  ******************************************************************************/
 extern float
-tmpl_Char_Array_Float_Total(const signed char * const arr, size_t len);
+tmpl_Char_Array_Float_Sum(const signed char * const arr, size_t len);
 
 extern float
-tmpl_UChar_Array_Float_Total(const unsigned char * const arr, size_t len);
+tmpl_UChar_Array_Float_Sum(const unsigned char * const arr, size_t len);
 
 extern float
-tmpl_Short_Array_Float_Total(const signed short int * const arr, size_t len);
+tmpl_Short_Array_Float_Sum(const signed short int * const arr, size_t len);
 
 extern float
-tmpl_UShort_Array_Float_Total(const unsigned short * const arr, size_t len);
+tmpl_UShort_Array_Float_Sum(const unsigned short * const arr, size_t len);
 
 extern float
-tmpl_Int_Array_Float_Total(const signed int * const arr, size_t len);
+tmpl_Int_Array_Float_Sum(const signed int * const arr, size_t len);
 
 extern float
-tmpl_UInt_Array_Float_Total(const unsigned int * const arr, size_t len);
+tmpl_UInt_Array_Float_Sum(const unsigned int * const arr, size_t len);
 
 extern float
-tmpl_Long_Array_Float_Total(const signed long int * const arr, size_t len);
+tmpl_Long_Array_Float_Sum(const signed long int * const arr, size_t len);
 
 extern float
-tmpl_ULong_Array_Float_Total(const unsigned long int * const arr, size_t len);
+tmpl_ULong_Array_Float_Sum(const unsigned long int * const arr, size_t len);
 
 /*  Long long functions if support is available.                              */
 #if TMPL_HAS_LONGLONG == 1
 
 extern float
-tmpl_LLong_Array_Float_Total(const signed long long int * const arr,
-                             size_t len);
+tmpl_LLong_Array_Float_Sum(const signed long long int * const arr, size_t len);
 
 extern float
-tmpl_ULLong_Array_Float_Total(const unsigned long long int * const arr,
-                              size_t len);
+tmpl_ULLong_Array_Float_Sum(const unsigned long long int * const arr,
+                            size_t len);
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
@@ -449,7 +448,7 @@ tmpl_ULLong_Array_LDouble_Average(const unsigned long long int * const arr,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Int_Array_LDouble_Total                                          *
+ *      tmpl_Int_Array_LDouble_Sum                                            *
  *  Purpose:                                                                  *
  *      Computes the sum of an array of ints outputting a long double.        *
  *  Arguments:                                                                *
@@ -465,39 +464,39 @@ tmpl_ULLong_Array_LDouble_Average(const unsigned long long int * const arr,
  *      provided if support is available and requested by the Makefile.       *
  ******************************************************************************/
 extern long double
-tmpl_Char_Array_LDouble_Total(const signed char * const arr, size_t len);
+tmpl_Char_Array_LDouble_Sum(const signed char * const arr, size_t len);
 
 extern long double
-tmpl_UChar_Array_LDouble_Total(const unsigned char * const arr, size_t len);
+tmpl_UChar_Array_LDouble_Sum(const unsigned char * const arr, size_t len);
 
 extern long double
-tmpl_Short_Array_LDouble_Total(const signed short int * const arr, size_t len);
+tmpl_Short_Array_LDouble_Sum(const signed short int * const arr, size_t len);
 
 extern long double
-tmpl_UShort_Array_LDouble_Total(const unsigned short * const arr, size_t len);
+tmpl_UShort_Array_LDouble_Sum(const unsigned short * const arr, size_t len);
 
 extern long double
-tmpl_Int_Array_LDouble_Total(const signed int * const arr, size_t len);
+tmpl_Int_Array_LDouble_Sum(const signed int * const arr, size_t len);
 
 extern long double
-tmpl_UInt_Array_LDouble_Total(const unsigned int * const arr, size_t len);
+tmpl_UInt_Array_LDouble_Sum(const unsigned int * const arr, size_t len);
 
 extern long double
-tmpl_Long_Array_LDouble_Total(const signed long int * const arr, size_t len);
+tmpl_Long_Array_LDouble_Sum(const signed long int * const arr, size_t len);
 
 extern long double
-tmpl_ULong_Array_LDouble_Total(const unsigned long int * const arr, size_t len);
+tmpl_ULong_Array_LDouble_Sum(const unsigned long int * const arr, size_t len);
 
 /*  Long long functions if support is available.                              */
 #if TMPL_HAS_LONGLONG == 1
 
 extern long double
-tmpl_LLong_Array_LDouble_Total(const signed long long int * const arr,
-                               size_t len);
+tmpl_LLong_Array_LDouble_Sum(const signed long long int * const arr,
+                             size_t len);
 
 extern long double
-tmpl_ULLong_Array_LDouble_Total(const unsigned long long int * const arr,
-                                size_t len);
+tmpl_ULLong_Array_LDouble_Sum(const unsigned long long int * const arr,
+                              size_t len);
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
@@ -884,7 +883,7 @@ tmpl_ULLong_Array_MinMax_Index(const unsigned long long int * const arr,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Int_Array_Total                                                  *
+ *      tmpl_Int_Array_Sum                                                    *
  *  Purpose:                                                                  *
  *      Computes the sum of an array of ints.                                 *
  *  Arguments:                                                                *
@@ -900,37 +899,37 @@ tmpl_ULLong_Array_MinMax_Index(const unsigned long long int * const arr,
  *      provided if support is available and requested by the Makefile.       *
  ******************************************************************************/
 extern signed char
-tmpl_Char_Array_Total(const signed char * const arr, size_t len);
+tmpl_Char_Array_Sum(const signed char * const arr, size_t len);
 
 extern unsigned char
-tmpl_UChar_Array_Total(const unsigned char * const arr, size_t len);
+tmpl_UChar_Array_Sum(const unsigned char * const arr, size_t len);
 
 extern signed short
-tmpl_Short_Array_Total(const signed short int * const arr, size_t len);
+tmpl_Short_Array_Sum(const signed short int * const arr, size_t len);
 
 extern unsigned short int
-tmpl_UShort_Array_Total(const unsigned short * const arr, size_t len);
+tmpl_UShort_Array_Sum(const unsigned short * const arr, size_t len);
 
 extern signed int
-tmpl_Int_Array_Total(const signed int * const arr, size_t len);
+tmpl_Int_Array_Sum(const signed int * const arr, size_t len);
 
 extern unsigned int
-tmpl_UInt_Array_Total(const unsigned int * const arr, size_t len);
+tmpl_UInt_Array_Sum(const unsigned int * const arr, size_t len);
 
 extern signed long int
-tmpl_Long_Array_Total(const signed long int * const arr, size_t len);
+tmpl_Long_Array_Sum(const signed long int * const arr, size_t len);
 
 extern unsigned long int
-tmpl_ULong_Array_Total(const unsigned long int * const arr, size_t len);
+tmpl_ULong_Array_Sum(const unsigned long int * const arr, size_t len);
 
 /*  Long long functions if support is available.                              */
 #if TMPL_HAS_LONGLONG == 1
 
 extern signed long long int
-tmpl_LLong_Array_Total(const signed long long int * const arr, size_t len);
+tmpl_LLong_Array_Sum(const signed long long int * const arr, size_t len);
 
 extern unsigned long long int
-tmpl_ULLong_Array_Total(const unsigned long long int * const arr, size_t len);
+tmpl_ULLong_Array_Sum(const unsigned long long int * const arr, size_t len);
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */

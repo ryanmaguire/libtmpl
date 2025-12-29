@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Char_Array_Total                                                 *
+ *      tmpl_Char_Array_Sum                                                   *
  *  Purpose:                                                                  *
  *      Computes the sum of a signed char array.                              *
  *  Arguments:                                                                *
@@ -58,7 +58,7 @@
 #include <libtmpl/include/tmpl_array_integer.h>
 
 /*  Function for summing the elements of a signed char array.                 */
-signed char tmpl_Char_Array_Total(const signed char * const arr, size_t len)
+signed char tmpl_Char_Array_Sum(const signed char * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -77,4 +77,4 @@ signed char tmpl_Char_Array_Total(const signed char * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_Char_Array_Total.                                             */
+/*  End of tmpl_Char_Array_Sum.                                               */

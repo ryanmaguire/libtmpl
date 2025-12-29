@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LLong_Array_Float_Total                                          *
+ *      tmpl_LLong_Array_Float_Sum                                            *
  *  Purpose:                                                                  *
  *      Computes the sum of a signed long long array.                         *
  *  Arguments:                                                                *
@@ -69,7 +69,7 @@
 
 /*  Function for summing the elements of a long long array.                   */
 float
-tmpl_LLong_Array_Float_Total(const signed long long int * const arr, size_t len)
+tmpl_LLong_Array_Float_Sum(const signed long long int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -88,7 +88,7 @@ tmpl_LLong_Array_Float_Total(const signed long long int * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_LLong_Array_Float_Total.                                      */
+/*  End of tmpl_LLong_Array_Float_Sum.                                        */
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */

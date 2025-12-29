@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Short_Array_LDouble_Total                                        *
+ *      tmpl_Short_Array_LDouble_Sum                                          *
  *  Purpose:                                                                  *
  *      Computes the sum of a signed short array.                             *
  *  Arguments:                                                                *
@@ -59,7 +59,7 @@
 
 /*  Function for summing the elements of a short array.                       */
 long double
-tmpl_Short_Array_LDouble_Total(const signed short int * const arr, size_t len)
+tmpl_Short_Array_LDouble_Sum(const signed short int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -78,4 +78,4 @@ tmpl_Short_Array_LDouble_Total(const signed short int * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_Short_Array_LDouble_Total.                                    */
+/*  End of tmpl_Short_Array_LDouble_Sum.                                      */

@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Char_Array_LDouble_Total                                         *
+ *      tmpl_Char_Array_LDouble_Sum                                           *
  *  Purpose:                                                                  *
  *      Computes the sum of a signed char array.                              *
  *  Arguments:                                                                *
@@ -59,7 +59,7 @@
 
 /*  Function for summing the elements of a signed char array.                 */
 long double
-tmpl_Char_Array_LDouble_Total(const signed char * const arr, size_t len)
+tmpl_Char_Array_LDouble_Sum(const signed char * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -78,4 +78,4 @@ tmpl_Char_Array_LDouble_Total(const signed char * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_Char_Array_LDouble_Total.                                     */
+/*  End of tmpl_Char_Array_LDouble_Sum.                                       */

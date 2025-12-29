@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_UShort_Array_LDouble_Total                                       *
+ *      tmpl_UShort_Array_LDouble_Sum                                         *
  *  Purpose:                                                                  *
  *      Computes the sum of an unsigned short array.                          *
  *  Arguments:                                                                *
@@ -59,8 +59,8 @@
 
 /*  Function for summing the elements of an unsigned short array.             */
 long double
-tmpl_UShort_Array_LDouble_Total(const unsigned short int * const arr,
-                                size_t len)
+tmpl_UShort_Array_LDouble_Sum(const unsigned short int * const arr,
+                              size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -79,4 +79,4 @@ tmpl_UShort_Array_LDouble_Total(const unsigned short int * const arr,
 
     return sum;
 }
-/*  End of tmpl_UShort_Array_LDouble_Total.                                   */
+/*  End of tmpl_UShort_Array_LDouble_Sum.                                     */
