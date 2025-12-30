@@ -30,7 +30,7 @@
 #define TMPL_HELPER_MIN_H
 
 /*  Computes the min of two real numbers (ints or floats).                    */
-#define TMPL_MIN(x, y) ((x) < (y) ? (y) : (x))
+#define TMPL_MIN(x, y) ((x) < (y) ? (x) : (y))
 
 /*  Computes the min of three real numbers (ints or floats).                  */
 #define TMPL_MIN3(x, y, z) TMPL_MIN((x), TMPL_MIN((y), (z)))
