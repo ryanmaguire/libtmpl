@@ -21,9 +21,10 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_UShort_Trailing_Zeros)
-    bsfl    %edi, %ecx
+    movzwl  %di, %edx
     xorl    %eax, %eax
+    bsfq    %rdx, %rdx
     testw   %di, %di
-    cmovnel %ecx, %eax
+    cmovne  %edx, %eax
     ret
 ASM_END(tmpl_UShort_Trailing_Zeros)
