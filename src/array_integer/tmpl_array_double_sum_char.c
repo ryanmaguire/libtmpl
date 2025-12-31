@@ -30,7 +30,7 @@
  *  Arguments:                                                                *
  *      arr (const signed char * const):                                      *
  *          A signed char array.                                              *
- *      len (size_t):                                                         *
+ *      len (const size_t):                                                   *
  *          The length of the array.                                          *
  *  Output:                                                                   *
  *      sum (double):                                                         *

@@ -232,7 +232,7 @@ tmpl_ULLong_Array_Double_Quick_RMS(const unsigned long long int * const arr,
  *  Arguments:                                                                *
  *      arr (const signed int * const):                                       *
  *          An array of ints.                                                 *
- *      len (size_t):                                                         *
+ *      len (const size_t):                                                   *
  *          The number of elements in the array.                              *
  *  Output:                                                                   *
  *      sum (double):                                                         *
@@ -242,39 +242,47 @@ tmpl_ULLong_Array_Double_Quick_RMS(const unsigned long long int * const arr,
  *      provided if support is available and requested by the Makefile.       *
  ******************************************************************************/
 extern double
-tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len);
+tmpl_Char_Array_Double_Sum(const signed char * const arr,
+                           const size_t len);
 
 extern double
-tmpl_UChar_Array_Double_Sum(const unsigned char * const arr, size_t len);
+tmpl_UChar_Array_Double_Sum(const unsigned char * const arr,
+                            const size_t len);
 
 extern double
-tmpl_Short_Array_Double_Sum(const signed short int * const arr, size_t len);
+tmpl_Short_Array_Double_Sum(const signed short int * const arr,
+                            const size_t len);
 
 extern double
-tmpl_UShort_Array_Double_Sum(const unsigned short * const arr, size_t len);
+tmpl_UShort_Array_Double_Sum(const unsigned short * const arr,
+                             const size_t len);
 
 extern double
-tmpl_Int_Array_Double_Sum(const signed int * const arr, size_t len);
+tmpl_Int_Array_Double_Sum(const signed int * const arr,
+                          const size_t len);
 
 extern double
-tmpl_UInt_Array_Double_Sum(const unsigned int * const arr, size_t len);
+tmpl_UInt_Array_Double_Sum(const unsigned int * const arr,
+                           const size_t len);
 
 extern double
-tmpl_Long_Array_Double_Sum(const signed long int * const arr, size_t len);
+tmpl_Long_Array_Double_Sum(const signed long int * const arr,
+                           const size_t len);
 
 extern double
-tmpl_ULong_Array_Double_Sum(const unsigned long int * const arr, size_t len);
+tmpl_ULong_Array_Double_Sum(const unsigned long int * const arr,
+                            const size_t len);
 
 /*  Long long functions if support is available.                              */
 #if TMPL_HAS_LONGLONG == 1
 
 extern double
 tmpl_LLong_Array_Double_Sum(const signed long long int * const arr,
-                            size_t len);
+                            const size_t len);
 
 extern double
 tmpl_ULLong_Array_Double_Sum(const unsigned long long int * const arr,
-                             size_t len);
+                             const size_t len);
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
