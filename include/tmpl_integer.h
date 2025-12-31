@@ -336,49 +336,47 @@ extern long int tmpl_Long_GCD(long int m, long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_UChar_GCD                                                        *
+ *      tmpl_UInt_GCD_Binary                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the GCD of two integers using the Stein algorithm.           *
+ *  Arguments:                                                                *
+ *      m (unsigned int):                                                     *
+ *          The first integer.                                                *
+ *      n (unsigned int):                                                     *
+ *          The second integer.                                               *
+ *  Output:                                                                   *
+ *      gcd (unsigned int):                                                   *
+ *          The greatest common denominator of m and n.                       *
+ *  Notes:                                                                    *
+ *      1.) On some compilers and with some architectures, this is the        *
+ ******************************************************************************/
+extern unsigned char
+tmpl_UChar_GCD_Binary(const unsigned char m, const unsigned char n);
+
+extern unsigned short int
+tmpl_UShort_GCD_Binary(const unsigned short int m, const unsigned short int n);
+
+extern unsigned int
+tmpl_UInt_GCD_Binary(const unsigned int m, const unsigned int n);
+
+extern unsigned long int
+tmpl_ULong_GCD_Binary(unsigned long int m, unsigned long int n);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_GCD_Euclidean                                                *
  *  Purpose:                                                                  *
  *      Computes the greatest common denominator of two unsigned integers.    *
  *      Similar functions are provided for short, int, and long.              *
  *  Arguments:                                                                *
- *      m (unsigned char/short/int/long):                                     *
+ *      m (unsigned int):                                                     *
  *          The first integer.                                                *
- *      n (unsigned char/short/int/long):                                     *
+ *      n (unsigned int):                                                     *
  *          The second integer.                                               *
  *  Output:                                                                   *
- *      GCD (unsigned char/short/int/long):                                   *
+ *      gcd (unsigned int):                                                   *
  *          The greatest common denominator of m and n.                       *
- *  Source Code:                                                              *
- *      libtmpl/src/integer/tmpl_binary_gcd_uchar.c                           *
- *      libtmpl/src/integer/tmpl_binary_gcd_ushort.c                          *
- *      libtmpl/src/integer/tmpl_binary_gcd_uint.c                            *
- *      libtmpl/src/integer/tmpl_binary_gcd_ulong.c                           *
- *  Examples:                                                                 *
- *      libtmpl/examples/integer/                                             *
- *          tmpl_binary_gcd_uchar_example.c                                   *
- *          tmpl_binary_gcd_ushort_example.c                                  *
- *          tmpl_binary_gcd_uint_example.c                                    *
- *          tmpl_binary_gcd_ulong_example.c                                   *
- *  Tests:                                                                    *
- *      libtmpl/tests/integer/time_tests/                                     *
- *          tmpl_binary_gcd_uchar_time_test.c                                 *
- *          tmpl_binary_gcd_ushort_time_test.c                                *
- *          tmpl_binary_gcd_uint_time_test.c                                  *
- *          tmpl_binary_gcd_ulong_time_test.c                                 *
  ******************************************************************************/
-extern unsigned char
-tmpl_UChar_GCD(unsigned char m, unsigned char n);
-
-extern unsigned short int
-tmpl_UShort_GCD(unsigned short int m, unsigned short int n);
-
-extern unsigned int
-tmpl_UInt_GCD(unsigned int m, unsigned int n);
-
-extern unsigned long int
-tmpl_ULong_GCD(unsigned long int m, unsigned long int n);
-
-/*  Signed Euclidean GCD algorithms.                                          */
 extern signed char
 tmpl_Char_GCD_Euclidean(signed char m, signed char n);
 

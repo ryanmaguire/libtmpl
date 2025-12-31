@@ -3,9 +3,7 @@
 
 /*  TMPL_MIN macro is provided here.                                          */
 #include <libtmpl/include/helper/tmpl_min.h>
-
 #include <libtmpl/include/helper/tmpl_swap.h>
-
 
 /*  Function for computing the GCD of two unsigned integers.                  */
 unsigned int tmpl_UInt_GCD_Mixed_Binary(unsigned int m, unsigned int n)
@@ -61,4 +59,4 @@ unsigned int tmpl_UInt_GCD_Mixed_Binary(unsigned int m, unsigned int n)
 
     return m << shift;
 }
-/*  End of tmpl_UInt_GCD.                                                     */
+/*  End of tmpl_UInt_GCD_Mixed_Binary.                                        */

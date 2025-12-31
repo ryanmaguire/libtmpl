@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_binary_gcd_uint                            *
+ *                            tmpl_gcd_binary_uint                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for computing the GCD of unsigned integers.             *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_UInt_GCD                                                         *
+ *      tmpl_UInt_GCD_Binary                                                  *
  *  Purpose:                                                                  *
  *      Computes GCD(m, n), the greatest common divisor of m and n.           *
  *  Arguments:                                                                *
@@ -36,98 +36,60 @@
  *      gcd (unsigned int):                                                   *
  *          The greatest common divisor of m and n.                           *
  *  Called Functions:                                                         *
- *      TMPL_UINT_TRAILING_ZEROS    (tmpl_integer.h)                          *
- *          Function that counts the number of trailing zeros in a number.    *
+ *      tmpl_integer.h:                                                       *
+ *          TMPL_UINT_TRAILING_ZEROS/                                         *
+ *              Counts the number of trailing zeros in an unsigned int. On    *
+ *              platforms supporting ctz or bsf this macro expands to one of  *
+ *              those, otherwise it is tmpl_UInt_Trailing_Zeros.              *
  *  Method:                                                                   *
- *      There are four implementations available. Binary, Mixed-Binary,       *
- *      Euclidean, and "by-hand". The Binary algorithm, also called the Stein *
- *      GCD algorithm, is the fastest and the default. Mixed-binary is from   *
- *      The Mixed Binary Euclid Algorithm, Sidi Mohamed Sedjelmaci,           *
- *      Electronic Notes in Discrete Mathematics 35 (2009) 169-176. The       *
- *      Euclidean algorithm is the classic algorithm using repeated modulo    *
- *      operations. The "by-hand" method is the way one computes GCD by hand. *
- *      Subtract the smaller from the larger and repeat until the values are  *
- *      equal. This is by far the slowest.                                    *
+ *      Use the classic Stein algorithm, also known as the binary GCD         *
+ *      algorithm. This uses the fact that:                                   *
+ *                                                                            *
+ *          GCD(2m, 2n) = 2 GCD(m, n)                                         *
+ *                                                                            *
+ *      We iteratively remove trailing zeros from m and n until they are odd  *
+ *      and then invoke the following identity:                               *
+ *                                                                            *
+ *          GCD(m, n) = GCD(m, n - m)                                         *
+ *                                                                            *
+ *      This holds when m and n are odd and m <= n. We then remove trailing   *
+ *      zeros again and repeat. Eventually we will reduce to m = n, and then  *
+ *      GCD can be obtained by multiplying by 2^min(ctz(m), ctz(n)), where    *
+ *      ctz is the "count-trailing-zeros" function. That is, we bit shift by  *
+ *      minimum number of trailing zeros that were removed at the start of    *
+ *      the function.                                                         *
  *  Notes:                                                                    *
- *      This function compiles without error or warning on Debian 11          *
- *      GNU/Linux with clang, gcc, tcc, and pcc using -Wall, -Wextra,         *
- *      -Wpedantic, and other options. It passes clang with -Weverything.     *
- *      -std=c89, -std=c99, -std=c11, and -std=c18 flags have been passed as  *
- *      well, and no problems were found. If any error or warnings arise on   *
- *      your platform, please report this.                                    *
- *  Accuracy and Performance:                                                 *
- *      A time and accuracy test yields the following results versus boost.   *
- *      All times are in seconds.                                             *
- *      Binary GCD                                                            *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 1405097472                                               *
- *          libtmpl: 71.781926                                                *
- *          boost:   99.431520                                                *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
- *      Mixed Binary GCD                                                      *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 1405097472                                               *
- *          libtmpl: 100.545565                                               *
- *          boost:   100.181320                                               *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
- *      Euclidean GCD                                                         *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 1405097472                                               *
- *          libtmpl: 88.997715                                                *
- *          boost:   98.855792                                                *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
- *      By-Hand GCD                                                           *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 1405097472                                               *
- *          libtmpl: 314.039140                                               *
- *          boost:   101.945712                                               *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
- *      These tests were performed with the following specs:                  *
- *          CPU:  AMD Ryzen 3900 12-core                                      *
- *          MIN:  2200.0000 MHz                                               *
- *          MAX:  4672.0698 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
- *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
- *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
- *      Using a Windows 10 virtual machine (same specs) with GNOME Boxes:     *
- *      Building libtmpl with MSVC, Binary GCD                                *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 23401941                                                 *
- *          libtmpl: 0.640000                                                 *
- *          boost:   1.522000                                                 *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
- *      Building libtmpl with LLVM's clang, Binary GCD                        *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 23401941                                                 *
- *          libtmpl: 0.630000                                                 *
- *          boost:   0.893000                                                 *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
- *      Using a FreeBSD 13 virtual machine (same specs) with GNOME Boxes:     *
- *      Building libtmpl with LLVM's clang, Binary GCD                        *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 1073462016                                               *
- *          libtmpl: 59.601562                                                *
- *          boost:   83.625000                                                *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
- *      Building libtmpl with GCC, Binary GCD                                 *
- *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
- *          samples: 1073462016                                               *
- *          libtmpl: 73.781250                                                *
- *          boost:   78.312653                                                *
- *          rms error: 0.000000e+00                                           *
- *          max error: 0.000000e+00                                           *
+ *      1.) On some platforms, and with some compilers, this is the fastest   *
+ *          algorithm for the GCD that libtmpl provides. This is both CPU and *
+ *          compiler specific, and also depends on compiler flags at build    *
+ *          time. On x86_64 with GCC or LLVM's Clang, and with optimizations  *
+ *          enabled, the mixed-binary algorithm is much faster, almost by a   *
+ *          factor of 2. The tmpl_UInt_GCD function selects the algorithm     *
+ *          requested at build time, the default is mixed-binary. If the      *
+ *          Stein algorithm is faster, set the TMPL_GCD_ALGORITHM flag at     *
+ *          compile time to use this function instead. See build instructions *
+ *          for more details. Usually if the architecture can do fast modulus *
+ *          operations, the mixed-binary algorithm will be faster.            *
+ *                                                                            *
+ *      2.) By definition, GCD(0, 0) = 0, GCD(n, 0) = n, and GCD(0, n) = n.   *
+ *          This function follows these requirements.                         *
+ *  Error:                                                                    *
+ *      Based on 2,245,328,622 samples with 0 <= x, y < RAND_MAX.             *
+ *          max relative error: 0                                             *
+ *          rms relative error: 0                                             *
+ *          max absolute error: 0                                             *
+ *          rms absolute error: 0                                             *
+ *      Tests were performed in C++ using glibc (std::gcd) and boost          *
+ *      (boost::integer::gcd). Error values assume 100% accuracy with these   *
+ *      implementations.                                                      *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_integer.h:                                                       *
+ *  1.) tmpl_min.h:                                                           *
+ *          Header file providing the TMPL_MIN macro.                         *
+ *  2.) tmpl_swap.h:                                                          *
+ *          Header file providing the TMPL_SWAP macro.                        *
+ *  3.) tmpl_integer.h:                                                       *
  *          Header file containing the function prototype.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -139,58 +101,72 @@
  *      Added more algorithms. There are 4 available: binary, mixed binary,   *
  *      Euclidean, and "by-hand". Binary is fastest, followed by Euclidean,   *
  *      and then mixed-binary. The "by-hand" algorithm is the slowest.        *
+ *  2025/12/30: Ryan Maguire                                                  *
+ *      Added references, fixed docstring, added TMPL_SWAP macro, clean-up.   *
  ******************************************************************************/
 
+/*  The TMPL_MIN macro is found here, computes the minimum of two values.     */
 #include <libtmpl/include/helper/tmpl_min.h>
+
+/*  TMPL_SWAP macro, used for swapping the data in two variables.             */
 #include <libtmpl/include/helper/tmpl_swap.h>
 
-/*  Function prototype is found here.                                         */
+/*  Function prototype is found here, as is TMPL_UINT_TRAILING_ZEROS.         */
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  Function for computing the GCD of two unsigned integers.                  */
-unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
+unsigned int tmpl_UInt_GCD_Binary(const unsigned int m, const unsigned int n)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     int m_zeros, n_zeros;
+    unsigned int u, v;
 
-    /*  Special cases. GCD(m, 0) = m and GCD(0, n) = n. Use this.             */
+    /*  Special cases. GCD(0, n) = n. It is best to avoid using the trailing  *
+     *  zeros function on zero. The libtmpl macro makes ctz(0) = 0, but in    *
+     *  general this is not well defined. It may be 0, it may be the number   *
+     *  of bits in unsigned int, or it may be something else. This if-then    *
+     *  statement for zero helps us avoid such issues.                        */
     if (m == 0U)
         return n;
 
+    /*  Same check for n, use GCD(m, 0) = m.                                  */
     if (n == 0U)
         return m;
 
-    /*  Use the fact that GCD(2m, 2n) = 2 GCD(m, n) to reduce the arguments.  */
+    /*  Use the fact that GCD(2m, 2n) = 2 GCD(m, n) to reduce the arguments.  *
+     *  Since GCD(2^k m, 2^k n) = 2^k GCD(m, n), we will eventually scale the *
+     *  result by 2^k where k is the minimum of ctz(m) and ctz(n), given by   *
+     *  m_zeros and n_zeros, respectively.                                    */
     m_zeros = TMPL_UINT_TRAILING_ZEROS(m);
     n_zeros = TMPL_UINT_TRAILING_ZEROS(n);
-    m = m >> m_zeros;
-    n = n >> n_zeros;
+    u = m >> m_zeros;
+    v = n >> n_zeros;
 
     /*  Keep reducing the arguments until we have n = m. GCD(n, n) = n, and   *
      *  our computation will be almost complete.                              */
-    while (m != n)
+    while (u != v)
     {
-        /*  Swap the variables so that m is larger, if necessary.             */
-        if (n > m)
-            TMPL_SWAP(unsigned int, m, n);
+        /*  Swap the variables so that u is larger, if necessary.             */
+        if (v > u)
+            TMPL_SWAP(unsigned int, u, v);
 
         /*  Next reduction step in the GCD algorithm. Use the fact that, for  *
-         *  odd inputs m and n, GCD(m, n) = GCD(|m - n|, min(m, n)). Since we *
-         *  have removed all trailing zeros from m and n, both are odd.       */
-        m -= n;
+         *  odd inputs u and v, GCD(u, v) = GCD(|u - v|, min(u, v)). Since we *
+         *  have removed all trailing zeros from u and v, both are odd.       */
+        u -= v;
 
         /*  Remove all trailing zeros from m, ensuring m is odd. Since m != n *
          *  we are guaranteed that m - n is positive.                         */
-        m >>= TMPL_UINT_TRAILING_ZEROS(m);
+        u >>= TMPL_UINT_TRAILING_ZEROS(u);
     }
 
-    /*  If a < b, we have GCD(2^a m, 2^b n) = 2^a GCD(m, 2^{b-a} n). We have  *
-     *  just computed GCD(m, 2^{b-a} n). We now need to multiply by 2^a. Here *
+    /*  If a < b, we have GCD(2^a u, 2^b v) = 2^a GCD(u, 2^{b-a} v). We have  *
+     *  just computed GCD(u, 2^{b-a} v). We now need to multiply by 2^a. Here *
      *  we have a is the number of trailing zeros in the input m, and b is    *
      *  the number of trailing zeros in the input n. We've saved both of      *
      *  these values as m_zeros and n_zeros, respectively. Compute the        *
      *  minimum of these two and then bit-shift m to the left by this min.    *
-     *  This is the equivalent of multiplying m by 2^min(m_zeros, n_zeros).   */
-    return m << TMPL_MIN(m_zeros, n_zeros);
+     *  This is the equivalent of multiplying u by 2^min(m_zeros, n_zeros).   */
+    return u << TMPL_MIN(m_zeros, n_zeros);
 }
-/*  End of tmpl_UInt_GCD.                                                     */
+/*  End of tmpl_UInt_GCD_Binary.                                              */
