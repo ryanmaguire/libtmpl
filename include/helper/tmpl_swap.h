@@ -39,7 +39,7 @@
         const type tmpl_swap_tmp = a;                                          \
         a = b;                                                                 \
         b = tmpl_swap_tmp;                                                     \
-    } while(0);
+    } while(0)
 
 #endif
 /*  End of include guard.                                                     */
