@@ -4,12 +4,14 @@
 /*  TMPL_MIN macro is provided here.                                          */
 #include <libtmpl/include/helper/tmpl_min.h>
 
+#include <libtmpl/include/helper/tmpl_swap.h>
+
+
 /*  Function for computing the GCD of two unsigned integers.                  */
 unsigned int tmpl_UInt_GCD_Mixed_Binary(unsigned int m, unsigned int n)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     int m_zeros, n_zeros, shift;
-    unsigned int tmp;
 
     /*  Special cases. GCD(m, 0) = m and GCD(0, n) = n. Use this.             */
     if (m == 0U)
@@ -20,11 +22,7 @@ unsigned int tmpl_UInt_GCD_Mixed_Binary(unsigned int m, unsigned int n)
 
     /*  Swap m and n, if necessary, so that m is the larger one.              */
     if (m < n)
-    {
-        tmp = m;
-        m = n;
-        n = tmp;
-    }
+        TMPL_SWAP(unsigned int, m, n);
 
     /*  Use the fact that GCD(2m, 2n) = 2 GCD(m, n) to reduce the arguments.  */
     m_zeros = TMPL_UINT_TRAILING_ZEROS(m);
@@ -55,11 +53,7 @@ unsigned int tmpl_UInt_GCD_Mixed_Binary(unsigned int m, unsigned int n)
 
         /*  Swap m and n, if necessary, so that m is larger.                  */
         if (m < n)
-        {
-            tmp = m;
-            m = n;
-            n = tmp;
-        }
+            TMPL_SWAP(unsigned int, m, n);
     }
 
     if (n == 1U)

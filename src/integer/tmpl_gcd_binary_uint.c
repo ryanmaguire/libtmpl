@@ -142,6 +142,7 @@
  ******************************************************************************/
 
 #include <libtmpl/include/helper/tmpl_min.h>
+#include <libtmpl/include/helper/tmpl_swap.h>
 
 /*  Function prototype is found here.                                         */
 #include <libtmpl/include/tmpl_integer.h>
@@ -151,12 +152,12 @@ unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     int m_zeros, n_zeros;
-    unsigned int tmp;
 
     /*  Special cases. GCD(m, 0) = m and GCD(0, n) = n. Use this.             */
     if (m == 0U)
         return n;
-    else if (n == 0U)
+
+    if (n == 0U)
         return m;
 
     /*  Use the fact that GCD(2m, 2n) = 2 GCD(m, n) to reduce the arguments.  */
@@ -171,11 +172,7 @@ unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
     {
         /*  Swap the variables so that m is larger, if necessary.             */
         if (n > m)
-        {
-            tmp = m;
-            m = n;
-            n = tmp;
-        }
+            TMPL_SWAP(unsigned int, m, n);
 
         /*  Next reduction step in the GCD algorithm. Use the fact that, for  *
          *  odd inputs m and n, GCD(m, n) = GCD(|m - n|, min(m, n)). Since we *
