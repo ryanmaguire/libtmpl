@@ -66,6 +66,7 @@
 #include "tmpl_config_write_has_floatint64.h"
 #include "tmpl_config_write_has_floatint_ldouble.h"
 #include "tmpl_config_write_license.h"
+#include "tmpl_config_write_gcd_algorithm.h"
 #include "tmpl_config_write_float_type.h"
 #include "tmpl_config_write_double_type.h"
 #include "tmpl_config_write_ldouble_type.h"
@@ -127,6 +128,9 @@ static int make_config_h(void)
 
     /*  Macro for whether to use memcpy or for-loops.                         */
     tmpl_write_use_memcpy(fp);
+
+    /*  Macro for which GCD algorithm libtmpl should implement as the default.*/
+    tmpl_write_gcd_algorithm(fp);
 
     /*  Write the include guard closer and write the end-of-file.             */
     tmpl_write_end_of_file(fp);
