@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_gcd_uint                                *
+ *                               tmpl_gcd_ulong                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the GCD of two unsigned integers.                            *
@@ -24,16 +24,16 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_UInt_GCD                                                         *
+ *      tmpl_ULong_GCD                                                        *
  *  Purpose:                                                                  *
  *      Computes GCD(m, n), the greatest common divisor of m and n.           *
  *  Arguments:                                                                *
- *      m (unsigned int):                                                     *
+ *      m (unsigned long int):                                                *
  *          An integer.                                                       *
- *      n (unsigned int):                                                     *
+ *      n (unsigned long int):                                                *
  *          Another integer.                                                  *
  *  Output:                                                                   *
- *      gcd (unsigned int):                                                   *
+ *      gcd (unsigned long int):                                              *
  *          The greatest common divisor of m and n.                           *
  *  Method:                                                                   *
  *      Inspect the TMPL_GCD_ALGORITHM macro and use the corresponding        *
@@ -75,8 +75,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_GCD_UINT_H
-#define TMPL_GCD_UINT_H
+#ifndef TMPL_GCD_ULONG_H
+#define TMPL_GCD_ULONG_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -90,11 +90,12 @@
  ******************************************************************************/
 
 /*  Forward declaration / function prototype for the mixed-binary function.   */
-extern unsigned int
-tmpl_UInt_GCD_Mixed_Binary(const unsigned int m, const unsigned int n);
+extern unsigned long int
+tmpl_ULong_GCD_Mixed_Binary(const unsigned long int m,
+                            const unsigned long int n);
 
 /*  Macro for selecting the mixed-binary method.                              */
-#define TMPL_GCD_METHOD tmpl_UInt_GCD_Mixed_Binary
+#define TMPL_GCD_METHOD tmpl_ULong_GCD_Mixed_Binary
 
 /*  With some architectures / compilers the binary algorithm is faster.       */
 #elif TMPL_GCD_ALGORITHM == TMPL_GCD_ALGORITHM_BINARY
@@ -104,11 +105,11 @@ tmpl_UInt_GCD_Mixed_Binary(const unsigned int m, const unsigned int n);
  ******************************************************************************/
 
 /*  Forward declaration / function prototype for the binary function.         */
-extern unsigned int
-tmpl_UInt_GCD_Binary(const unsigned int m, const unsigned int n);
+extern unsigned long int
+tmpl_ULong_GCD_Binary(const unsigned long int m, const unsigned long int n);
 
 /*  Macro for selecting the binary method.                                    */
-#define TMPL_GCD_METHOD tmpl_UInt_GCD_Binary
+#define TMPL_GCD_METHOD tmpl_ULong_GCD_Binary
 
 /*  The Euclidean algorithm is often a bit slower than the binary algorithm.  *
  *  It can still be quite fast, and there may be benefits to using it.        */
@@ -119,11 +120,11 @@ tmpl_UInt_GCD_Binary(const unsigned int m, const unsigned int n);
  ******************************************************************************/
 
 /*  Forward declaration / function prototype for the Euclidean function.      */
-extern unsigned int
-tmpl_UInt_GCD_Euclidean(const unsigned int m, const unsigned int n);
+extern unsigned long int
+tmpl_ULong_GCD_Euclidean(const unsigned long int m, const unsigned long int n);
 
 /*  Macro for selecting the Euclidean method.                                 */
-#define TMPL_GCD_METHOD tmpl_UInt_GCD_Euclidean
+#define TMPL_GCD_METHOD tmpl_ULong_GCD_Euclidean
 
 /*  The Naive algorithm is always the slowest. Only use this for experiment.  */
 #else
@@ -133,22 +134,23 @@ tmpl_UInt_GCD_Euclidean(const unsigned int m, const unsigned int n);
  ******************************************************************************/
 
 /*  Forward declaration / function prototype for the Naive function.          */
-extern unsigned int
-tmpl_UInt_GCD_Naive(const unsigned int m, const unsigned int n);
+extern unsigned long int
+tmpl_ULong_GCD_Naive(const unsigned long int m, const unsigned long int n);
 
 /*  Macro for selecting the Naive method.                                     */
-#define TMPL_GCD_METHOD tmpl_UInt_GCD_Naive
+#define TMPL_GCD_METHOD tmpl_ULong_GCD_Naive
 
 #endif
 /*  End of #if TMPL_GCD_ALGORITHM == TMPL_GCD_ALGORITHM_MIXED_BINARY.         */
 
 /*  Function for computing the GCD of two unsigned integers.                  */
 TMPL_INLINE_DECL
-unsigned int tmpl_UInt_GCD(const unsigned int m, const unsigned int n)
+unsigned long int
+tmpl_ULong_GCD(const unsigned long int m, const unsigned long int n)
 {
     return TMPL_GCD_METHOD(m, n);
 }
-/*  End of tmpl_UInt_GCD.                                                     */
+/*  End of tmpl_ULong_GCD.                                                    */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #undef TMPL_GCD_METHOD

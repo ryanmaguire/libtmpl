@@ -336,6 +336,41 @@ extern long int tmpl_Long_GCD(long int m, long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_UInt_GCD                                                         *
+ *  Purpose:                                                                  *
+ *      Computes the GCD of two unsigned integers.                            *
+ *  Arguments:                                                                *
+ *      m (const unsigned int):                                               *
+ *          The first integer.                                                *
+ *      n (const unsigned int):                                               *
+ *          The second integer.                                               *
+ *  Output:                                                                   *
+ *      gcd (unsigned int):                                                   *
+ *          The greatest common denominator of m and n.                       *
+ ******************************************************************************/
+
+/*  Small function worth inlining.                                            */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/inline/integer/tmpl_gcd_uint.h>
+#include <libtmpl/include/inline/integer/tmpl_gcd_ulong.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the functions in src/integer/.                              */
+extern unsigned int
+tmpl_UInt_GCD(const unsigned int m, const unsigned int n);
+
+extern unsigned long int
+tmpl_ULong_GCD(unsigned long int m, unsigned long int n);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_UInt_GCD_Binary                                                  *
  *  Purpose:                                                                  *
  *      Computes the GCD of two integers using the Stein algorithm.           *
