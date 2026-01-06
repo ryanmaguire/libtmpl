@@ -20,8 +20,8 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex modulus (absolute value), done   *
- *      "quickly". This method is about 1.5 times faster than the default one *
- *      but may overflow for certain values.                                  *
+ *      "quickly". This method is up to 1.5 times faster than the default one *
+ *      but is susceptible to underflow and overflow.                         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -44,7 +44,7 @@
  *                                                                            *
  *      otherwise. This involves computing |x|, |y|, and seeing which one is  *
  *      the max as intermediate steps, and a division. The resulting time     *
- *      tests indicate that this is about 1.5x slower. The naive method is    *
+ *      tests indicate that this is up to 1.5x slower. The naive method is    *
  *      kept here in case the user needs extra speed and is not worried about *
  *      overflowing. On IEEE-754 compliant implementations, this means        *
  *      working with numbers less than 10^154, which is very plausible.       *
@@ -55,16 +55,21 @@
  *      abs_z (double):                                                       *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Double_Sqrt        (tmpl_math.h)                                 *
- *          Computes the square root of a real number.                        *
+ *      src/math/                                                             *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a real number.                    *
  *  Notes:                                                                    *
- *      This code is a fork of the code I wrote for rss_ringoccs.             *
- *      librssringoccs is also released under GPL3.                           *
+ *      1.) This function is susceptible to underflow and overflow, but it is *
+ *          faster than tmpl_CDouble_Abs. Only use this function when you are *
+ *          sure that the square of the input will not underflow or overflow. *
+ *                                                                            *
+ *      2.) There are no checks for NaN or infinity. NaN inputs will produce  *
+ *          NaN, and infinity (positive or negative) will output infinity.    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_USE_INLINE macro.                 *
+ *          TMPL_INLINE_DECL macro found here.                                *
  *  2.) tmpl_complex_double.h:                                                *
  *          Header providing double precision complex numbers.                *
  ******************************************************************************
@@ -91,8 +96,8 @@
  *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
  *      No more changes unless something breaks.                              *
  *  2021/10/19: Ryan Maguire                                                  *
- *      Changed this to "QuickAbs". Numbers greater than sqrt(DBL_MAX) will   *
- *      overflow using this method. On most computers, this is 10^154. These  *
+ *      Changed this to "Quick_Abs". Numbers greater than sqrt(DBL_MAX) will  *
+ *      overflow using this method. On most computers this is 10^154. These   *
  *      numbers shouldn't overflow for a proper implementation of complex abs.*
  *      A proper implementation is now implemented in tmpl_CDouble_Abs. These *
  *      functions are 1.3-1.5x faster and are kept for users who will not be  *
@@ -105,7 +110,7 @@
 #ifndef TMPL_COMPLEX_QUICK_ABS_DOUBLE_H
 #define TMPL_COMPLEX_QUICK_ABS_DOUBLE_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
