@@ -145,17 +145,12 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
  *      Compute the absolute value of a complex number. This is equivalent to *
  *      the cabs function found in complex.h (C99).                           *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble z:                                                 *
+ *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      double abs_z:                                                         *
+ *      abs_z (double):                                                       *
  *          The absolute value of z, computed by the Pythagorean formula. If  *
  *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
- *  Source Code:                                                              *
- *      libtmpl/src/complex/                                                  *
- *          tmpl_complex_abs_double.c                                         *
- *          tmpl_complex_abs_float.c                                          *
- *          tmpl_complex_abs_ldouble.c                                        *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
 
@@ -165,9 +160,9 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
 
 #else
 
-extern float tmpl_CFloat_Abs(tmpl_ComplexFloat z);
-extern double tmpl_CDouble_Abs(tmpl_ComplexDouble z);
-extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Abs(const tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Abs(const tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z);
 
 #endif
 
