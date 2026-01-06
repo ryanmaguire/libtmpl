@@ -60,11 +60,19 @@
  *      1 ULP.                                                                *
  *  Notes:                                                                    *
  *      1.) This function properly handles very small and very large inputs.  *
- *          This comes at a very small cost of speed. The alternative         *
- *          function tmpl_CLDouble_Quick_Abs use the faster naive method, but *
+ *          This comes at the cost of speed. The alternative function,        *
+ *          tmpl_CLDouble_Quick_Abs, uses the faster, more naive method, but  *
  *          it is susceptible to overflow and underflow. Nevertheless, most   *
  *          real applications do not deal with very large or very small       *
- *          numbers and the (slight) performance boost may be desirable.      *
+ *          numbers and the performance boost may be desirable. This boost    *
+ *          largely depends on the compiler and architecture, and may vary    *
+ *          from a small boost (a few percent) to being 2x faster. On         *
+ *          Debian 13 GNU/Linux x86_64 with GCC (and optimizations enabled)   *
+ *          the "quick-abs" function is about 1.65x faster and produces the   *
+ *          same result for "ordinary" inputs (that is, having components     *
+ *          that are zero, or greater than 10^-2000 and less than 10^2000).   *
+ *          Long double is implemented using 80-bit extended precision on     *
+ *          that platform.                                                    *
  *                                                                            *
  *      2.) There are no checks for NaN or infinity. NaN inputs will produce  *
  *          NaN, and infinity (positive or negative) will output infinity.    *
