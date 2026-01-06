@@ -44,6 +44,15 @@
  *      Based on 67,108,864 random samples:                                   *
  *          Max Relative Error: 0.000000e+00                                  *
  *          RMS Relative Error: 0.000000e+00                                  *
+ *  Notes:                                                                    *
+ *      1.) This function is susceptible to underflow and overflow. For very  *
+ *          small arguments (say, less than sqrt(LDBL_MIN)) or very large     *
+ *          arguments (greater than sqrt(LDBL_MAX)) the function f(z) = |z|^2 *
+ *          will underflow and overflow, respectively. This function does not *
+ *          attempt to mitigate this.                                         *
+ *                                                                            *
+ *      2.) There are no checks for NaN or infinity. NaN inputs will produce  *
+ *          NaN, and infinity (positive or negative) will output infinity.    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
