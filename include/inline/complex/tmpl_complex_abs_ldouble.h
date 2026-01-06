@@ -58,6 +58,16 @@
  *      Values assume 80-bit extended precision. For double, double-double,   *
  *      and quadruple implementations of long double the peak error is also   *
  *      1 ULP.                                                                *
+ *  Notes:                                                                    *
+ *      1.) This function properly handles very small and very large inputs.  *
+ *          This comes at a very small cost of speed. The alternative         *
+ *          function tmpl_CLDouble_Quick_Abs use the faster naive method, but *
+ *          it is susceptible to overflow and underflow. Nevertheless, most   *
+ *          real applications do not deal with very large or very small       *
+ *          numbers and the (slight) performance boost may be desirable.      *
+ *                                                                            *
+ *      2.) There are no checks for NaN or infinity. NaN inputs will produce  *
+ *          NaN, and infinity (positive or negative) will output infinity.    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

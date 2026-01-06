@@ -57,6 +57,16 @@
  *          RMS Relative Error: 3.751642e-17                                  *
  *      Values assume 100% accuracy of glibc. Actual error in glibc is        *
  *      less than 1 ULP (~2 x 10^-16).                                        *
+ *  Notes:                                                                    *
+ *      1.) This function properly handles very small and very large inputs.  *
+ *          This comes at a very small cost of speed. The alternative         *
+ *          function tmpl_CDouble_Quick_Abs use the faster naive method, but  *
+ *          it is susceptible to overflow and underflow. Nevertheless, most   *
+ *          real applications do not deal with very large or very small       *
+ *          numbers and the (slight) performance boost may be desirable.      *
+ *                                                                            *
+ *      2.) There are no checks for NaN or infinity. NaN inputs will produce  *
+ *          NaN, and infinity (positive or negative) will output infinity.    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
