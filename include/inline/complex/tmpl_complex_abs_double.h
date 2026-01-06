@@ -31,7 +31,7 @@
  *          |z| = |x + iy| = sqrt(x^2 + y^2)                                  *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexDouble):                                               *
+ *      z (const tmpl_ComplexDouble):                                         *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      abs_z (double):                                                       *
@@ -137,7 +137,7 @@ extern double tmpl_Double_Hypot(const double x, const double y);
 
 /*  Function for computing the magnitude, or modulus, of a complex number.    */
 TMPL_INLINE_DECL
-double tmpl_CDouble_Abs(tmpl_ComplexDouble z)
+double tmpl_CDouble_Abs(const tmpl_ComplexDouble z)
 {
     return tmpl_Double_Hypot(z.dat[0], z.dat[1]);
 }

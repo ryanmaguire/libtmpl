@@ -31,7 +31,7 @@
  *          |z| = |x + iy| = sqrt(x^2 + y^2)                                  *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexFloat):                                                *
+ *      z (const tmpl_ComplexFloat):                                          *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      abs_z (float):                                                        *
@@ -109,11 +109,11 @@
 #include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  The hypot function does all of the heavy lifting.                         */
-extern float tmpl_Float_Hypot(float x, float y);
+extern float tmpl_Float_Hypot(const float x, const float y);
 
 /*  Function for computing the magnitude, or modulus, of a complex number.    */
 TMPL_INLINE_DECL
-float tmpl_CFloat_Abs(tmpl_ComplexFloat z)
+float tmpl_CFloat_Abs(const tmpl_ComplexFloat z)
 {
     return tmpl_Float_Hypot(z.dat[0], z.dat[1]);
 }
