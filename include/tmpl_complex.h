@@ -199,25 +199,15 @@ extern long double tmpl_CLDouble_Abs_Squared(const tmpl_ComplexLongDouble z);
  *  Function:                                                                 *
  *      tmpl_CDouble_Add                                                      *
  *  Purpose:                                                                  *
- *      Add two complex numbers.                                              *
+ *      Adds two complex numbers.                                             *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble z0:                                                *
+ *      z (const tmpl_ComplexDouble):                                         *
  *          A complex number.                                                 *
- *      tmpl_ComplexDouble z1:                                                *
+ *      w (const tmpl_ComplexDouble):                                         *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      tmpl_ComplexDouble sum:                                               *
- *          The sum of z0 and z1.                                             *
- *  Notes:                                                                    *
- *      In C99, since _Complex is a built-in data type, given double _Complex *
- *      z0 and double _Complex z1, you can just do z0 + z1. In C89 we use     *
- *      structs to define complex numbers. Structs cannot be added, so we     *
- *      need a function for computing the sum of two complex values.          *
- *  Source Code:                                                              *
- *      libtmpl/src/complex/                                                  *
- *          tmpl_complex_add_double.c                                         *
- *          tmpl_complex_add_float.c                                          *
- *          tmpl_complex_add_ldouble.c                                        *
+ *      sum (tmpl_ComplexDouble):                                             *
+ *          The sum of z and w.                                               *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
 
@@ -228,13 +218,16 @@ extern long double tmpl_CLDouble_Abs_Squared(const tmpl_ComplexLongDouble z);
 #else
 
 extern tmpl_ComplexFloat
-tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+tmpl_CFloat_Add(const tmpl_ComplexFloat z,
+                const tmpl_ComplexFloat w);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Add(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+tmpl_CDouble_Add(const tmpl_ComplexDouble z,
+                 const tmpl_ComplexDouble w);
 
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+tmpl_CLDouble_Add(const tmpl_ComplexLongDouble z,
+                  const tmpl_ComplexLongDouble w);
 
 #endif
 
