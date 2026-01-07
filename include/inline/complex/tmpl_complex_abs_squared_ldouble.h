@@ -31,7 +31,7 @@
  *          f(z) = f(x + iy) = x^2 + y^2                                      *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexLongDouble):                                           *
+ *      z (const tmpl_ComplexLongDouble):                                     *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      abs_sq_z (long double):                                               *
@@ -99,7 +99,7 @@
 
 /*  Long double precision abs squared function.                               */
 TMPL_INLINE_DECL
-long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z)
+long double tmpl_CLDouble_Abs_Squared(const tmpl_ComplexLongDouble z)
 {
     /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
     return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
