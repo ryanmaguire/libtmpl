@@ -175,16 +175,11 @@ extern long double tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z);
  *      redundant square root calculation. We can just compute x*x + y*y for  *
  *      the complex number z = x + iy.                                        *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble z:                                                 *
+ *      z (const tmpl_ComplexDouble):                                         *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      double abs_sq:                                                        *
+ *      abs_sq (double):                                                      *
  *          The square of the absolute value of z, |z|^2.                     *
- *  Source Code:                                                              *
- *      libtmpl/src/complex/                                                  *
- *          tmpl_complex_abs_squared_double.c                                 *
- *          tmpl_complex_abs_squared_float.c                                  *
- *          tmpl_complex_abs_squared_ldouble.c                                *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
 
@@ -194,9 +189,9 @@ extern long double tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z);
 
 #else
 
-extern float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
-extern double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
-extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Abs_Squared(const tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Abs_Squared(const tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Abs_Squared(const tmpl_ComplexLongDouble z);
 
 #endif
 
