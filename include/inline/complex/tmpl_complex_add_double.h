@@ -32,9 +32,9 @@
  *                = (a + c) + i(b + d)                                        *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexDouble):                                               *
+ *      z (const tmpl_ComplexDouble):                                         *
  *          A complex number.                                                 *
- *      w (tmpl_ComplexDouble):                                               *
+ *      w (const tmpl_ComplexDouble):                                         *
  *          Another complex number.                                           *
  *  Output:                                                                   *
  *      sum (tmpl_ComplexDouble):                                             *
@@ -45,11 +45,13 @@
  *      Sum the components and return.                                        *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
  *      2.) A lot of the complex number code was originally written for       *
  *          rss_ringoccs, but has since migrated to libtmpl.                  *
  *          librssringoccs is also released under the GPLv3.                  *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *                                                                            *
  *      2.) Ahfors, L. (1979)                                                 *
  *          "Complex Analysis, Third Edition"                                 *
  *          McGraw-Hill, International Series in Pure and Applied Mathematics *
@@ -99,22 +101,22 @@
 /*  Complex numbers provided here.                                            */
 #include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z0  *
- *  and double _Complex z1, you can just do z0 + z1. With C89 we use structs  *
+/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
+ *  and double _Complex w, you can just do z + w. With C89 we use structs     *
  *  to define complex numbers. Structs cannot be added, so we need a function *
- *  for computing the sum of two complex values.                              */
+ *  for computing the sum of two complex numbers.                             */
 
 /*  Double precision complex addition.                                        */
 TMPL_INLINE_DECL
 tmpl_ComplexDouble
-tmpl_CDouble_Add(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
+tmpl_CDouble_Add(const tmpl_ComplexDouble z, const tmpl_ComplexDouble w)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexDouble sum;
 
     /*  The sum of two complex numbers simply adds their components.          */
-    sum.dat[0] = z0.dat[0] + z1.dat[0];
-    sum.dat[1] = z0.dat[1] + z1.dat[1];
+    sum.dat[0] = z.dat[0] + w.dat[0];
+    sum.dat[1] = z.dat[1] + w.dat[1];
     return sum;
 }
 /*  End of tmpl_CDouble_Add.                                                  */

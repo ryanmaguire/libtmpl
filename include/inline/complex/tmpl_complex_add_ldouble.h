@@ -32,9 +32,9 @@
  *                = (a + c) + i(b + d)                                        *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexLongDouble):                                           *
+ *      z (const tmpl_ComplexLongDouble):                                     *
  *          A complex number.                                                 *
- *      w (tmpl_ComplexLongDouble):                                           *
+ *      w (const tmpl_ComplexLongDouble):                                     *
  *          Another complex number.                                           *
  *  Output:                                                                   *
  *      sum (tmpl_ComplexLongDouble):                                         *
@@ -99,22 +99,23 @@
 /*  Complex numbers provided here.                                            */
 #include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
-/*  In C99, since _Complex is a built-in data type, long double _Complex z0   *
- *  and long double _Complex z1 may be added via z0 + z1. With C89 we use     *
+/*  In C99, since _Complex is a built-in data type, long double _Complex z    *
+ *  and long double _Complex w may be added via z + w. With C89 we use        *
  *  structs to define complex numbers. Structs cannot be added, so we need a  *
  *  function for computing the sum of two complex values.                     */
 
 /*  Long double precision complex addition.                                   */
 TMPL_INLINE_DECL
 tmpl_ComplexLongDouble
-tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
+tmpl_CLDouble_Add(const tmpl_ComplexLongDouble z,
+                  const tmpl_ComplexLongDouble w)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexLongDouble sum;
 
     /*  The sum of two complex numbers simply adds their components.          */
-    sum.dat[0] = z0.dat[0] + z1.dat[0];
-    sum.dat[1] = z0.dat[1] + z1.dat[1];
+    sum.dat[0] = z.dat[0] + w.dat[0];
+    sum.dat[1] = z.dat[1] + w.dat[1];
     return sum;
 }
 /*  End of tmpl_CLDouble_Add.                                                 */
