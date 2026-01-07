@@ -32,8 +32,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype and complex numbers provided here.                     */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Single precision complex numbers.                                         */
+#include <libtmpl/include/types/tmpl_complex_float.h>
+
+/*  Function prototype / forward declaration.                                 */
+float tmpl_CFloat_Abs_Squared(const tmpl_ComplexFloat z);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/complex/tmpl_complex_abs_squared_float.h"
