@@ -32,8 +32,12 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype and complex numbers provided here.                     */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Single precision complex numbers.                                         */
+#include <libtmpl/include/types/tmpl_complex_float.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_ComplexFloat
+tmpl_CFloat_Add_Imag(const float y, const tmpl_ComplexFloat z);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/complex/tmpl_complex_add_imag_float.h"

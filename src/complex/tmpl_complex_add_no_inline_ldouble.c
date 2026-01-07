@@ -32,8 +32,13 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype and complex numbers provided here.                     */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Long double precision complex numbers.                                    */
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Add(const tmpl_ComplexLongDouble z,
+                  const tmpl_ComplexLongDouble w);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/complex/tmpl_complex_add_ldouble.h"

@@ -32,8 +32,12 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype and complex numbers provided here.                     */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Double precision complex numbers.                                         */
+#include <libtmpl/include/types/tmpl_complex_double.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_ComplexDouble
+tmpl_CDouble_Add_Imag(const double y, const tmpl_ComplexDouble z);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/complex/tmpl_complex_add_imag_double.h"
