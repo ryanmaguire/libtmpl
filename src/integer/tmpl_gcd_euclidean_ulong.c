@@ -86,7 +86,7 @@ tmpl_ULong_GCD_Euclidean(const unsigned long int m, const unsigned long int n)
     unsigned long int u, v;
 
     /*  Avoid a redundant computation. If m = 0, then GCD(n, 0) = n.          */
-    if (m == 0ULL)
+    if (m == 0UL)
         return n;
 
     /*  Same check with n, GCD(0, m) = m.                                     */
