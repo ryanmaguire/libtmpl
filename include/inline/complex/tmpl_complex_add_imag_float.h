@@ -33,9 +33,9 @@
  *            = a + i(b + y)                                                  *
  *                                                                            *
  *  Arguments:                                                                *
- *      y (float):                                                            *
+ *      y (const float):                                                      *
  *          The imaginary number we wish to add to z.                         *
- *      z (tmpl_ComplexFloat):                                                *
+ *      z (const tmpl_ComplexFloat):                                          *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      w (tmpl_ComplexFloat):                                                *
@@ -46,11 +46,13 @@
  *      Add the real-valued input to the imaginary part of the complex number.*
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
  *      2.) A lot of the complex number code was originally written for       *
  *          rss_ringoccs, but has since migrated to libtmpl.                  *
  *          librssringoccs is also released under the GPLv3.                  *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *                                                                            *
  *      2.) Ahfors, L. (1979)                                                 *
  *          "Complex Analysis, Third Edition"                                 *
  *          McGraw-Hill, International Series in Pure and Applied Mathematics *
@@ -87,6 +89,8 @@
  *      Changed src/complex/tmpl_complex_add_imag_float.c to use this file.   *
  *  2024/12/15: Ryan Maguire                                                  *
  *      Added references. Changed include to "tmpl_complex_float.h".          *
+ *  2026/01/07: Ryan Maguire                                                  *
+ *      Added const qualifiers to arguments and cleaned up a bit.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -107,11 +111,16 @@
 
 /*  Single precision complex addition where one variable is imaginary.        */
 TMPL_INLINE_DECL
-tmpl_ComplexFloat tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z)
+tmpl_ComplexFloat
+tmpl_CFloat_Add_Imag(const float y, const tmpl_ComplexFloat z)
 {
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_ComplexFloat sum;
+
     /*  Add the value to the imaginary part of the complex number and return. */
-    z.dat[1] += y;
-    return z;
+    sum.dat[0] = z.dat[0];
+    sum.dat[1] = z.dat[1] + y;
+    return sum;
 }
 /*  End of tmpl_CFloat_Add_Imag.                                              */
 
