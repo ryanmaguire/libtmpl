@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Computes GCD(m, n), the greatest common divisor of m and n.           *
  *  Arguments:                                                                *
- *      m (unsigned int):                                                     *
+ *      m (const unsigned int):                                               *
  *          An integer.                                                       *
- *      n (unsigned int):                                                     *
+ *      n (const unsigned int):                                               *
  *          Another integer.                                                  *
  *  Output:                                                                   *
  *      gcd (unsigned int):                                                   *
