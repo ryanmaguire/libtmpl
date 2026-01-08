@@ -176,30 +176,6 @@ int tmpl_Int_GCD(int m, int n)
 /*  Implementation of the Euclidean GCD algorithm.                            */
 #elif TMPL_GCD_ALGORITHM == 3
 
-/*  Function for computing the GCD of two integers.                           */
-int tmpl_Int_GCD(int m, int n)
-{
-    int tmp;
-
-    /*  The GCD of negative numbers is still positive. Compute the absolute   *
-     *  value of m and n and use the unsigned algorithm.                      */
-    m = tmpl_Int_Abs(m);
-    n = tmpl_Int_Abs(n);
-
-    /*  Apply the Euclidean GCD algorithm.                                    */
-    while(n != 0)
-    {
-        m %= n;
-
-        /*  After m %=n we have m < n. Swap the values so that m is larger.   */
-        tmp = m;
-        m = n;
-        n = tmp;
-    }
-    return m;
-}
-/*  End of tmpl_Int_GCD.                                                      */
-
 /*  Implementation of the Standard "by-hand" GCD algorithm.                   */
 #else
 
