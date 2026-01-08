@@ -45,11 +45,13 @@
  *      Sum the components and return.                                        *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
  *      2.) A lot of the complex number code was originally written for       *
  *          rss_ringoccs, but has since migrated to libtmpl.                  *
  *          librssringoccs is also released under the GPLv3.                  *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *                                                                            *
  *      2.) Ahfors, L. (1979)                                                 *
  *          "Complex Analysis, Third Edition"                                 *
  *          McGraw-Hill, International Series in Pure and Applied Mathematics *
