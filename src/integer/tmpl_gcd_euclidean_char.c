@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_gcd_euclidean_char                           *
+ *                           tmpl_gcd_euclidean_char                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for computing the GCD of signed integers.               *
@@ -28,15 +28,15 @@
  *  Purpose:                                                                  *
  *      Computes GCD(m, n), the greatest common divisor of m and n.           *
  *  Arguments:                                                                *
- *      m (signed char):                                                      *
+ *      m (const signed char):                                                *
  *          An integer.                                                       *
- *      n (signed char):                                                      *
+ *      n (const signed char):                                                *
  *          Another integer.                                                  *
  *  Output:                                                                   *
  *      gcd (signed char):                                                    *
  *          The greatest common divisor of m and n.                           *
  *  Called Functions:                                                         *
- *      tmpl_integer.h:                                                       *
+ *      src/integer/                                                          *
  *          tmpl_Char_Abs:                                                    *
  *              Computes the absolute value of an integer.                    *
  *  Method:                                                                   *
@@ -45,28 +45,57 @@
  *                                                                            *
  *          m = m mod n                                                       *
  *                                                                            *
- *      And then swap the variables so the m > n is true. The algorithm       *
+ *      And then swap the variables so that m > n is true. The algorithm      *
  *      terminates once n is zero.                                            *
  *  Notes:                                                                    *
- *      1.) This is significantly slower than the binary, or mixed-binary,    *
- *          GCD. It is included mostly for research purposes.                 *
+ *      1.) This algorithm is often slower than the binary and mixed-binary   *
+ *          algorithms for the GCD, but this is highly sensitive to the       *
+ *          compiler used and the underlying architecture.                    *
+ *                                                                            *
  *      2.) The GCD is defined to be non-negative. For negative inputs, the   *
  *          GCD of their absolute values is returned.                         *
+ *                                                                            *
+ *      3.) By definition, GCD(0, 0) = 0, GCD(n, 0) = n, and GCD(0, n) = n.   *
+ *          This function follows these requirements.                         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_integer.h:                                                       *
- *          Header file containing the function prototype.                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_USE_INLINE macro.                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 17, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/01/08: Ryan Maguire                                                  *
+ *      Fixed bugs and typos, general cleanup, added forward declaration.     *
  ******************************************************************************/
 
-/*  Function prototype is found here.                                         */
-#include <libtmpl/include/tmpl_integer.h>
+/*  TMPL_USE_INLINE macro found here.                                         */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Forward declaration / function prototype.                                 */
+extern signed char
+tmpl_Char_GCD_Euclidean(const signed char m, const signed char n);
+
+/*  The abs function is small enough to be inlined.                           */
+#if TMPL_USE_INLINE == 1
+
+/*  Location of the tmpl_Char_Abs function.                                   */
+#include <libtmpl/include/inline/integer/tmpl_abs_char.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, tell the compiler about the abs function.         */
+extern signed char tmpl_Char_Abs(const signed char n);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Function for computing the GCD of two signed integers.                    */
-signed char tmpl_Char_GCD_Euclidean(signed char m, signed char n)
+signed char tmpl_Char_GCD_Euclidean(const signed char m, const signed char n)
 {
     /*  The GCD is non-negative. We compute the absolute values of the inputs *
      *  and then run the algorithm with those values.                         */
@@ -76,7 +105,7 @@ signed char tmpl_Char_GCD_Euclidean(signed char m, signed char n)
      *  Compute |n| and then check if m is zero.                              */
     abs_n = tmpl_Char_Abs(n);
 
-    /*  Avoid a redundant computation. If m = 0, GCD(n, 0) = |n|.             */
+    /*  Avoid a redundant computation. If m = 0, then GCD(n, 0) = |n|.        */
     if (m == 0x00)
         return abs_n;
 
@@ -97,6 +126,6 @@ signed char tmpl_Char_GCD_Euclidean(signed char m, signed char n)
         abs_m = tmp;
     }
 
-    return m;
+    return abs_m;
 }
 /*  End of tmpl_Char_GCD_Euclidean.                                           */
