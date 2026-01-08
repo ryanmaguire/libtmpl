@@ -33,12 +33,12 @@
  *            = (a + x) + ib                                                  *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          The real number we wish to add to z.                              *
- *      z (tmpl_ComplexLongDouble):                                           *
+ *      z (const tmpl_ComplexLongDouble):                                     *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      w (tmpl_ComplexLongDouble):                                           *
+ *      sum (tmpl_ComplexLongDouble):                                         *
  *          The sum of z and x.                                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -46,11 +46,13 @@
  *      Add the real-valued input to the real part of the complex number.     *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
  *      2.) A lot of the complex number code was originally written for       *
  *          rss_ringoccs, but has since migrated to libtmpl.                  *
  *          librssringoccs is also released under the GPLv3.                  *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *                                                                            *
  *      2.) Ahfors, L. (1979)                                                 *
  *          "Complex Analysis, Third Edition"                                 *
  *          McGraw-Hill, International Series in Pure and Applied Mathematics *
@@ -87,6 +89,8 @@
  *      Changed src/complex/tmpl_complex_add_real_ldouble.c to use this file. *
  *  2024/12/15: Ryan Maguire                                                  *
  *      Added references. Changed include to "tmpl_complex_ldouble.h".        *
+ *  2026/01/08: Ryan Maguire                                                  *
+ *      Added const qualifiers to arguments and cleaned up a bit.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -107,11 +111,15 @@
 /*  Long double precision complex addition where one variable is real.        */
 TMPL_INLINE_DECL
 tmpl_ComplexLongDouble
-tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z)
+tmpl_CLDouble_Add_Real(const long double x, const tmpl_ComplexLongDouble z)
 {
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_ComplexLongDouble sum;
+
     /*  Add the value to the real part of the complex number and return.      */
-    z.dat[0] += x;
-    return z;
+    sum.dat[0] = z.dat[0] + x;
+    sum.dat[1] = z.dat[1];
+    return sum;
 }
 /*  End of tmpl_CLDouble_Add_Real.                                            */
 
