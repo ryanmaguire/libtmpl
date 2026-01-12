@@ -117,6 +117,9 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  tmpl_LongDoubleDouble typedef provided here.                              */
+#include <libtmpl/include/types/tmpl_doubledouble_ldouble.h>
+
 /*  2Sum and Fast2Sum are small enough that they can be inlined.              */
 #if TMPL_USE_INLINE == 1
 
