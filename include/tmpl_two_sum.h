@@ -58,20 +58,20 @@
 
 /*  Lacking inline support, use the versions in src/two_sum/.                 */
 extern void
-tmpl_Float_Fast_Two_Sum(float x,
-                        float y,
+tmpl_Float_Fast_Two_Sum(const float x,
+                        const float y,
                         float * TMPL_RESTRICT const out,
                         float * TMPL_RESTRICT const err);
 
 extern void
-tmpl_Double_Fast_Two_Sum(double x,
-                         double y,
+tmpl_Double_Fast_Two_Sum(const double x,
+                         const double y,
                          double * TMPL_RESTRICT const out,
                          double * TMPL_RESTRICT const err);
 
 extern void
-tmpl_LDouble_Fast_Two_Sum(long double x,
-                          long double y,
+tmpl_LDouble_Fast_Two_Sum(const long double x,
+                          const long double y,
                           long double * TMPL_RESTRICT const out,
                           long double * TMPL_RESTRICT const err);
 
@@ -111,20 +111,20 @@ tmpl_LDouble_Fast_Two_Sum(long double x,
 
 /*  Lacking inline support, use the versions in src/two_sum/.                 */
 extern void
-tmpl_Float_Two_Sum(float x,
-                   float y,
+tmpl_Float_Two_Sum(const float x,
+                   const float y,
                    float * TMPL_RESTRICT const out,
                    float * TMPL_RESTRICT const err);
 
 extern void
-tmpl_Double_Two_Sum(double x,
-                    double y,
+tmpl_Double_Two_Sum(const double x,
+                    const double y,
                     double * TMPL_RESTRICT const out,
                     double * TMPL_RESTRICT const err);
 
 extern void
-tmpl_LDouble_Two_Sum(long double x,
-                     long double y,
+tmpl_LDouble_Two_Sum(const long double x,
+                     const long double y,
                      long double * TMPL_RESTRICT const out,
                      long double * TMPL_RESTRICT const err);
 

@@ -110,8 +110,8 @@
 /*  Standard 2Sum algorithm at single precision.                              */
 TMPL_INLINE_DECL
 void
-tmpl_Float_Two_Sum(float x,
-                   float y,
+tmpl_Float_Two_Sum(const float x,
+                   const float y,
                    float * TMPL_RESTRICT const out,
                    float * TMPL_RESTRICT const err)
 {

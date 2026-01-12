@@ -110,8 +110,8 @@
 /*  Standard 2Sum algorithm at long double precision.                         */
 TMPL_INLINE_DECL
 void
-tmpl_LDouble_Two_Sum(long double x,
-                     long double y,
+tmpl_LDouble_Two_Sum(const long double x,
+                     const long double y,
                      long double * TMPL_RESTRICT const out,
                      long double * TMPL_RESTRICT const err)
 {
