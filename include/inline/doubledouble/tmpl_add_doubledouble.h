@@ -132,14 +132,14 @@
 
 /*  Lacking inline support, tell the compiler about these functions.          */
 extern void
-tmpl_Double_Two_Sum(double x,
-                    double y,
+tmpl_Double_Two_Sum(const double x,
+                    const double y,
                     double * TMPL_RESTRICT const out,
                     double * TMPL_RESTRICT const err);
 
 extern void
-tmpl_Double_Fast_Two_Sum(double x,
-                         double y,
+tmpl_Double_Fast_Two_Sum(const double x,
+                         const double y,
                          double * TMPL_RESTRICT const out,
                          double * TMPL_RESTRICT const err);
 

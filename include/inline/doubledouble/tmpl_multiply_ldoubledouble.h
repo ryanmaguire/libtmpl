@@ -35,14 +35,14 @@
 
 /*  Lacking inline support, tell the compiler about these functions.          */
 extern void
-tmpl_LDouble_Two_Prod(long double x,
-                      long double y,
+tmpl_LDouble_Two_Prod(const long double x,
+                      const long double y,
                       long double * TMPL_RESTRICT const out,
                       long double * TMPL_RESTRICT const err);
 
 extern void
-tmpl_LDouble_Fast_Two_Sum(long double x,
-                          long double y,
+tmpl_LDouble_Fast_Two_Sum(const long double x,
+                          const long double y,
                           long double * TMPL_RESTRICT const out,
                           long double * TMPL_RESTRICT const err);
 
