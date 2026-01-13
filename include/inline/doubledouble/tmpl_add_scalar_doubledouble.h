@@ -119,7 +119,7 @@ tmpl_Double_Fast_Two_Sum(const double x,
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
-/*  Performs addition for two double-doubles.                                 */
+/*  Performs addition for a double-double with a double.                      */
 TMPL_INLINE_DECL
 tmpl_DoubleDouble
 tmpl_DoubleDouble_Add_Scalar(const double x, const tmpl_DoubleDouble * const y)
