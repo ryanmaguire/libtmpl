@@ -19,16 +19,16 @@
  *                      tmpl_filon01_integrand_cldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the integral of f(z) exp(i g(x)) assuming constant f and     *
- *      affine g, g(x) = ax + b.                                              *
+ *      Computes the integral of f(t) exp(i g(t)) assuming constant f and     *
+ *      affine g, g(t) = a t + b.                                             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_CLDouble_Filon01_Integrand                                       *
  *  Purpose:                                                                  *
- *      Numerically integrates f(z) exp(i g(x)) assuming constant f and       *
- *      affine g.                                                             *
+ *      Numerically integrates f(t) exp(i g(t)) assuming constant f and       *
+ *      affine g, where f is complex-valued and g is real-valued.             *
  *  Arguments:                                                                *
  *      value (const tmpl_ComplexLongDouble):                                 *
  *          The approximate value for the complex function across the bin.    *
@@ -40,7 +40,7 @@
  *          The width of the bin.                                             *
  *  Output:                                                                   *
  *      integrand (tmpl_ComplexLongDouble):                                   *
- *          The integral of f(z) exp(i g(x)).                                 *
+ *          The integral of f(t) exp(i g(t)).                                 *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_LDouble_Abs:                                                 *
@@ -57,22 +57,22 @@
  *          tmpl_CLDouble_Subtract:                                           *
  *              Performs complex subtraction, z - w.                          *
  *  Method:                                                                   *
- *      We integrate f(z) exp(i g(x)) by assuming f(z) = constant and         *
- *      g(x) = ax + b. Given g(L) and g(R), we have:                          *
+ *      We integrate f(t) exp(i g(t)) by assuming f(t) = constant and         *
+ *      g(t) = a t + b. Given g(L) and g(R), we have:                         *
  *                                                                            *
  *             R                       R                                      *
  *             -                       -                                      *
  *            | |                     | |                                     *
- *            |         i g(x)    =   |      i (a x + b)                      *
- *          | |   f(z) e       dx   | |   c e            dx                   *
+ *            |         i g(t)    =   |      i (a t + b)                      *
+ *          | |   f(t) e       dt   | |   c e            dt                   *
  *           -                       -                                        *
  *           L                       L                                        *
  *                                                                            *
  *                                            R                               *
  *                                            -                               *
  *                                           | |                              *
- *                                =    i b   |    i a x                       *
- *                                  c e    | |   e      dx                    *
+ *                                =    i b   |    i a t                       *
+ *                                  c e    | |   e      dt                    *
  *                                          -                                 *
  *                                          L                                 *
  *                                                                            *
@@ -133,14 +133,14 @@ tmpl_CLDouble_Filon01_Integrand(const tmpl_ComplexLongDouble value,
                                 const long double g_right,
                                 const long double width)
 {
-    /*  Variable for the output, the integral of f(z) exp(i g(x)) across the  *
+    /*  Variable for the output, the integral of f(t) exp(i g(t)) across the  *
      *  current bin [L, R], with R - L = width.                               */
     tmpl_ComplexLongDouble integrand;
 
     /*  Threshold for swapping between Filon integral and trapezoidal rule.   */
     const long double threshold = 4.0L * TMPL_SQRT_LDBL_EPS;
 
-    /*  Both methods need exp(i g(x)) evaluated at the two endpoints.         */
+    /*  Both methods need exp(i g(t)) evaluated at the two endpoints.         */
     const tmpl_ComplexLongDouble left_exp = tmpl_CLDouble_Expi(g_left);
     const tmpl_ComplexLongDouble right_exp = tmpl_CLDouble_Expi(g_right);
 
@@ -159,14 +159,14 @@ tmpl_CLDouble_Filon01_Integrand(const tmpl_ComplexLongDouble value,
         integrand = tmpl_CLDouble_Midpoint(left_exp, right_exp);
 
         /*  The output is then scaled by the width of the bin, similar to how *
-         *  the Riemann sum of a function involves a "Delta x" factor.        */
+         *  the Riemann sum of a function involves a "Delta t" factor.        */
         tmpl_CLDouble_MultiplyBy_Real(&integrand, width);
     }
 
     /*  If |g(R) - g(L)| is large enough, we may safely use the Filon method. *
      *  Indeed, if |g(R) - g(L)| is very large, then the trapezoid rule will  *
      *  produce a poor numerical integral since it is not suited for rapidly  *
-     *  oscillating functions, such as exp(i g(x)).                           */
+     *  oscillating functions, such as exp(i g(t)).                           */
     else
     {
         /*  The integral is:                                                  *
@@ -174,12 +174,12 @@ tmpl_CLDouble_Filon01_Integrand(const tmpl_ComplexLongDouble value,
          *         R                                                          *
          *         -                                      -                -  *
          *        | |                          R  -  L   |  i g(R)   i g(L) | *
-         *        |         i g(x)    = -i c ----------- | e      - e       | *
-         *      | |   f(z) e       dx        g(R) - g(L) |                  | *
+         *        |         i g(t)    = -i c ----------- | e      - e       | *
+         *      | |   f(t) e       dt        g(R) - g(L) |                  | *
          *       -                                        -                -  *
          *       L                                                            *
          *                                                                    *
-         *  where we assume f(z) = c, a constant across the entire bin. The   *
+         *  where we assume f(t) = c, a constant across the entire bin. The   *
          *  real scale factor is the width divided by g(R) - g(L).            */
         const long double rcpr_slope = width / g_diff;
 
@@ -192,7 +192,7 @@ tmpl_CLDouble_Filon01_Integrand(const tmpl_ComplexLongDouble value,
         tmpl_CLDouble_MultiplyBy_Imag(&integrand, -rcpr_slope);
     }
 
-    /*  We treat f(z) as constant across the window. Scale the integral by    *
+    /*  We treat f(t) as constant across the window. Scale the integral by    *
      *  this factor to complete the calculation.                              */
     tmpl_CLDouble_MultiplyBy(&integrand, &value);
     return integrand;
