@@ -46,8 +46,8 @@
  *  Function:                                                                 *
  *      tmpl_CDouble_Filon01_Integrand                                        *
  *  Purpose:                                                                  *
- *      Numerically evaluates f(z) exp(i g(x)) dx across a small bin where    *
- *      f(z) is assumed complex and constant, and g(x) = ax + b.              *
+ *      Numerically evaluates f(t) exp(i g(t)) dt across a small bin where    *
+ *      f(t) is assumed complex and constant, and g(t) = a t + b.             *
  *  Arguments:                                                                *
  *      value (const tmpl_ComplexDouble):                                     *
  *          The approximate value for the complex function across the bin.    *
