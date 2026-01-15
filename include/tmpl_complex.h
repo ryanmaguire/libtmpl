@@ -1857,31 +1857,42 @@ extern tmpl_ComplexFloat tmpl_CFloat_Sqrt_Real(float x);
 extern tmpl_ComplexDouble tmpl_CDouble_Sqrt_Real(double x);
 extern tmpl_ComplexLongDouble tmpl_CLDouble_Sqrt_Real(long double x);
 
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_CDouble_Subtract                                                 *
  *  Purpose:                                                                  *
- *      Subtract two complex numbers.                                         *
+ *      Subtracts two complex numbers.                                        *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble z0:                                                *
+ *      z (const tmpl_ComplexDouble):                                         *
  *          A complex number.                                                 *
- *      tmpl_ComplexDouble z1:                                                *
+ *      w (const tmpl_ComplexDouble):                                         *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      tmpl_ComplexDouble diff:                                              *
- *          The difference of z0 and z1, z0 - z1.                             *
- *  NOTE:                                                                     *
- *      Subtraction is not commutative, so given (z0, z1), this computes      *
- *      the first entry minus the second. That is, z0 - z1.                   *
+ *      diff (tmpl_ComplexDouble):                                            *
+ *          The difference of z and w.                                        *
  ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_complex_subtract_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_subtract_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_subtract_ldouble.h)
+
+#else
+
 extern tmpl_ComplexFloat
-tmpl_CFloat_Subtract(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+tmpl_CFloat_Subtract(const tmpl_ComplexFloat z,
+                     const tmpl_ComplexFloat w);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Subtract(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+tmpl_CDouble_Subtract(const tmpl_ComplexDouble z,
+                      const tmpl_ComplexDouble w);
 
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Subtract(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+tmpl_CLDouble_Subtract(const tmpl_ComplexLongDouble z,
+                       const tmpl_ComplexLongDouble w);
+
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

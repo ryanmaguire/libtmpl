@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_complex_subtract_ldouble                       *
+ *                        tmpl_complex_subtract_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex subtraction.                     *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CLDouble_Subtract                                                *
+ *      tmpl_CFloat_Subtract                                                  *
  *  Purpose:                                                                  *
  *      Subtracts two complex numbers:                                        *
  *                                                                            *
@@ -32,12 +32,12 @@
  *                = (a - c) + i(b - d)                                        *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (const tmpl_ComplexLongDouble):                                     *
+ *      z (const tmpl_ComplexFloat):                                          *
  *          A complex number.                                                 *
- *      w (const tmpl_ComplexLongDouble):                                     *
+ *      w (const tmpl_ComplexFloat):                                          *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      diff (tmpl_ComplexLongDouble):                                        *
+ *      diff (tmpl_ComplexFloat):                                             *
  *          The difference of z and w.                                        *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -62,8 +62,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Contains the TMPL_INLINE_DECL macro.                              *
- *  2.) tmpl_complex_ldouble.h:                                               *
- *          Header providing long double precision complex numbers.           *
+ *  2.) tmpl_complex_float.h:                                                 *
+ *          Header providing single precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 30, 2020                                             *
@@ -84,27 +84,25 @@
 /*  Complex numbers provided here.                                            */
 #include <libtmpl/include/types/tmpl_complex_float.h>
 
-/*  In C99, since _Complex is a built-in data type, given                     *
- *  long double _Complex z and long double _Complex w, you can just do z - w. *
- *  With C89 we use structs to define complex numbers. Structs cannot be      *
- *  subtracted, so we need a function for computing the difference of two     *
- *  complex numbers.                                                          */
+/*  In C99, since _Complex is a built-in data type, given float _Complex z    *
+ *  and float _Complex w, you can just do z - w. With C89 we use structs      *
+ *  to define complex numbers. Structs cannot be subtracted, so we need a     *
+ *  function for computing the difference of two complex numbers.             */
 
-/*  Long double precision complex subtraction.                                */
+/*  Single precision complex subtraction.                                     */
 TMPL_INLINE_DECL
-tmpl_ComplexLongDouble
-tmpl_CLDouble_Subtract(const tmpl_ComplexLongDouble z,
-                       const tmpl_ComplexLongDouble w)
+tmpl_ComplexFloat
+tmpl_CFloat_Subtract(const tmpl_ComplexFloat z, const tmpl_ComplexFloat w)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexLongDouble diff;
+    tmpl_ComplexFloat diff;
 
     /*  The difference of two complex numbers simply subtracts the components.*/
     diff.dat[0] = z.dat[0] - w.dat[0];
     diff.dat[1] = z.dat[1] - w.dat[1];
     return diff;
 }
-/*  End of tmpl_CLDouble_Subtract.                                            */
+/*  End of tmpl_CFloat_Subtract.                                              */
 
 #endif
 /*  End of include guard.                                                     */
