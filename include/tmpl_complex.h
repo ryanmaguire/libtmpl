@@ -1005,6 +1005,42 @@ extern long double tmpl_CLDouble_Log_Abs(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_Midpoint                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the midpoint of two complex numbers.                         *
+ *  Arguments:                                                                *
+ *      z (const tmpl_ComplexDouble):                                         *
+ *          A complex number.                                                 *
+ *      w (const tmpl_ComplexDouble):                                         *
+ *          Another complex number.                                           *
+ *  Output:                                                                   *
+ *      mid (tmpl_ComplexDouble):                                             *
+ *          The midpoint of z and w.                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_complex_midpoint_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_midpoint_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_midpoint_ldouble.h)
+
+#else
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_Midpoint(const tmpl_ComplexFloat z,
+                     const tmpl_ComplexFloat w);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Midpoint(const tmpl_ComplexDouble z,
+                      const tmpl_ComplexDouble w);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Midpoint(const tmpl_ComplexLongDouble z,
+                       const tmpl_ComplexLongDouble w);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_Multiply                                                 *
  *  Purpose:                                                                  *
  *      Mutliply two complex numbers.                                         *
