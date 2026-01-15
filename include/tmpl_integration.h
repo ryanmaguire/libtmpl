@@ -34,8 +34,53 @@
 #ifndef TMPL_INTEGRATION_H
 #define TMPL_INTEGRATION_H
 
+/*  Complex numbers found here.                                               */
+#include <libtmpl/include/types/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
+
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Filon01_Integrand                                        *
+ *  Purpose:                                                                  *
+ *      Numerically evaluates f(z) exp(i g(x)) dx across a small bin where    *
+ *      f(z) is assumed complex and constant, and g(x) = ax + b.              *
+ *  Arguments:                                                                *
+ *      value (const tmpl_ComplexDouble):                                     *
+ *          The approximate value for the complex function across the bin.    *
+ *      g_left (const double):                                                *
+ *          The left real value for the phase.                                *
+ *      g_right (const double):                                               *
+ *          The right real value for the phase.                               *
+ *      dx (const double):                                                    *
+ *          The width of the bin.                                             *
+ *  Output:                                                                   *
+ *      integrand (tmpl_ComplexDouble):                                       *
+ *          The integral of midpoint(left, right) * exp(i g(x)) across the    *
+ *          bin of width "dx", assuming g(x) = ax + b for constants a and b.  *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern tmpl_ComplexDouble
+tmpl_CDouble_Filon01_Integrand(const tmpl_ComplexDouble value,
+                               const double g_left,
+                               const double g_right,
+                               const double dx);
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_Filon01_Integrand(const tmpl_ComplexFloat value,
+                              const float g_left,
+                              const float g_right,
+                              const float dx);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Filon01_Integrand(const tmpl_ComplexLongDouble value,
+                                const long double g_left,
+                                const long double g_right,
+                                const long double dx);
 
 /******************************************************************************
  *  Function:                                                                 *
