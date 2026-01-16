@@ -33,92 +33,156 @@
  *  Output:                                                                   *
  *      C_x (double):                                                         *
  *          The normalized Fresnel cosine function C(x).                      *
- *  Called Functions:                                                         *
- *      tmpl_special_functions_real.h:                                        *
- *          tmpl_Double_Normalized_Fresnel_Cos_Maclaurin:                     *
- *              Computes C(x) using a Maclaurin series.                       *
- *          tmpl_Double_Normalized_Fresnel_Cos_Pade:                          *
- *              Computes C(x) using a Pade approximant.                       *
- *          tmpl_Double_Normalized_Fresnel_Cos_Remez:                         *
- *              Computes C(x) using a Remez polynomial via a lookup table.    *
- *          tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small:               *
- *              Computes C(x) using auxiliary functions for 2 <= x < 4.       *
- *          tmpl_Double_Normalized_Fresnel_Cos_Auxiliary:                     *
- *              Computes C(x) using auxiliary functions for 4 <= x < 2^17.    *
- *          tmpl_Double_Normalized_Fresnel_Cos_Asymptotic:                    *
- *              Computes C(x) for x >= 2^17.                                  *
- *      tmpl_math.h:                                                          *
- *          tmpl_Double_Abs:                                                  *
- *              Computes |x|. Only used if IEEE-754 support is not available. *
- *          tmpl_Double_Is_NaN_Or_Inf:                                        *
- *              Determines if a real number is NaN or infinity.               *
- *          tmpl_Double_Is_NaN:                                               *
- *              Determines if the input is Not-a-Number.                      *
- *  Method:                                                                   *
- *      The IEEE-754 method and the portable method use the same tricks.      *
- *      The normalized Fresnel cosine functions is defined by the integral:   *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          src/special_functions_real/auxiliary/                             *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Maclaurin:                 *
+ *                  Computes C(x) using a Maclaurin series.                   *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Pade:                      *
+ *                  Computes C(x) using a Pade approximant.                   *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Remez:                     *
+ *                  Computes C(x) using a Remez polynomial via a lookup table.*
+ *              tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small:           *
+ *                  Computes C(x) using auxiliary functions for 2 <= x < 4.   *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Auxiliary:                 *
+ *                  Computes C(x) using auxiliary functions for 4 <= x < 2^17.*
+ *              tmpl_Double_Normalized_Fresnel_Cos_Asymptotic:                *
+ *                  Computes C(x) for x >= 2^17.                              *
+ *      Method:                                                               *
+ *          The normalized Fresnel cosine function is defined by:             *
  *                                                                            *
- *                    x                                                       *
- *                    -                                                       *
- *                   | |      -     2 -                                       *
- *                   |       |  pi t   |                                      *
- *          C(x) =   |   cos |  -----  | dt                                   *
- *                 | |       |    2    |                                      *
- *                  -         -       -                                       *
- *                  0                                                         *
+ *                        x                                                   *
+ *                        -                                                   *
+ *                       | |      -     2 -                                   *
+ *                       |       |  pi t   |                                  *
+ *              C(x) =   |   cos |  -----  | dt                               *
+ *                     | |       |    2    |                                  *
+ *                      -         -       -                                   *
+ *                      0                                                     *
  *                                                                            *
- *      By integrating the Maclaurin series for cos(pi/2 x^2) term by term,   *
- *      we obtain:                                                            *
+ *          By integrating the Maclaurin series for cos(pi/2 x^2) term by     *
+ *          term, we obtain:                                                  *
  *                                                                            *
- *                 infty                                                      *
- *                 -----       n  4n+1  -   -  2n                             *
- *                 \       (-1)  x     | pi  |                                *
- *          C(x) = /       ----------- | --- |                                *
- *                 -----   (4n+1)(2n)!  - 2 -                                 *
- *                 n = 0                                                      *
+ *                     infty                                                  *
+ *                     -----       n  4n+1  -   -  2n                         *
+ *                     \       (-1)  x     | pi  |                            *
+ *              C(x) = /       ----------- | --- |                            *
+ *                     -----   (4n+1)(2n)!  - 2 -                             *
+ *                     n = 0                                                  *
  *                                                                            *
- *      For small x, |x| < 1/4, use the first few terms of this. For slightly *
- *      larger x, |x| < 1, use a Pade approximant based off of this series.   *
+ *          For small x, |x| < 1/4, use the first few terms of this.          *
+ *          For slightly larger x, |x| < 1, use a Pade approximant based off  *
+ *          of this series. The Pade approximant is used instead of the       *
+ *          rational Remez approximation since the Pade expansion is in terms *
+ *          of x^4, whereas the Remez method is in terms of x^2. More of the  *
+ *          coefficients for the Pade expansion are zero, and we only need a  *
+ *          few non-zero terms to get a good rational approximation.          *
  *                                                                            *
- *      For larger x, reduce x to being positive via C(x) = -C(-x).           *
- *      For 1 <= |x| < 2, a lookup table is used with pre-computed            *
- *      coefficients for Remez polynomials on the intervals                   *
- *      [1 + n / 32, 1 + (n+1) / 32].                                         *
+ *          For larger x, reduce x to being positive using C(x) = -C(-x).     *
+ *          For 1 <= |x| < 2, a lookup table is used with pre-computed        *
+ *          coefficients for Remez polynomials on the intervals               *
+ *          [1 + n / 32, 1 + (n+1) / 32].                                     *
  *                                                                            *
- *      The Fresnel functions exhibit highly oscillatory behavior, and can    *
- *      be computed using auxiliary functions "f" and "g" defined via:        *
+ *          Asymptotically the Fresnel functions exhibit highly oscillatory   *
+ *          behavior, and can be computed using auxiliary functions "f" and   *
+ *          "g" defined by:                                                   *
  *                                                                            *
- *          C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
- *          S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *                                   -     -              -     -             *
+ *                     1            | pi  2 |            | pi  2 |            *
+ *              C(x) = - + f(x) cos | -- x  | - g(x) sin | -- x  |            *
+ *                     2            |  2    |            |  2    |            *
+ *                                   -     -              -     -             *
  *                                                                            *
- *      Solving for f and g gives us the following:                           *
+ *                                   -     -              -     -             *
+ *                     1            | pi  2 |            | pi  2 |            *
+ *              S(x) = - - f(x) sin | -- x  | - g(x) cos | -- x  |            *
+ *                     2            |  2    |            |  2    |            *
+ *                                   -     -              -     -             *
  *                                                                            *
- *          f(x) = sin(pi/2 x^2) (C(x) - 0.5) - cos(pi/2 x^2) (S(x) - 0.5)    *
- *          g(x) = -sin(pi/2 x^2) (S(x) - 0.5) - cos(pi/2 x^2) (C(x) - 0.5)   *
+ *          Solving for f and g gives us the following:                       *
  *                                                                            *
- *      Remez polynomials are used on the intervals [2, 4] and [4, 2^17] for  *
- *      f and g in terms of t = 1/x. Care is taken to compute cos(pi/2 x^2)   *
- *      and sin(pi/2 x^2) without the precision loss that occurs from         *
- *      squaring "x" by using a double-double trick.                          *
+ *                      -        -       -     -     -        -       -     - *
+ *                     |        1 |     | pi  2 |   |        1 |     | pi  2 |*
+ *              f(x) = | C(x) - - | sin | -- x  | - | S(x) - - | cos | -- x  |*
+ *                     |        2 |     |  2    |   |        2 |     |  2    |*
+ *                      -        -       -     -     -        -       -     - *
  *                                                                            *
- *      For 2^17 <= x < 2^52 we use the asymptotic expansion. This is:        *
+ *                      -        -       -     -     -        -       -     - *
+ *                     | 1        |     | pi  2 |   | 1        |     | pi  2 |*
+ *              g(x) = | - - S(x) | sin | -- x  | + | - - C(x) | cos | -- x  |*
+ *                     | 2        |     |  2    |   | 2        |     |  2    |*
+ *                      -        -       -     -     -        -       -     - *
  *                                                                            *
- *                 1    1                                                     *
- *          C(x) ~ - + ---- sin(pi/2 x^2)                                     *
- *                 2   pi x                                                   *
+ *          Remez polynomials are used on the intervals [2, 4] and [4, 2^17]  *
+ *          for f and g in terms of t = 1/x. Care is taken when computing     *
+ *          cos(pi/2 x^2) and sin(pi/2 x^2) without the precision loss that   *
+ *          occurs from squaring "x" by using a double-double trick.          *
  *                                                                            *
- *      Again, care is taken to compute sin(pi/2 x^2) without precision loss  *
- *      by computing x^2 using a double-double trick.                         *
+ *          For 2^17 <= x < 2^52 we use the asymptotic expansion. This is:    *
  *                                                                            *
- *      For very large x, |x| > 2^52, use the limit and return 1/2.           *
+ *                                   -     -                                  *
+ *                     1    1       | pi  2 |                                 *
+ *              C(x) ~ - + ---- sin | -- x  |                                 *
+ *                     2   pi x     |  2    |                                 *
+ *                                   -     -                                  *
+ *                                                                            *
+ *          Again, care is taken to compute sin(pi/2 x^2) without precision   *
+ *          loss by computing x^2 using a double-double trick.                *
+ *                                                                            *
+ *          For very large x, |x| > 2^52, use the limit and return 1/2.       *
+ *      Error:                                                                *
+ *          Based on 200000 samples with 0 < x < 200.                         *
+ *              max relative error: 2.9477733163204456E-16                    *
+ *              rms relative error: 5.4387245117000150E-17                    *
+ *          Based on 200000 samples with 2^16 < x < 2^16 + 200.               *
+ *              max relative error: 1.5351009935923512E-16                    *
+ *              rms relative error: 5.8839565232001230E-17                    *
+ *          Based on 200000 samples with 2^24 < x < 2^24 + 200.               *
+ *              max relative error: 1.1107311803074394E-16                    *
+ *              rms relative error: 5.0597436110907290E-17                    *
+ *          Error values were computed using the Python library mpmath with   *
+ *          224-bit octuple precision. Error values assume 100% accuracy in   *
+ *          mpmath. Actual error is on the order of a few ULP (~3.7x10^-68).  *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          src/special_functions_real/auxiliary/                             *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Maclaurin:                 *
+ *                  Computes C(x) using a Maclaurin series.                   *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Pade:                      *
+ *                  Computes C(x) using a Pade approximant.                   *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Remez:                     *
+ *                  Computes C(x) using a Remez polynomial via a lookup table.*
+ *              tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small:           *
+ *                  Computes C(x) using auxiliary functions for 2 <= x < 4.   *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Auxiliary:                 *
+ *                  Computes C(x) using auxiliary functions for 4 <= x < 2^17.*
+ *              tmpl_Double_Normalized_Fresnel_Cos_Asymptotic:                *
+ *                  Computes C(x) for x >= 2^17.                              *
+ *          src/math/                                                         *
+ *              tmpl_Double_Abs:                                              *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Double_Is_NaN_Or_Inf:                                    *
+ *                  Determines if a real number is NaN or infinity.           *
+ *              tmpl_Double_Is_NaN:                                           *
+ *                  Determines if the input is Not-a-Number.                  *
+ *      Method:                                                               *
+ *          Similar to the IEEE-754 method, by determine the size of the      *
+ *          input using the absolute value function and comparing this with   *
+ *          the values 1/4, 1, 2, 4, 2^17, and 2^52 directly.                 *
+ *  Notes:                                                                    *
+ *      1.) An input of NaN will return NaN, +infinity will output 1/2, and   *
+ *          -infinity will return -1/2.                                       *
+ *                                                                            *
+ *      2.) Using the double-double trick to carefully compute the sine and   *
+ *          cosine of x^2 does slow things down a bit, but without this the   *
+ *          relative error may be worse than single precision (~10^-7).       *
+ *          Using the double-double trick gives us double precision error.    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_ieee754_double.h:                                                *
  *          Header file providing a union type for IEEE-754 double.           *
- *  2.) tmpl_special_functions_real.h:                                        *
- *          Header file containing the functions prototype.                   *
- *  3.) tmpl_math.h:                                                          *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file containing tmpl_Double_Abs. Only included if IEEE-754 *
  *          support is not available.                                         *
  ******************************************************************************
@@ -129,8 +193,8 @@
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Function prototype / forward declaration.                                 */
+extern double tmpl_Double_Normalized_Fresnel_Cos(const double x);
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -162,7 +226,7 @@
  ******************************************************************************/
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-double tmpl_Double_Normalized_Fresnel_Cos(double x)
+double tmpl_Double_Normalized_Fresnel_Cos(const double x)
 {
     /*  Variable for the output.                                              */
     double out;
