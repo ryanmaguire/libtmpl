@@ -321,7 +321,7 @@ double tmpl_Double_Normalized_Fresnel_Cos(const double x)
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-double tmpl_Double_Normalized_Fresnel_Cos(double x)
+double tmpl_Double_Normalized_Fresnel_Cos(const double x)
 {
     /*  Variable for the output.                                              */
     double out;
