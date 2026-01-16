@@ -169,6 +169,19 @@
  *          Similar to the IEEE-754 method, by determine the size of the      *
  *          input using the absolute value function and comparing this with   *
  *          the values 1/4, 1, 2, 4, 2^17, and 2^52 directly.                 *
+ *      Error:                                                                *
+ *          Based on 200000 samples with 0 < x < 200.                         *
+ *              max relative error: 2.9477733163204456E-16                    *
+ *              rms relative error: 5.4387245117000150E-17                    *
+ *          Based on 200000 samples with 2^16 < x < 2^16 + 200.               *
+ *              max relative error: 1.5351009935923512E-16                    *
+ *              rms relative error: 5.8839565232001230E-17                    *
+ *          Based on 200000 samples with 2^24 < x < 2^24 + 200.               *
+ *              max relative error: 1.1107311803074394E-16                    *
+ *              rms relative error: 5.0597436110907290E-17                    *
+ *          Error values were computed using the Python library mpmath with   *
+ *          224-bit octuple precision. Error values assume 100% accuracy in   *
+ *          mpmath. Actual error is on the order of a few ULP (~3.7x10^-68).  *
  *  Notes:                                                                    *
  *      1.) An input of NaN will return NaN, +infinity will output 1/2, and   *
  *          -infinity will return -1/2.                                       *
