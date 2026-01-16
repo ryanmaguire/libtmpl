@@ -75,8 +75,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_SUBTRACT_FLOAT_H
-#define TMPL_COMPLEX_SUBTRACT_FLOAT_H
+#ifndef TMPL_COMPLEX_SUBTRACT_LDOUBLE_H
+#define TMPL_COMPLEX_SUBTRACT_LDOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
