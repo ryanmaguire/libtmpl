@@ -124,6 +124,51 @@ tmpl_CLDouble_Filon01_Integrand(const tmpl_ComplexLongDouble value,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Filon11_Integrand                                         *
+ *  Purpose:                                                                  *
+ *      Numerically integrates f(t) exp(i g(t)) dt across a small bin where   *
+ *      f(t) = A t + B (A and B are real), and g(t) = a t + b (also real).    *
+ *  Arguments:                                                                *
+ *      left (const double):                                                  *
+ *          The value for f at the left end of the bin.                       *
+ *      right (const double):                                                 *
+ *          The value for f at the right end of the bin.                      *
+ *      g_left (const double):                                                *
+ *          The left real value for the phase.                                *
+ *      g_right (const double):                                               *
+ *          The right real value for the phase.                               *
+ *      width (const double):                                                 *
+ *          The width of the bin.                                             *
+ *  Output:                                                                   *
+ *      integrand (tmpl_ComplexDouble):                                       *
+ *          The integral of f(t) * exp(i g(t)) across the bin, assuming       *
+ *          f(t) = a t + b and g(t) = c t + d for constants a, b, c, and d.   *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern tmpl_ComplexDouble
+tmpl_Double_Filon11_Integrand(const double left,
+                              const double right,
+                              const double g_left,
+                              const double g_right,
+                              const double width);
+
+extern tmpl_ComplexFloat
+tmpl_Float_Filon11_Integrand(const float left,
+                             const float right,
+                             const float g_left,
+                             const float g_right,
+                             const float width);
+
+extern tmpl_ComplexLongDouble
+tmpl_LDouble_Filon11_Integrand(const long double left,
+                               const long double right,
+                               const long double g_left,
+                               const long double g_right,
+                               const long double width);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_Filon11_Integrand                                        *
  *  Purpose:                                                                  *
  *      Numerically integrates f(t) exp(i g(t)) dt across a small bin where   *
@@ -137,12 +182,12 @@ tmpl_CLDouble_Filon01_Integrand(const tmpl_ComplexLongDouble value,
  *          The left real value for the phase.                                *
  *      g_right (const double):                                               *
  *          The right real value for the phase.                               *
- *      dx (const double):                                                    *
+ *      width (const double):                                                 *
  *          The width of the bin.                                             *
  *  Output:                                                                   *
  *      integrand (tmpl_ComplexDouble):                                       *
- *          The integral of midpoint(left, right) * exp(i g(x)) across the    *
- *          bin of width "dx", assuming g(x) = ax + b for constants a and b.  *
+ *          The integral of f(t) * exp(i g(t)) across the bin, assuming       *
+ *          f(t) = a t + b and g(t) = c t + d for constants a, b, c, and d.   *
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
@@ -151,21 +196,21 @@ tmpl_CDouble_Filon11_Integrand(const tmpl_ComplexDouble left,
                                const tmpl_ComplexDouble right,
                                const double g_left,
                                const double g_right,
-                               const double dx);
+                               const double width);
 
 extern tmpl_ComplexFloat
 tmpl_CFloat_Filon11_Integrand(const tmpl_ComplexFloat left,
                               const tmpl_ComplexFloat right,
                               const float g_left,
                               const float g_right,
-                              const float dx);
+                              const float width);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Filon11_Integrand(const tmpl_ComplexLongDouble left,
                                 const tmpl_ComplexLongDouble right,
                                 const long double g_left,
                                 const long double g_right,
-                                const long double dx);
+                                const long double width);
 
 /******************************************************************************
  *  Function:                                                                 *
