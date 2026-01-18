@@ -28,11 +28,11 @@
  *  Purpose:                                                                  *
  *      Returns the input "x" rounded to its higher order bits.               *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (const float):                                                      *
  *          A real number.                                                    *
- *      splitter (float):                                                     *
- *          The splitting factor. This will most likely by 2^n + 1, where you *
- *          want the higher 23 - n bits to be returned, assuming float has    *
+ *      splitter (const float):                                               *
+ *          The splitting factor. This will most likely be 2^n + 1, where you *
+ *          want the higher 24 - n bits to be returned, assuming float has    *
  *          23 bits in the mantissa.                                          *
  *  Output:                                                                   *
  *      x_hi (float):                                                         *
@@ -78,7 +78,7 @@
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_High_Split(float x, float splitter)
+float tmpl_Float_High_Split(const float x, const float splitter)
 {
     /*  Declaring everything as volatile almost guarantees the split works.   */
     volatile const float split = x * splitter;
@@ -92,7 +92,7 @@ float tmpl_Float_High_Split(float x, float splitter)
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_High_Split(float x, float splitter)
+float tmpl_Float_High_Split(const float x, const float splitter)
 {
     /*  It is usually sufficient to declare the split product as volatile.    *
      *  With optimizations on this is only slightly slower (1-3%) than        *
@@ -107,7 +107,7 @@ float tmpl_Float_High_Split(float x, float splitter)
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_High_Split(float x, float splitter)
+float tmpl_Float_High_Split(const float x, const float splitter)
 {
     /*  This is the "standard" way to perform a split. No volatile used.      */
     const float split = x * splitter;
