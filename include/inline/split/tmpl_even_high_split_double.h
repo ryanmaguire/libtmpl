@@ -26,11 +26,11 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Even_High_Split                                           *
  *  Purpose:                                                                  *
- *      Returns the input "x" truncated to its higher order bits. The split   *
+ *      Returns the input "x" rounded to its higher order bits. The split     *
  *      is done "evenly" down the middle so that x_hi and x_lo both have the  *
  *      same number of bits of x.                                             *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      x_hi (double):                                                        *
@@ -53,6 +53,7 @@
  *  References:                                                               *
  *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
  *          "Library for Double-Double and Quad-Double Arithmetic"            *
+ *                                                                            *
  *      2.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
@@ -80,9 +81,9 @@
 
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
-double tmpl_Double_Even_High_Split(double x)
+double tmpl_Double_Even_High_Split(const double x)
 {
-    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations were   *
+    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work. Without these volatile     *
      *  statements a call to FMA is used instead, which ruins the split.      */
     volatile const double split = x * 134217729.0;
@@ -96,7 +97,7 @@ double tmpl_Double_Even_High_Split(double x)
 
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
-double tmpl_Double_Even_High_Split(double x)
+double tmpl_Double_Even_High_Split(const double x)
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile. Failure to do so makes the compiler use FMA  *
@@ -112,7 +113,7 @@ double tmpl_Double_Even_High_Split(double x)
 
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
-double tmpl_Double_Even_High_Split(double x)
+double tmpl_Double_Even_High_Split(const double x)
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines and no volatile declaration is required.                     */
