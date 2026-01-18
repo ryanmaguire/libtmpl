@@ -28,10 +28,10 @@
  *  Purpose:                                                                  *
  *      Returns the input "x" rounded to its higher order bits.               *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
- *      splitter (long double):                                               *
- *          The splitting factor. This will most likely by 2^n + 1, where you *
+ *      splitter (const long double):                                         *
+ *          The splitting factor. This will most likely be 2^n + 1, where you *
  *          want the higher 64 - n bits to be returned, assuming long double  *
  *          has 63 bits in the mantissa. For quadruple it is 113 - n, and for *
  *          double and double-double it is 53 - n.                            *
@@ -86,7 +86,7 @@
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_High_Split(long double x, double splitter)
+long double tmpl_LDouble_High_Split(const long double x, const double splitter)
 {
     /*  Splitting a double-double is somewhat useless, since a double-double  *
      *  is already "split" as two doubles. It is however useful to split the  *
@@ -108,9 +108,10 @@ long double tmpl_LDouble_High_Split(long double x, double splitter)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_High_Split(long double x, long double splitter)
+long double
+tmpl_LDouble_High_Split(const long double x, const long double splitter)
 {
-    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations were   *
+    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work with double. It doesn't     *
      *  seem to be necessary for long double. Nevertheless, the overly        *
      *  cautious method declares each step as volatile and then splits.       */
@@ -125,7 +126,8 @@ long double tmpl_LDouble_High_Split(long double x, long double splitter)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_High_Split(long double x, long double splitter)
+long double
+tmpl_LDouble_High_Split(const long double x, const long double splitter)
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile in the double implementation. Again, for long *
@@ -140,7 +142,8 @@ long double tmpl_LDouble_High_Split(long double x, long double splitter)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_High_Split(long double x, long double splitter)
+long double
+tmpl_LDouble_High_Split(const long double x, const long double splitter)
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines for double, and x86_64, arm64, and more for long double.     */
