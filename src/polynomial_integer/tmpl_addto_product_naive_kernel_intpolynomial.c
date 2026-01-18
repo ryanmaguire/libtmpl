@@ -101,8 +101,9 @@
  *  Date:       May 21, 2023                                                  *
  ******************************************************************************/
 
-/*  realloc found here.                                                       */
-#include <stdlib.h>
+/*  realloc and casting with C vs. C++ compatibility provided here.           */
+#include <libtmpl/include/compat/tmpl_cast.h>
+#include <libtmpl/include/compat/tmpl_realloc.h>
 
 /*  Boolean given here.                                                       */
 #include <libtmpl/include/tmpl_bool.h>
@@ -148,23 +149,22 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
         const size_t len = deg + one;
 
         /*  Try to allocate memory for the output.                            */
-        void *tmp = realloc(P->coeffs, sizeof(*P->coeffs)*len);
+        void * const tmp = TMPL_REALLOC(P->coeffs, len);
 
         /*  Check if realloc failed. Abort the computation if it did.         */
         if (!tmp)
         {
             P->error_occurred = tmpl_True;
-            P->error_message = tmpl_String_Duplicate(
+            P->error_message =
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_AddTo_Product_Naive_Kernel\n\n"
-                "realloc failed. Aborting.\n\n"
-            );
+                "realloc failed and returned NULL.\n\n";
 
             return;
         }
 
         /*  Otherwise reset the coefficient pointer.                          */
-        P->coeffs = tmp;
+        P->coeffs = TMPL_CAST(tmp, signed int *);
 
         /*  Initialize the new coefficients to zero so we can loop over them. */
         for (n = P->degree + one; n < len; ++n)
@@ -208,23 +208,22 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
         const size_t len = deg + one;
 
         /*  Try to allocate memory for the product.                           */
-        void *tmp = realloc(P->coeffs, sizeof(*P->coeffs)*len);
+        void * const tmp = TMPL_REALLOC(P->coeffs, len);
 
         /*  Check if realloc failed. Abort the computation if it did.         */
         if (!tmp)
         {
             P->error_occurred = tmpl_True;
-            P->error_message = tmpl_String_Duplicate(
+            P->error_message =
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_AddTo_Product_Naive_Kernel\n\n"
-                "realloc failed. Aborting.\n\n"
-            );
+                "realloc failed and returned NULL.\n\n";
 
             return;
         }
 
         /*  Otherwise reset the coefficient pointer.                          */
-        P->coeffs = tmp;
+        P->coeffs = TMPL_CAST(tmp, signed int *);
 
         /*  Initialize the new coefficients to zero so we can loop over them. */
         for (n = P->degree + one; n < len; ++n)

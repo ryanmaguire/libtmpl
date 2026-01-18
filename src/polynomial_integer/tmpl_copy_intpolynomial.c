@@ -72,9 +72,6 @@
  *      "dest" polynomial empty.                                              *
  ******************************************************************************/
 
-/*  free function declared here.                                              */
-#include <stdlib.h>
-
 /*  tmpl_Bool, tmpl_False, and tmpl_True are given here.                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -86,8 +83,8 @@
 
 /*  Function for copying the coefficients of one polynomial to another.       */
 void
-tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
-                        const tmpl_IntPolynomial *src)
+tmpl_IntPolynomial_Copy(tmpl_IntPolynomial * const dest,
+                        const tmpl_IntPolynomial * const src)
 {
     /*  If the destination pointer is NULL, there's nothing to be done.       */
     if (!dest)
@@ -114,11 +111,11 @@ tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
     {
         /*  Set the error_occurred Boolean and add an error message.          */
         dest->error_occurred = tmpl_True;
-        dest->error_message = tmpl_strdup(
+        dest->error_message =
             "\nError Encountered: libtmpl\n"
             "    tmpl_IntPolynomial_Copy\n\n"
-            "src pointer has error_occurred set to True. Aborting.\n\n"
-        );
+            "src pointer has error_occurred set to True.\n\n";
+
         return;
     }
 

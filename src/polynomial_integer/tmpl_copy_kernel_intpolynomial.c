@@ -69,8 +69,9 @@
  *  Date:       April 25, 2023                                                *
  ******************************************************************************/
 
-/*  realloc and free functions are declared here.                             */
-#include <stdlib.h>
+/*  realloc and casting with C vs. C++ compatibility provided here.           */
+#include <libtmpl/include/compat/tmpl_cast.h>
+#include <libtmpl/include/compat/tmpl_realloc.h>
 
 /*  TMPL_USE_MEMCPY macro is here.                                            */
 #include <libtmpl/include/tmpl_config.h>
@@ -93,8 +94,8 @@
 
 /*  Function for copying the coefficients of one polynomial to another.       */
 void
-tmpl_IntPolynomial_Copy_Kernel(tmpl_IntPolynomial *dest,
-                               const tmpl_IntPolynomial *src)
+tmpl_IntPolynomial_Copy_Kernel(tmpl_IntPolynomial * const dest,
+                               const tmpl_IntPolynomial * const src)
 {
     /*  If we're not using memcpy, we need a variable to index the loop.      */
 #if TMPL_USE_MEMCPY != 1
@@ -102,28 +103,28 @@ tmpl_IntPolynomial_Copy_Kernel(tmpl_IntPolynomial *dest,
 #endif
 
     /*  We'll be copying degree + 1 elements. Set the length to this value.   */
-    size_t len = src->degree + (size_t)1;
+    size_t len = src->degree + 1;
 
     /*  Check if we need to reallocate the memory for the dest coefficients.  */
     if (dest->degree != src->degree)
     {
         /*  Use realloc to resize the memory for the coefficients array.      */
-        void *tmp = realloc(dest->coeffs, len);
+        void * const tmp = TMPL_REALLOC(dest->coeffs, len);
 
         /*  Check if realloc failed.                                          */
         if (!tmp)
         {
             dest->error_occurred = tmpl_False;
-            dest->error_message = tmpl_String_Duplicate(
+            dest->error_message =
                 "\nError Encountered: libtmpl\n"
                 "    tmpl_IntPolynomial_Copy_Kernel\n\n"
-                "Realloc failed to resize dest->coeffs. Aborting.\n\n"
-            );
+                "Realloc failed to resize dest->coeffs.\n\n";
+
             return;
         }
 
         /*  Otherwise reset the coefficient array and degree.                 */
-        dest->coeffs = tmp;
+        dest->coeffs = TMPL_CAST(tmp, signed int *);
         dest->degree = src->degree;
     }
 
@@ -131,13 +132,13 @@ tmpl_IntPolynomial_Copy_Kernel(tmpl_IntPolynomial *dest,
 #if TMPL_USE_MEMCPY == 1
 
     /*  memcpy syntax is (void *dest, const void *src, size_t num).           */
-    memcpy(dest->coeffs, src->coeffs, len*sizeof(*src->coeffs));
+    memcpy(dest->coeffs, src->coeffs, len * sizeof(*src->coeffs));
 
 #else
 /*  Else for #if TMPL_USE_MEMCPY == 1.                                        */
 
     /*  Otherwise use a simple for-loop to copy the data term-by-term.        */
-    for (n = (size_t)0; n < len; ++n)
+    for (n = 0; n < len; ++n)
         dest->coeffs[n] = src->coeffs[n];
 
 #endif
