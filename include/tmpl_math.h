@@ -469,8 +469,8 @@ extern const long double tmpl_ldouble_atan_v[8];
 extern const long double tmpl_ldouble_atan_of_v[8];
 #endif
 
-extern const double tmpl_Double_SinCos_Table[440];
-extern const float tmpl_Float_SinCos_Table[440];
+extern const double tmpl_double_sincos_table[440];
+extern const float tmpl_float_sincos_table[440];
 
 /*  If type-punning is available, use a table of 64-bit ints representing     *
  *  various values of exp(x). This speeds up the computation considerably.    */

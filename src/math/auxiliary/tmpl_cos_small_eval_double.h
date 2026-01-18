@@ -60,10 +60,10 @@ double tmpl_Double_Cos_Small_Eval(double x)
     w.r = x_shift;
     k = (w.bits.man3 << 2U) & 0xFFFF;
 
-    sn = tmpl_Double_SinCos_Table[k];
-    ssn = tmpl_Double_SinCos_Table[k + 1];
-    cs = tmpl_Double_SinCos_Table[k + 2];
-    ccs = tmpl_Double_SinCos_Table[k + 3];
+    sn = tmpl_double_sincos_table[k];
+    ssn = tmpl_double_sincos_table[k + 1];
+    cs = tmpl_double_sincos_table[k + 2];
+    ccs = tmpl_double_sincos_table[k + 3];
 
     cor = (ccs - sin_arg * ssn - cs * cos_arg) - sin_arg * sn;
     return cs + cor;

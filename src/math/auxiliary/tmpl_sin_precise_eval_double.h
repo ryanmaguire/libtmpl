@@ -77,10 +77,10 @@ double tmpl_Double_Sin_Precise_Eval(double x, double dx)
     s = dx + x*(S0 + x2*(S1 + x2*S2));
     c = x*dx + x2*(C0 + x2*(C1 + x2*C2));
     k = (w.bits.man3 << 2U) & 0xFFFF;
-    sn = tmpl_Double_SinCos_Table[k];
-    ssn = tmpl_Double_SinCos_Table[k + 1];
-    cs = tmpl_Double_SinCos_Table[k + 2];
-    ccs = tmpl_Double_SinCos_Table[k + 3];
+    sn = tmpl_double_sincos_table[k];
+    ssn = tmpl_double_sincos_table[k + 1];
+    cs = tmpl_double_sincos_table[k + 2];
+    ccs = tmpl_double_sincos_table[k + 3];
     cor = (ssn + s * ccs - sn * c) + cs * s;
     w.r = cor + sn;
     w.bits.sign = tmp.bits.sign;

@@ -61,10 +61,10 @@ double tmpl_Double_Cos_Precise_Eval(double x, double dx)
     s = x*(S0 + x_sq*(S1 + x_sq*S2));
     c = x_sq*(C0 + x_sq*(C1 + x_sq*C2));
     k = (w.bits.man3 << 2U) & 0xFFFF;
-    sn = tmpl_Double_SinCos_Table[k];
-    ssn = tmpl_Double_SinCos_Table[k + 1];
-    cs = tmpl_Double_SinCos_Table[k + 2];
-    ccs = tmpl_Double_SinCos_Table[k + 3];
+    sn = tmpl_double_sincos_table[k];
+    ssn = tmpl_double_sincos_table[k + 1];
+    cs = tmpl_double_sincos_table[k + 2];
+    ccs = tmpl_double_sincos_table[k + 3];
     cor = (ccs - s * ssn - cs * c) - sn * s;
     return cs + cor;
 }
