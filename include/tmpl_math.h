@@ -1588,13 +1588,19 @@ tmpl_LDouble_SinCosd(long double t, long double *sind_t, long double *cosd_t);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void tmpl_Float_SinCosPi(float t, float *sinpi_t, float *cospi_t);
-extern void tmpl_Double_SinCosPi(double t, double *sinpi_t, double *cospi_t);
+extern void
+tmpl_Float_SinCosPi(const float t,
+                    float * TMPL_RESTRICT const sinpi_t,
+                    float * TMPL_RESTRICT const cospi_t);
 
 extern void
-tmpl_LDouble_SinCosPi(long double t,
-                      long double *sinpi_t,
-                      long double *cospi_t);
+tmpl_Double_SinCosPi(const double t,
+                     double * TMPL_RESTRICT const sinpi_t,
+                     double * TMPL_RESTRICT const cospi_t);
+extern void
+tmpl_LDouble_SinCosPi(const long double t,
+                      long double * TMPL_RESTRICT const sinpi_t,
+                      long double * TMPL_RESTRICT const cospi_t);
 
 /******************************************************************************
  *  Function:                                                                 *

@@ -4,7 +4,7 @@
 #include "auxiliary/tmpl_sinpi_maclaurin_double.h"
 
 void
-tmpl_Double_SinCosPi(double t,
+tmpl_Double_SinCosPi(const double t,
                      double * TMPL_RESTRICT const sinpi_t,
                      double * TMPL_RESTRICT const cospi_t)
 {

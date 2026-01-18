@@ -3,7 +3,10 @@
 #include "auxiliary/tmpl_cospi_maclaurin_float.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_float.h"
 
-void tmpl_Float_SinCosPi(float t, float *sinpi_t, float *cospi_t)
+void
+tmpl_Float_SinCosPi(const float t,
+                    float * TMPL_RESTRICT const sinpi_t,
+                    float * TMPL_RESTRICT const cospi_t)
 {
     float arg, abs_t, sgn_sin, sgn_cos, cx, cdx, sx, sdx, dx;
     unsigned int ind;

@@ -4,7 +4,9 @@
 #include "auxiliary/tmpl_sinpi_maclaurin_ldouble.h"
 
 void
-tmpl_LDouble_SinCosPi(long double t, long double *sinpi_t, long double *cospi_t)
+tmpl_LDouble_SinCosPi(const long double t,
+                      long double * TMPL_RESTRICT const sinpi_t,
+                      long double * TMPL_RESTRICT const cospi_t)
 {
     long double arg, abs_t, sgn_sin, sgn_cos, cx, cdx, sx, sdx, dx;
     unsigned int ind;
