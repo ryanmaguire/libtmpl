@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Splits a number into two parts and returns the high word. See         *
- *      include/split/tmpl_high_split_ldouble.h. for details.                 *
+ *      include/split/tmpl_high_split_ldouble.h for details.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 28, 2024                                               *
@@ -32,8 +32,21 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_split.h>
+/*  Function prototype / forward declaration. Double-double is implemented    *
+ *  differently than the other representations and has a different signature. */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+extern long double
+tmpl_LDouble_High_Split(const long double x, const double splitter);
+
+/*  All other versions are treated in a similar manner to float and double.   */
+#else
+
+extern long double
+tmpl_LDouble_High_Split(const long double x, const long double splitter);
+
+#endif
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
 
 /*  Implemented in include/split/tmpl_high_split_ldouble.h.                   */
 #include "../../include/inline/split/tmpl_high_split_ldouble.h"

@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Splits a number into two parts and returns the high word. See         *
- *      include/split/tmpl_even_high_split_double.h. for details.             *
+ *      include/split/tmpl_even_high_split_double.h for details.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 28, 2024                                               *
@@ -32,8 +32,8 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_split.h>
+/*  Function prototype / forward declaration.                                 */
+extern double tmpl_Double_Even_High_Split(const double x);
 
 /*  Implemented in include/split/tmpl_even_high_split_double.h.               */
 #include "../../include/inline/split/tmpl_even_high_split_double.h"
