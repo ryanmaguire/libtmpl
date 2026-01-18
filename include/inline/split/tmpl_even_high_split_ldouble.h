@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Returns the input "x" rounded to its higher order bits.               *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      x_hi (long double):                                                   *
@@ -51,6 +51,7 @@
  *  References:                                                               *
  *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
  *          "Library for Double-Double and Quad-Double Arithmetic"            *
+ *                                                                            *
  *      2.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
@@ -103,7 +104,7 @@
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x)
 {
     /*  We just need to cast to double since double-double is already split.  */
     const double x_double = TMPL_CAST(x, double);
@@ -117,9 +118,9 @@ long double tmpl_LDouble_Even_High_Split(long double x)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x)
 {
-    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations were   *
+    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work with double. It doesn't     *
      *  seem to be necessary for long double. Nevertheless, the overly        *
      *  cautious method declares each step as volatile and then splits.       */
@@ -134,7 +135,7 @@ long double tmpl_LDouble_Even_High_Split(long double x)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x)
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile in the double implementation. Again, for long *
@@ -149,7 +150,7 @@ long double tmpl_LDouble_Even_High_Split(long double x)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x)
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines for double, and x86_64, arm64, and more for long double.     */

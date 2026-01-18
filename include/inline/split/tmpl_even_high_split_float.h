@@ -26,11 +26,11 @@
  *  Function Name:                                                            *
  *      tmpl_Float_Even_High_Split                                            *
  *  Purpose:                                                                  *
- *      Returns the input "x" truncated to its higher order bits. The split   *
+ *      Returns the input "x" rounded to its higher order bits. The split     *
  *      is done "evenly" down the middle so that x_hi and x_lo both have the  *
  *      same number of bits of x.                                             *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (const float):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      x_hi (float):                                                         *
@@ -53,6 +53,7 @@
  *  References:                                                               *
  *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
  *          "Library for Double-Double and Quad-Double Arithmetic"            *
+ *                                                                            *
  *      2.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
@@ -80,7 +81,7 @@
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(float x)
+float tmpl_Float_Even_High_Split(const float x)
 {
     /*  Declaring everything as volatile almost guarantees the split works.   */
     volatile const float split = x * 4097.0F;
@@ -94,7 +95,7 @@ float tmpl_Float_Even_High_Split(float x)
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(float x)
+float tmpl_Float_Even_High_Split(const float x)
 {
     /*  It is usually sufficient to declare the split product as volatile.    *
      *  With optimizations on this is only slightly slower (1-3%) than        *
@@ -109,7 +110,7 @@ float tmpl_Float_Even_High_Split(float x)
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(float x)
+float tmpl_Float_Even_High_Split(const float x)
 {
     /*  This is the "standard" way to perform a split. No volatile used.      */
     const float split = x * 4097.0F;
