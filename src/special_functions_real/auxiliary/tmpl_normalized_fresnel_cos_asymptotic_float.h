@@ -31,7 +31,7 @@
  *      x (const float):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (float):                                                          *
+ *      fresnel_cos_x (float):                                                *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
