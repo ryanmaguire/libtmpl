@@ -28,15 +28,18 @@
  *  Purpose:                                                                  *
  *      Computes C(x) for large positive inputs.                              *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (long double):                                                    *
+ *      fresnel_cos_x (long double):                                          *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_LDouble_SinCosPi:                                            *
  *              Simultaneously computes sin(pi t) and cos(pi t).              *
+ *      src/split/                                                            *
+ *          tmpl_LDouble_High_Split:                                          *
+ *              Splits a long double into two parts so that x = xhi + xlo.    *
  *  Method:                                                                   *
  *      Use the asymptotic expansion for C(x):                                *
  *                                                                            *
@@ -66,8 +69,20 @@
  *      expression. This avoids precision loss and only minimally impacts     *
  *      performance.                                                          *
  *  Notes:                                                                    *
- *      This function assumes the input is greater than 2^N where             *
- *      N = floor(m / 3), m being the number of bits in the mantissa.         *
+ *      1.) This function assumes the input is greater than 2^N where         *
+ *          N = floor(m / 3), m being the number of bits in the mantissa.     *
+ *                                                                            *
+ *      2.) Do not use this function for arguments greater than 2^N where N   *
+ *          is the number of bits in the mantissa of long double. The         *
+ *          computation of sin(pi x^2) and cos(pi x^2) are redundant since    *
+ *          the final expression is divided by pi x, meaning the output is    *
+ *          1 / 2 to long double precision. For extremely large inputs,       *
+ *          simply return 1 / 2.                                              *
+ *                                                                            *
+ *      3.) There are no checks for NaN or infinity.                          *
+ *                                                                            *
+ *      4.) There are no checks for negative numbers. This function assumes   *
+ *          the input is positive.                                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -85,17 +100,33 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retrieving the high part of a long double.         */
+/*  The splitting function is small enough that it can be inlined.            */
 #if TMPL_USE_INLINE == 1
+
+/*  Splitting function for getting the high part of a long double found here. */
 #include <libtmpl/include/inline/split/tmpl_high_split_ldouble.h>
+
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-extern long double tmpl_LDouble_High_Split(long double x, double splitter);
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, tell the compiler about the function. The         *
+ *  double-double implementation is different than the other representations, *
+ *  the splitter parameter is declared as a double.                           */
+extern long double
+tmpl_LDouble_High_Split(const long double x, const double splitter);
+
 #else
-extern long double tmpl_LDouble_High_Split(long double x, long double splitter);
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  For all other representations, the splitter is a long double.             */
+extern long double
+tmpl_LDouble_High_Split(const long double x, const long double splitter);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
-#define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939E+00L)
+extern const long double tmpl_ldouble_pi;
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
@@ -143,7 +174,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
 
     /*  The scale factor for the asymptotic expansion. For large x we only    *
      *  need the first term of the approximation.                             */
-    const long double t = 1.0L / (TMPL_ONE_PI * x);
+    const long double t = 1.0L / (tmpl_ldouble_pi * x);
 
     /*  For large x we have xhi^2 / 2 is an even integer. Since sin(pi t)     *
      *  is periodic with period 2, the xhi^2 term can be disregarded. The     *
@@ -153,7 +184,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
     /*  Compute sin(pi/2 (2 xhi xlo + xlo^2)) using the angle sum formula.    */
     tmpl_LDouble_SinCosPi(xlo * xhi, &sin_hi, &cos_hi);
     tmpl_LDouble_SinCosPi(0.5L * xlo * xlo, &sin_lo, &cos_lo);
-    sin_x = cos_hi*sin_lo + cos_lo*sin_hi;
+    sin_x = cos_hi * sin_lo + cos_lo * sin_hi;
 
     /*  The first term of the asymptotic expansion is all that is needed.     */
     return 0.5L + t * sin_x;
@@ -161,7 +192,6 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
 /*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic.                    */
 
 /*  Undefine everything in case someone wants to include this file.           */
-#undef TMPL_ONE_PI
 #undef TMPL_LDOUBLE_SPLITTER
 
 #endif
