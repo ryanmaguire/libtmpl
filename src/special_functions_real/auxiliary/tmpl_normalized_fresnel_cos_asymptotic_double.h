@@ -34,7 +34,7 @@
  *      C_x (double):                                                         *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_SinCosPi:                                             *
  *              Simultaneously computes sin(pi t) and cos(pi t).              *
  *  Method:                                                                   *
