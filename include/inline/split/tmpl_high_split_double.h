@@ -28,10 +28,10 @@
  *  Purpose:                                                                  *
  *      Returns the input "x" rounded to its higher order bits.               *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      splitter (double):                                                    *
- *          The splitting factor. This will most likely by 2^n + 1, where you *
+ *      splitter (const double):                                              *
+ *          The splitting factor. This will most likely be 2^n + 1, where you *
  *          want the higher 53 - n bits to be returned, assuming double has   *
  *          52 bits in the mantissa.                                          *
  *  Output:                                                                   *
@@ -78,9 +78,9 @@
 
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+double tmpl_Double_High_Split(const double x, const double splitter)
 {
-    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations were   *
+    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work. Without these volatile     *
      *  statements a call to FMA is used instead, which ruins the split.      */
     volatile const double split = x * splitter;
@@ -94,7 +94,7 @@ double tmpl_Double_High_Split(double x, double splitter)
 
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+double tmpl_Double_High_Split(const double x, const double splitter)
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile. Failure to do so makes the compiler use FMA  *
@@ -110,7 +110,7 @@ double tmpl_Double_High_Split(double x, double splitter)
 
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+double tmpl_Double_High_Split(const double x, const double splitter)
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines and no volatile declaration is required.                     */
