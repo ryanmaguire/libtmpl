@@ -82,6 +82,6 @@ tmpl_LDouble_Optical_Depth_Enhancement_Factor(const long double opening,
     /*  Following Equation 16 from Gresh 1986, compute the effective angle.   */
     const long double tan_b = tmpl_LDouble_Tan(opening);
     const long double cos_phi = tmpl_LDouble_Cos(azimuth);
-    return tan_b / cos_phi;
+    return cos_phi / tan_b;
 }
 /*  End tmpl_LDouble_Optical_Depth_Enhancement_Factor.                        */
