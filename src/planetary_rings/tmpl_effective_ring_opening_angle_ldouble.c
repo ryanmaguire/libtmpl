@@ -16,18 +16,20 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *               tmpl_optical_depth_enhancement_factor_ldouble                *
+ *                 tmpl_effective_ring_opening_angle_ldouble                  *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the beta factor (enhancement factor) for optical depth.      *
+ *      Computes the effective ring opening angle of a planetary ring system. *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Optical_Depth_Enhancement_Factor                         *
+ *      tmpl_LDouble_Effecting_Ring_Opening_Angle                             *
  *  Purpose:                                                                  *
- *      Computes the beta factor for the optical depth calculation for        *
- *      occultation observations in a planetary ring system.                  *
+ *      Computes the effective ring opening angle of a planetary ring system  *
+ *      from the azimuthal angle of a point under consideration, and from     *
+ *      the ring opening angle of the ring plane with respect to the          *
+ *      observer.                                                             *
  *  Arguments:                                                                *
  *      opening (const long double):                                          *
  *          The opening angle of the ring plane with respect to the observer, *
@@ -37,21 +39,24 @@
  *      azimuth (const long double):                                          *
  *          The azimuthal angle, in radians, of the point under consideration.*
  *  Output:                                                                   *
- *      beta (long double):                                                   *
- *          The enhancement factor, unitless.                                 *
+ *      eff_opening (long double):                                            *
+ *          The effective ring opening angle.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_LDouble_Cos:                                                 *
  *              Computes cosine, in radians.                                  *
  *          tmpl_LDouble_Tan:                                                 *
  *              Computes tangent, in radians.                                 *
+ *          tmpl_LDouble_Arctan2:                                             *
+ *              Computes the angle made by the point (x, y) and the x axis.   *
  *  Method:                                                                   *
  *      Apply equation 16 from Gresh et. al, 1986:                            *
  *                                                                            *
- *          Beta = tan(opening) / cos(azimuth)                                *
+ *          B    = atan2(tan(opening), cos(azimuth))                          *
+ *           eff                                                              *
  *                                                                            *
  *  Notes:                                                                    *
- *      1.) All angles are in radians. The output is unitless.                *
+ *      1.) All angles are in radians. The output angle is also in radians.   *
  *      2.) No checks for NaNs or Infs are made.                              *
  *  References:                                                               *
  *      1.) An Analysis of Bending Waves in Saturn's Rings Using Voyager      *
@@ -59,29 +64,37 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_astro.h:                                                         *
- *          Function prototype given here.                                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing trigonometric functions.                   *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 1, 2024                                               *
+ *  Date:       September 30, 2024                                            *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/01/20: Ryan Maguire                                                  *
+ *      Moved function from astro directory to planetary_rings.               *
  ******************************************************************************/
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_astro.h>
+/*  Function prototype / forward declaration.                                 */
+extern long double
+tmpl_LDouble_Effecting_Ring_Opening_Angle(const long double opening,
+                                          const long double azimuth);
 
-/*  Trigonometric functions found here.                                       */
-#include <libtmpl/include/tmpl_math.h>
+/*  Trig functions needed for the computation.                                */
+extern long double tmpl_LDouble_Cos(const long double x);
+extern long double tmpl_LDouble_Tan(const long double x);
 
-/*  Function for computing the beta factor for optical depth.                 */
+extern long double
+tmpl_LDouble_Arctan2(const long double y, const long double x);
+
+/*  Function for computing the effective opening angle for a ring plane.      */
 long double
-tmpl_LDouble_Optical_Depth_Enhancement_Factor(const long double opening,
-                                              const long double azimuth)
+tmpl_LDouble_Effecting_Ring_Opening_Angle(const long double opening,
+                                          const long double azimuth)
 {
     /*  Following Equation 16 from Gresh 1986, compute the effective angle.   */
     const long double tan_b = tmpl_LDouble_Tan(opening);
     const long double cos_phi = tmpl_LDouble_Cos(azimuth);
-    return cos_phi / tan_b;
+    return tmpl_LDouble_Arctan2(tan_b, cos_phi);
 }
-/*  End tmpl_LDouble_Optical_Depth_Enhancement_Factor.                        */
+/*  End tmpl_LDouble_Effecting_Ring_Opening_Angle.                            */

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                  tmpl_effective_ring_opening_angle_double                  *
+ *                  tmpl_effective_ring_opening_angle_float                   *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the effective ring opening angle of a planetary ring system. *
@@ -24,30 +24,30 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Effecting_Ring_Opening_Angle                              *
+ *      tmpl_Float_Effecting_Ring_Opening_Angle                               *
  *  Purpose:                                                                  *
  *      Computes the effective ring opening angle of a planetary ring system  *
  *      from the azimuthal angle of a point under consideration, and from     *
  *      the ring opening angle of the ring plane with respect to the          *
  *      observer.                                                             *
  *  Arguments:                                                                *
- *      opening (const double):                                               *
+ *      opening (const float):                                                *
  *          The opening angle of the ring plane with respect to the observer, *
  *          in radians. Most often this is the angle made between the line    *
  *          going from the core of the Earth and the core of the planet with  *
  *          respect to the ring plane.                                        *
- *      azimuth (const double):                                               *
+ *      azimuth (const float):                                                *
  *          The azimuthal angle, in radians, of the point under consideration.*
  *  Output:                                                                   *
- *      eff_opening (double):                                                 *
+ *      eff_opening (float):                                                  *
  *          The effective ring opening angle.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_Cos:                                                  *
+ *          tmpl_Float_Cos:                                                   *
  *              Computes cosine, in radians.                                  *
- *          tmpl_Double_Tan:                                                  *
+ *          tmpl_Float_Tan:                                                   *
  *              Computes tangent, in radians.                                 *
- *          tmpl_Double_Arctan2:                                              *
+ *          tmpl_Float_Arctan2:                                               *
  *              Computes the angle made by the point (x, y) and the x axis.   *
  *  Method:                                                                   *
  *      Apply equation 16 from Gresh et. al, 1986:                            *
@@ -64,29 +64,35 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_astro.h:                                                         *
- *          Function prototype given here.                                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing trigonometric functions.                   *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 30, 2024                                            *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/01/20: Ryan Maguire                                                  *
+ *      Moved function from astro directory to planetary_rings.               *
  ******************************************************************************/
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_astro.h>
+/*  Function prototype / forward declaration.                                 */
+extern float
+tmpl_Float_Effecting_Ring_Opening_Angle(const float opening,
+                                        const float azimuth);
 
-/*  Trigonometric functions found here.                                       */
-#include <libtmpl/include/tmpl_math.h>
+/*  Trig functions needed for the computation.                                */
+extern float tmpl_Float_Cos(const float x);
+extern float tmpl_Float_Tan(const float x);
+extern float tmpl_Float_Arctan2(const float y, const float x);
 
 /*  Function for computing the effective opening angle for a ring plane.      */
-double
-tmpl_Double_Effecting_Ring_Opening_Angle(const double opening,
-                                         const double azimuth)
+float
+tmpl_Float_Effecting_Ring_Opening_Angle(const float opening,
+                                        const float azimuth)
 {
     /*  Following Equation 16 from Gresh 1986, compute the effective angle.   */
-    const double tan_b = tmpl_Double_Tan(opening);
-    const double cos_phi = tmpl_Double_Cos(azimuth);
-    return tmpl_Double_Arctan2(tan_b, cos_phi);
+    const float tan_b = tmpl_Float_Tan(opening);
+    const float cos_phi = tmpl_Float_Cos(azimuth);
+    return tmpl_Float_Arctan2(tan_b, cos_phi);
 }
-/*  End tmpl_Double_Effecting_Ring_Opening_Angle.                             */
+/*  End tmpl_Float_Effecting_Ring_Opening_Angle.                              */
