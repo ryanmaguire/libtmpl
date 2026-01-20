@@ -269,7 +269,7 @@ extern const long double tmpl_LDouble_Pi_By_Sqrt_Two;
  ******************************************************************************/
 extern const float tmpl_float_rad_to_deg;
 extern const double tmpl_double_rad_to_deg;
-extern const long double tmpl_LDouble_Rad_To_Deg;
+extern const long double tmpl_ldouble_rad_to_deg;
 
 extern const float tmpl_Float_Deg_To_Rad;
 extern const double tmpl_Double_Deg_To_Rad;
