@@ -261,7 +261,7 @@ tmpl_Float_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(float k,
         /*  Perform the Newton iteration, and increment n. Note, the output   *
          *  of dpsi / d2psi will be in radians, but phi is in degrees. Scale  *
          *  dpsi / d2psi by 180 / pi to avoid incorrectly mixing units.       */
-        phi = phi - tmpl_Float_Rad_To_Deg * dpsi / d2psi;
+        phi = phi - tmpl_float_rad_to_deg * dpsi / d2psi;
         ++n;
 
         /*  Update the error. We want the partial derivative to be small.     */

@@ -103,7 +103,7 @@ const long double tmpl_LDouble_Pi_By_Sqrt_Two = TMPL_LDOUBLE_PI_BY_SQRT_TWO;
 /******************************************************************************
  *                      Conversions Radians and Degrees                       *
  ******************************************************************************/
-const float tmpl_Float_Rad_To_Deg = TMPL_FLOAT_RAD_TO_DEG;
+const float tmpl_float_rad_to_deg = TMPL_FLOAT_RAD_TO_DEG;
 const double tmpl_Double_Rad_To_Deg = TMPL_DOUBLE_RAD_TO_DEG;
 const long double tmpl_LDouble_Rad_To_Deg = TMPL_LDOUBLE_RAD_TO_DEG;
 

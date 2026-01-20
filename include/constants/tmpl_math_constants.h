@@ -267,7 +267,7 @@ extern const long double tmpl_LDouble_Pi_By_Sqrt_Two;
 /******************************************************************************
  *                      Conversions Radians and Degrees                       *
  ******************************************************************************/
-extern const float tmpl_Float_Rad_To_Deg;
+extern const float tmpl_float_rad_to_deg;
 extern const double tmpl_Double_Rad_To_Deg;
 extern const long double tmpl_LDouble_Rad_To_Deg;
 
