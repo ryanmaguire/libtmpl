@@ -107,9 +107,9 @@ const float tmpl_float_rad_to_deg = TMPL_FLOAT_RAD_TO_DEG;
 const double tmpl_double_rad_to_deg = TMPL_DOUBLE_RAD_TO_DEG;
 const long double tmpl_ldouble_rad_to_deg = TMPL_LDOUBLE_RAD_TO_DEG;
 
-const float tmpl_Float_Deg_To_Rad = TMPL_FLOAT_DEG_TO_RAD;
-const double tmpl_Double_Deg_To_Rad = TMPL_DOUBLE_DEG_TO_RAD;
-const long double tmpl_LDouble_Deg_To_Rad = TMPL_LDOUBLE_DEG_TO_RAD;
+const float tmpl_float_deg_to_rad = TMPL_FLOAT_DEG_TO_RAD;
+const double tmpl_double_deg_to_rad = TMPL_DOUBLE_DEG_TO_RAD;
+const long double tmpl_ldouble_deg_to_rad = TMPL_LDOUBLE_DEG_TO_RAD;
 
 /******************************************************************************
  *                            Multiples of 1 / Pi                             *

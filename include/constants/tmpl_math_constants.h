@@ -271,9 +271,9 @@ extern const float tmpl_float_rad_to_deg;
 extern const double tmpl_double_rad_to_deg;
 extern const long double tmpl_ldouble_rad_to_deg;
 
-extern const float tmpl_Float_Deg_To_Rad;
-extern const double tmpl_Double_Deg_To_Rad;
-extern const long double tmpl_LDouble_Deg_To_Rad;
+extern const float tmpl_float_deg_to_rad;
+extern const double tmpl_double_deg_to_rad;
+extern const long double tmpl_ldouble_deg_to_rad;
 
 /******************************************************************************
  *                            Multiples of 1 / Pi                             *
