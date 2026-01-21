@@ -16,61 +16,50 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *          tmpl_normalized_fresnel_cos_asymptotic_very_large_double          *
+ *                tmpl_normalized_fresnel_sin_asymptotic_double               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine for large positive inputs.     *
+ *      Computes the normalized Fresnel sine for large positive inputs.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Very_Large              *
+ *      tmpl_Double_Normalized_Fresnel_Sin_Asymptotic                         *
  *  Purpose:                                                                  *
- *      Computes C(x) for very large positive inputs.                         *
+ *      Computes S(x) for large positive inputs.                              *
  *  Arguments:                                                                *
- *      x (const double):                                                     *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      fresnel_cos_x (double):                                               *
- *          The normalized Fresnel cosine of x.                               *
+ *      S_x (double):                                                         *
+ *          The normalized Fresnel sine of x.                                 *
  *  Called Functions:                                                         *
- *      src/math/                                                             *
+ *      tmpl_math.h:                                                          *
  *          tmpl_Double_SinCosPi:                                             *
  *              Simultaneously computes sin(pi t) and cos(pi t).              *
- *      src/split/                                                            *
- *          tmpl_Double_Even_High_Split:                                      *
- *              Splits a double into two parts so that x = xhi + xlo.         *
  *  Method:                                                                   *
- *      Use the asymptotic expansion for C(x):                                *
+ *      Use the asymptotic expansion for S(x):                                *
  *                                                                            *
- *                               -        -                                   *
- *                 1    1       |  pi   2  |                                  *
- *          C(x) ~ - + ---- sin |  --- x   |                                  *
- *                 2   pi x     |   2      |                                  *
- *                               -        -                                   *
+ *                 1    1                                                     *
+ *          S(x) ~ - - ---- cos(pi/2 x^2)                                     *
+ *                 2   pi x                                                   *
  *                                                                            *
- *      To avoid precision loss in the computation of sin(pi/2 x^2) we use a  *
+ *      To avoid precision loss in the computation of cos(pi/2 x^2) we use a  *
  *      double-double trick and split x into two parts, xhi and xlo, so that: *
  *                                                                            *
  *          x^2 = (xhi + xlo)^2                                               *
  *              = xhi^2 + 2 xhi xlo + xlo^2                                   *
  *                                                                            *
- *      For x > 2^28, we have that xhi^2 / 2 is even, meaning sin(pi/2 xhi^2) *
- *      is zero. We compute sin(pi/2 (2 xhi xlo + xlo^2)) using the angle-sum *
- *      formula.                                                              *
+ *      xhi is chosen to be the upper 16 bits, and xlo is the lower 36 bits.  *
+ *      By doing this we guarantee that xhi^2 / 2 is an even integer for all  *
+ *      x > 2^17. Since cos(pi t) is periodic with period 2, we can           *
+ *      disregard the xhi^2 term completely and concentrate solely on         *
+ *      2 xhi xlo + xlo^2. This term is passed to the SinCosPi function. By   *
+ *      doing this we avoid precision loss that occurs with taking the cosine *
+ *      of the square of a large number. This only minimally impacts          *
+ *      performance as well.                                                  *
  *  Notes:                                                                    *
- *      1.) This function assumes the input is greater than 2^28.             *
- *                                                                            *
- *      2.) Do not use this function for arguments greater than 2^52. The     *
- *          computation of sin(pi x^2) and cos(pi x^2) are redundant since    *
- *          the final expression is divided by pi x, meaning the output is    *
- *          1 / 2 to double precision. For extremely large inputs, simply     *
- *          return 1 / 2.                                                     *
- *                                                                            *
- *      3.) There are no checks for NaN or infinity.                          *
- *                                                                            *
- *      4.) There are no checks for negative numbers. This function assumes   *
- *          the input is positive.                                            *
+ *      This function assumes the input is greater than 2^17.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -78,12 +67,12 @@
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       July 8, 2024                                                  *
+ *  Date:       January 21, 2026                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_ASYMPTOTIC_VERY_LARGE_DOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_ASYMPTOTIC_VERY_LARGE_DOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_SIN_ASYMPTOTIC_LARGE_DOUBLE_H
+#define TMPL_NORMALIZED_FRESNEL_SIN_ASYMPTOTIC_LARGE_DOUBLE_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
@@ -112,9 +101,9 @@ tmpl_Double_SinCosPi(const double t,
                      double * TMPL_RESTRICT const sin_t,
                      double * TMPL_RESTRICT const cos_t);
 
-/*  Function for computing the normalized Fresnel cosine of a large input.    */
+/*  Function for computing the normalized Fresnel sine of a large input.      */
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Very_Large(const double x)
+double tmpl_Double_Normalized_Fresnel_Sin_Asymptotic_Large(const double x)
 {
     /*  Split the input into two parts. This allows us to compute the square  *
      *  of x more precisely.                                                  */
@@ -125,20 +114,24 @@ double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Very_Large(const double x)
      *  need the first term of the approximation.                             */
     const double t = 1.0 / (tmpl_double_pi * x);
 
-    /*  For x > 2^28, we have xhi^2 / 2 is an even integer. Since sin(pi t)   *
+    /*  For x > 2^28, we have xhi^2 / 2 is an even integer. Since cos(pi t)   *
      *  is periodic with period 2, the xhi^2 term can be ignored. The         *
      *  argument we then care about is pi (2 xhi xlo + xlo^2) / 2.            */
-    double sin_hi, cos_hi, sin_lo, cos_lo, sin_x;
+    double sin_hi, cos_hi, sin_lo, cos_lo, minus_cos_x;
 
-    /*  Compute sin(pi/2 (2 xhi xlo + xlo^2)) using the angle sum formula.    */
+    /*  Compute cos(pi/2 (2 xhi xlo + xlo^2)) using the angle sum formula.    */
     tmpl_Double_SinCosPi(xlo * xhi, &sin_hi, &cos_hi);
     tmpl_Double_SinCosPi(0.5 * xlo * xlo, &sin_lo, &cos_lo);
-    sin_x = cos_hi * sin_lo + cos_lo * sin_hi;
+    minus_cos_x = sin_hi * sin_lo - cos_hi * cos_lo;
 
     /*  The first term of the asymptotic expansion is all that is needed.     */
-    return 0.5 + t * sin_x;
+    return 0.5 + t * minus_cos_x;
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Very_Large.          */
+/*  End of tmpl_Double_Normalized_Fresnel_Sin_Asymptotic.                     */
+
+/*  Undefine everything in case someone wants to include this file.           */
+#undef TMPL_ONE_PI
+#undef TMPL_SPLITTING_FACTOR
 
 #endif
 /*  End of include guard.                                                     */

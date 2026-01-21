@@ -36,17 +36,17 @@
  *  Called Functions:                                                         *
  *      tmpl_special_functions_real.h:                                        *
  *          tmpl_Double_Normalized_Fresnel_Sin_Maclaurin:                     *
- *              Computes C(x) using a Maclaurin series.                       *
+ *              Computes S(x) using a Maclaurin series.                       *
  *          tmpl_Double_Normalized_Fresnel_Sin_Pade:                          *
- *              Computes C(x) using a Pade approximant.                       *
+ *              Computes S(x) using a Pade approximant.                       *
  *          tmpl_Double_Normalized_Fresnel_Sin_Remez:                         *
- *              Computes C(x) using a Remez polynomial via a lookup table.    *
+ *              Computes S(x) using a Remez polynomial via a lookup table.    *
  *          tmpl_Double_Normalized_Fresnel_Sin_Auxiliary_Small:               *
- *              Computes C(x) using auxiliary functions for 2 <= x < 4.       *
+ *              Computes S(x) using auxiliary functions for 2 <= x < 4.       *
  *          tmpl_Double_Normalized_Fresnel_Sin_Auxiliary:                     *
- *              Computes C(x) using auxiliary functions for 4 <= x < 2^17.    *
+ *              Computes S(x) using auxiliary functions for 4 <= x < 2^17.    *
  *          tmpl_Double_Normalized_Fresnel_Sin_Asymptotic:                    *
- *              Computes C(x) for x >= 2^17.                                  *
+ *              Computes S(x) for x >= 2^17.                                  *
  *      tmpl_math.h:                                                          *
  *          tmpl_Double_Abs:                                                  *
  *              Computes |x|. Only used if IEEE-754 support is not available. *
@@ -73,14 +73,14 @@
  *                 infty                                                      *
  *                 -----       n  4n+1  -   -  2n                             *
  *                 \       (-1)  x     | pi  |                                *
- *          C(x) = /       ----------- | --- |                                *
+ *          S(x) = /       ----------- | --- |                                *
  *                 -----   (4n+1)(2n)!  - 2 -                                 *
  *                 n = 0                                                      *
  *                                                                            *
  *      For small x, |x| < 1/4, use the first few terms of this. For slightly *
  *      larger x, |x| < 1, use a Pade approximant based off of this series.   *
  *                                                                            *
- *      For larger x, reduce x to being positive via C(x) = -C(-x).           *
+ *      For larger x, reduce x to being positive via S(x) = -S(-x).           *
  *      For 1 <= |x| < 2, a lookup table is used with pre-computed            *
  *      coefficients for Remez polynomials on the intervals                   *
  *      [1 + n / 32, 1 + (n+1) / 32].                                         *
@@ -104,7 +104,7 @@
  *      For 2^17 <= x < 2^52 we use the asymptotic expansion. This is:        *
  *                                                                            *
  *                 1    1                                                     *
- *          C(x) ~ - + ---- sin(pi/2 x^2)                                     *
+ *          S(x) ~ - - ---- cos(pi/2 x^2)                                     *
  *                 2   pi x                                                   *
  *                                                                            *
  *      Again, care is taken to compute sin(pi/2 x^2) without precision loss  *
@@ -136,22 +136,25 @@
  *                         Static / Inlined Functions                         *
  ******************************************************************************/
 
-/*  Computes C(x) using auxiliary functions "f" and "g" for large x.          */
+/*  Computes S(x) using auxiliary functions "f" and "g" for large x.          */
 #include "auxiliary/tmpl_normalized_fresnel_sin_auxiliary_double.h"
 
-/*  Computes C(x) using auxiliary functions "f" and "g" for 2 <= x < 4.       */
+/*  Computes S(x) using auxiliary functions "f" and "g" for 2 <= x < 4.       */
 #include "auxiliary/tmpl_normalized_fresnel_sin_auxiliary_small_double.h"
 
-/*  Computes C(x) using an asymptotic expansion for x > 2^17.                 */
+/*  Computes S(x) using an asymptotic expansion for x > 2^17.                 */
 #include "auxiliary/tmpl_normalized_fresnel_sin_asymptotic_double.h"
 
-/*  Computes C(x) using a Maclaurin series for |x| < 1 / 4.                   */
+/*  Computes S(x) using an asymptotic expansion for x > 2^27.                 */
+#include "auxiliary/tmpl_normalized_fresnel_sin_asymptotic_large_double.h"
+
+/*  Computes S(x) using a Maclaurin series for |x| < 1 / 4.                   */
 #include "auxiliary/tmpl_normalized_fresnel_sin_maclaurin_double.h"
 
-/*  Computes C(x) using a Pade approximant for |x| < 1.                       */
+/*  Computes S(x) using a Pade approximant for |x| < 1.                       */
 #include "auxiliary/tmpl_normalized_fresnel_sin_pade_double.h"
 
-/*  Computes C(x) using a lookup table of Remez coefficients for 1 <= x < 2.  */
+/*  Computes S(x) using a lookup table of Remez coefficients for 1 <= x < 2.  */
 #include "auxiliary/tmpl_normalized_fresnel_sin_remez_double.h"
 
 /*  Speed boost if IEEE-754 support is available.                             */
@@ -237,17 +240,33 @@ double tmpl_Double_Normalized_Fresnel_Sin(double x)
             out = tmpl_Double_Normalized_Fresnel_Sin_Auxiliary(w.r);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
-     *  asymptotic series is all that is needed. Use this.                    */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x34U)
+    /*  For large inputs, 2^17 <= |x| < 2^27, a single term of the asymptotic *
+     *  series is all that is needed. Use this. We split x = xhi + xlo at the *
+     *  16th bit so that xhi^2 / 2 is even, and cos(pi / 2 x^2) can be        *
+     *  computed using the angle sum formula with xhi * xlo + xlo * xlo / 2.  *
+     *  Since we split at the 16th bit, instead of down the middle, the       *
+     *  computation xlo^2 is not exact. Fortunately the error in this term    *
+     *  is dominated by the 1 / pi x term that appears in the asymptotic      *
+     *  expansion for S(x).                                                   */
+    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x1C)
         out = tmpl_Double_Normalized_Fresnel_Sin_Asymptotic(w.r);
+
+    /*  For very large x, the error in xlo^2 can reduce the accuracy in the   *
+     *  calculation. We split x = xhi + xlo down the middle so that x^2 can   *
+     *  be computed exactly using xhi^2 + 2*xhi*xlo + xlo^2. For x > 2^28 we  *
+     *  have the xhi^2 / 2 is even, meaning we may compute cos(pi / 2 x^2)    *
+     *  using the angle sum formula with xhi * xlo + xlo * xlo / 2. By        *
+     *  spltting down the middle, the evaluations for xhi * xlo and xlo * xlo *
+     *  are exact.                                                            */
+    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x34U)
+        out = tmpl_Double_Normalized_Fresnel_Sin_Asymptotic_Large(w.r);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
     else
         out = 0.5;
 
-    /*  C(x) is odd. For negative inputs, return -C(-x).                      */
+    /*  S(x) is odd. For negative inputs, return -C(-x).                      */
     if (x < 0.0)
         return -out;
 
@@ -271,7 +290,7 @@ double tmpl_Double_Normalized_Fresnel_Sin(double x)
     /*  Variable for the output.                                              */
     double out;
 
-    /*  C(x) is odd. Compute |x| and work with that.                          */
+    /*  S(x) is odd. Compute |x| and work with that.                          */
     const double abs_x = tmpl_Double_Abs(x);
 
     /*  Special case, NaN or Infinity.                                        */
@@ -326,17 +345,33 @@ double tmpl_Double_Normalized_Fresnel_Sin(double x)
             out = tmpl_Double_Normalized_Fresnel_Sin_Auxiliary(abs_x);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
-     *  asymptotic series is all that is needed. Use this.                    */
+    /*  For large inputs, 2^17 <= |x| < 2^27, a single term of the asymptotic *
+     *  series is all that is needed. Use this. We split x = xhi + xlo at the *
+     *  16th bit so that xhi^2 / 2 is even, and cos(pi / 2 x^2) can be        *
+     *  computed using the angle sum formula with xhi * xlo + xlo * xlo / 2.  *
+     *  Since we split at the 16th bit, instead of down the middle, the       *
+     *  computation xlo^2 is not exactly. Fortunately the error in this term  *
+     *  is dominated by the 1 / pi x term that appears in the asymptotic      *
+     *  expansion for S(x).                                                   */
+    else if (abs_x < 1.34217728E+08)
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(w.r);
+
+    /*  For very large x, the error in xlo^2 can reduce the accuracy in the   *
+     *  calculation. We split x = xhi + xlo down the middle so that x^2 can   *
+     *  be computed exactly using xhi^2 + 2*xhi*xlo + xlo^2. For x > 2^28 we  *
+     *  have the xhi^2 / 2 is even, meaning we may compute cos(pi / 2 x^2)    *
+     *  using the angle sum formula with xhi * xlo + xlo * xlo / 2. By        *
+     *  spltting down the middle, the evaluations for xhi * xlo and xlo * xlo *
+     *  are exact.                                                            */
     else if (abs_x < 4.503599627370496E+15)
-        out = tmpl_Double_Normalized_Fresnel_Sin_Asymptotic(abs_x);
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Large(w.r);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
     else
         out = 0.5;
 
-    /*  C(x) is odd. For negative inputs, return -C(-x).                      */
+    /*  S(x) is odd. For negative inputs, return -C(-x).                      */
     if (x < 0.0)
         return -out;
 

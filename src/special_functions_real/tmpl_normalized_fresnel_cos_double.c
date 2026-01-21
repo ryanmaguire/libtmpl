@@ -47,7 +47,9 @@
  *              tmpl_Double_Normalized_Fresnel_Cos_Auxiliary:                 *
  *                  Computes C(x) using auxiliary functions for 4 <= x < 2^17.*
  *              tmpl_Double_Normalized_Fresnel_Cos_Asymptotic:                *
- *                  Computes C(x) for x >= 2^17.                              *
+ *                  Computes C(x) for 2^17 <= x < 2^28.                       *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Large:          *
+ *                  Computes C(x) for 2^28 <= x < 2^52.                       *
  *      Method:                                                               *
  *          The normalized Fresnel cosine function is defined by:             *
  *                                                                            *
@@ -157,7 +159,9 @@
  *              tmpl_Double_Normalized_Fresnel_Cos_Auxiliary:                 *
  *                  Computes C(x) using auxiliary functions for 4 <= x < 2^17.*
  *              tmpl_Double_Normalized_Fresnel_Cos_Asymptotic:                *
- *                  Computes C(x) for x >= 2^17.                              *
+ *                  Computes C(x) for 2^17 <= x < 2^28.                       *
+ *              tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Large:          *
+ *                  Computes C(x) for 2^28 <= x < 2^52.                       *
  *          src/math/                                                         *
  *              tmpl_Double_Abs:                                              *
  *                  Computes the absolute value of a real number.             *
@@ -223,7 +227,7 @@ extern double tmpl_Double_Normalized_Fresnel_Cos(const double x);
 #include "auxiliary/tmpl_normalized_fresnel_cos_asymptotic_double.h"
 
 /*  Computes C(x) using an asymptotic expansion for x > 2^27.                 */
-#include "auxiliary/tmpl_normalized_fresnel_cos_asymptotic_very_large_double.h"
+#include "auxiliary/tmpl_normalized_fresnel_cos_asymptotic_large_double.h"
 
 /*  Computes C(x) using a Maclaurin series for |x| < 1 / 4.                   */
 #include "auxiliary/tmpl_normalized_fresnel_cos_maclaurin_double.h"
@@ -308,13 +312,26 @@ double tmpl_Double_Normalized_Fresnel_Cos(const double x)
             out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(w.r);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
-     *  asymptotic series is all that is needed. Use this.                    */
+    /*  For large inputs, 2^17 <= |x| < 2^27, a single term of the asymptotic *
+     *  series is all that is needed. Use this. We split x = xhi + xlo at the *
+     *  16th bit so that xhi^2 / 2 is even, and sin(pi / 2 x^2) can be        *
+     *  computed using the angle sum formula with xhi * xlo + xlo * xlo / 2.  *
+     *  Since we split at the 16th bit, instead of down the middle, the       *
+     *  computation xlo^2 is not exact. Fortunately the error in this term    *
+     *  is dominated by the 1 / pi x term that appears in the asymptotic      *
+     *  expansion for C(x).                                                   */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x1C)
         out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(w.r);
 
+    /*  For very large x, the error in xlo^2 can reduce the accuracy in the   *
+     *  calculation. We split x = xhi + xlo down the middle so that x^2 can   *
+     *  be computed exactly using xhi^2 + 2*xhi*xlo + xlo^2. For x > 2^28 we  *
+     *  have the xhi^2 / 2 is even, meaning we may compute sin(pi / 2 x^2)    *
+     *  using the angle sum formula with xhi * xlo + xlo * xlo / 2. By        *
+     *  spltting down the middle, the evaluations for xhi * xlo and xlo * xlo *
+     *  are exact.                                                            */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x34U)
-        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Very_Large(w.r);
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Large(w.r);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
@@ -400,10 +417,26 @@ double tmpl_Double_Normalized_Fresnel_Cos(const double x)
             out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(abs_x);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
-     *  asymptotic series is all that is needed. Use this.                    */
+    /*  For large inputs, 2^17 <= |x| < 2^27, a single term of the asymptotic *
+     *  series is all that is needed. Use this. We split x = xhi + xlo at the *
+     *  16th bit so that xhi^2 / 2 is even, and sin(pi / 2 x^2) can be        *
+     *  computed using the angle sum formula with xhi * xlo + xlo * xlo / 2.  *
+     *  Since we split at the 16th bit, instead of down the middle, the       *
+     *  computation xlo^2 is not exactly. Fortunately the error in this term  *
+     *  is dominated by the 1 / pi x term that appears in the asymptotic      *
+     *  expansion for C(x).                                                   */
+    else if (abs_x < 1.34217728E+08)
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(w.r);
+
+    /*  For very large x, the error in xlo^2 can reduce the accuracy in the   *
+     *  calculation. We split x = xhi + xlo down the middle so that x^2 can   *
+     *  be computed exactly using xhi^2 + 2*xhi*xlo + xlo^2. For x > 2^28 we  *
+     *  have the xhi^2 / 2 is even, meaning we may compute sin(pi / 2 x^2)    *
+     *  using the angle sum formula with xhi * xlo + xlo * xlo / 2. By        *
+     *  spltting down the middle, the evaluations for xhi * xlo and xlo * xlo *
+     *  are exact.                                                            */
     else if (abs_x < 4.503599627370496E+15)
-        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(abs_x);
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Large(w.r);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
