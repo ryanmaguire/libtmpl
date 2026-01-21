@@ -36,7 +36,7 @@
  *          The approximate value for f(t) across the right bin.              *
  *      g_left (const double):                                                *
  *          The left real value for the phase.                                *
- *      g_middle (const double):                                              *
+ *      g_mid (const double):                                                 *
  *          The central real value for the phase.                             *
  *      g_right (const double):                                               *
  *          The right real value for the phase.                               *
@@ -83,7 +83,7 @@ tmpl_ComplexDouble
 tmpl_CDouble_Filon02_Integrand(const tmpl_ComplexDouble left,
                                const tmpl_ComplexDouble right,
                                const double g_left,
-                               const double g_middle,
+                               const double g_mid,
                                const double g_right,
                                const double width)
 {
@@ -92,27 +92,25 @@ tmpl_CDouble_Filon02_Integrand(const tmpl_ComplexDouble left,
     tmpl_ComplexDouble integrand;
 
     /*  Threshold for swapping between quadratic and linear methods.          */
-    const double threshold = 4.0 * TMPL_SQRT_DBL_EPS;
+    const double threshold = 4.0 * TMPL_QURT_DBL_EPS;
 
     /*  The function g is written in the form A (t - B)^2 + C. We use the     *
      *  magnitude of A to determine whether we use a quadratic or a linear    *
      *  interpolation across the two bins for the integral.                   */
     const double rcpr_width = 1.0 / width;
     const double half_rcpr_width_squared = 0.5 * rcpr_width * rcpr_width;
-    const double scaled_curvature = g_right - 2.0 * g_middle + g_left;
+    const double scaled_curvature = g_right - 2.0 * g_mid + g_left;
     const double curvature = scaled_curvature * half_rcpr_width_squared;
+    const double abs_curvature = tmpl_Double_Abs(curvature);
+    tmpl_ComplexDouble l_int, r_int;
 
     /*  If the curvature is very small, then the parabola essentially becomes *
      *  a line and we may use a linear interpolation for the integral.        */
-    if (tmpl_Double_Abs(curvature) < threshold)
+    if (abs_curvature < threshold)
     {
-        const tmpl_ComplexDouble left_integral =
-            tmpl_CDouble_Filon01_Integrand(left, g_left, g_middle, width);
-
-        const tmpl_ComplexDouble right_integral =
-            tmpl_CDouble_Filon01_Integrand(right, g_middle, g_right, width);
-
-        integrand = tmpl_CDouble_Add(left_integral, right_integral);
+        l_int = tmpl_CDouble_Filon01_Integrand(left, g_left, g_mid, width);
+        r_int = tmpl_CDouble_Filon01_Integrand(right, g_mid, g_right, width);
+        integrand = tmpl_CDouble_Add(l_int, r_int);
     }
 
     /*  If the curvature is large enough, way may safely use the quadratic    *
@@ -122,9 +120,9 @@ tmpl_CDouble_Filon02_Integrand(const tmpl_ComplexDouble left,
         const double scale_factor = 0.5 / scaled_curvature;
         const double g_diff = g_left - g_right;
 
-        const double p0 = g_middle - 0.25 * g_diff * g_diff * scale_factor;
+        const double p0 = g_mid - 0.25 * g_diff * g_diff * scale_factor;
         const double p1 = g_diff * width * scale_factor;
-        const double p2 = tmpl_Double_Sqrt(curvature);
+        const double p2 = tmpl_Double_Sqrt(abs_curvature);
 
         const tmpl_ComplexDouble scale = tmpl_CDouble_Polar(1.0 / p2, p0);
 
@@ -141,16 +139,20 @@ tmpl_CDouble_Filon02_Integrand(const tmpl_ComplexDouble left,
         const double c_left_scale = c_left - c_middle;
         const double c_right_scale = c_middle - c_right;
 
-        tmpl_ComplexDouble left_integral =
-            tmpl_CDouble_Rect(c_left_scale, s_left_scale);
+        l_int = tmpl_CDouble_Rect(c_left_scale, s_left_scale);
+        r_int = tmpl_CDouble_Rect(c_right_scale, s_right_scale);
 
-        tmpl_ComplexDouble right_integral =
-            tmpl_CDouble_Rect(c_right_scale, s_right_scale);
+        if (curvature < 0.0)
+        {
+            tmpl_CDouble_ConjugateSelf(&l_int);
+            tmpl_CDouble_ConjugateSelf(&r_int);
+        }
 
-        tmpl_CDouble_MultiplyBy(&left_integral, &left);
-        tmpl_CDouble_MultiplyBy(&right_integral, &right);
 
-        integrand = tmpl_CDouble_Add(left_integral, right_integral);
+        tmpl_CDouble_MultiplyBy(&l_int, &left);
+        tmpl_CDouble_MultiplyBy(&r_int, &right);
+
+        integrand = tmpl_CDouble_Add(l_int, r_int);
         tmpl_CDouble_MultiplyBy(&integrand, &scale);
     }
 
