@@ -222,6 +222,9 @@ extern double tmpl_Double_Normalized_Fresnel_Cos(const double x);
 /*  Computes C(x) using an asymptotic expansion for x > 2^17.                 */
 #include "auxiliary/tmpl_normalized_fresnel_cos_asymptotic_double.h"
 
+/*  Computes C(x) using an asymptotic expansion for x > 2^27.                 */
+#include "auxiliary/tmpl_normalized_fresnel_cos_asymptotic_very_large_double.h"
+
 /*  Computes C(x) using a Maclaurin series for |x| < 1 / 4.                   */
 #include "auxiliary/tmpl_normalized_fresnel_cos_maclaurin_double.h"
 
@@ -307,8 +310,11 @@ double tmpl_Double_Normalized_Fresnel_Cos(const double x)
 
     /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
      *  asymptotic series is all that is needed. Use this.                    */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x34U)
+    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x1C)
         out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(w.r);
+
+    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x34U)
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Very_Large(w.r);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
