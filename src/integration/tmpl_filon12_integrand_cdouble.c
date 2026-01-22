@@ -162,6 +162,15 @@ tmpl_CDouble_Filon12_Integrand(const tmpl_ComplexDouble left,
         const double mid_exp_arg = curvature * p1 * p1;
         const double right_exp_arg = curvature * shift_right * shift_right;
 
+        l_int = tmpl_CDouble_Rect(c_left_scale, s_left_scale);
+        r_int = tmpl_CDouble_Rect(c_right_scale, s_right_scale);
+
+        if (curvature < 0.0)
+        {
+            tmpl_CDouble_ConjugateSelf(&l_int);
+            tmpl_CDouble_ConjugateSelf(&r_int);
+        }
+
         exp_left = tmpl_CDouble_Expi(left_exp_arg);
         exp_mid = tmpl_CDouble_Expi(mid_exp_arg);
         exp_right = tmpl_CDouble_Expi(right_exp_arg);
@@ -190,22 +199,21 @@ tmpl_CDouble_Filon12_Integrand(const tmpl_ComplexDouble left,
         tmpl_CDouble_MultiplyBy_Real(&scale_left, 2.0 * p2);
         tmpl_CDouble_MultiplyBy_Real(&scale_right, 2.0 * p2);
 
-        l_int = tmpl_CDouble_Rect(c_left_scale, s_left_scale);
-        r_int = tmpl_CDouble_Rect(c_right_scale, s_right_scale);
-
-        scale = tmpl_CDouble_Polar(0.5 / curvature, p0);
-
-        if (curvature < 0.0)
-        {
-            tmpl_CDouble_ConjugateSelf(&l_int);
-            tmpl_CDouble_ConjugateSelf(&r_int);
-        }
+        scale = tmpl_CDouble_Polar(0.5 / abs_curvature, p0);
 
         tmpl_CDouble_MultiplyBy(&l_int, &scale_left);
         tmpl_CDouble_MultiplyBy(&r_int, &scale_right);
 
-        tmpl_CDouble_AddTo(&l_int, &factor_left);
-        tmpl_CDouble_AddTo(&r_int, &factor_right);
+        if (curvature < 0.0)
+        {
+            tmpl_CDouble_SubtractFrom(&l_int, &factor_left);
+            tmpl_CDouble_SubtractFrom(&r_int, &factor_right);
+        }
+        else
+        {
+            tmpl_CDouble_AddTo(&l_int, &factor_left);
+            tmpl_CDouble_AddTo(&r_int, &factor_right);
+        }
 
         integrand = tmpl_CDouble_Add(l_int, r_int);
         tmpl_CDouble_MultiplyBy(&integrand, &scale);
