@@ -167,16 +167,13 @@ tmpl_CDouble_Filon12_Integrand(const tmpl_ComplexDouble left,
         exp_right = tmpl_CDouble_Expi(right_exp_arg);
 
         factor_left = tmpl_CDouble_Subtract(exp_left, exp_mid);
-        factor_right = tmpl_CDouble_Subtract(exp_right, exp_mid);
+        factor_right = tmpl_CDouble_Subtract(exp_mid, exp_right);
 
         diff_left = tmpl_CDouble_Subtract(mid, left);
         diff_right = tmpl_CDouble_Subtract(right, mid);
 
         scale_left = tmpl_CDouble_Multiply_Real(rcpr_width, diff_left);
         scale_right = tmpl_CDouble_Multiply_Real(rcpr_width, diff_right);
-
-        factor_left = tmpl_CDouble_Subtract(exp_left, exp_mid);
-        factor_right = tmpl_CDouble_Subtract(exp_right, exp_mid);
 
         tmpl_CDouble_MultiplyBy(&factor_left, &scale_left);
         tmpl_CDouble_MultiplyBy(&factor_right, &scale_right);
@@ -216,4 +213,4 @@ tmpl_CDouble_Filon12_Integrand(const tmpl_ComplexDouble left,
 
     return integrand;
 }
-/*  End of tmpl_CDouble_Filon02_Integrand.                                    */
+/*  End of tmpl_CDouble_Filon12_Integrand.                                    */
