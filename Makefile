@@ -46,7 +46,7 @@
 #                   make CC=c_compiler_name [other-options]
 #       AR:
 #           Set the archiver. This is only used if a static
-#           build is begin created. Enable with:
+#           build is being created. Enable with:
 #               make AR=archiver_name
 #       ARCH:
 #           Manually set the output of uname -m. The Makefile uses this to see
@@ -94,7 +94,7 @@
 #           option. Note, the portable algorithms are significantly slower.
 #               make NO_IEEE=1 [other-options]
 #       NO_INT:
-#           In a few cases it useful to have fixed-width (8, 16, 32, and 64) bit
+#          	It is sometimes useful to have fixed-width (8, 16, 32, and 64) bit
 #           integers. The C standard does not require these widths be available
 #           but rather specifies the minimum widths allowed by certain data
 #           types. The config.c file will try to find the widths of various
@@ -304,7 +304,6 @@ endif
 # Whether or not to use the strictly portable code, or IEEE-754 compliant code.
 ifdef NO_IEEE
 CONFIG_FLAGS += -DTMPL_SET_TMPL_USE_IEEE_FALSE
-EXCLUDE += -not -name "*_no_ieee_*.c"
 endif
 
 # Whether to use memcpy or for-loops for copying data.
