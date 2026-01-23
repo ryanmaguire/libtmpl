@@ -188,7 +188,7 @@ if (NOT NO_ASM)
     # Check if MSVC (Visual Studio) is used.
     # MSVC cannot compile GAS (.S) files directly.
     if (MSVC)
-        message(WARNING "MSVC detected. Disabling Assembly.")
+        message(STATUS "MSVC detected. Disabling Assembly.")
     else()
         if (FASM)
             find_program(FASM_EXECUTABLE fasm)
