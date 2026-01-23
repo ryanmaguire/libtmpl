@@ -59,7 +59,8 @@
 #define TMPL_HAS_INLINE 0
 
 /*  The inline keyword was only introduced with the C99 standard. Check.      */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
+    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
 
 /*  Users may optionally request libtmpl not use inline at all. Check.        */
 #ifdef TMPL_SET_INLINE_TRUE
