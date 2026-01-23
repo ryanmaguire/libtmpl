@@ -162,16 +162,16 @@ endif()
 
 # The files tmpl_config.h, tmpl_float.h, and more, are all created by the
 # config.c file which probes the compiler and runs before the main build.
-add_executable(tmpl_config_gen config.c)
+add_executable(tmpl_config_generate config.c)
 
 # Add the config flags for config.c.
-target_compile_definitions(tmpl_config_gen PRIVATE ${CONFIG_FLAGS})
+target_compile_definitions(tmpl_config_generate PRIVATE ${CONFIG_FLAGS})
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/tmpl_config.h
-    COMMAND tmpl_config_gen
+    COMMAND tmpl_config_generate
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS tmpl_config_gen
+    DEPENDS tmpl_config_generate
     COMMENT "Generating tmpl_config.h with flags: ${CONFIG_FLAGS}"
 )
 
@@ -297,4 +297,4 @@ install(
 )
 
 # Install header files.
-install(DIRECTORY include/ DESTINATION include/libtmpl)
+install(DIRECTORY include/ DESTINATION include/libtmpl/include)
