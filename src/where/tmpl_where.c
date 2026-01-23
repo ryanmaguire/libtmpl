@@ -8,15 +8,14 @@
  *  that changes between the various functions is the type of the input       *
  *  pointer, the code is exactly the same.                                    */
 
-#define CreateWhereFunction(type, Type, threshtype)                            \
-unsigned long **tmpl_Where_Greater_##Type(type *data, unsigned long dim,       \
-                                        threshtype threshold)                  \
+#define CreateWhereFunction(type, Type, ftype)                                 \
+size_t **tmpl_Where_Greater_##Type(type *data, size_t dim, ftype threshold)    \
 {                                                                              \
     /*  Declare necessary variables.                                         */\
-    unsigned long i;                                                           \
-    unsigned long *arr;                                                        \
-    unsigned long **where;                                                     \
-    unsigned long arr_size = 0;                                                \
+    size_t i;                                                                  \
+    size_t *arr;                                                               \
+    size_t **where;                                                            \
+    size_t arr_size = 0;                                                       \
                                                                                \
     /*  Create a dummy array to store the correct indices in for now.        */\
     arr = malloc(sizeof(*arr) * dim);                                          \
@@ -24,7 +23,7 @@ unsigned long **tmpl_Where_Greater_##Type(type *data, unsigned long dim,       \
     /*  Loop over the input array data to check which indices match.         */\
     for (i=0; i<dim; ++i)                                                      \
     {                                                                          \
-        if ((threshtype)data[i] > threshold)                                   \
+        if ((ftype)data[i] > threshold)                                        \
         {                                                                      \
             arr[arr_size] = i;                                                 \
             arr_size += 1;                                                     \
@@ -61,15 +60,14 @@ CreateWhereFunction(long double, LDouble, long double)
 /*  Erase the CreateWhereFunction macro.                                      */
 #undef CreateWhereFunction
 
-#define CreateWhereFunction(type, Type, threshtype)                            \
-unsigned long **tmpl_Where_Lesser_##Type(type *data, unsigned long dim,        \
-                                       threshtype threshold)                   \
+#define CreateWhereFunction(type, Type, ftype)                                 \
+size_t **tmpl_Where_Lesser_##Type(type *data, size_t dim, ftype threshold)     \
 {                                                                              \
     /*  Declare necessary variables.                                         */\
-    unsigned long i;                                                           \
-    unsigned long *arr;                                                        \
-    unsigned long **where;                                                     \
-    unsigned long arr_size = 0;                                                \
+    size_t i;                                                                  \
+    size_t *arr;                                                               \
+    size_t **where;                                                            \
+    size_t arr_size = 0;                                                       \
                                                                                \
     /*  Create a dummy array to store the correct indices in for now.        */\
     arr = malloc(sizeof(*arr) * dim);                                          \
@@ -77,7 +75,7 @@ unsigned long **tmpl_Where_Lesser_##Type(type *data, unsigned long dim,        \
     /*  Loop over the input array data to check which indices match.         */\
     for (i=0; i<dim; ++i)                                                      \
     {                                                                          \
-        if ((threshtype)data[i] < threshold)                                   \
+        if ((ftype)data[i] < threshold)                                        \
         {                                                                      \
             arr[arr_size] = i;                                                 \
             arr_size += 1;                                                     \
@@ -113,16 +111,15 @@ CreateWhereFunction(long double, LDouble, long double)
 
 #undef CreateWhereFunction
 
-#define CreateWhereFunction(type, Type, threshtype)\
-unsigned long **tmpl_Where_LesserGreater_##Type(type *data, unsigned long dim, \
-                                              threshtype lower,                \
-                                              threshtype upper)                \
+#define CreateWhereFunction(type, Type, ftype)                                 \
+size_t **tmpl_Where_LesserGreater_##Type(type *data, size_t dim,               \
+                                         ftype lower, ftype upper)             \
 {                                                                              \
     /*  Declare necessary variables.                                         */\
-    unsigned long i;                                                           \
-    unsigned long *arr;                                                        \
-    unsigned long **where;                                                     \
-    unsigned long arr_size = 0;                                                \
+    size_t i;                                                                  \
+    size_t *arr;                                                               \
+    size_t **where;                                                            \
+    size_t arr_size = 0;                                                       \
                                                                                \
     /*  Create a dummy array to store the correct indices in for now.        */\
     arr = malloc(sizeof(*arr) * dim);                                          \
@@ -130,7 +127,7 @@ unsigned long **tmpl_Where_LesserGreater_##Type(type *data, unsigned long dim, \
     /*  Loop over the input array data to check which indices match.         */\
     for (i=0; i<dim; ++i)                                                      \
     {                                                                          \
-        if (((threshtype)data[i] > lower) && ((threshtype)data[i] < upper))    \
+        if (((ftype)data[i] > lower) && ((ftype)data[i] < upper))              \
         {                                                                      \
             arr[arr_size] = i;                                                 \
             arr_size += 1;                                                     \
