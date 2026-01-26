@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes the factorial function, n! = n * (n-1) * ... * 2 * 1.        *
  *  Arguments:                                                                *
- *      n (unsigned short int):                                               *
+ *      n (const unsigned short int):                                         *
  *          An integer, the independent variable for n!.                      *
  *  Output:                                                                   *
  *      n! (unsigned short int):                                              *
@@ -55,6 +55,8 @@
  *          Header file where TMPL_INLINE_DECL is provided.                   *
  *  2.) tmpl_limits.h:                                                        *
  *          Header file containing TMPL_USHORT_BIT.                           *
+ *  3.) tmpl_array_size.h:                                                    *
+ *          Header file providing the TMPL_ARRAY_SIZE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
@@ -64,7 +66,11 @@
  *  2022/10/18: Ryan Maguire                                                  *
  *      Moved from math/ to integer/.                                         *
  *  2024/05/24: Ryan Maguire                                                  *
- *      Inlined the function, moved to include/integer/.                      *
+ *      Inlined the function, moved to include/inline/integer/.               *
+ *  2026/01/26: Ryan Maguire                                                  *
+ *      Cleaned up, made it so only two functions are implemented. A macro    *
+ *      now exists indicating if a lookup table can be used, and a for-loop   *
+ *      is used otherwise.                                                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -76,6 +82,9 @@
 
 /*  The TMPL_USHORT_BIT macro is found here.                                  */
 #include <libtmpl/include/tmpl_limits.h>
+
+/*  TMPL_ARRAY_SIZE macro provided here.                                      */
+#include <libtmpl/include/helper/tmpl_array_size.h>
 
 /*  16-bit unsigned short int has a max value of 65,535.                      */
 #if TMPL_USHORT_BIT == 16
@@ -90,20 +99,8 @@ static const unsigned short int tmpl_ushort_factorial_values[9] = {
     1U, 1U, 2U, 6U, 24U, 120U, 720U, 5040U, 40320U
 };
 
-/*  16-bit unsigned short factorial function.                                 */
-TMPL_INLINE_DECL
-unsigned short int tmpl_UShort_Factorial(unsigned short int n)
-{
-    /*  For 16-bit unsigned short n! overflows for n > 8. Return 0 if this is *
-     *  the case. n! is never zero for non-negative integers, so this         *
-     *  indicates an error to the caller.                                     */
-    if (n > 8U)
-        return 0U;
-
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_ushort_factorial_values[n];
-}
-/*  End of tmpl_UShort_Factorial.                                             */
+/*  Macro indicating we may use a lookup table, instead of a for-loop.        */
+#define TMPL_USHORT_FACTORIAL_USE_LOOKUP_TABLE 1
 
 /*  32-bit unsigned short has a max value of 4,294,967,295.                   */
 #elif TMPL_USHORT_BIT == 32
@@ -119,20 +116,8 @@ static const unsigned short int tmpl_ushort_factorial_values[13] = {
     3628800U, 39916800U, 479001600U
 };
 
-/*  32-bit unsigned short factorial function.                                 */
-TMPL_INLINE_DECL
-unsigned short int tmpl_UShort_Factorial(unsigned short int n)
-{
-    /*  For 32-bit unsigned short n! overflows for n > 12. Return 0 if this   *
-     *  is the case. n! is never zero for non-negative integers, so this      *
-     *  indicates an error to the caller.                                     */
-    if (n > 12U)
-        return 0U;
-
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_ushort_factorial_values[n];
-}
-/*  End of tmpl_UShort_Factorial.                                             */
+/*  Same macro as before, we may use the lookup table instead of a loop.      */
+#define TMPL_USHORT_FACTORIAL_USE_LOOKUP_TABLE 1
 
 /*  64-bit unsigned short has a max value of 18,446,744,073,709,551,615.      */
 #elif TMPL_USHORT_BIT == 64
@@ -150,20 +135,8 @@ static const unsigned short int tmpl_ushort_factorial_values[21] = {
     121645100408832000U, 2432902008176640000U
 };
 
-/*  64-bit unsigned short int factorial function.                             */
-TMPL_INLINE_DECL
-unsigned short int tmpl_UShort_Factorial(unsigned short int n)
-{
-    /*  For 64-bit unsigned short n! overflows for n > 20. Return 0 if this   *
-     *  is the case. n! is never zero for non-negative integers, so this      *
-     *  indicates an error to the caller.                                     */
-    if (n > 20U)
-        return 0U;
-
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_ushort_factorial_values[n];
-}
-/*  End of tmpl_UShort_Factorial.                                             */
+/*  64-bit width is the largest supported size. We may use a lookup table.    */
+#define TMPL_USHORT_FACTORIAL_USE_LOOKUP_TABLE 1
 
 /*  Lastly, a portable version. No assumption on width is made.               */
 #else
@@ -172,37 +145,69 @@ unsigned short int tmpl_UShort_Factorial(unsigned short int n)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Short must be at least 16 bits wide. Precompute the first 9 values of n!. */
-static const unsigned short int tmpl_ushort_factorial_values[9] = {
-    1U, 1U, 2U, 6U, 24U, 120U, 720U, 5040U, 40320U
-};
+/*  For widths other than 16, 32, and 64, use a for-loop.                     */
+#define TMPL_USHORT_FACTORIAL_USE_LOOKUP_TABLE 0
 
-/*  Portable factorial function for unsigned short.                           */
+#endif
+/*  End of #if TMPL_USHORT_BIT == 16.                                         */
+
+/*  For supported widths, this function is very short. Just use the table.    */
+#if TMPL_USHORT_FACTORIAL_USE_LOOKUP_TABLE == 1
+
+/******************************************************************************
+ *                            Lookup Table Version                            *
+ ******************************************************************************/
+
+/*  Unsigned short int factorial function.                                    */
 TMPL_INLINE_DECL
-unsigned short int tmpl_UShort_Factorial(unsigned short int n)
+unsigned short int tmpl_UShort_Factorial(const unsigned short int n)
 {
-    /*  Declare necessary variable. C89 requires this at the top.             */
-    unsigned short int k, factorial;
+    /*  If n can't index the lookup table, we assume that n! is greater than  *
+     *  the maximum value of unsigned short. Return zero in this case. n! is  *
+     *  never zero for non-negative integers, so this signals the caller that *
+     *  an error has occurred.                                                */
+    if (n >= TMPL_ARRAY_SIZE(tmpl_ushort_factorial_values))
+        return 0U;
 
-    /*  For 0 <= n <= 8 we can use the lookup table above.                    */
-    if (n < 9U)
-        return tmpl_ushort_factorial_values[n];
+    /*  Otherwise, return n! from the precomputed table.                      */
+    return tmpl_ushort_factorial_values[n];
+}
+/*  End of tmpl_UShort_Factorial.                                             */
 
-    /*  Otherwise, set factorial to the largest value in the table. We will   *
-     *  compute using n! = n*(n-1)*...*8!.                                    */
-    factorial = tmpl_ushort_factorial_values[8];
+/*  Otherwise, use a for-loop with n! = n * (n - 1)!.                         */
+#else
 
-    /*  For 9 <= k <= n, multiply the result by k. This method has the        *
-     *  unfortunate disadvantage of not detecting overflows.                  */
-    for (k = 9U; k <= n; ++k)
-        factorial *= k;
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Unsigned short int factorial function.                                    */
+TMPL_INLINE_DECL
+unsigned short int tmpl_UShort_Factorial(const unsigned short int n)
+{
+    /*  Variable for indexing the for-loop.                                   */
+    unsigned short int index;
+
+    /*  Variable for n!. We start at one and iteratively multiply.            */
+    unsigned short int factorial = 1U;
+
+    /*  0! = 1! = 1. Return 1 if n < 2.                                       */
+    if (n < 2U)
+        return factorial;
+
+    /*  Loop through and compute using n! = n * (n - 1)!.                     */
+    for (index = 2U; index <= n; ++index)
+        factorial *= index;
 
     return factorial;
 }
 /*  End of tmpl_UShort_Factorial.                                             */
 
 #endif
-/*  End of #if TMPL_USHORT_BIT == 16.                                         */
+/*  End of #if TMPL_USHORT_FACTORIAL_USE_LOOKUP_TABLE == 1.                   */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_USHORT_FACTORIAL_USE_LOOKUP_TABLE
 
 #endif
 /*  End of include guard.                                                     */
