@@ -26,9 +26,9 @@
  *  Function Name:                                                            *
  *      tmpl_ULong_Factorial                                                  *
  *  Purpose:                                                                  *
- *      Computes the factorial function, n! = n * (n-1)* ... * 2 * 1.         *
+ *      Computes the factorial function, n! = n * (n-1) * ... * 2 * 1.        *
  *  Arguments:                                                                *
- *      n (unsigned long int):                                                *
+ *      n (const unsigned long int):                                          *
  *          An integer, the independent variable for n!.                      *
  *  Output:                                                                   *
  *      n! (unsigned long int):                                               *
@@ -38,10 +38,8 @@
  *          None.                                                             *
  *      Method:                                                               *
  *          Use a lookup table. Only a few values of n will not cause         *
- *          overflow. For 32-bit unsigned long this is 0 <= n <= 12 and       *
- *          for 64-bit unsigned long this is 0 <= n <= 20. For larger values  *
- *          return 0. n! is never zero for non-negative integers, so this     *
- *          acts as an error message to the caller.                           *
+ *          overflow. For larger values return 0. n! is never zero for        *
+ *          non-negative integers, so this acts as an error for the caller.   *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
@@ -57,6 +55,8 @@
  *          Header file where TMPL_INLINE_DECL is provided.                   *
  *  2.) tmpl_limits.h:                                                        *
  *          Header file containing TMPL_ULONG_BIT.                            *
+ *  3.) tmpl_array_size.h:                                                    *
+ *          Header file providing the TMPL_ARRAY_SIZE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
@@ -66,7 +66,11 @@
  *  2022/10/18: Ryan Maguire                                                  *
  *      Moved from math/ to integer/.                                         *
  *  2024/05/24: Ryan Maguire                                                  *
- *      Inlined the function, moved to include/integer/.                      *
+ *      Inlined the function, moved to include/inline/integer/.               *
+ *  2026/01/26: Ryan Maguire                                                  *
+ *      Cleaned up, made it so only two functions are implemented. A macro    *
+ *      now exists indicating if a lookup table can be used, and a for-loop   *
+ *      is used otherwise.                                                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -78,6 +82,9 @@
 
 /*  The TMPL_ULONG_BIT macro is found here.                                   */
 #include <libtmpl/include/tmpl_limits.h>
+
+/*  TMPL_ARRAY_SIZE macro provided here.                                      */
+#include <libtmpl/include/helper/tmpl_array_size.h>
 
 /*  32-bit unsigned long has a max value of 4,294,967,295.                    */
 #if TMPL_ULONG_BIT == 32
@@ -93,20 +100,8 @@ static const unsigned long int tmpl_ulong_factorial_values[13] = {
     3628800UL, 39916800UL, 479001600UL
 };
 
-/*  32-bit unsigned long factorial function.                                  */
-TMPL_INLINE_DECL
-unsigned long int tmpl_ULong_Factorial(unsigned long int n)
-{
-    /*  For 32-bit unsigned long n! overflows for n > 12. Return 0 if this is *
-     *  the case. n! is never zero for non-negative integers, so this         *
-     *  indicates an error to the caller.                                     */
-    if (n > 12UL)
-        return 0UL;
-
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_ulong_factorial_values[n];
-}
-/*  End of tmpl_ULong_Factorial.                                              */
+/*  Macro indicating we may use a lookup table, instead of a for-loop.        */
+#define TMPL_ULONG_FACTORIAL_USE_LOOKUP_TABLE 1
 
 /*  64-bit unsigned long has a max value of 18,446,744,073,709,551,615.       */
 #elif TMPL_ULONG_BIT == 64
@@ -124,61 +119,79 @@ static const unsigned long int tmpl_ulong_factorial_values[21] = {
     121645100408832000UL, 2432902008176640000UL
 };
 
-/*  64-bit unsigned long factorial function.                                  */
-TMPL_INLINE_DECL
-unsigned long int tmpl_ULong_Factorial(unsigned long int n)
-{
-    /*  For 64-bit unsigned long n! overflows for n > 20. Return 0 if this is *
-     *  the case. n! is never zero for non-negative integers, so this         *
-     *  indicates an error to the caller.                                     */
-    if (n > 20UL)
-        return 0UL;
+/*  Same macro as before, we may use the lookup table instead of a loop.      */
+#define TMPL_ULONG_FACTORIAL_USE_LOOKUP_TABLE 1
 
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_ulong_factorial_values[n];
-}
-/*  End of tmpl_ULong_Factorial.                                              */
-
+/*  Lastly, a portable version. No assumption on width is made.               */
 #else
-/*  Portable algorithm for other sizes.                                       */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Long is required to be at least 32-bits wide, so we can precompute        *
- *  the first few values of the factorial function.                           */
-static const unsigned long int tmpl_ulong_factorial_values[13] = {
-    1UL, 1UL, 2UL, 6UL, 24UL, 120UL, 720UL, 5040UL, 40320UL, 362880UL,
-    3628800UL, 39916800UL, 479001600UL
-};
+/*  For widths other than  32 and 64 use a for-loop.                          */
+#define TMPL_ULONG_FACTORIAL_USE_LOOKUP_TABLE 0
 
-/*  Portable factorial function for unsigned long.                            */
+#endif
+/*  End of #if TMPL_ULONG_BIT == 32.                                          */
+
+/*  For supported widths, this function is very short. Just use the table.    */
+#if TMPL_ULONG_FACTORIAL_USE_LOOKUP_TABLE == 1
+
+/******************************************************************************
+ *                            Lookup Table Version                            *
+ ******************************************************************************/
+
+/*  Unsigned long int factorial function.                                     */
 TMPL_INLINE_DECL
-unsigned long int tmpl_ULong_Factorial(unsigned long int n)
+unsigned long int tmpl_ULong_Factorial(const unsigned long int n)
 {
-    /*  Declare necessary variable. C89 requires this at the top.             */
-    unsigned long int k, factorial;
+    /*  If n can't index the lookup table, we assume that n! is greater than  *
+     *  the maximum value of unsigned long. Return zero in this case. n! is   *
+     *  never zero for non-negative integers, so this signals the caller that *
+     *  an error has occurred.                                                */
+    if (n >= TMPL_ARRAY_SIZE(tmpl_ulong_factorial_values))
+        return 0U;
 
-    /*  For 0 <= n <= 12 we can use the lookup table above.                   */
-    if (n < 13UL)
-        return tmpl_ulong_factorial_values[n];
+    /*  Otherwise, return n! from the precomputed table.                      */
+    return tmpl_ulong_factorial_values[n];
+}
+/*  End of tmpl_ULong_Factorial.                                              */
 
-    /*  Otherwise, set factorial to the largest value in the table. We will   *
-     *  compute using n! = n*(n-1)*...*12!.                                   */
-    factorial = tmpl_ulong_factorial_values[12];
+/*  Otherwise, use a for-loop with n! = n * (n - 1)!.                         */
+#else
 
-    /*  For 13 <= k <= n, multiply the result by k. This method has the       *
-     *  unfortunate disadvantage of not detecting overflows.                  */
-    for (k = 13UL; k <= n; ++k)
-        factorial *= k;
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Unsigned long int factorial function.                                     */
+TMPL_INLINE_DECL
+unsigned long int tmpl_ULong_Factorial(const unsigned long int n)
+{
+    /*  Variable for indexing the for-loop.                                   */
+    unsigned long int index;
+
+    /*  Variable for n!. We start at one and iteratively multiply.            */
+    unsigned long int factorial = 1UL;
+
+    /*  0! = 1! = 1. Return 1 if n < 2.                                       */
+    if (n < 2UL)
+        return factorial;
+
+    /*  Loop through and compute using n! = n * (n - 1)!.                     */
+    for (index = 2UL; index <= n; ++index)
+        factorial *= index;
 
     return factorial;
 }
 /*  End of tmpl_ULong_Factorial.                                              */
 
 #endif
-/*  End of #if TMPL_ULONG_BIT == 64.                                          */
+/*  End of #if TMPL_ULONG_FACTORIAL_USE_LOOKUP_TABLE == 1.                    */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_ULONG_FACTORIAL_USE_LOOKUP_TABLE
 
 #endif
 /*  End of include guard.                                                     */
