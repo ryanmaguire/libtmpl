@@ -61,7 +61,7 @@ extern "C" {
  *  Purpose:                                                                  *
  *      Computes the absolute value of an integer.                            *
  *  Arguments:                                                                *
- *      n (int):                                                              *
+ *      n (const signed int):                                                 *
  *          An integer.                                                       *
  *  Output:                                                                   *
  *      abs_n (int):                                                          *
@@ -87,14 +87,14 @@ extern "C" {
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Otherwise use the functions in src/integer/.                              */
-extern signed char tmpl_Char_Abs(signed char n);
-extern signed short int tmpl_Short_Abs(signed short int n);
-extern signed int tmpl_Int_Abs(signed int n);
-extern signed long int tmpl_Long_Abs(signed long int n);
+extern signed char tmpl_Char_Abs(const signed char n);
+extern signed short int tmpl_Short_Abs(const signed short int n);
+extern signed int tmpl_Int_Abs(const signed int n);
+extern signed long int tmpl_Long_Abs(const signed long int n);
 
 /*  Long long function if support is available.                               */
 #if TMPL_HAS_LONGLONG == 1
-extern signed long long int tmpl_LLong_Abs(signed long long int);
+extern signed long long int tmpl_LLong_Abs(const signed long long int);
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 

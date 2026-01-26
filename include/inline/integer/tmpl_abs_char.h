@@ -32,7 +32,7 @@
  *          |n|  =  |  -n,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      n (signed char):                                                      *
+ *      n (const signed char):                                                *
  *          An integer.                                                       *
  *  Output:                                                                   *
  *      abs_n (signed char):                                                  *
@@ -67,7 +67,7 @@
 
 /*  Computes the absolute value of a signed char.                             */
 TMPL_INLINE_DECL
-signed char tmpl_Char_Abs(signed char n)
+signed char tmpl_Char_Abs(const signed char n)
 {
     /*  For negative inputs we just negate and return.                        */
     if (n < 0x00)

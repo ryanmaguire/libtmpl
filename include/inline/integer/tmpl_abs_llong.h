@@ -32,7 +32,7 @@
  *          |n|  =  |  -n,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      n (signed long long int):                                             *
+ *      n (const signed long long int):                                       *
  *          An integer.                                                       *
  *  Output:                                                                   *
  *      abs_n (signed long long int):                                         *
@@ -46,7 +46,9 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
+ *  1.) tmpl_inttype.h:                                                       *
+ *          Header file containing the TMPL_HAS_LONGLONG macro.               *
+ *  2.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -73,7 +75,7 @@
 
 /*  Computes the absolute value of a signed long long int.                    */
 TMPL_INLINE_DECL
-signed long long int tmpl_LLong_Abs(signed long long int n)
+signed long long int tmpl_LLong_Abs(const signed long long int n)
 {
     /*  For negative inputs we just negate and return.                        */
     if (n < 0LL)

@@ -32,7 +32,7 @@
  *          |n|  =  |  -n,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      n (signed int):                                                       *
+ *      n (const signed int):                                                 *
  *          An integer.                                                       *
  *  Output:                                                                   *
  *      abs_n (signed int):                                                   *
@@ -67,7 +67,7 @@
 
 /*  Computes the absolute value of a signed int.                              */
 TMPL_INLINE_DECL
-signed int tmpl_Int_Abs(signed int n)
+signed int tmpl_Int_Abs(const signed int n)
 {
     /*  For negative inputs we just negate and return.                        */
     if (n < 0)

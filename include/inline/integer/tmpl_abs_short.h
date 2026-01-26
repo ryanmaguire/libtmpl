@@ -32,7 +32,7 @@
  *          |n|  =  |  -n,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      n (signed short int):                                                 *
+ *      n (const signed short int):                                           *
  *          An integer.                                                       *
  *  Output:                                                                   *
  *      abs_n (signed short int):                                             *
@@ -67,7 +67,7 @@
 
 /*  Computes the absolute value of a signed short int.                        */
 TMPL_INLINE_DECL
-signed short int tmpl_Short_Abs(signed short int n)
+signed short int tmpl_Short_Abs(const signed short int n)
 {
     /*  For negative inputs we just negate and return.                        */
     if (n < 0)

@@ -32,7 +32,7 @@
  *          |n|  =  |  -n,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      n (signed long int):                                                  *
+ *      n (const signed long int):                                            *
  *          An integer.                                                       *
  *  Output:                                                                   *
  *      abs_n (signed long int):                                              *
@@ -67,7 +67,7 @@
 
 /*  Computes the absolute value of a signed long int.                         */
 TMPL_INLINE_DECL
-signed long int tmpl_Long_Abs(signed long int n)
+signed long int tmpl_Long_Abs(const signed long int n)
 {
     /*  For negative inputs we just negate and return.                        */
     if (n < 0L)
