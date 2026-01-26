@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes the factorial function, n! = n * (n-1) * ... * 2 * 1.        *
  *  Arguments:                                                                *
- *      n (unsigned char):                                                    *
+ *      n (const unsigned char):                                              *
  *          An integer, the independent variable for n!.                      *
  *  Output:                                                                   *
  *      n! (unsigned char):                                                   *
@@ -55,6 +55,8 @@
  *          Header file where TMPL_INLINE_DECL is provided.                   *
  *  2.) tmpl_limits.h:                                                        *
  *          Header file containing TMPL_UCHAR_BIT.                            *
+ *  3.) tmpl_array_size.h:                                                    *
+ *          Header file providing the TMPL_ARRAY_SIZE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
@@ -64,7 +66,11 @@
  *  2022/10/18: Ryan Maguire                                                  *
  *      Moved from math/ to integer/.                                         *
  *  2024/05/24: Ryan Maguire                                                  *
- *      Inlined the function, moved to include/integer/.                      *
+ *      Inlined the function, moved to include/inline/integer/.               *
+ *  2026/01/26: Ryan Maguire                                                  *
+ *      Cleaned up, made it so only two functions are implemented. A macro    *
+ *      now exists indicating if a lookup table can be used, and a for-loop   *
+ *      is used otherwise.                                                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -76,6 +82,9 @@
 
 /*  The TMPL_UCHAR_BIT macro is found here.                                   */
 #include <libtmpl/include/tmpl_limits.h>
+
+/*  TMPL_ARRAY_SIZE macro provided here.                                      */
+#include <libtmpl/include/helper/tmpl_array_size.h>
 
 /*  8-bit unsigned char has a max value of 255.                               */
 #if TMPL_UCHAR_BIT == 8
@@ -89,20 +98,8 @@ static const unsigned char tmpl_uchar_factorial_values[6] = {
     0x01U, 0x01U, 0x02U, 0x06U, 0x18U, 0x78U
 };
 
-/*  8-bit unsigned char factorial function.                                   */
-TMPL_INLINE_DECL
-unsigned char tmpl_UChar_Factorial(unsigned char n)
-{
-    /*  For 8-bit unsigned char n! overflows for n > 5. Return 0 if this is   *
-     *  the case. n! is never zero for non-negative integers, so this         *
-     *  indicates an error to the caller.                                     */
-    if (n > 0x05U)
-        return 0x00U;
-
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_uchar_factorial_values[n];
-}
-/*  End of tmpl_UChar_Factorial.                                              */
+/*  Macro indicating we may use a lookup table, instead of a for-loop.        */
+#define TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE 1
 
 /*  16-bit unsigned char has a max value of 65,535.                           */
 #elif TMPL_UCHAR_BIT == 16
@@ -118,20 +115,8 @@ static const unsigned char tmpl_uchar_factorial_values[9] = {
     0x0018U, 0x0078U, 0x02D0U, 0x13B0U, 0x9D80U
 };
 
-/*  16-bit unsigned char factorial function.                                  */
-TMPL_INLINE_DECL
-unsigned char tmpl_UChar_Factorial(unsigned char n)
-{
-    /*  For 16-bit unsigned char n! overflows for n > 8. Return 0 if this is  *
-     *  the case. n! is never zero for non-negative integers, so this         *
-     *  indicates an error to the caller.                                     */
-    if (n > 0x08U)
-        return 0x00U;
-
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_uchar_factorial_values[n];
-}
-/*  End of tmpl_UChar_Factorial.                                              */
+/*  Same macro as before, we may use the lookup table instead of a loop.      */
+#define TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE 1
 
 /*  32-bit unsigned char has a max value of 4,294,967,295.                    */
 #elif TMPL_UCHAR_BIT == 32
@@ -148,20 +133,8 @@ static const unsigned char tmpl_uchar_factorial_values[13] = {
     0x00009D80U, 0x00058980U, 0x00375F00U, 0x02611500U, 0x1C8CFC00U
 };
 
-/*  32-bit unsigned char factorial function.                                  */
-TMPL_INLINE_DECL
-unsigned char tmpl_UChar_Factorial(unsigned char n)
-{
-    /*  For 32-bit unsigned char n! overflows for n > 12. Return 0 if this is *
-     *  the case. n! is never zero for non-negative integers, so this         *
-     *  indicates an error to the caller.                                     */
-    if (n > 0x0CU)
-        return 0x00U;
-
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_uchar_factorial_values[n];
-}
-/*  End of tmpl_UChar_Factorial.                                              */
+/*  32-bit width supported, we may use a lookup table.                        */
+#define TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE 1
 
 /*  64-bit unsigned char has a max value of 18,446,744,073,709,551,615.       */
 #elif TMPL_UCHAR_BIT == 64
@@ -182,59 +155,79 @@ static const unsigned char tmpl_uchar_factorial_values[21] = {
     0x0016BEECCA730000U, 0x01B02B9306890000U, 0x21C3677C82B40000U,
 };
 
-/*  64-bit unsigned char factorial function.                                  */
-TMPL_INLINE_DECL
-unsigned char tmpl_UChar_Factorial(unsigned char n)
-{
-    /*  For 64-bit unsigned char n! overflows for n > 20. Return 0 if this    *
-     *  is the case. n! is never zero for non-negative integers, so this      *
-     *  indicates an error to the caller.                                     */
-    if (n > 0x14U)
-        return 0x00U;
+/*  64-bit width is the largest supported size. We may use a lookup table.    */
+#define TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE 1
 
-    /*  Otherwise, return n! from the precomputed table above.                */
-    return tmpl_uchar_factorial_values[n];
-}
-/*  End of tmpl_UChar_Factorial.                                              */
-
-/*  Lastly, a portable version. No assumption on width is made.               */
+/*  Portable method, no lookup table provided. Compute with a for-loop.       */
 #else
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Char must be at least 8 bits wide. Precompute the first 6 values of n!.   */
-static const unsigned char tmpl_uchar_factorial_values[6] = {
-    0x01U, 0x01U, 0x02U, 0x06U, 0x18U, 0x78U
-};
+/*  For widths other than 8, 16, 32, and 64, use a for-loop.                  */
+#define TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE 0
 
-/*  Portable factorial function for unsigned char.                            */
+#endif
+/*  End of #if TMPL_UCHAR_BIT == 8.                                           */
+
+/*  For supported widths, this function is very short. Just use the table.    */
+#if TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE == 1
+
+/******************************************************************************
+ *                            Lookup Table Version                            *
+ ******************************************************************************/
+
+/*  Unsigned char factorial function.                                         */
 TMPL_INLINE_DECL
-unsigned char tmpl_UChar_Factorial(unsigned char n)
+unsigned char tmpl_UChar_Factorial(const unsigned char n)
 {
-    /*  Declare necessary variable. C89 requires this at the top.             */
-    unsigned char k, factorial;
+    /*  If n can't index the lookup table, we assume that n! is greater than  *
+     *  the maximum value of unsigned char. Return zero in this case. n! is   *
+     *  never zero for non-negative integers, so this signals the caller that *
+     *  an error has occurred.                                                */
+    if (n >= TMPL_ARRAY_SIZE(tmpl_uchar_factorial_values))
+        return 0x00U;
 
-    /*  For 0 <= n <= 5 we can use the lookup table above.                    */
-    if (n < 0x06U)
-        return tmpl_uchar_factorial_values[n];
+    /*  Otherwise, return n! from the precomputed table.                      */
+    return tmpl_uchar_factorial_values[n];
+}
+/*  End of tmpl_UChar_Factorial.                                              */
 
-    /*  Otherwise, set factorial to the largest value in the table. We will   *
-     *  compute using n! = n*(n-1)*...*5!.                                    */
-    factorial = tmpl_uchar_factorial_values[5];
+/*  Otherwise, use a for-loop with n! = n * (n - 1)!.                         */
+#else
 
-    /*  For 6 <= k <= n, multiply the result by k. This method has the        *
-     *  unfortunate disadvantage of not detecting overflows.                  */
-    for (k = 0x06U; k <= n; ++k)
-        factorial *= k;
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Unsigned char factorial function.                                         */
+TMPL_INLINE_DECL
+unsigned char tmpl_UChar_Factorial(const unsigned char n)
+{
+    /*  Variable for indexing the for-loop.                                   */
+    unsigned char index;
+
+    /*  Variable for n!. We start at one and iteratively multiply.            */
+    unsigned char factorial = 0x01U;
+
+    /*  0! = 1! = 1. Return 1 if n < 2.                                       */
+    if (n < 0x02U)
+        return factorial;
+
+    /*  Loop through and compute using n! = n * (n - 1)!.                     */
+    for (index = 0x02U; index <= n; ++index)
+        factorial *= index;
 
     return factorial;
 }
 /*  End of tmpl_UChar_Factorial.                                              */
 
 #endif
-/*  End of #if TMPL_UCHAR_BIT == 8.                                           */
+/*  End of #if TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE == 1.                    */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_UCHAR_FACTORIAL_USE_LOOKUP_TABLE
 
 #endif
 /*  End of include guard.                                                     */

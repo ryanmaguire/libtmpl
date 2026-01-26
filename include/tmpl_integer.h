@@ -40,9 +40,6 @@
 #ifndef TMPL_INTEGER_H
 #define TMPL_INTEGER_H
 
-/*  size_t typedef given here.                                                */
-#include <stddef.h>
-
 /*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
 
@@ -107,10 +104,10 @@ extern signed long long int tmpl_LLong_Abs(const signed long long int);
  *  Purpose:                                                                  *
  *      Computes the factorial of an integer.                                 *
  *  Arguments:                                                                *
- *      n (unsigned int):                                                     *
+ *      n (const unsigned int):                                               *
  *          An integer.                                                       *
  *  Output:                                                                   *
- *      n! (int):                                                             *
+ *      n! (unsigned int):                                                    *
  *          The factorial of n.                                               *
  *  Notes:                                                                    *
  *      Returns 0 on overflow. n! is never zero for positive integers, so     *
@@ -139,14 +136,15 @@ extern signed long long int tmpl_LLong_Abs(const signed long long int);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Otherwise use the functions in src/integer/.                              */
-extern unsigned char tmpl_UChar_Factorial(unsigned char n);
-extern unsigned short int tmpl_UShort_Factorial(unsigned short int n);
-extern unsigned int tmpl_UInt_Factorial(unsigned int n);
-extern unsigned long int tmpl_ULong_Factorial(unsigned long int n);
+extern unsigned char tmpl_UChar_Factorial(const unsigned char n);
+extern unsigned short int tmpl_UShort_Factorial(const unsigned short int n);
+extern unsigned int tmpl_UInt_Factorial(const unsigned int n);
+extern unsigned long int tmpl_ULong_Factorial(const unsigned long int n);
 
 /*  Long long function if support is available.                               */
 #if TMPL_HAS_LONGLONG == 1
-extern unsigned long long int tmpl_ULLong_Factorial(unsigned long long int);
+extern unsigned long long int
+tmpl_ULLong_Factorial(const unsigned long long int);
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
