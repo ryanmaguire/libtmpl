@@ -19,7 +19,7 @@
  *                               tmpl_abs_long                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(n) = |n|. See include/integer/tmpl_abs_long.h for details. *
+ *      Computes f(n) = |n|. See include/inline/integer/tmpl_abs_long.h.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -31,10 +31,10 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+/*  Function prototype / forward declaration.                                 */
+extern signed long int tmpl_Long_Abs(const signed long int x);
 
-/*  Implemented in include/integer/tmpl_abs_long.h.                           */
+/*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_abs_long.h"
 
 #endif
