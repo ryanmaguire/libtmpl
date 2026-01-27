@@ -71,9 +71,9 @@
  *              of the object representation shall be divided into two        *
  *              groups: value bits and padding bits (there need not be any of *
  *              the latter). If there are N value bits, each bit shall        *
- *              represent a different power of 2 between 1 and 2^(N − 1), so  *
+ *              represent a different power of 2 between 1 and 2^(N - 1), so  *
  *              that objects of that type shall be capable of representing    *
- *              values from 0 to 2^N − 1 using a pure binary representation;  *
+ *              values from 0 to 2^N - 1 using a pure binary representation;  *
  *              this shall be known as the value representation. The values   *
  *              of any padding bits are unspecified.                          *
  *                                                                            *
