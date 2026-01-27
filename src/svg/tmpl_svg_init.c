@@ -1,3 +1,8 @@
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
+
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/types/tmpl_svg_type.h>
 #include <libtmpl/include/tmpl_svg.h>

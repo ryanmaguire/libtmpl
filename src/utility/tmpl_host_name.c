@@ -68,7 +68,7 @@
 #include <string.h>
 
 /*  There is no true portable method for this. Check the operating system.    */
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
 
 /******************************************************************************
  *                                  Windows                                   *
@@ -76,6 +76,7 @@
 
 /*  Disable Windows deprecations for standard library functions.              */
 #define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
 
 /*  Windows specific header files. GetComputerName is provided here.          */
 #include <Windows.h>
