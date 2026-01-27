@@ -56,8 +56,14 @@
 /*  Clipping functions are provided here.                                     */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  TMPL_CAST macro provided here.                                            */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
 /*  The maximum value for a 10-bit color channel is 1023.                     */
 #define PEAK (0x3FFU)
+
+/*  Helper macro for computing the complement of a given color channel.       */
+#define COMPLEMENT(color) TMPL_CAST(PEAK - color, unsigned short int)
 
 /*  Function for adding together two colors in 24-bit RGBA format.            */
 tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, tmpl_RGBA30 c1)
@@ -67,9 +73,9 @@ tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, tmpl_RGBA30 c1)
 
     /*  Avoid overflowing the sum by ensuring the sum of the color channels   *
      *  does not exceed 1023.                                                 */
-    const unsigned short int r_diff = PEAK - c0.red;
-    const unsigned short int g_diff = PEAK - c0.green;
-    const unsigned short int b_diff = PEAK - c0.blue;
+    const unsigned short int r_diff = COMPLEMENT(c0.red);
+    const unsigned short int g_diff = COMPLEMENT(c0.green);
+    const unsigned short int b_diff = COMPLEMENT(c0.blue);
 
     /*  The alpha parameter is also summed together.                          */
     const double alpha = c0.alpha + c1.alpha;
