@@ -399,50 +399,67 @@ tmpl_ULong_GCD_Binary(unsigned long int m, unsigned long int n);
  *  Function:                                                                 *
  *      tmpl_Int_GCD_Euclidean                                                *
  *  Purpose:                                                                  *
+ *      Computes the greatest common denominator of two signed integers.      *
+ *      Similar functions are provided for short, int, and long.              *
+ *  Arguments:                                                                *
+ *      m (const signed int):                                                 *
+ *          The first integer.                                                *
+ *      n (const signed int):                                                 *
+ *          The second integer.                                               *
+ *  Output:                                                                   *
+ *      gcd (signed int):                                                     *
+ *          The greatest common denominator of m and n.                       *
+ ******************************************************************************/
+extern signed char
+tmpl_Char_GCD_Euclidean(const signed char m, const signed char n);
+
+extern signed int
+tmpl_Int_GCD_Euclidean(const signed int m, const signed int n);
+
+extern signed long int
+tmpl_Long_GCD_Euclidean(const signed long int m, const signed long int n);
+
+extern signed short int
+tmpl_Short_GCD_Euclidean(const signed short int m, const signed short int n);
+
+#if TMPL_HAS_LONGLONG == 1
+extern signed long long int
+tmpl_LLong_GCD_Euclidean(const signed long long int m,
+                         const signed long long int n);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UInt_GCD_Euclidean                                               *
+ *  Purpose:                                                                  *
  *      Computes the greatest common denominator of two unsigned integers.    *
  *      Similar functions are provided for short, int, and long.              *
  *  Arguments:                                                                *
- *      m (unsigned int):                                                     *
+ *      m (const unsigned int):                                               *
  *          The first integer.                                                *
- *      n (unsigned int):                                                     *
+ *      n (const unsigned int):                                               *
  *          The second integer.                                               *
  *  Output:                                                                   *
  *      gcd (unsigned int):                                                   *
  *          The greatest common denominator of m and n.                       *
  ******************************************************************************/
-extern signed char
-tmpl_Char_GCD_Euclidean(signed char m, signed char n);
-
-extern signed int
-tmpl_Int_GCD_Euclidean(signed int m, signed int n);
-
-extern signed long int
-tmpl_Long_GCD_Euclidean(signed long int m, signed long int n);
-
-extern signed short int
-tmpl_Short_GCD_Euclidean(signed short int m, signed short int n);
-
-#if TMPL_HAS_LONGLONG == 1
-extern signed long long int
-tmpl_LLong_GCD_Euclidean(signed long long int m, signed long long int n);
-#endif
-
-/*  Unsigned Euclidean GCD algorithms.                                        */
 extern unsigned char
-tmpl_UChar_GCD_Euclidean(unsigned char m, unsigned char n);
+tmpl_UChar_GCD_Euclidean(const unsigned char m, const unsigned char n);
 
 extern unsigned int
-tmpl_UInt_GCD_Euclidean(unsigned int m, unsigned int n);
+tmpl_UInt_GCD_Euclidean(const unsigned int m, const unsigned int n);
 
 extern unsigned long int
-tmpl_ULong_GCD_Euclidean(unsigned long int m, unsigned long int n);
+tmpl_ULong_GCD_Euclidean(const unsigned long int m, const unsigned long int n);
 
 extern unsigned short int
-tmpl_UShort_GCD_Euclidean(unsigned short int m, unsigned short int n);
+tmpl_UShort_GCD_Euclidean(const unsigned short int m,
+                          const unsigned short int n);
 
 #if TMPL_HAS_LONGLONG == 1
 extern unsigned long long int
-tmpl_ULLong_GCD_Euclidean(unsigned long long int m, unsigned long long int n);
+tmpl_ULLong_GCD_Euclidean(const unsigned long long int m,
+                          const unsigned long long int n);
 #endif
 
 /*  Signed naive GCD algorithms.                                              */
