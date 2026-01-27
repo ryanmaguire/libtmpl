@@ -52,6 +52,20 @@
  *                                                                            *
  *      2.) By definition, GCD(0, 0) = 0, GCD(n, 0) = n, and GCD(0, n) = n.   *
  *          This function follows these requirements.                         *
+ *  References:                                                               *
+ *      1.) Klain, Daniel A. (2020)                                           *
+ *          Essentials of Number Theory                                       *
+ *          Preliminary Edition                                               *
+ *                                                                            *
+ *          Undergraduate level introduction to number theory.                *
+ *          Euclid's algorithm follows from proposition 6.2.                  *
+ *                                                                            *
+ *      2.) Stein, William (2009)                                             *
+ *          Elementary Number Theory: Primes, Congruences, and Secrets        *
+ *          Springer Undergraduate Texts in Mathematics                       *
+ *                                                                            *
+ *          From the creator of SageMath, Euclid's algorithm is detailed      *
+ *          in algorithm 1.1.13.                                              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
