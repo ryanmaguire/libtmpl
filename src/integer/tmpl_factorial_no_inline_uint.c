@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_factorial_uint                            *
+ *                            tmpl_factorial_uint                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(n) = n!. See include/integer/tmpl_factorial_uint.h.        *
+ *      Computes n!. See include/inline/integer/tmpl_factorial_uint.h.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 25, 2024                                                  *
@@ -31,10 +31,10 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+/*  Function prototype / forward declaration.                                 */
+extern unsigned int tmpl_UInt_Factorial(const unsigned int x);
 
-/*  Implemented in include/integer/tmpl_factorial_uint.h.                     */
+/*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_factorial_uint.h"
 
 #endif

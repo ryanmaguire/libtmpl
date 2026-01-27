@@ -19,7 +19,7 @@
  *                            tmpl_factorial_uchar                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(n) = n!. See include/integer/tmpl_factorial_uchar.h.       *
+ *      Computes n!. See include/inline/integer/tmpl_factorial_uchar.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 25, 2024                                                  *
@@ -31,10 +31,10 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+/*  Function prototype / forward declaration.                                 */
+extern unsigned char tmpl_UChar_Factorial(const unsigned char x);
 
-/*  Implemented in include/integer/tmpl_factorial_uchar.h.                    */
+/*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_factorial_uchar.h"
 
 #endif

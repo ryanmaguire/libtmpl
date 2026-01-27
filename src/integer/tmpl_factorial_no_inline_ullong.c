@@ -19,7 +19,7 @@
  *                           tmpl_factorial_ullong                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(n) = n!. See include/integer/tmpl_factorial_ullong.h.      *
+ *      Computes n!. See include/inline/integer/tmpl_factorial_ullong.h.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 25, 2024                                                  *
@@ -37,10 +37,11 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+/*  Function prototype / forward declaration.                                 */
+extern unsigned long long int
+tmpl_ULLong_Factorial(const unsigned long long int x);
 
-/*  Implemented in include/integer/tmpl_factorial_ullong.h.                   */
+/*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_factorial_ullong.h"
 
 #endif
