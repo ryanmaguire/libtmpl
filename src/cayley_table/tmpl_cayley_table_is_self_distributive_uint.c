@@ -104,7 +104,7 @@ tmpl_UIntCayleyTable_Is_Self_Distributive(
         return tmpl_False;
 
     /*  Check for the empty Cayley table, which is the Cayley table for the   *
-     *  "empty operation" on the empty set. It is vacuously self-distributive.*                                   *
+     *  "empty operation" on the empty set. It is vacuously self-distributive.*
      *                                                                        *
      *  The empty Cayley table is given by a NULL data pointer and size = 0.  */
     if (!table->data)
