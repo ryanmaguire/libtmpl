@@ -267,8 +267,13 @@ if (NOT MSVC)
     endif()
 else()
 
-    # Flags for MSVC on Windows.
-    target_compile_options(tmpl PRIVATE /W4 /O2)
+    # Flags for MSVC on Windows. Warning C4146 complains about negating
+    # unsigned ints. This is valid well-defined behavior in C, it is
+    # equivalent to computing 2^N - n where N is the number of bits in n.
+    # Turn this warning off when using MSVC.
+    target_compile_options(tmpl PRIVATE /W4 /O2 /wd4146)
+
+    add_compile_options()
 endif()
 
 # Check for OpenMP support.
