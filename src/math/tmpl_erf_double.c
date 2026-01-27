@@ -95,7 +95,7 @@
  *          rms absolute error: 9.4395719349921919e-17                        *
  *      Values assume 100% accuracy of glibc. Actual error in glibc is        *
  *      around 1 ULP (~2 x 10^-16). A comparison with arbitrary               *
- *      precision erf routines show the peak relative error to be 1 ULP.      *                                                                            *
+ *      precision erf routines show the peak relative error to be 1 ULP.      *
  *      For |x| > 6 both glibc and libtmpl return erf(x) = +/- 1.             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
