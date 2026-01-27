@@ -134,7 +134,7 @@ tmpl_Short_GCD_Euclidean(const signed short int m, const signed short int n)
     abs_n = tmpl_Short_Abs(n);
 
     /*  Avoid a redundant computation. If m = 0, then GCD(n, 0) = |n|.        */
-    if (m == 0L)
+    if (m == 0)
         return abs_n;
 
     /*  Similar computation for m, we use GCD(m, n) = GCD(|m|, |n|) to reduce *
@@ -142,7 +142,7 @@ tmpl_Short_GCD_Euclidean(const signed short int m, const signed short int n)
     abs_m = tmpl_Short_Abs(m);
 
     /*  Same check with n, GCD(0, m) = |m|.                                   */
-    if (n == 0L)
+    if (n == 0)
         return abs_m;
 
     /*  Otherwise start the algorithm with u >= v.                            */
@@ -157,7 +157,7 @@ tmpl_Short_GCD_Euclidean(const signed short int m, const signed short int n)
 
         /*  If u was a multiple of v before computing the modulus, then it is *
          *  now zero. The GCD is hence the current value of v.                */
-        if (u == 0L)
+        if (u == 0)
             return v;
 
         /*  Otherwise we now have v > u and u is non-zero. Reduce again by    *
@@ -165,7 +165,7 @@ tmpl_Short_GCD_Euclidean(const signed short int m, const signed short int n)
         v %= u;
 
         /*  Same check as before, if v is now zero, then the GCD is u.        */
-        if (v == 0L)
+        if (v == 0)
             return u;
     }
 }
