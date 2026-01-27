@@ -46,7 +46,7 @@
  *          m = m mod n                                                       *
  *                                                                            *
  *      And then swap the variables so that m > n is true. The algorithm      *
- *      terminates once n is zero.                                            *
+ *      terminates once one of them is zero.                                  *
  *  Notes:                                                                    *
  *      1.) This algorithm is often slower than the binary and mixed-binary   *
  *          algorithms for the GCD, but this is highly sensitive to the       *
@@ -57,11 +57,29 @@
  *                                                                            *
  *      3.) By definition, GCD(0, 0) = 0, GCD(n, 0) = n, and GCD(0, n) = n.   *
  *          This function follows these requirements.                         *
+ *  References:                                                               *
+ *      1.) Klain, Daniel A. (2020)                                           *
+ *          Essentials of Number Theory                                       *
+ *          Preliminary Edition                                               *
+ *                                                                            *
+ *          Undergraduate level introduction to number theory.                *
+ *          Euclid's algorithm follows from proposition 6.2.                  *
+ *                                                                            *
+ *      2.) Stein, William (2009)                                             *
+ *          Elementary Number Theory: Primes, Congruences, and Secrets        *
+ *          Springer Undergraduate Texts in Mathematics                       *
+ *                                                                            *
+ *          From the creator of SageMath, Euclid's algorithm is detailed      *
+ *          in algorithm 1.1.13.                                              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing the TMPL_USE_INLINE macro.                 *
+ *  2.) tmpl_max.h:                                                           *
+ *          Header file containing the TMPL_MAX macro.                        *
+ *  3.) tmpl_min.h:                                                           *
+ *          Header file containing the TMPL_MIN macro.                        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 17, 2024                                                  *
@@ -70,6 +88,8 @@
  ******************************************************************************
  *  2026/01/08: Ryan Maguire                                                  *
  *      Fixed bugs and typos, general cleanup, added forward declaration.     *
+ *  2026/01/27: Ryan Maguire                                                  *
+ *      Modified to avoid using swap. Small performance improvement.          *
  ******************************************************************************/
 
 /*  TMPL_USE_INLINE macro found here.                                         */
@@ -78,6 +98,10 @@
 /*  Forward declaration / function prototype.                                 */
 extern signed long int
 tmpl_Long_GCD_Euclidean(const signed long int m, const signed long int n);
+
+/*  TMPL_MAX and TMPL_MIN macros found here.                                  */
+#include <libtmpl/include/helper/tmpl_max.h>
+#include <libtmpl/include/helper/tmpl_min.h>
 
 /*  The abs function is small enough to be inlined.                           */
 #if TMPL_USE_INLINE == 1
@@ -98,11 +122,14 @@ extern signed long int tmpl_Long_Abs(const signed long int n);
 signed long int
 tmpl_Long_GCD_Euclidean(const signed long int m, const signed long int n)
 {
-    /*  The GCD is non-negative. We compute the absolute values of the inputs *
-     *  and then run the algorithm with those values.                         */
-    signed long int abs_m, abs_n;
+    /*  Variables for the algorithm. We start with u > v and then iteratively *
+     *  reduce using the Euclidean algorithm. We also reduce to non-negative  *
+     *  integers since GCD(m, n) = GCD(|m|, |n|).                             */
+    long int abs_m, abs_n, u, v;
 
-    /*  Save a redundant absolute value. If m is zero, |m| isn't needed.      *
+    /*  Since GCD(m, n) = GCD(|m|, |n|), we may reduce m and n to positive    *
+     *  by taking their absolute values. We can save a possibly redundant     *
+     *  absolute value computation. If m is zero, then |m| isn't needed.      *
      *  Compute |n| and then check if m is zero.                              */
     abs_n = tmpl_Long_Abs(n);
 
@@ -110,23 +137,36 @@ tmpl_Long_GCD_Euclidean(const signed long int m, const signed long int n)
     if (m == 0L)
         return abs_n;
 
-    /*  Since GCD must be non-negative, compute the absolute value of m.      */
+    /*  Similar computation for m, we use GCD(m, n) = GCD(|m|, |n|) to reduce *
+     *  the arguments to positive. Compute |m| and work with that.            */
     abs_m = tmpl_Long_Abs(m);
 
+    /*  Same check with n, GCD(0, m) = |m|.                                   */
+    if (n == 0L)
+        return abs_m;
+
+    /*  Otherwise start the algorithm with u >= v.                            */
+    u = TMPL_MAX(abs_m, abs_n);
+    v = TMPL_MIN(abs_m, abs_n);
+
     /*  Apply the Euclidean GCD algorithm.                                    */
-    while (abs_n != 0L)
+    while (1)
     {
-        /*  We swap m and n in a bit. Save the current value of n.            */
-        const signed long int tmp = abs_n;
+        /*  We have u >= v, reduce by setting u = u mod v.                    */
+        u %= v;
 
-        /*  Euclidean reduction, compute mod n.                               */
-        abs_m %= abs_n;
+        /*  If u was a multiple of v before computing the modulus, then it is *
+         *  now zero. The GCD is hence the current value of v.                */
+        if (u == 0L)
+            return v;
 
-        /*  After m %=n we have m < n. Swap the values so that m is larger.   */
-        abs_n = abs_m;
-        abs_m = tmp;
+        /*  Otherwise we now have v > u and u is non-zero. Reduce again by    *
+         *  setting v = v mod u.                                              */
+        v %= u;
+
+        /*  Same check as before, if v is now zero, then the GCD is u.        */
+        if (v == 0L)
+            return u;
     }
-
-    return abs_m;
 }
 /*  End of tmpl_Long_GCD_Euclidean.                                           */
