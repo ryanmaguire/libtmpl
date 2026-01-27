@@ -53,8 +53,14 @@
 /*  Color typedef's and function prototypes provided here.                    */
 #include <libtmpl/include/tmpl_color.h>
 
+/*  TMPL_CAST macro provided here.                                            */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
 /*  The maximum value for a 10-bit color channel is 1023.                     */
 #define PEAK (0x3FFU)
+
+/*  Helper macro for computing the complement of a given color channel.       */
+#define COMPLEMENT(color) TMPL_CAST(PEAK - color, unsigned short int)
 
 /*  Function for adding together two colors in 30-bit RGB format.             */
 tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, tmpl_RGB30 c1)
@@ -64,9 +70,9 @@ tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, tmpl_RGB30 c1)
 
     /*  Avoid overflowing the sums by ensuring the sums of the color channels *
      *  do not exceed 1023.                                                   */
-    const unsigned short int r_diff = PEAK - c0.red;
-    const unsigned short int g_diff = PEAK - c0.green;
-    const unsigned short int b_diff = PEAK - c0.blue;
+    const unsigned short int r_diff = COMPLEMENT(c0.red);
+    const unsigned short int g_diff = COMPLEMENT(c0.green);
+    const unsigned short int b_diff = COMPLEMENT(c0.blue);
 
     /*  If a channel will overflow, set the channel to 1023 (max value).      *
      *  Otherwise compute the sum as normal. The "& PEAK" at the end is       *
@@ -83,3 +89,4 @@ tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, tmpl_RGB30 c1)
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #undef PEAK
+#undef COMPLEMENT
