@@ -9,15 +9,15 @@ tmpl_CDouble_IFFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
                                     size_t N)
 {
     /*  The chirp factors range from -(N-1) to N-1, inclusive.                */
-    unsigned long chirp_size;
+    size_t chirp_size;
 
     /*  We're going to use the radix-2 FFT to compute the FFT of an arbitrary *
      *  array. We'll need the next highest power of 2 greater than N. Use     *
      *  bitwise operations to do this.                                        */
-    unsigned long N_pow_2;
+    size_t N_pow_2;
 
     /*  Variables for indexing.                                               */
-    unsigned long n, m;
+    size_t n, m;
 
     /*  We'll need some variables declared. These will be our arrays.         */
     tmpl_ComplexDouble *chirp;
