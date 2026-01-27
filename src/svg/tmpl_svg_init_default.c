@@ -1,3 +1,13 @@
+/*  MSVC will spit out several warnings for using standard library functions. */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+
+/*  Disable Windows deprecations for standard library functions.              */
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
+
+#endif
+/*  End of #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER).       */
+
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/types/tmpl_svg_type.h>
 #include <libtmpl/include/tmpl_svg.h>

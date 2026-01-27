@@ -61,6 +61,16 @@
  *  Date:       September 11, 2024                                            *
  ******************************************************************************/
 
+/*  MSVC will spit out several warnings for using standard library functions. */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+
+/*  Disable Windows deprecations for standard library functions.              */
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
+
+#endif
+/*  End of #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER).       */
+
 /*  Function prototype provided here.                                         */
 #include <libtmpl/include/tmpl_utility.h>
 
@@ -73,10 +83,6 @@
 /******************************************************************************
  *                                  Windows                                   *
  ******************************************************************************/
-
-/*  Disable Windows deprecations for standard library functions.              */
-#define _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_DEPRECATE
 
 /*  Windows specific header files. GetComputerName is provided here.          */
 #include <Windows.h>
