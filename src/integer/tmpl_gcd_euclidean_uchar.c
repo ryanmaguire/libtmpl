@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Computes GCD(m, n), the greatest common divisor of m and n.           *
  *  Arguments:                                                                *
- *      m (unsigned char):                                                    *
+ *      m (const unsigned char):                                              *
  *          An integer.                                                       *
- *      n (unsigned char):                                                    *
+ *      n (const unsigned char):                                              *
  *          Another integer.                                                  *
  *  Output:                                                                   *
  *      gcd (unsigned char):                                                  *
@@ -43,45 +43,92 @@
  *                                                                            *
  *          m = m mod n                                                       *
  *                                                                            *
- *      And then swap the variables so the m > n is true. The algorithm       *
- *      terminates once n is zero.                                            *
+ *      And then swap the variables so that m > n is true. The algorithm      *
+ *      terminates once one of them is zero.                                  *
  *  Notes:                                                                    *
- *      This is significantly slower than the binary, or mixed-binary, GCD.   *
- *      It is included mostly for research purposes.                          *
+ *      1.) This algorithm is often slower than the binary and mixed-binary   *
+ *          algorithms for the GCD, but this is highly sensitive to the       *
+ *          compiler used and the underlying architecture.                    *
+ *                                                                            *
+ *      2.) By definition, GCD(0, 0) = 0, GCD(n, 0) = n, and GCD(0, n) = n.   *
+ *          This function follows these requirements.                         *
+ *  References:                                                               *
+ *      1.) Klain, Daniel A. (2020)                                           *
+ *          Essentials of Number Theory                                       *
+ *          Preliminary Edition                                               *
+ *                                                                            *
+ *          Undergraduate level introduction to number theory.                *
+ *          Euclid's algorithm follows from proposition 6.2.                  *
+ *                                                                            *
+ *      2.) Stein, William (2009)                                             *
+ *          Elementary Number Theory: Primes, Congruences, and Secrets        *
+ *          Springer Undergraduate Texts in Mathematics                       *
+ *                                                                            *
+ *          From the creator of SageMath, Euclid's algorithm is detailed      *
+ *          in algorithm 1.1.13.                                              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_integer.h:                                                       *
- *          Header file containing the function prototype.                    *
+ *  1.) tmpl_max.h:                                                           *
+ *          Header file containing the TMPL_MAX macro.                        *
+ *  2.) tmpl_min.h:                                                           *
+ *          Header file containing the TMPL_MIN macro.                        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 17, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/01/27: Ryan Maguire                                                  *
+ *      Modified to avoid using swap. Small performance improvement.          *
  ******************************************************************************/
 
-/*  Function prototype is found here.                                         */
-#include <libtmpl/include/tmpl_integer.h>
+/*  TMPL_MAX and TMPL_MIN macros found here.                                  */
+#include <libtmpl/include/helper/tmpl_max.h>
+#include <libtmpl/include/helper/tmpl_min.h>
 
-/*  Function for computing the GCD of two unsigned integers.                  */
-unsigned char tmpl_UChar_GCD_Euclidean(unsigned char m, unsigned char n)
+/*  Function prototype / forward declaration.                                 */
+extern unsigned char
+tmpl_UChar_GCD_Euclidean(const unsigned char m, const unsigned char n);
+
+/*  Function for computing the GCD of two unsigned chars.                     */
+unsigned char
+tmpl_UChar_GCD_Euclidean(const unsigned char m, const unsigned char n)
 {
-    /*  Avoid a redundant computation. If m = 0, GCD(n, 0) = n.               */
+    /*  Variables for the algorithm. We start with u > v and then iteratively *
+     *  reduce using the Euclidean algorithm.                                 */
+    unsigned char u, v;
+
+    /*  Avoid a redundant computation. If m = 0, then GCD(n, 0) = n.          */
     if (m == 0x00U)
         return n;
 
+    /*  Same check with n, GCD(0, m) = m.                                     */
+    if (n == 0x00U)
+        return m;
+
+    /*  Otherwise start the algorithm with u >= v.                            */
+    u = TMPL_MAX(m, n);
+    v = TMPL_MIN(m, n);
+
     /*  Apply the Euclidean GCD algorithm.                                    */
-    while (n != 0x00U)
+    while (1)
     {
-        /*  We swap m and n in a bit. Save the current value of n.            */
-        const unsigned char tmp = n;
+        /*  We have u >= v, reduce by setting u = u mod v.                    */
+        u %= v;
 
-        /*  Euclidean reduction, compute mod n.                               */
-        m %= n;
+        /*  If u was a multiple of v before computing the modulus, then it is *
+         *  now zero. The GCD is hence the current value of v.                */
+        if (u == 0x00U)
+            return v;
 
-        /*  After m %=n we have m < n. Swap the values so that m is larger.   */
-        n = m;
-        m = tmp;
+        /*  Otherwise we now have v > u and u is non-zero. Reduce again by    *
+         *  setting v = v mod u.                                              */
+        v %= u;
+
+        /*  Same check as before, if v is now zero, then the GCD is u.        */
+        if (v == 0x00U)
+            return u;
     }
-
-    return m;
 }
 /*  End of tmpl_UChar_GCD_Euclidean.                                          */
