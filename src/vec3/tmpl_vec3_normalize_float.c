@@ -112,7 +112,7 @@ tmpl_3DFloat_Normalize(const tmpl_ThreeVectorFloat * const P)
     tmpl_IEEE754_Float wx, wy, wz;
 
     /*  Variable for storing the exponent of the largest component.           */
-    unsigned short int max_expo;
+    unsigned int max_expo;
 
     /*  Variables for the multiplicative factors used in normalizing.         */
     float norm, rcpr_norm;

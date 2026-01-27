@@ -145,7 +145,7 @@ tmpl_3DLDouble_Normalize(const tmpl_ThreeVectorLongDouble * const P)
     tmpl_IEEE754_LDouble wx, wy, wz;
 
     /*  Variable for storing the exponent of the largest component.           */
-    unsigned short int max_expo;
+    unsigned int max_expo;
 
     /*  Variables for the multiplicative factors used in normalizing.         */
     long double norm, rcpr_norm;
