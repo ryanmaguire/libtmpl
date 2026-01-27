@@ -117,7 +117,8 @@ void tmpl_PPM_Complex_Plot(const char *func_name,
             tmpl_PPM_Write_Color(fp[1], tmpl_PPM_Scaled_Gradient(w_y));
             tmpl_PPM_Write_Color(fp[2], tmpl_PPM_Scaled_Gradient(mag));
             tmpl_PPM_Write_Color(
-                fp[3], tmpl_PPM_Linear_Gradient(arg, -tmpl_double_pi, tmpl_double_pi)
+                fp[3],
+                tmpl_PPM_Linear_Gradient(arg, -tmpl_double_pi, tmpl_double_pi)
             );
         }
     }
