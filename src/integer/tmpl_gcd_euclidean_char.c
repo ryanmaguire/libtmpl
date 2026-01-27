@@ -124,7 +124,7 @@ signed char tmpl_Char_GCD_Euclidean(const signed char m, const signed char n)
     /*  Variables for the algorithm. We start with u > v and then iteratively *
      *  reduce using the Euclidean algorithm. We also reduce to non-negative  *
      *  integers since GCD(m, n) = GCD(|m|, |n|).                             */
-    char abs_m, abs_n, u, v;
+    signed char abs_m, abs_n, u, v;
 
     /*  Since GCD(m, n) = GCD(|m|, |n|), we may reduce m and n to positive    *
      *  by taking their absolute values. We can save a possibly redundant     *

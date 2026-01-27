@@ -125,7 +125,7 @@ tmpl_Long_GCD_Euclidean(const signed long int m, const signed long int n)
     /*  Variables for the algorithm. We start with u > v and then iteratively *
      *  reduce using the Euclidean algorithm. We also reduce to non-negative  *
      *  integers since GCD(m, n) = GCD(|m|, |n|).                             */
-    long int abs_m, abs_n, u, v;
+    signed long int abs_m, abs_n, u, v;
 
     /*  Since GCD(m, n) = GCD(|m|, |n|), we may reduce m and n to positive    *
      *  by taking their absolute values. We can save a possibly redundant     *
