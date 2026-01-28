@@ -152,6 +152,9 @@ extern long double tmpl_LDouble_Abs(long double x);
 /*  Computes C(x) using an asymptotic expansion for x > 2^17.                 */
 #include "auxiliary/tmpl_normalized_fresnel_sin_asymptotic_ldouble.h"
 
+/*  Computes C(x) using an asymptotic expansion for very large x.             */
+#include "auxiliary/tmpl_normalized_fresnel_sin_asymptotic_large_ldouble.h"
+
 /*  Computes C(x) using a Maclaurin series for |x| < 1 / 4.                   */
 #include "auxiliary/tmpl_normalized_fresnel_sin_maclaurin_ldouble.h"
 
@@ -167,18 +170,22 @@ extern long double tmpl_LDouble_Abs(long double x);
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 #define TMPL_LDOUBLE_UNDERFLOW_EXPO (TMPL_LDOUBLE_UBIAS - 0x11U)
 #define TMPL_LDOUBLE_ASYMPTOTIC_EXPO (TMPL_LDOUBLE_UBIAS + 0x11U)
+#define TMPL_LDOUBLE_ASYMPTOTIC_LARGE_EXPO (TMPL_LDOUBLE_UBIAS + 0x1CU)
 #define TMPL_LDOUBLE_LIMIT_EXPO (TMPL_LDOUBLE_UBIAS + 0x34U)
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
 #define TMPL_LDOUBLE_UNDERFLOW_EXPO (TMPL_LDOUBLE_UBIAS - 0x15U)
 #define TMPL_LDOUBLE_ASYMPTOTIC_EXPO (TMPL_LDOUBLE_UBIAS + 0x15U)
+#define TMPL_LDOUBLE_ASYMPTOTIC_LARGE_EXPO (TMPL_LDOUBLE_UBIAS + 0x21U)
 #define TMPL_LDOUBLE_LIMIT_EXPO (TMPL_LDOUBLE_UBIAS + 0x3FU)
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 #define TMPL_LDOUBLE_UNDERFLOW_EXPO (TMPL_LDOUBLE_UBIAS - 0x22U)
 #define TMPL_LDOUBLE_ASYMPTOTIC_EXPO (TMPL_LDOUBLE_UBIAS + 0x22U)
+#define TMPL_LDOUBLE_ASYMPTOTIC_LARGE_EXPO (TMPL_LDOUBLE_UBIAS + 0x36U)
 #define TMPL_LDOUBLE_LIMIT_EXPO (TMPL_LDOUBLE_UBIAS + 0x68U)
 #else
 #define TMPL_LDOUBLE_UNDERFLOW_EXPO (TMPL_LDOUBLE_UBIAS - 0x25U)
 #define TMPL_LDOUBLE_ASYMPTOTIC_EXPO (TMPL_LDOUBLE_UBIAS + 0x25U)
+#define TMPL_LDOUBLE_ASYMPTOTIC_LARGE_EXPO (TMPL_LDOUBLE_UBIAS + 0x3AU)
 #define TMPL_LDOUBLE_LIMIT_EXPO (TMPL_LDOUBLE_UBIAS + 0x70U)
 #endif
 
@@ -251,8 +258,10 @@ long double tmpl_LDouble_Normalized_Fresnel_Sin(long double x)
     }
 
     /*  For very large inputs use a single term of the asymptotic series.     */
-    else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_LIMIT_EXPO)
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_ASYMPTOTIC_LARGE_EXPO)
         out = tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic(w.r);
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_LIMIT_EXPO)
+        out = tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic_Large(w.r);
 
     /*  For very very large inputs use the limit, 1/2.                        */
     else
