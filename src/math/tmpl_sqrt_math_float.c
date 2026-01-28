@@ -297,11 +297,10 @@ float tmpl_Float_Sqrt(float x)
      *  sqrt(u/t) by sqrt(t) using the table, giving us sqrt(u).              */
     w.r *= tmpl_float_sqrt_data[parity] * tmpl_float_sqrt_table[ind];
 
-    /*  The Remez polynomial is accurate to single precision. Unlike the      *
-     *  double and long double implementations, the single precision mode     *
-     *  does not need to apply Newton's method. Return the float part of the  *
-     *  word.                                                                 */
-    return w.r;
+    /*  The Remez polynomial for single precision sqrt is nearly accurate to  *
+     *  full single precision, the error is only a few ULP. To get down to    *
+     *  1 ULP or less, apply an iteration of Newton's method.                 */
+    return 0.5F * (w.r + x / w.r);
 }
 /*  End of tmpl_Float_Sqrt.                                                   */
 
