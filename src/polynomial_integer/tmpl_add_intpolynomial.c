@@ -173,7 +173,7 @@ tmpl_IntPolynomial_Add(tmpl_IntPolynomial * const sum,
 
     /*  Same idea if q is an empty polynomial.                                */
     else if (!q->coeffs)
-        tmpl_IntPolynomial_Copy(sum, q);
+        tmpl_IntPolynomial_Copy(sum, p);
 
     /*  Otherwise we have a computation to do. The Add_Kernel function deals  *
      *  with the majority of the work, use it to compute sum = p + q.         */
