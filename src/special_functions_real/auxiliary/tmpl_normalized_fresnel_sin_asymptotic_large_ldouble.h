@@ -135,11 +135,11 @@ tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic_Large(const long double x)
 
     /*  Compute cos(pi/2 (2 xhi xlo + xlo^2)) using the angle sum formula.    */
     tmpl_LDouble_SinCosPi(xlo * xhi, &sin_hi, &cos_hi);
-    tmpl_LDouble_SinCosPi(0.5 * xlo * xlo, &sin_lo, &cos_lo);
+    tmpl_LDouble_SinCosPi(0.5L * xlo * xlo, &sin_lo, &cos_lo);
     minus_cos_x = sin_hi * sin_lo - cos_hi * cos_lo;
 
     /*  The first term of the asymptotic expansion is all that is needed.     */
-    return 0.5 + t * minus_cos_x;
+    return 0.5L + t * minus_cos_x;
 }
 /*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic_Large.              */
 
