@@ -71,7 +71,7 @@
  *      slope (const double):                                                 *
  *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *      intercept (const double):                                             *
- *          The intercept of the transformation, "b" in f(x) = mx + b.        *
+ *          The y-intercept of the transformation, "b" in f(x) = mx + b.      *
  *  Output:                                                                   *
  *      transform (tmpl_AffineDouble):                                        *
  *          The transform f(x) = mx + b.                                      *
