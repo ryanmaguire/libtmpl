@@ -31,7 +31,7 @@
  *      slope (const float):                                                  *
  *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *      intercept (const float):                                              *
- *          The intercept of the transformation, "b" in f(x) = mx + b.        *
+ *          The y-intercept of the transformation, "b" in f(x) = mx + b.      *
  *  Output:                                                                   *
  *      transform (tmpl_AffineFloat):                                         *
  *          The transform f(x) = mx + b.                                      *
@@ -45,7 +45,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
  *  2.) tmpl_affine_float.h:                                                  *
  *          Location of the tmpl_AffineFloat typedef.                         *
  ******************************************************************************
