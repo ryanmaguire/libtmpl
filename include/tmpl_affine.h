@@ -64,6 +64,57 @@
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_AffDouble_Point_Slope                                            *
+ *  Purpose:                                                                  *
+ *      Creates an affine transformation from point-slope form.               *
+ *  Arguments:                                                                *
+ *      slope (const double):                                                 *
+ *          The slope of the transformation, "m" in f(x) = mx + b.            *
+ *      x0 (const double):                                                    *
+ *          The x component of the point.                                     *
+ *      y0 (const double):                                                    *
+ *          The y component of the point.                                     *
+ *  Output:                                                                   *
+ *      transform (tmpl_AffineDouble):                                        *
+ *          The transform f(x) = m(x - x0) + y0.                              *
+ *  Notes:                                                                    *
+ *      1.) Float and long double equivalents are provided.                   *
+ *                                                                            *
+ *      2.) No checks for NaN or infinity are made.                           *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline. Check for inline support.     */
+#if TMPL_USE_INLINE
+
+/*  Location of the inlined versions.                                         */
+TMPL_INLINE_FILE(tmpl_affine_point_slope_double.h)
+TMPL_INLINE_FILE(tmpl_affine_point_slope_float.h)
+TMPL_INLINE_FILE(tmpl_affine_point_slope_ldouble.h)
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/affine/.                  */
+extern tmpl_AffineDouble
+tmpl_AffDouble_Point_Slope(const double slope,
+                           const double x0,
+                           const double y0);
+
+extern tmpl_AffineFloat
+tmpl_AffFloat_Point_Slope(const float slope,
+                          const float x0,
+                          const float y0);
+
+extern tmpl_AffineLongDouble
+tmpl_AffLDouble_Point_Slope(const long double slope,
+                            const long double x0,
+                            const long double y0);
+
+#endif
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_AffDouble_Slope_Intercept                                        *
  *  Purpose:                                                                  *
  *      Creates an affine transformation from slope-intercept form.           *

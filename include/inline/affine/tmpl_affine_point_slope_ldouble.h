@@ -1,0 +1,97 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                      tmpl_affine_point_slope_ldouble                       *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Creates an affine transformation from point-slope form.               *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_AffLDouble_Point_Slope                                           *
+ *  Purpose:                                                                  *
+ *      Creates an affine transformation from point-slope form.               *
+ *  Arguments:                                                                *
+ *      slope (const long double):                                            *
+ *          The slope of the transformation, "m" in f(x) = mx + b.            *
+ *      x0 (const long double):                                               *
+ *          The x component of the point.                                     *
+ *      y0 (const long double):                                               *
+ *          The y component of the point.                                     *
+ *  Output:                                                                   *
+ *      transform (tmpl_AffineLongDouble):                                    *
+ *          The transform f(x) = m(x - x0) + y0.                              *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Given the slope "m" and a point (x0, y0) that falls on the line, we   *
+ *      have:                                                                 *
+ *                                                                            *
+ *          f(x) = m (x - x ) + y                                             *
+ *                         0     0                                            *
+ *                                                                            *
+ *               = m x + y  - m x                                             *
+ *                        0      0                                            *
+ *                                                                            *
+ *      The slope is m and the y-intercept is y0 - m * x0. We store these     *
+ *      values in the affine transformation.                                  *
+ *  Notes:                                                                    *
+ *      1.) No checks for NaN or infinity are made.                           *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
+ *  2.) tmpl_affine_ldouble.h:                                                *
+ *          Location of the tmpl_AffineLongDouble typedef.                    *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       January 29, 2026                                              *
+ ******************************************************************************/
+
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_AFFINE_POINT_SLOPE_LDOUBLE_H
+#define TMPL_AFFINE_POINT_SLOPE_LDOUBLE_H
+
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  The tmpl_AffineLongDouble typedef is provided here.                       */
+#include <libtmpl/include/types/tmpl_affine_ldouble.h>
+
+/*  Creates an affine transformation given its slope and y0 = f(x0).          */
+TMPL_INLINE_DECL
+tmpl_AffineLongDouble
+tmpl_AffLDouble_Point_Slope(const long double slope,
+                            const long double x0,
+                            const long double y0)
+{
+    /*  Variable for the output.                                              */
+    tmpl_AffineLongDouble transform;
+
+    /*  Given f(x) = m (x - x0) + y0, the slope is m and the y-intercept can  *
+     *  be found by expanding this out, giving us b = y0 - m * x0.            */
+    transform.dat[0] = slope;
+    transform.dat[1] = y0 - slope * x0;
+    return transform;
+}
+/*  End of tmpl_AffLDouble_Point_Slope.                                       */
+
+#endif
+/*  End of include guard.                                                     */
