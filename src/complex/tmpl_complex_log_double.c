@@ -66,13 +66,13 @@
 /*  Macros for computing the max of two real numbers.                         */
 #include <libtmpl/include/helper/tmpl_max.h>
 
-/*  The values 2^512 and 2^-512, to double precision, stored as macros.       */
-#define TMPL_BIG_SCALE (1.340780792994259709957402E+154)
-#define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965E-155)
+/*  The values 2^514 and 2^-514, to double precision, stored as macros.       */
+#define TMPL_BIG_SCALE (5.363123171977038839829609999282338450991746328236E+154)
+#define TMPL_RCPR_BIG_SCALE (1.8645851828000516858227413288657334593441178E-155)
 
-/*  The values log(512) and log(512 + 52). Used for shifting the result.      */
-#define TMPL_LOG_FACTOR (3.548913564466919984216228461865864028547E+02)
-#define TMPL_NORMALIZE_FACTOR (3.909350098358091545113189165024115843946E+02)
+/*  The values log(2^514) and log(2^(514 + 52)). Used for shifting the result.*/
+#define TMPL_LOG_FACTOR (3.562776508078118890404573104295027559908070690612E+02)
+#define TMPL_NORMALIZE_FACTOR (3.923213041969290451301533807453279375307331E+02)
 
 /*  Computes the complex log of a real number.                                */
 tmpl_ComplexDouble tmpl_CDouble_Log(tmpl_ComplexDouble z)
@@ -108,35 +108,35 @@ tmpl_ComplexDouble tmpl_CDouble_Log(tmpl_ComplexDouble z)
             if (w.bits.expo == 0x00U)
             {
                 /*  Normalize by scaling by 2^52. Then scale this value by    *
-                 *  2^512 to ensure we will not underflow.                    */
+                 *  2^514 to ensure we will not underflow.                    */
                 const double norm_x = abs_x * TMPL_DOUBLE_NORMALIZE;
                 const double norm_y = abs_y * TMPL_DOUBLE_NORMALIZE;
                 const double scale_x = norm_x * TMPL_BIG_SCALE;
                 const double scale_y = norm_y * TMPL_BIG_SCALE;
 
-                /*  r_sq is (2^(512 + 52))^2 * (x^2 + y^2).                   */
+                /*  r_sq is (2^(514 + 52))^2 * (x^2 + y^2).                   */
                 const double r_sq = scale_x*scale_x + scale_y*scale_y;
 
                 /*  We want 0.5 * log(x^2 + y^2). Half of log(r_sq) gives us  *
-                 *  0.5*log(x^2 + y^2) + log(512 + 52). Subtracting off this  *
-                 *  log(512 + 52) term gives us the correct value.            */
+                 *  0.5*log(x^2 + y^2) + log(514 + 52). Subtracting off this  *
+                 *  log(514 + 52) term gives us the correct value.            */
                 ln_z.dat[0] = 0.5*tmpl_Double_Log(r_sq) - TMPL_NORMALIZE_FACTOR;
             }
 
             /*  x^2 + y^2 will underflow, but not subnormal. Need to scale up.*/
             else
             {
-                /*  Scaling by 2^512 will ensure the computation does not     *
+                /*  Scaling by 2^514 will ensure the computation does not     *
                  *  underflow.                                                */
                 const double scale_x = abs_x * TMPL_BIG_SCALE;
                 const double scale_y = abs_y * TMPL_BIG_SCALE;
 
-                /*  r_sq is 2^(512 * 2) * (x^2 + y^2).                        */
+                /*  r_sq is 2^(514 * 2) * (x^2 + y^2).                        */
                 const double r_sq = scale_x*scale_x + scale_y*scale_y;
 
-                /*  0.5*log(r_sq) gives 0.5*log(x^2 + y^2) + log(512). If     *
-                 *  we subtract off log(512) we get the desired result.       */
-                ln_z.dat[0] = 0.5*tmpl_Double_Log(r_sq) - TMPL_LOG_FACTOR;
+                /*  0.5*log(r_sq) gives 0.5*log(x^2 + y^2) + log(514). If     *
+                 *  we subtract off log(514) we get the desired result.       */
+                ln_z.dat[0] = 0.5 * tmpl_Double_Log(r_sq) - TMPL_LOG_FACTOR;
             }
         }
     }
@@ -144,15 +144,15 @@ tmpl_ComplexDouble tmpl_CDouble_Log(tmpl_ComplexDouble z)
     /*  x^2 + y^2 will overflow. Need to scale down.                          */
     else
     {
-        /*  Scale by 2^-512 to avoid overflow.                                */
+        /*  Scale by 2^-514 to avoid overflow.                                */
         const double scale_x = abs_x * TMPL_RCPR_BIG_SCALE;
         const double scale_y = abs_y * TMPL_RCPR_BIG_SCALE;
 
         /*  r_sq is set to 2^(-1024) * (x^2 + y^2).                           */
         const double r_sq = scale_x*scale_x + scale_y*scale_y;
 
-        /*  0.5*log(r_sq) gives us 0.5*log(x^2 + y^2) - log(512). By adding   *
-         *  log(512) to the result we get the correct answer.                 */
+        /*  0.5*log(r_sq) gives us 0.5*log(x^2 + y^2) - log(514). By adding   *
+         *  log(514) to the result we get the correct answer.                 */
         ln_z.dat[0] = 0.5*tmpl_Double_Log(r_sq) + TMPL_LOG_FACTOR;
     }
 
