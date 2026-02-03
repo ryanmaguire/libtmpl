@@ -226,12 +226,12 @@ tmpl_AffLDouble_Point_Point(const long double x0,
  *  Purpose:                                                                  *
  *      Creates an affine transformation from point-slope form.               *
  *  Arguments:                                                                *
- *      slope (const double):                                                 *
- *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *      x0 (const double):                                                    *
  *          The x component of the point.                                     *
  *      y0 (const double):                                                    *
  *          The y component of the point.                                     *
+ *      slope (const double):                                                 *
+ *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *  Output:                                                                   *
  *      transform (tmpl_AffineDouble):                                        *
  *          The transform f(x) = m(x - x0) + y0.                              *
@@ -254,19 +254,19 @@ TMPL_INLINE_FILE(tmpl_affine_point_slope_ldouble.h)
 
 /*  Lacking inline support, use the versions in src/affine/.                  */
 extern tmpl_AffineDouble
-tmpl_AffDouble_Point_Slope(const double slope,
-                           const double x0,
-                           const double y0);
+tmpl_AffDouble_Point_Slope(const double x0,
+                           const double y0,
+                           const double slope);
 
 extern tmpl_AffineFloat
-tmpl_AffFloat_Point_Slope(const float slope,
-                          const float x0,
-                          const float y0);
+tmpl_AffFloat_Point_Slope(const float x0,
+                          const float y0,
+                          const float slope);
 
 extern tmpl_AffineLongDouble
-tmpl_AffLDouble_Point_Slope(const long double slope,
-                            const long double x0,
-                            const long double y0);
+tmpl_AffLDouble_Point_Slope(const long double x0,
+                            const long double y0,
+                            const long double slope);
 
 #endif
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
