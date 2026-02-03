@@ -704,17 +704,22 @@ extern long double tmpl_LDouble_Arctan(long double x);
  *  Purpose:                                                                  *
  *      Compute the maximum of an array of doubles.                           *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
+ *      arr (const double * const):                                           *
  *          An array of doubles.                                              *
- *      size_t len:                                                           *
+ *      len (const len):                                                      *
  *          The number of elements in the array.                              *
  *  Output:                                                                   *
- *      double max:                                                           *
+ *      max (double):                                                         *
  *          The maximum of arr. NaN's in the array are skipped.               *
  ******************************************************************************/
-extern float tmpl_Float_Array_Max(float *arr, size_t len);
-extern double tmpl_Double_Array_Max(double *arr, size_t len);
-extern long double tmpl_LDouble_Array_Max(long double *arr, size_t len);
+extern float
+tmpl_Float_Array_Max(const float * const arr, const size_t len);
+
+extern double
+tmpl_Double_Array_Max(const double * const arr, const size_t len);
+
+extern long double
+tmpl_LDouble_Array_Max(const long double * const arr, const size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -722,17 +727,22 @@ extern long double tmpl_LDouble_Array_Max(long double *arr, size_t len);
  *  Purpose:                                                                  *
  *      Compute the index of the maximum of an array of doubles.              *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
+ *      arr (const double * const):                                           *
  *          An array of doubles.                                              *
- *      size_t len:                                                           *
+ *      len (const len):                                                      *
  *          The number of elements in the array.                              *
  *  Output:                                                                   *
- *      size_t ind:                                                           *
+ *      ind (size_t):                                                         *
  *          The index of the maximum of arr. NaN's in the array are skipped.  *
  ******************************************************************************/
-extern size_t tmpl_Float_Array_Max_Index(float *arr, size_t len);
-extern size_t tmpl_Double_Array_Max_Index(double *arr, size_t len);
-extern size_t tmpl_LDouble_Array_Max_Index(long double *arr, size_t len);
+extern size_t
+tmpl_Float_Array_Max_Index(const float * const arr, const size_t len);
+
+extern size_t
+tmpl_Double_Array_Max_Index(const double * const arr, const size_t len);
+
+extern size_t
+tmpl_LDouble_Array_Max_Index(const long double * const arr, const size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -740,17 +750,22 @@ extern size_t tmpl_LDouble_Array_Max_Index(long double *arr, size_t len);
  *  Purpose:                                                                  *
  *      Compute the minimum of an array of doubles.                           *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
+ *      arr (const double * const):                                           *
  *          An array of doubles.                                              *
- *      size_t len:                                                           *
+ *      len (const len):                                                      *
  *          The number of elements in the array.                              *
  *  Output:                                                                   *
- *      double min:                                                           *
+ *      min (double):                                                         *
  *          The minimum of arr. NaN's in the array are skipped.               *
  ******************************************************************************/
-extern float tmpl_Float_Array_Min(float *arr, size_t len);
-extern double tmpl_Double_Array_Min(double *arr, size_t len);
-extern long double tmpl_LDouble_Array_Min(long double *arr, size_t len);
+extern float
+tmpl_Float_Array_Min(const float * const arr, const size_t len);
+
+extern double
+tmpl_Double_Array_Min(const double * const arr, const size_t len);
+
+extern long double
+tmpl_LDouble_Array_Min(const long double * const arr, const size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -758,17 +773,22 @@ extern long double tmpl_LDouble_Array_Min(long double *arr, size_t len);
  *  Purpose:                                                                  *
  *      Compute the index of the maximum of an array of doubles.              *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
+ *      arr (const double * const):                                           *
  *          An array of doubles.                                              *
- *      size_t len:                                                           *
+ *      len (const len):                                                      *
  *          The number of elements in the array.                              *
  *  Output:                                                                   *
- *      size_t ind:                                                           *
+ *      ind (size_t):                                                         *
  *          The index of the maximum of arr. NaN's in the array are skipped.  *
  ******************************************************************************/
-extern size_t tmpl_Float_Array_Min_Index(float *arr, size_t len);
-extern size_t tmpl_Double_Array_Min_Index(double *arr, size_t len);
-extern size_t tmpl_LDouble_Array_Min_Index(long double *arr, size_t len);
+extern size_t
+tmpl_Float_Array_Min_Index(const float * const arr, const size_t len);
+
+extern size_t
+tmpl_Double_Array_Min_Index(const double * const arr, const size_t len);
+
+extern size_t
+tmpl_LDouble_Array_Min_Index(const long double * const arr, const size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -776,28 +796,34 @@ extern size_t tmpl_LDouble_Array_Min_Index(long double *arr, size_t len);
  *  Purpose:                                                                  *
  *      Compute the min and max of an array of doubles.                       *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
+ *      arr (const double * const):                                           *
  *          An array of doubles.                                              *
- *      size_t len:                                                           *
+ *      len (const len):                                                      *
  *          The number of elements in the array.                              *
- *      double *min:                                                          *
+ *      min (double * const):                                                 *
  *          A pointer to a double. The minimum will be stored here.           *
- *      double *max:                                                          *
+ *      max (double * const):                                                 *
  *          A pointer to a double. The max is stored here.                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_Float_Array_MinMax(float *arr, size_t len,
-                        float *min, float *max);
+tmpl_Float_Array_MinMax(const float * const arr,
+                        const size_t len,
+                        float * const min,
+                        float * const max);
 
 extern void
-tmpl_Double_Array_MinMax(double *arr, size_t len,
-                         double *min, double *max);
+tmpl_Double_Array_MinMax(const double * const arr,
+                         const size_t len,
+                         double * const min,
+                         double * const max);
 
 extern void
-tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
-                          long double *min, long double *max);
+tmpl_LDouble_Array_MinMax(const long double * const arr,
+                          const size_t len,
+                          long double * const min,
+                          long double * const max);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -805,28 +831,34 @@ tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
  *  Purpose:                                                                  *
  *      Compute the indices of the min and max of an array of doubles.        *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
+ *      arr (const double * const):                                           *
  *          An array of doubles.                                              *
- *      size_t len:                                                           *
+ *      len (const len):                                                      *
  *          The number of elements in the array.                              *
- *      size_t *minind:                                                       *
+ *      minind (size_t * const):                                              *
  *          A pointer to a double. The index of the min will be stored here.  *
- *      size_t *maxind:                                                       *
+ *      maxind (size_t * const):                                              *
  *          A pointer to a double. The index of the max will be stored here.  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_Float_Array_MinMax_Index(float *arr, size_t len,
-                              size_t *minind, size_t *maxind);
+tmpl_Float_Array_MinMax_Index(const float * const arr,
+                              const size_t len,
+                              size_t * const minind,
+                              size_t * const maxind);
 
 extern void
-tmpl_Double_Array_MinMax_Index(double *arr, size_t len,
-                               size_t *minind, size_t *maxind);
+tmpl_Double_Array_MinMax_Index(const double * const arr,
+                               const size_t len,
+                               size_t * const minind,
+                               size_t * const maxind);
 
 extern void
-tmpl_LDouble_Array_MinMax_Index(long double *arr, size_t len,
-                                size_t *minind, size_t *maxind);
+tmpl_LDouble_Array_MinMax_Index(const long double * const arr,
+                                const size_t len,
+                                size_t * const minind,
+                                size_t * const maxind);
 
 /******************************************************************************
  *  Function:                                                                 *
