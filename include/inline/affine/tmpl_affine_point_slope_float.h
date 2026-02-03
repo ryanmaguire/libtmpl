@@ -28,12 +28,12 @@
  *  Purpose:                                                                  *
  *      Creates an affine transformation from point-slope form.               *
  *  Arguments:                                                                *
- *      slope (const float):                                                  *
- *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *      x0 (const float):                                                     *
  *          The x component of the point.                                     *
  *      y0 (const float):                                                     *
  *          The y component of the point.                                     *
+ *      slope (const float):                                                  *
+ *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *  Output:                                                                   *
  *      transform (tmpl_AffineFloat):                                         *
  *          The transform f(x) = m(x - x0) + y0.                              *
@@ -78,9 +78,9 @@
 /*  Creates an affine transformation given its slope and y0 = f(x0).          */
 TMPL_INLINE_DECL
 tmpl_AffineFloat
-tmpl_AffFloat_Point_Slope(const float slope,
-                          const float x0,
-                          const float y0)
+tmpl_AffFloat_Point_Slope(const float x0,
+                          const float y0,
+                          const float slope)
 {
     /*  Variable for the output.                                              */
     tmpl_AffineFloat transform;

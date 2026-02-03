@@ -28,12 +28,12 @@
  *  Purpose:                                                                  *
  *      Creates an affine transformation from point-slope form.               *
  *  Arguments:                                                                *
- *      slope (const long double):                                            *
- *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *      x0 (const long double):                                               *
  *          The x component of the point.                                     *
  *      y0 (const long double):                                               *
  *          The y component of the point.                                     *
+ *      slope (const long double):                                            *
+ *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *  Output:                                                                   *
  *      transform (tmpl_AffineLongDouble):                                    *
  *          The transform f(x) = m(x - x0) + y0.                              *
@@ -78,9 +78,9 @@
 /*  Creates an affine transformation given its slope and y0 = f(x0).          */
 TMPL_INLINE_DECL
 tmpl_AffineLongDouble
-tmpl_AffLDouble_Point_Slope(const long double slope,
-                            const long double x0,
-                            const long double y0)
+tmpl_AffLDouble_Point_Slope(const long double x0,
+                            const long double y0,
+                            const long double slope)
 {
     /*  Variable for the output.                                              */
     tmpl_AffineLongDouble transform;
