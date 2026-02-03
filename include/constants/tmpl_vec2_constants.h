@@ -54,7 +54,7 @@ extern const tmpl_TwoVectorDouble tmpl_2DDouble_South;
 extern const tmpl_TwoVectorFloat tmpl_2DFloat_South;
 extern const tmpl_TwoVectorLongDouble tmpl_2DLDouble_South;
 
-/*  Unit vector in the positive x direction, East = (1, 0).                  */
+/*  Unit vector in the positive x direction, East = (1, 0).                   */
 extern const tmpl_TwoVectorDouble tmpl_2DDouble_East;
 extern const tmpl_TwoVectorFloat tmpl_2DFloat_East;
 extern const tmpl_TwoVectorLongDouble tmpl_2DLDouble_East;
