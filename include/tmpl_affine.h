@@ -86,7 +86,7 @@
  ******************************************************************************/
 
 /*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE
+#if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
 TMPL_INLINE_FILE(tmpl_affine_intercept_form_double.h)
@@ -188,7 +188,7 @@ tmpl_AffLDouble_Point_Intercept(const long double x0,
  ******************************************************************************/
 
 /*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE
+#if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
 TMPL_INLINE_FILE(tmpl_affine_point_point_double.h)
@@ -242,7 +242,7 @@ tmpl_AffLDouble_Point_Point(const long double x0,
  ******************************************************************************/
 
 /*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE
+#if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
 TMPL_INLINE_FILE(tmpl_affine_point_slope_double.h)
@@ -291,7 +291,7 @@ tmpl_AffLDouble_Point_Slope(const long double slope,
  ******************************************************************************/
 
 /*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE
+#if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
 TMPL_INLINE_FILE(tmpl_affine_slope_intercept_double.h)
