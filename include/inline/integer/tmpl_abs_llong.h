@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes the absolute value of an integer.                            *
  *                   --                                                       *
- *                  |   n,  x >= 0                                            *
+ *                  |   n,  n >= 0                                            *
  *          |n|  =  |  -n,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
