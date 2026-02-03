@@ -32,7 +32,7 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype / forward declaration.                                 */
-extern unsigned short int tmpl_UShort_Factorial(const unsigned short int x);
+extern unsigned short int tmpl_UShort_Factorial(const unsigned short int n);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_factorial_ushort.h"

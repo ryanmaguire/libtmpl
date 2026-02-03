@@ -39,7 +39,7 @@
 
 /*  Function prototype / forward declaration.                                 */
 extern unsigned long long int
-tmpl_ULLong_Factorial(const unsigned long long int x);
+tmpl_ULLong_Factorial(const unsigned long long int n);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_factorial_ullong.h"

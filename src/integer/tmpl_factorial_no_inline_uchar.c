@@ -32,7 +32,7 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype / forward declaration.                                 */
-extern unsigned char tmpl_UChar_Factorial(const unsigned char x);
+extern unsigned char tmpl_UChar_Factorial(const unsigned char n);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_factorial_uchar.h"

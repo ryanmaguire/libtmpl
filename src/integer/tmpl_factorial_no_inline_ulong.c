@@ -32,7 +32,7 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype / forward declaration.                                 */
-extern unsigned long int tmpl_ULong_Factorial(const unsigned long int x);
+extern unsigned long int tmpl_ULong_Factorial(const unsigned long int n);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_factorial_ulong.h"
