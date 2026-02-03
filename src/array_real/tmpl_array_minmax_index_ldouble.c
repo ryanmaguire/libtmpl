@@ -61,8 +61,10 @@
 
 /*  Function that finds the indices of the min and max of a long double array.*/
 void
-tmpl_LDouble_Array_MinMax_Index(long double *arr, size_t len,
-                                size_t *minind, size_t *maxind)
+tmpl_LDouble_Array_MinMax_Index(const long double * const arr,
+                                const size_t len,
+                                size_t * const minind,
+                                size_t * const maxind)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

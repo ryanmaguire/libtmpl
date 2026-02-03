@@ -81,7 +81,8 @@
 #if TMPL_LDOUBLE_ARRAY_MIN_METHOD == 1
 
 /*  Function for finding the minimum of a long double array.                  */
-long double tmpl_LDouble_Array_Min(long double *arr, size_t len)
+long double
+tmpl_LDouble_Array_Min(const long double * const arr, const size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, ind;
@@ -121,7 +122,8 @@ long double tmpl_LDouble_Array_Min(long double *arr, size_t len)
 /*  Else for #if TMPL_LDOUBLE_ARRAY_MIN_METHOD == 1.                          */
 
 /*  Function for finding the minimum of a long double array.                  */
-long double tmpl_LDouble_Array_Min(long double *arr, size_t len)
+long double
+tmpl_LDouble_Array_Min(const long double * const arr, const size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

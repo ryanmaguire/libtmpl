@@ -81,7 +81,7 @@
 #if TMPL_FLOAT_ARRAY_MAX_METHOD == 1
 
 /*  Function for finding the maximum of a float array.                        */
-float tmpl_Float_Array_Max(float *arr, size_t len)
+float tmpl_Float_Array_Max(const float * const arr, const size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, ind;
@@ -121,7 +121,7 @@ float tmpl_Float_Array_Max(float *arr, size_t len)
 /*  Else for #if TMPL_FLOAT_ARRAY_MAX_METHOD == 1.                            */
 
 /*  Function for finding the maximum of a float array.                        */
-float tmpl_Float_Array_Max(float *arr, size_t len)
+float tmpl_Float_Array_Max(const float * const arr, const size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

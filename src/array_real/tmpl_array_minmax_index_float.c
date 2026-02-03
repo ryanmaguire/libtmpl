@@ -61,8 +61,10 @@
 
 /*  Function for finding the indices of the min and max of a float array.     */
 void
-tmpl_Float_Array_MinMax_Index(float *arr, size_t len,
-                              size_t *minind, size_t *maxind)
+tmpl_Float_Array_MinMax_Index(const float * const arr,
+                              const size_t len,
+                              size_t * const minind,
+                              size_t * const maxind)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

@@ -65,7 +65,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for finding the index of the minimum of a long double array.     */
-size_t tmpl_LDouble_Array_Min_Index(long double *arr, size_t len)
+size_t
+tmpl_LDouble_Array_Min_Index(const long double * const arr, const size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, ind;

@@ -65,7 +65,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for finding the index of the minimum of a float array.           */
-size_t tmpl_Float_Array_Min_Index(float *arr, size_t len)
+size_t tmpl_Float_Array_Min_Index(const float * const arr, const size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, ind;

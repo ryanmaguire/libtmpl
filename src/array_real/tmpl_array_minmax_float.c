@@ -81,7 +81,11 @@
 #if TMPL_FLOAT_ARRAY_MINMAX_METHOD == 1
 
 /*  Function for finding the min and max of a float array.                    */
-void tmpl_Float_Array_MinMax(float *arr, size_t len, float *min, float *max)
+void
+tmpl_Float_Array_MinMax(const float * const arr,
+                        const size_t len,
+                        float * const min,
+                        float * const max)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, minind, maxind;
@@ -136,7 +140,11 @@ void tmpl_Float_Array_MinMax(float *arr, size_t len, float *min, float *max)
 /*  Else for #if TMPL_FLOAT_ARRAY_MINMAX_METHOD == 1.                         */
 
 /*  Function for finding the min and max of a float array.                    */
-void tmpl_Float_Array_MinMax(float *arr, size_t len, float *min, float *max)
+void
+tmpl_Float_Array_MinMax(const float * const arr,
+                        const size_t len,
+                        float * const min,
+                        float * const max)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

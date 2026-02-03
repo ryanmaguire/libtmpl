@@ -82,8 +82,10 @@
 
 /*  Function for finding the min and max of a long double array.              */
 void
-tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
-                          long double *min, long double *max)
+tmpl_LDouble_Array_MinMax(const long double * const arr,
+                          const size_t len,
+                          long double * const min,
+                          long double * const max)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, minind, maxind;

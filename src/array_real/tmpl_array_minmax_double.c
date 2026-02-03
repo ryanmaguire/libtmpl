@@ -81,7 +81,11 @@
 #if TMPL_DOUBLE_ARRAY_MINMAX_METHOD == 1
 
 /*  Function for finding the min and max of a double array.                   */
-void tmpl_Double_Array_MinMax(double *arr, size_t len, double *min, double *max)
+void
+tmpl_Double_Array_MinMax(const double * const arr,
+                         const size_t len,
+                         double * const min,
+                         double * const max)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, minind, maxind;
@@ -136,7 +140,11 @@ void tmpl_Double_Array_MinMax(double *arr, size_t len, double *min, double *max)
 /*  Else for #if TMPL_DOUBLE_ARRAY_MINMAX_METHOD == 1.                        */
 
 /*  Function for finding the min and max of a double array.                   */
-void tmpl_Double_Array_MinMax(double *arr, size_t len, double *min, double *max)
+void
+tmpl_Double_Array_MinMax(const double * const arr,
+                         const size_t len,
+                         double * const min,
+                         double * const max)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

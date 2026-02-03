@@ -65,7 +65,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for finding the index of the maximum of a double array.          */
-size_t tmpl_Double_Array_Max_Index(double *arr, size_t len)
+size_t tmpl_Double_Array_Max_Index(const double * const arr, const size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n, ind;
