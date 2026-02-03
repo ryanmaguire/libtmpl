@@ -36,9 +36,9 @@
 
 /*  Function prototype / forward declaration.                                 */
 extern tmpl_AffineLongDouble
-tmpl_AffLDouble_Point_Slope(const long double slope,
-                            const long double x0,
-                            const long double y0);
+tmpl_AffLDouble_Point_Slope(const long double x0,
+                            const long double y0,
+                            const long double slope);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/affine/tmpl_affine_point_slope_ldouble.h"

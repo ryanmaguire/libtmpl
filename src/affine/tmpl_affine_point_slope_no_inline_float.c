@@ -36,9 +36,9 @@
 
 /*  Function prototype / forward declaration.                                 */
 extern tmpl_AffineFloat
-tmpl_AffFloat_Point_Slope(const float slope,
-                          const float x0,
-                          const float y0);
+tmpl_AffFloat_Point_Slope(const float x0,
+                          const float y0,
+                          const float slope);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/affine/tmpl_affine_point_slope_float.h"
