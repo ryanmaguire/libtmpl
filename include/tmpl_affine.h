@@ -111,6 +111,59 @@ tmpl_AffLDouble_Intercept_Form(const long double x0, const long double y0);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_AffDouble_Point_Intercept                                        *
+ *  Purpose:                                                                  *
+ *      Creates an affine transformation from a point and the y-intercept.    *
+ *  Arguments:                                                                *
+ *      x0 (const double):                                                    *
+ *          The x-component of the point.                                     *
+ *      y0 (const double):                                                    *
+ *          The y-component of the point.                                     *
+ *      intercept (const double):                                             *
+ *          The y-intercept.                                                  *
+ *  Output:                                                                   *
+ *      transform (tmpl_AffineDouble):                                        *
+ *          The transform f(x) = mx + b.                                      *
+ *  Notes:                                                                    *
+ *      1.) Float and long double equivalents are provided.                   *
+ *                                                                            *
+ *      2.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
+ *      3.) Point-intercept requires x0 != 0. No checks for this are made.    *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline. Check for inline support.     */
+#if TMPL_USE_INLINE == 1
+
+/*  Location of the inlined versions.                                         */
+TMPL_INLINE_FILE(tmpl_affine_point_intercept_double.h)
+TMPL_INLINE_FILE(tmpl_affine_point_intercept_float.h)
+TMPL_INLINE_FILE(tmpl_affine_point_intercept_ldouble.h)
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/affine/.                  */
+extern tmpl_AffineDouble
+tmpl_AffDouble_Point_Intercept(const double x0,
+                               const double y0,
+                               const double intercept);
+
+extern tmpl_AffineFloat
+tmpl_AffFloat_Point_Intercept(const float x0,
+                              const float y0,
+                              const float intercept);
+
+extern tmpl_AffineLongDouble
+tmpl_AffLDouble_Point_Intercept(const long double x0,
+                                const long double y0,
+                                const long double intercept);
+
+#endif
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_AffDouble_Point_Point                                            *
  *  Purpose:                                                                  *
  *      Creates an affine transformation from two-point form.                 *
