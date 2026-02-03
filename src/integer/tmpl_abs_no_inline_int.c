@@ -32,7 +32,7 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype / forward declaration.                                 */
-extern signed int tmpl_Int_Abs(const signed int x);
+extern signed int tmpl_Int_Abs(const signed int n);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_abs_int.h"

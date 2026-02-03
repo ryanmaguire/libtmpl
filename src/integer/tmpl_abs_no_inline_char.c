@@ -32,7 +32,7 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype / forward declaration.                                 */
-extern signed char tmpl_Char_Abs(const signed char x);
+extern signed char tmpl_Char_Abs(const signed char n);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/integer/tmpl_abs_char.h"
