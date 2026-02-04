@@ -243,6 +243,16 @@ target_include_directories(
     tmpl PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
 )
 
+# Check for OMP support.
+if (OMP)
+    find_package(OpenMP)
+    if (OpenMP_C_FOUND)
+        message(STATUS "libtmpl compiling with OpenMP support.")
+    else()
+        message(WARNING "OpenMP support requested but not found.")
+    endif()
+endif()
+
 # Add compiler and linker flags.
 if (NOT MSVC)
 
@@ -265,6 +275,12 @@ if (NOT MSVC)
     if (NO_MATH)
         target_link_libraries(tmpl PRIVATE m)
     endif()
+
+    # Add OMP flags if necessary.
+    if (OpenMP_C_FOUND)
+        target_compile_options(tmpl PRIVATE -fopenmp)
+        target_link_libraries(tmpl PRIVATE OpenMP::OpenMP_C)
+    endif()
 else()
 
     # Flags for MSVC on Windows. Warning C4146 complains about negating
@@ -273,13 +289,8 @@ else()
     # Turn this warning off when using MSVC.
     target_compile_options(tmpl PRIVATE /W4 /O2 /wd4146)
 
-    add_compile_options()
-endif()
-
-# Check for OpenMP support.
-if (OMP)
-    find_package(OpenMP)
     if (OpenMP_C_FOUND)
+        target_compile_options(tmpl PRIVATE /openmp)
         target_link_libraries(tmpl PRIVATE OpenMP::OpenMP_C)
     endif()
 endif()
