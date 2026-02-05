@@ -304,6 +304,11 @@ else()
         target_compile_options(tmpl PRIVATE /openmp)
         target_link_libraries(tmpl PRIVATE OpenMP::OpenMP_C)
     endif()
+
+    # Turn off C compiler flags for assembly code.
+    if (NOT NO_ASM)
+        set_source_files_properties(${ASM_SOURCES} PROPERTIES COMPILE_FLAGS "")
+    endif()
 endif()
 
 # Check for support for link-time optimization.
