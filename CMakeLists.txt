@@ -188,6 +188,8 @@ if (NOT NO_ASM)
     # Check if MSVC (Visual Studio) is used.
     # MSVC cannot compile GAS (.S) files directly.
     if (MSVC)
+        enable_language(ASM_MASM)
+
         file(GLOB ASM_SOURCES "src/assembly/x86_64_msvc/*.i")
 
         # Exclude corresponding C files.
@@ -196,6 +198,8 @@ if (NOT NO_ASM)
             string(REPLACE "_x86_64_msvc" "" pure_name ${fname})
             list(FILTER SOURCES EXCLUDE REGEX ".*${pure_name}\\.c$")
         endforeach()
+
+        set_source_files_properties(${ASM_SOURCES} PROPERTIES LANGUAGE ASM_MASM)
     else()
         if (FASM)
             find_program(FASM_EXECUTABLE fasm)
