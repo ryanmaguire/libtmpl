@@ -298,16 +298,13 @@ else()
     # unsigned ints. This is valid well-defined behavior in C, it is
     # equivalent to computing 2^N - n where N is the number of bits in n.
     # Turn this warning off when using MSVC.
-    target_compile_options(tmpl PRIVATE /W4 /O2 /wd4146)
+    target_compile_options(
+        tmpl PRIVATE $<$<COMPILE_LANGUAGE:C>:/W4 /O2 /wd4146>
+    )
 
     if (OpenMP_C_FOUND)
-        target_compile_options(tmpl PRIVATE /openmp)
+        target_compile_options(tmpl PRIVATE $<$<COMPILE_LANGUAGE:C>:/openmp>)
         target_link_libraries(tmpl PRIVATE OpenMP::OpenMP_C)
-    endif()
-
-    # Turn off C compiler flags for assembly code.
-    if (NOT NO_ASM)
-        set_source_files_properties(${ASM_SOURCES} PROPERTIES COMPILE_FLAGS "")
     endif()
 endif()
 
