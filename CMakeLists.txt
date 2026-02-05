@@ -80,7 +80,7 @@ option(NO_VOLATILE_SPLIT "Disable volatile splitting (Not Recommended)" OFF)
 # Detect the architecture.
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" TMPL_ARCH)
 
-if( TMPL_ARCH MATCHES "amd64|x86_64")
+if(TMPL_ARCH MATCHES "amd64|x86_64")
     set(TMPL_ARCH "x86_64")
 elseif(TMPL_ARCH MATCHES "i386|x86")
     set(TMPL_ARCH "i386")
@@ -188,7 +188,14 @@ if (NOT NO_ASM)
     # Check if MSVC (Visual Studio) is used.
     # MSVC cannot compile GAS (.S) files directly.
     if (MSVC)
-        message(STATUS "MSVC detected. Disabling Assembly.")
+        file(GLOB ASM_SOURCES "src/assembly/x86_64_msvc/*.i")
+
+        # Exclude corresponding C files.
+        foreach(f ${ASM_SOURCES})
+            get_filename_component(fname ${f} NAME_WE)
+            string(REPLACE "_x86_64_msvc" "" pure_name ${fname})
+            list(FILTER SOURCES EXCLUDE REGEX ".*${pure_name}\\.c$")
+        endforeach()
     else()
         if (FASM)
             find_program(FASM_EXECUTABLE fasm)
