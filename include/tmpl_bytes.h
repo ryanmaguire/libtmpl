@@ -118,44 +118,24 @@ extern tmpl_Endian tmpl_Determine_Endianness(void);
  *          The second pointer to a char.                                     *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/bytes/tmpl_swap_bytes.c                                   *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes_examples/tmpl_swap_bytes_example.c             *
- *  Tests:                                                                    *
- *      libtmpl/tests/bytes_tests/tmpl_swap_bytes_unit_test_001.c             *
  ******************************************************************************/
 extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Swap_Most_Significant_Bit_2                                      *
+ *      tmpl_Byte_Reverse2                                                    *
  *  Purpose:                                                                  *
  *      Changes the endianness of a data type that is two chars long. This    *
  *      is usually a "short". Similar functions are provided for 4 and 8.     *
  *  Arguments:                                                                *
- *      ptr (char *):                                                         *
+ *      ptr (char * const):                                                   *
  *          A pointer to a char array.                                        *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/bytes/tmpl_swap_most_significant_bit_2.c                  *
- *      libtmpl/src/bytes/tmpl_swap_most_significant_bit_4.c                  *
- *      libtmpl/src/bytes/tmpl_swap_most_significant_bit_8.c                  *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_2_example.c     *
- *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_2_alt_example.c *
- *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_4_example.c     *
- *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_8_example.c     *
- *  Tests:                                                                    *
- *      libtmpl/tests/bytes_tests/                                            *
- *          tmpl_swap_most_significant_bit_2_unit_test_001.c                  *
- *          tmpl_swap_most_significant_bit_4_unit_test_001.c                  *
- *          tmpl_swap_most_significant_bit_8_unit_test_001.c                  *
  ******************************************************************************/
-extern void tmpl_Swap_Most_Significant_Bit_2(char *ptr);
-extern void tmpl_Swap_Most_Significant_Bit_4(char *ptr);
-extern void tmpl_Swap_Most_Significant_Bit_8(char *ptr);
+extern void tmpl_Byte_Reverse2(char * const ptr);
+extern void tmpl_Byte_Reverse4(char * const ptr);
+extern void tmpl_Byte_Reverse8(char * const ptr);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus

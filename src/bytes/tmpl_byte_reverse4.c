@@ -1,10 +1,10 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  under the terms of the GNU General Public License as published by         *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -16,32 +16,27 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_swap_most_significant_bit_4                       *
+ *                             tmpl_byte_reverse4                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for swapping the values in a char array containing      *
- *      four elements.                                                        *
+ *      Swaps the order of a char array with four elements.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Swap_Most_Significant_Bit_4                                      *
+ *      tmpl_Byte_Reverse4                                                    *
  *  Purpose:                                                                  *
- *      Swaps the values of a pointer to an array of 4 char elements. Useful  *
- *      for dealing with binary data files with big vs. little endianness     *
- *      concerns. The original use was for extracting the data from binary RSR*
- *      files for the NASA Cassini mission which had big endianness, and read *
- *      them on little endian platforms.                                      *
+ *      Reverses the order of a char array with 4 elements. Useful for        *
+ *      handling data with big vs. little endianness concerns.                *
  *  Arguments:                                                                *
- *      ptr (char *):                                                         *
+ *      ptr (char * const):                                                   *
  *          A pointer to a char array containing four elements.               *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_Swap_Bytes (tmpl_bytes.h).                                       *
+ *      None.                                                                 *
  *  Method:                                                                   *
- *      Use tmpl_Swap_Bytes twice on the elements. The input/output scheme    *
- *      is as follows:                                                        *
+ *      Use the TMPL_SWAP macro on the array. The input / output scheme is:   *
  *                                                                            *
  *          -------------------------                                         *
  *      IN  |  0  |  1  |  2  |  3  |                                         *
@@ -50,39 +45,23 @@
  *          -------------------------                                         *
  *                                                                            *
  *  Notes:                                                                    *
- *      It is assumed the char pointer has had its memory sufficiently        *
- *      allocated and initialized before being passed to this function.       *
- *      Failure to do so may result in a segmentation fault as the function   *
- *      will try to access memory you do not own.                             *
+ *      1.) It is assumed the char pointer has had its memory sufficiently    *
+ *          allocated and initialized before being passed to this function.   *
  *                                                                            *
- *      This code is a duplicate of the code I originally wrote for           *
- *      rss_ringoccs. That library is also released under GPL3.               *
+ *      2.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      3.) This code is a fork of code I originally wrote for                *
+ *          rss_ringoccs. That library is also released under the GPLv3.      *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_bytes.h:                                                         *
- *          Header where tmpl_Endian enum data type is defined, and           *
- *          where the function's prototype is given.                          *
- ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
+ *  1.) tmpl_swap.h:                                                          *
+ *          Performs a swap on two variables.                                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 11, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2021/01/14: Ryan Maguire                                                  *
  *      Created file (rss_ringoccs for Wellesley College).                    *
@@ -94,24 +73,24 @@
  *  2021/04/30: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
  *      more changes to comments or code unless something breaks.             *
+ *  2026/02/07: Ryan Maguire                                                  *
+ *      Removed include, provided explicit forward declaration. Changed name  *
+ *      to clarify the purpose of this function, and make the naming more     *
+ *      consistent with other functions in libtmpl. Add TMPL_SWAP macro use.  *
  ******************************************************************************/
 
-/*  The function prototype is found here.                                     */
-#include <libtmpl/include/tmpl_bytes.h>
+/*  TMPL_SWAP macro provided here.                                            */
+#include <libtmpl/include/helper/tmpl_swap.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern void tmpl_Byte_Reverse4(char * const ptr);
 
 /*  Function for swapping the values in a char array with four elements.      */
-void tmpl_Swap_Most_Significant_Bit_4(char *ptr)
+void tmpl_Byte_Reverse4(char * const ptr)
 {
-    /*  Simply use tmpl_Swap_Bytes twice and return. tmpl_Swap_Bytes wants    *
-     *  two pointers to the char values, but we just have a single            *
-     *  pointer to a char array. To get a pointer to the zeroth value we      *
-     *  first dereference with ptr[0] (we could also do *ptr, but ptr[0] is   *
-     *  clearer in my opinion). We then grab the address with &. So in total  *
-     *  we have &(ptr[0]), which is a pointer to the zeroth element of the    *
-     *  char array. Similarly for &(ptr[1]), &(ptr[2]), and &(ptr[3]). We     *
-     *  pass these to tmpl_Swap_Bytes and return.                             */
-    tmpl_Swap_Bytes(&(ptr[0]), &(ptr[3]));
-    tmpl_Swap_Bytes(&(ptr[1]), &(ptr[2]));
-    return;
+    /*  The array contains four elements, to byte reverse we swap the outer   *
+     *  two elements with each other, and then swap the inner ones.           */
+    TMPL_SWAP(char, ptr[0], ptr[3]);
+    TMPL_SWAP(char, ptr[1], ptr[2]);
 }
-/*  End of tmpl_Swap_Most_Significant_Bit_4.                                  */
+/*  End of tmpl_Byte_Reverse4.                                                */
