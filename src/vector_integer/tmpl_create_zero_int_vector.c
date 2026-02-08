@@ -64,6 +64,9 @@
 /*  malloc is provided here.                                                  */
 #include <stdlib.h>
 
+/*  TMPL_CALLOC macro found here.                                             */
+#include <libtmpl/include/compat/tmpl_calloc.h>
+
 /*  tmpl_Bool, tmpl_False, and tmpl_True are defined here.                    */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -101,7 +104,7 @@ tmpl_IntVector *tmpl_Create_Zero_IntVector(size_t length)
 
     /*  Otherwise, allocate memory for the data pointer. calloc, unlike       *
      *  malloc, will initialize everything to zero, giving us a zero vector.  */
-    vec->data = calloc(sizeof(*(vec->data)), length);
+    vec->data = TMPL_CALLOC(signed int, length);
 
     /*  Again, check that calloc did not fail.                                */
     if (vec->data == NULL)
@@ -149,7 +152,7 @@ tmpl_UIntVector *tmpl_Create_Zero_UIntVector(size_t length)
 
     /*  Otherwise, allocate memory for the data pointer. calloc, unlike       *
      *  malloc, will initialize everything to zero, giving us a zero vector.  */
-    vec->data = calloc(sizeof(*(vec->data)), length);
+    vec->data = TMPL_CALLOC(unsigned int, length);
 
     /*  Again, check that calloc did not fail.                                */
     if (vec->data == NULL)
