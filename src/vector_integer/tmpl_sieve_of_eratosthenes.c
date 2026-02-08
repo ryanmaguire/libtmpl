@@ -127,7 +127,7 @@ tmpl_ULongVector *tmpl_ULong_Sieve_of_Eratosthenes(unsigned long N)
         return NULL;
     }
 
-    has_been_visited = calloc(sizeof(*has_been_visited), N);
+    has_been_visited = calloc(N, sizeof(*has_been_visited));
     if (has_been_visited == NULL)
     {
         free(sieve);
