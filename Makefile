@@ -388,7 +388,7 @@ ASM_OBJS = $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
 FASM_OBJS = $(FASM_SRCS:%=$(BUILD_DIR)/%.o)
 OBJS = $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
 
-.PHONY: clean install uninstall all install-local uninstall-local help
+.PHONY: clean install uninstall all help
 
 all: $(TARGET_LIB)
 
@@ -428,7 +428,8 @@ clean:
 	rm -f include/tmpl_inttype.h
 	rm -f include/tmpl_limits.h
 	rm -f include/tmpl_float.h
-	rm -f $(TARGET_LIB)
+	rm -f $(TARGET_LIB_SHARED)
+	rm -f $(TARGET_LIB_STATIC)
 
 install:
 	mkdir -p $(prefix)/lib/
@@ -436,57 +437,27 @@ install:
 	cp -r ./include $(prefix)/include/libtmpl/
 	cp $(TARGET_LIB) $(prefix)/lib/$(TARGET_LIB)
 
-uninstall:
-	rm -f *.o
-	rm -rf $(BUILD_DIR)
-	rm -f include/tmpl_config.h
-	rm -f include/tmpl_inttype.h
-	rm -f include/tmpl_limits.h
-	rm -f include/tmpl_float.h
-	rm -f $(TARGET_LIB)
+uninstall: clean
 	rm -rf $(prefix)/include/libtmpl/
-	rm -f $(prefix)/lib/$(TARGET_LIB)
-
-install-local:
-	mkdir -p $(HOME)/.local/include/libtmpl/
-	mkdir -p $(HOME)/.local/lib/
-	cp -r ./include $(HOME)/.local/include/libtmpl/
-	cp $(TARGET_LIB) $(HOME)/.local/lib/$(TARGET_LIB)
-
-uninstall-local:
-	rm -f *.o
-	rm -rf $(BUILD_DIR)
-	rm -f include/tmpl_config.h
-	rm -f include/tmpl_inttype.h
-	rm -f include/tmpl_limits.h
-	rm -f include/tmpl_float.h
-	rm -f $(TARGET_LIB)
-	rm -rf $(HOME)/.local/include/libtmpl/
-	rm -f $(HOME)/.local/lib/$(TARGET_LIB)
+	rm -f $(prefix)/lib/$(TARGET_LIB_SHARED)
+	rm -f $(prefix)/lib/$(TARGET_LIB_STATIC)
 
 help:
 	@echo "\033[0;96mBuild and install libtmpl.\n\nExecutive summary:"
 	@echo "\033[0;96m\tTo build and install onto your system:"
 	@echo "\033[0;96m\t\tmake -j && sudo make install"
 	@echo "\033[0;96m\tTo build and install locally (current user only):"
-	@echo "\033[0;96m\t\tmake -j && make install-local\n"
+	@echo "\033[0;96m\t\tmake -j && make install prefix=~/.local\n"
 	@echo "\033[0;96mRecognized commands:"
 	@echo "\033[0;96m\tmake:"
 	@echo "\033[0;96m\t\tCompile the library. Use -j to speed this up."
 	@echo "\033[0;96m\tmake install:"
-	@echo "\033[0;96m\t\tInstall library into /usr/local/."
-	@echo "\033[0;96m\t\tsudo privileges required."
+	@echo "\033[0;96m\t\tInstall library into /usr/local/ (or the set prefix)."
 	@echo "\033[0;96m\tmake clean:"
 	@echo "\033[0;96m\t\tRemove all compiled files in this directory."
 	@echo "\033[0;96m\tmake uninstall:"
 	@echo "\033[0;96m\t\tRemove all compiled files from this directory and from"
-	@echo "\033[0;96m\t\t/usr/local/. sudo privileges required."
-	@echo "\033[0;96m\tmake install-local:"
-	@echo "\033[0;96m\t\tInstall library into ~/.local/."
-	@echo "\033[0;96m\t\tsudo privileges are not required."
-	@echo "\033[0;96m\tmake uninstall-local:"
-	@echo "\033[0;96m\t\tRemove all compiled files from this directory and from"
-	@echo "\033[0;96m\t\t~/.local/. sudo privileges are not required."
+	@echo "\033[0;96m\t\t/usr/local/ (or the set prefix)."
 	@echo "\033[0;96m\tmake help:"
 	@echo "\033[0;96m\t\tPrint this message.\n"
 	@echo "\033[0;96mBuild options (see comments in Makefile for more details):"
