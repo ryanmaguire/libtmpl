@@ -41,7 +41,7 @@
 #include <cstdlib>
 
 /*  Macro for allocating memory. In C++ one must cast the result of calloc.   */
-#define TMPL_CALLOC(type, n) static_cast<type *>(std::calloc(sizeof(type), (n)))
+#define TMPL_CALLOC(type, n) static_cast<type *>(std::calloc((n), sizeof(type)))
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
@@ -50,7 +50,7 @@
 #include <stdlib.h>
 
 /*  Macro for calloc. In C one should not cast the result of calloc.          */
-#define TMPL_CALLOC(type, n) calloc(sizeof(type), (n))
+#define TMPL_CALLOC(type, n) calloc((n), sizeof(type))
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
