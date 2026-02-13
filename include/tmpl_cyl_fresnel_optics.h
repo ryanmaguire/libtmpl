@@ -1068,7 +1068,7 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Kernel(
     unsigned int max_iters
 );
 
-extern void
+extern double
 tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
     double k,
     const tmpl_CylFresnelGeometryDouble * TMPL_RESTRICT const geo,

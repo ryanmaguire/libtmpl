@@ -44,7 +44,6 @@ tmpl_Double_Stationary_Cyl_Fresnel_Kernel(
     unsigned int max_iters
 )
 {
-    tmpl_ComplexDouble ker;
     double weight, psi;
 
     tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
@@ -54,7 +53,6 @@ tmpl_Double_Stationary_Cyl_Fresnel_Kernel(
     /*  The Fresnel kernel is the scale factor times exp(i psi). The          *
      *  stationary phase also contains exp(-i pi / 4), which rotates the      *
      *  result. This is equivalent to multiplying by (1 - i) / sqrt(2).       */
-    ker = tmpl_CDouble_Polar(weight, psi);
-    return ker;
+    return tmpl_CDouble_Polar(weight, psi);
 }
 /*  End of tmpl_Double_Stationary_Cyl_Fresnel_Psi.                            */

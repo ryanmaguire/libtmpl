@@ -44,7 +44,7 @@
 #include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
 
 /*  Function for computing the full stationary Fresnel kernel in polar form.  */
-void
+double
 tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
     double k,
     const tmpl_CylFresnelGeometryDouble * TMPL_RESTRICT const geo,
@@ -264,5 +264,8 @@ tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
      *  function computes this quantity.                                      */
     factor = k * tmpl_Double_Rcpr_Two_Pi / tmpl_Double_Abs(d2psi);
     *weight = sin_opening * r_s * tmpl_Double_Sqrt(factor) / mag;
+
+    /*  Return the stationary azimuth angle.                                  */
+    return phi_s;
 }
 /*  End of tmpl_Double_Stationary_Cyl_Fresnel_Psi.                            */
