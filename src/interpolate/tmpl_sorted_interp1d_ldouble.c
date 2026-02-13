@@ -97,7 +97,7 @@ tmpl_LDouble_Sorted_Linear_Interp1d(const long double * const x,
                                     long double * const y_new,
                                     const size_t len_new);
 
-/*  Single precision linear interpolation of sorted data.                     */
+/*  Long double precision linear interpolation of sorted data.                */
 void
 tmpl_LDouble_Sorted_Linear_Interp1d(const long double * const x,
                                     const long double * const y,
