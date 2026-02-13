@@ -95,7 +95,7 @@ static void tmpl_write_has_floatint32(FILE *fp)
     if (!tmpl_all_widths_are_known)
         tmpl_check_widths();
 
-    /*  If there is no 32-bit integer type, we may not use type punning. Skip. */
+    /*  If there is no 32-bit integer type, we may not use type punning. Skip.*/
     if (!tmpl_has_32_bit_uint)
         goto FINISH;
 
