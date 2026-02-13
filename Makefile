@@ -453,7 +453,7 @@ help:
 	@echo "\033[0;96m\t\tCompile the library. Use -j to speed this up."
 	@echo "\033[0;96m\tmake install:"
 	@echo "\033[0;96m\t\tInstall library into /usr/local/"
-	@echo "\033[0;96m\t\t(or into the set --prefix)."
+	@echo "\033[0;96m\t\t(or into the set prefix)."
 	@echo "\033[0;96m\tmake clean:"
 	@echo "\033[0;96m\t\tRemove all compiled files in this directory."
 	@echo "\033[0;96m\tmake uninstall:"
