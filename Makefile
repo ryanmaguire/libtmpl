@@ -94,7 +94,7 @@
 #           option. Note, the portable algorithms are significantly slower.
 #               make NO_IEEE=1 [other-options]
 #       NO_INT:
-#          	It is sometimes useful to have fixed-width (8, 16, 32, and 64) bit
+#           It is sometimes useful to have fixed-width (8, 16, 32, and 64) bit
 #           integers. The C standard does not require these widths be available
 #           but rather specifies the minimum widths allowed by certain data
 #           types. The config.c file will try to find the widths of various
@@ -452,15 +452,16 @@ help:
 	@echo "\033[0;96m\tmake:"
 	@echo "\033[0;96m\t\tCompile the library. Use -j to speed this up."
 	@echo "\033[0;96m\tmake install:"
-	@echo "\033[0;96m\t\tInstall library into /usr/local/ (or the set prefix)."
+	@echo "\033[0;96m\t\tInstall library into /usr/local/"
+	@echo "\033[0;96m\t\t(or into the set --prefix)."
 	@echo "\033[0;96m\tmake clean:"
 	@echo "\033[0;96m\t\tRemove all compiled files in this directory."
 	@echo "\033[0;96m\tmake uninstall:"
-	@echo "\033[0;96m\t\tRemove all compiled files from this directory and from"
-	@echo "\033[0;96m\t\t/usr/local/ (or the set prefix)."
+	@echo "\033[0;96m\t\tRemove all compiled files from this directory and"
+	@echo "\033[0;96m\t\tfrom /usr/local/ (or the set prefix)."
 	@echo "\033[0;96m\tmake help:"
 	@echo "\033[0;96m\t\tPrint this message.\n"
-	@echo "\033[0;96mBuild options (see comments in Makefile for more details):"
+	@echo "\033[0;96mBuild options (see Makefile for more details):"
 	@echo "\033[0;96m\tBUILD_STATIC:"
 	@echo "\033[0;96m\t\tCreate a static libary (libtmpl.a) instead of a"
 	@echo "\033[0;96m\t\tdynamic library (libtmpl.so)."
@@ -470,7 +471,8 @@ help:
 	@echo "\033[0;96m\tAR (static builds only):"
 	@echo "\033[0;96m\t\tSet the archiver. Example: make AR=ar"
 	@echo "\033[0;96m\tARCH:"
-	@echo "\033[0;96m\t\tChange the output of uname -m. Example: make ARCH=i386"
+	@echo "\033[0;96m\t\tChange the output of uname -m."
+	@echo "\033[0;96m\t\tExample: make ARCH=i386"
 	@echo "\033[0;96m\tOMP:"
 	@echo "\033[0;96m\t\tCompile with OpenMP support. Example: make OMP=1"
 	@echo "\033[0;96m\tNO_MATH:"
@@ -511,12 +513,13 @@ help:
 	@echo "\033[0;96m\t\tForce double splits to use the volatile keyword."
 	@echo "\033[0;96m\t\tExample: make VOLATILE_SPLIT=1"
 	@echo "\033[0;96m\tCAUTIOUS_SPLIT:"
-	@echo "\033[0;96m\t\tForce double splits to use several volatile keywords,"
-	@echo "\033[0;96m\t\tbreaking the computation into several lines."
+	@echo "\033[0;96m\t\tForce double splits to use several volatiles,"
+	@echo "\033[0;96m\t\tbreaking the computation into separate lines."
 	@echo "\033[0;96m\t\tExample: make CAUTIOUS_SPLIT=1"
 	@echo "\033[0;96m\tNO_VOLATILE_SPLIT:"
-	@echo "\033[0;96m\t\tForce double splits to never use the volatile keyword"
-	@echo "\033[0;96m\t\t(NOT RECOMMENDED). Example: make NO_VOLATILE_SPLIT=1"
+	@echo "\033[0;96m\t\tForce double splits to never use volatile"
+	@echo "\033[0;96m\t\t(NOT RECOMMENDED)."
+	@echo "\033[0;96m\t\tExample: make NO_VOLATILE_SPLIT=1"
 	@echo "\033[0;96m\tEXTRA_FLAGS:"
 	@echo "\033[0;96m\t\tAdd extra flags for the C compiler."
 	@echo "\033[0;96m\t\tExample: make EXTRA_FLAGS=\"-Wno-float-equal\""
