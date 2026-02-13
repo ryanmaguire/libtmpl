@@ -22,8 +22,7 @@
 
 # Table of Contents
 1. [libtmpl](#libtmpl)
-    1. [The Mathematicians Programming Library]
-        (#The-Mathematicians-Programming-Library)
+    1. [The Mathematicians Programming Library](#intro)
     2. [Installation: Makefile](#Installation-Makefile)
     3. [Installation: Bash Script](#Installation-Bash-Script)
     3. [Installation: Batch Script](#Installation-Batch-Script)
@@ -35,7 +34,7 @@
 
 **This project is still in its infancy and is updated regularly.**
 
-## The Mathematicians Programming Library
+## The Mathematicians Programming Library <a name="intro"/>
 This project is a collection of code written in C89/C90 (commonly called ANSI C)
 for mathematicians and physicists to use on various types of projects. It
 started with rss_ringoccs, a suite of tools written for processing the Cassini
