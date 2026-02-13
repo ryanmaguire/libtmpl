@@ -22,7 +22,8 @@
 
 # Table of Contents
 1. [libtmpl](#libtmpl)
-    1. [The Mathematicians Programming Library](#The-Mathematicians-Programming-Library)
+    1. [The Mathematicians Programming Library]
+        (#The-Mathematicians-Programming-Library)
     2. [Installation: Makefile](#Installation-Makefile)
     3. [Installation: Bash Script](#Installation-Bash-Script)
     3. [Installation: Batch Script](#Installation-Batch-Script)
@@ -176,8 +177,9 @@ To uninstall, run:
 ```
 sudo make uninstall
 ```
-To install into a directory tree other than `/usr/local`, set the `prefix` variable
-when running `make`, e.g. `make prefix=/opt install` will install into `/opt/lib` etc.
+To install into a directory tree other than `/usr/local`, set the `prefix`
+variable when running `make`, e.g. `make prefix=/opt install`
+will install into`/opt/lib` etc.
 
 ## Installation: Bash Script
 A `bash` script is available, but results in a larger and less performant build.
