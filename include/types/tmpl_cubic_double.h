@@ -46,5 +46,12 @@ typedef struct tmpl_CubicDouble_Type {
 #define TMPL_CUBIC_DOUBLE_PTR_QUADRATIC_TERM(cubic) ((cubic)->dat[2])
 #define TMPL_CUBIC_DOUBLE_PTR_CUBIC_TERM(cubic) ((cubic)->dat[3])
 
+/*  Evaluate's a cubic polynomial using Horner's method.                      */
+#define TMPL_CUBIC_DOUBLE_EVAL(p, x) \
+    ((p).dat[0] + (x)*((p).dat[1] + (x)*((p).dat[2] + (x)*(p).dat[3])))
+
+#define TMPL_CUBIC_DOUBLE_PTR_EVAL(p, x) \
+    ((p)->dat[0] + (x)*((p)->dat[1] + (x)*((p)->dat[2] + (x)*(p)->dat[3])))
+
 #endif
 /*  End of include guard.                                                     */
