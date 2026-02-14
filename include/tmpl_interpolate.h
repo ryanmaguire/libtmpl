@@ -32,11 +32,29 @@
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
 
+/*  Cubic polynomial typedef's provided here.                                 */
+#include <libtmpl/include/types/tmpl_cubic_double.h>
+#include <libtmpl/include/types/tmpl_cubic_float.h>
+#include <libtmpl/include/types/tmpl_cubic_ldouble.h>
+
+
 extern void
-tmpl_Double_Natural_Cubic_Spline_Coeffs(const double * const x,
-                                        const double * const y,
-                                        tmpl_CubicDouble * TMPL_RESTRICT p,
-                                        const size_t len);
+tmpl_Double_Natural_Cubic_Spline(const double * const x,
+                                 const double * const y,
+                                 tmpl_CubicDouble * TMPL_RESTRICT p,
+                                 const size_t len);
+
+extern void
+tmpl_Double_Natural_Cubic_Spline(const double * const x,
+                                 const double * const y,
+                                 tmpl_CubicDouble * TMPL_RESTRICT p,
+                                 const size_t len);
+
+extern void
+tmpl_LDouble_Natural_Cubic_Spline(const long double * const x,
+                                  const long double * const y,
+                                  tmpl_CubicLongDouble * TMPL_RESTRICT p,
+                                  const size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
