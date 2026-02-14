@@ -32,6 +32,12 @@
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
 
+extern void
+tmpl_Double_Natural_Cubic_Spline_Coeffs(const double * const x,
+                                        const double * const y,
+                                        tmpl_CubicDouble * TMPL_RESTRICT p,
+                                        const size_t len);
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Sorted_Linear_Interp1d                                    *
