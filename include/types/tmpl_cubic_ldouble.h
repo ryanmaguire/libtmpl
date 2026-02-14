@@ -46,12 +46,19 @@ typedef struct tmpl_CubicLongDouble_Type {
 #define TMPL_CUBIC_LDOUBLE_PTR_QUADRATIC_TERM(cubic) ((cubic)->dat[2])
 #define TMPL_CUBIC_LDOUBLE_PTR_CUBIC_TERM(cubic) ((cubic)->dat[3])
 
-/*  Evaluate's a cubic polynomial using Horner's method.                      */
+/*  Evaluates a cubic polynomial using Horner's method.                       */
 #define TMPL_CUBIC_LDOUBLE_EVAL(p, x) \
     ((p).dat[0] + (x)*((p).dat[1] + (x)*((p).dat[2] + (x)*(p).dat[3])))
 
 #define TMPL_CUBIC_LDOUBLE_PTR_EVAL(p, x) \
     ((p)->dat[0] + (x)*((p)->dat[1] + (x)*((p)->dat[2] + (x)*(p)->dat[3])))
+
+/*  Evaluates the derivative using Horner's method.                           */
+#define TMPL_CUBIC_LDOUBLE_DERIV_EVAL(p, x) \
+    ((p).dat[1] + (x) * ((2.0 * (p).dat[2]) + (x) * (3.0 * (p).dat[3])))
+
+#define TMPL_CUBIC_LDOUBLE_PTR_DERIV_EVAL(p, x) \
+    ((p)->dat[1] + (x) * ((2.0 * (p)->dat[2]) + (x) * (3.0 * (p)->dat[3])))
 
 #endif
 /*  End of include guard.                                                     */

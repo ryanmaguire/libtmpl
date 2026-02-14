@@ -46,12 +46,19 @@ typedef struct tmpl_CubicFloat_Type {
 #define TMPL_CUBIC_FLOAT_PTR_QUADRATIC_TERM(cubic) ((cubic)->dat[2])
 #define TMPL_CUBIC_FLOAT_PTR_CUBIC_TERM(cubic) ((cubic)->dat[3])
 
-/*  Evaluate's a cubic polynomial using Horner's method.                      */
+/*  Evaluates a cubic polynomial using Horner's method.                       */
 #define TMPL_CUBIC_FLOAT_EVAL(p, x) \
     ((p).dat[0] + (x)*((p).dat[1] + (x)*((p).dat[2] + (x)*(p).dat[3])))
 
 #define TMPL_CUBIC_FLOAT_PTR_EVAL(p, x) \
     ((p)->dat[0] + (x)*((p)->dat[1] + (x)*((p)->dat[2] + (x)*(p)->dat[3])))
+
+/*  Evaluates the derivative using Horner's method.                           */
+#define TMPL_CUBIC_FLOAT_DERIV_EVAL(p, x) \
+    ((p).dat[1] + (x) * ((2.0 * (p).dat[2]) + (x) * (3.0 * (p).dat[3])))
+
+#define TMPL_CUBIC_FLOAT_PTR_DERIV_EVAL(p, x) \
+    ((p)->dat[1] + (x) * ((2.0 * (p)->dat[2]) + (x) * (3.0 * (p)->dat[3])))
 
 #endif
 /*  End of include guard.                                                     */
