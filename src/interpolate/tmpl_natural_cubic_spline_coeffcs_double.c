@@ -3,16 +3,16 @@
 #include <stddef.h>
 
 extern void
-tmpl_Double_Natural_Cubic_Spline_Coeffs(const double * const x,
-                                        const double * const y,
-                                        tmpl_CubicDouble * TMPL_RESTRICT p,
-                                        const size_t len);
+tmpl_Double_Natural_Cubic_Spline(const double * const x,
+                                 const double * const y,
+                                 tmpl_CubicDouble * TMPL_RESTRICT p,
+                                 const size_t len);
 
 void
-tmpl_Double_Natural_Cubic_Spline_Coeffs(const double * const x,
-                                        const double * const y,
-                                        tmpl_CubicDouble * TMPL_RESTRICT p,
-                                        const size_t len)
+tmpl_Double_Natural_Cubic_Spline(const double * const x,
+                                 const double * const y,
+                                 tmpl_CubicDouble * TMPL_RESTRICT p,
+                                 const size_t len)
 {
     size_t n;
 
@@ -97,4 +97,4 @@ tmpl_Double_Natural_Cubic_Spline_Coeffs(const double * const x,
         p[n].dat[3] = (c_n_plus_1 - c_n) / (3.0 * dx);
     }
 }
-/*  End of tmpl_Double_Natural_Cubic_Spline_Coeffs.                           */
+/*  End of tmpl_Double_Natural_Cubic_Spline.                                  */
