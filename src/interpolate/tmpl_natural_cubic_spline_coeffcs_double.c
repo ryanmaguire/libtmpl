@@ -39,17 +39,17 @@ tmpl_Double_Natural_Cubic_Spline(const double * const x,
      *  the matrix equation.                                                  */
     double g_n = 3.0 * (dy_n_plus_1 / dx_n_plus_1 - dy_n / dx_n);
 
-
     /*  Use the constant coefficients array for scratch work.                 */
-    p[0].dat[0] = dx_n_plus_1 / diag;
+    p[1].dat[0] = dx_n_plus_1 / diag;
 
     /*  The quadratic term is where most of the work is done. The constant,   *
      *  linear, and cubic terms all follow quickly from the quadratic term    *
      *  and the (x, y) values. Quadratic coefficients come from the Thomas    *
      *  algorithm for symmetric tridiagonal matrices.                         */
-    p[0].dat[2] = g_n / diag;
+    p[0].dat[2] = 0.0;
+    p[1].dat[2] = g_n / diag;
 
-    for (n = 1; n < len - 1; ++n)
+    for (n = 1; n < len - 2; ++n)
     {
         /*  Variables for computing the scratch terms.                        */
         double numer, denom;
@@ -60,27 +60,27 @@ tmpl_Double_Natural_Cubic_Spline(const double * const x,
         dy_dx_n = dy_dx_n_plus_1;
 
         /*  Compute these terms for the next bin.                             */
-        dx_n_plus_1 = x[n + 1] - x[n];
-        dy_n_plus_1 = y[n + 1] - y[n];
+        dx_n_plus_1 = x[n + 2] - x[n + 1];
+        dy_n_plus_1 = y[n + 2] - y[n + 1];
         dy_dx_n_plus_1 = dy_n_plus_1 / dx_n_plus_1;
 
         /*  Compute the new diagonal entry, and the component for the vector  *
          *  on the right-hand side of the matrix equation.                    */
-        diag = 2.0 * (x[n + 1] - x[n - 1]);
+        diag = 2.0 * (x[n + 2] - x[n]);
         g_n = 3.0 * (dy_dx_n_plus_1 - dy_dx_n);
 
         /*  Common factors for the scratch variables.                         */
-        numer = g_n - dx_n * p[n - 1].dat[2];
-        denom = diag - dx_n * p[n - 1].dat[0];
+        numer = g_n - dx_n * p[n].dat[2];
+        denom = diag - dx_n * p[n].dat[0];
 
         /*  Compute the scratch variables.                                    */
-        p[n].dat[0] = dx_n_plus_1 / denom;
-        p[n].dat[2] = numer / denom;
+        p[n + 1].dat[0] = dx_n_plus_1 / denom;
+        p[n + 1].dat[2] = numer / denom;
     }
 
     /*  Backwards iterate to compute the quadratic terms.                     */
-    for (n = len - 1; n > 0; --n)
-        p[n - 1].dat[2] -= p[n - 1].dat[0] * p[n].dat[2];
+    for (n = len - 3; n > 0; --n)
+        p[n].dat[2] -= p[n].dat[0] * p[n + 1].dat[2];
 
     /*  The constant, linear, and cubic terms follow very quickly from the    *
      *  quadratic terms. Compute all of them.                                 */
@@ -90,8 +90,12 @@ tmpl_Double_Natural_Cubic_Spline(const double * const x,
         const double dy = y[n + 1] - y[n];
 
         const double c_n = p[n].dat[2];
-        const double c_n_plus_1 = p[n + 1].dat[2];
 
+        /*  The polynomial array has len - 1 entries, pad the quadratic terms *
+         *  with a zero if n + 1 goes beyond the bounds of the array.         */
+        const double c_n_plus_1 = (n == len - 2 ? 0.0 : p[n + 1].dat[2]);
+
+        /*  Compute the constant, linear, and cubic terms.                    */
         p[n].dat[0] = y[n];
         p[n].dat[1] = dy / dx - dx * (c_n_plus_1 + 2.0 * c_n) / 3.0;
         p[n].dat[3] = (c_n_plus_1 - c_n) / (3.0 * dx);
