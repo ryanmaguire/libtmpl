@@ -29,14 +29,16 @@
 #ifndef TMPL_INTERPOLATE_H
 #define TMPL_INTERPOLATE_H
 
-/*  size_t typedef provided here.                                             */
-#include <stddef.h>
+/*  TMPL_RESTRICT macro found here.                                           */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  Cubic polynomial typedef's provided here.                                 */
 #include <libtmpl/include/types/tmpl_cubic_double.h>
 #include <libtmpl/include/types/tmpl_cubic_float.h>
 #include <libtmpl/include/types/tmpl_cubic_ldouble.h>
 
+/*  size_t typedef provided here.                                             */
+#include <stddef.h>
 
 extern void
 tmpl_Double_Natural_Cubic_Spline(const double * const x,
