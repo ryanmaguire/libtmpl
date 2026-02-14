@@ -58,6 +58,89 @@ tmpl_LDouble_Natural_Cubic_Spline(const long double * const x,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Sorted_Cubic_Interp1d                                     *
+ *  Purpose:                                                                  *
+ *      Interpolate values of (x, y) to (x_new, y_new) using a cubic spline.  *
+ *  Arguments:                                                                *
+ *      x (const double * const):                                             *
+ *          A sorted array of real numbers that are monotonically increasing. *
+ *      y (const double * const):                                             *
+ *          The data points corresponding to x.                               *
+ *      p (const tmpl_CubicDouble * TMPL_RESTRICT const):                     *
+ *          The user-provided splining polynomials. There are "len - 1" total.*
+ *      len (const size_t):                                                   *
+ *          The number of elements of x and y.                                *
+ *      x_new (const double * const):                                         *
+ *          The new data points. Assumed sorted in increasing order.          *
+ *      y_new (double * const):                                               *
+ *          The interpolated data corresponding to x_new, to be computed.     *
+ *      len_new (const size_t):                                               *
+ *          The number of elements of x_new and y_new.                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      1.) Both x and x_new are assumed to be sorted in increasing order.    *
+ *                                                                            *
+ *      2.) For values outside of (min(x), max(x)), we use the cubic splining *
+ *          polynomials to extrapolate.                                       *
+ *                                                                            *
+ *      3.) The user may provide any splining polynomial they wish. Natural   *
+ *          splines, Hermite cubics, and more are all possible.               *
+ *                                                                            *
+ *      4.) If any of the inputs are NULL, or if len_new = 0, nothing is done.*
+ *                                                                            *
+ *      5.) If len < 3, then we use a linear interpolation.                   *
+ *                                                                            *
+ *      6.) The polynomial "p" is declared with TMPL_RESTRICT, which expands  *
+ *          to "restrict" if C99 support is available. To properly use this   *
+ *          function, none of the other arguments (x, y, x_new, y_new) should *
+ *          point to p.                                                       *
+ *                                                                            *
+ *      7.) It is assumed that the coefficients for the nth splining          *
+ *          polynomial are for the function:                                  *
+ *                                                                            *
+ *                                                 2            3             *
+ *              p (x) = a + b (x - x ) + c (x - x ) + d (x - x )              *
+ *               n                  n            n            n               *
+ *                                                                            *
+ *          where x_n is the nth element of the "x" array. That is the        *
+ *          parameter for the nth spline is x - x_n.                          *
+ ******************************************************************************/
+extern void
+tmpl_Float_Sorted_Cubic_Interp1d(
+    const float * const x,
+    const float * const y,
+    const tmpl_CubicFloat * TMPL_RESTRICT const p,
+    const size_t len,
+    const float * const x_new,
+    float * const y_new,
+    const size_t len_new
+);
+
+extern void
+tmpl_Double_Sorted_Cubic_Interp1d(
+    const double * const x,
+    const double * const y,
+    const tmpl_CubicDouble * TMPL_RESTRICT const p,
+    const size_t len,
+    const double * const x_new,
+    double * const y_new,
+    const size_t len_new
+);
+
+extern void
+tmpl_LDouble_Sorted_Cubic_Interp1d(
+    const long double * const x,
+    const long double * const y,
+    const tmpl_CubicLongDouble * TMPL_RESTRICT const p,
+    const size_t len,
+    const long double * const x_new,
+    long double * const y_new,
+    const size_t len_new
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Sorted_Linear_Interp1d                                    *
  *  Purpose:                                                                  *
  *      Interpolate values of (x, y) to (x_new, y_new).                       *
