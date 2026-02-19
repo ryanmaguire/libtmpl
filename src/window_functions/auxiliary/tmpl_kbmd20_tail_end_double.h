@@ -47,7 +47,7 @@
  *                                                                            *
  *      on the interval [-1/4, 0] (the limit of f at zero is used to avoid a  *
  *      division-by-zero), where KBMD20 represents the modified Kaiser-Bessel *
- *      window with alpha = 2, have be pre-computed below. Given x with       *
+ *      window with alpha = 2, have been pre-computed below. Given x with     *
  *      1 / 4 <= x <= 1 / 2, we translate x into this interval using:         *
  *                                                                            *
  *                     1                                                      *
@@ -86,7 +86,7 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (-4.5847288850771500899519121342862207284106326971267E-01)
 #define A01 (+3.7703430459325869351666011886888007493805010737097E+00)
 #define A02 (-9.2748851460735770070873687837606018595281772953278E+00)
@@ -97,7 +97,7 @@
 #define A07 (+1.2013007956983332028738370656593394262634958622036E+01)
 #define A08 (+2.3806275613935762858840601619804706484041671686613E+01)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the rational Remez approximation.     */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
 #define B01 (+6.4590537669403026293698188389403347665806182276329E-01)
 #define B02 (+2.4051579740584122995183821213142052648841929286432E+00)

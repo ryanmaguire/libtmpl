@@ -67,7 +67,7 @@ extern float
 tmpl_Float_Modified_Kaiser_Bessel_2_0(float x, float W);
 
 extern double
-tmpl_Double_Modified_Kaiser_Bessel_2_0(double x, double W);
+tmpl_Double_KBMD20(const double x, const double width);
 
 extern long double
 tmpl_LDouble_Modified_Kaiser_Bessel_2_0(long double x, long double W);

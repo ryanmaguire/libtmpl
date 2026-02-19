@@ -16,66 +16,178 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_kaiser_bessel_2_0_double                        *
+ *                             tmpl_kbmd20_double                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Kaiser-Bessel window with alpha = 2 pi.                  *
+ *      Computes the modified Kaiser-Bessel window with alpha = 2.            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Kaiser_Bessel_2_0                                         *
+ *      tmpl_Double_KBMD20                                                    *
  *  Purpose:                                                                  *
- *      Computes the Kaiser-Bessel window function with alpha set to 2 pi.    *
- *      This is defined in terms of modified Bessel functions:                *
+ *      Computes the Kaiser-Bessel window with alpha = 2. This is defined in  *
+ *      terms of the zeroth modified Bessel function, I_0:                    *
  *                                                                            *
- *                        I_0(2 pi sqrt(1 - (2x/W)^2))                        *
- *          kb20(x, W) =  ----------------------------                        *
- *                                 I_0(2 pi)                                  *
+ *                              -             ___________ -                   *
+ *                             |             /    -   - 2  |                  *
+ *                             |            /    | 2 x |   |                  *
+ *                          I  | 2 pi \    / 1 - | --- |   | - 1              *
+ *                           0 |       \  /      |  w  |   |                  *
+ *                             |        \/        -   -    |                  *
+ *                              -                         -                   *
+ *          KBMD20(x, w) =  ------------------------------------              *
+ *                                         -    -                             *
+ *                                        |      |                            *
+ *                                     I  | 2 pi | - 1                        *
+ *                                      0 |      |                            *
+ *                                         -    -                             *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number, the input data value.                              *
- *      W (double):                                                           *
+ *      width (const double):                                                 *
  *          The width of the window. Units are the same as x.                 *
  *  Output:                                                                   *
- *      window (double):                                                      *
- *          The Kaiser-Bessel window with alpha = 2 Pi and window width W     *
- *          evaluated at the point x.                                         *
+ *      kbmd20_xw (double):                                                   *
+ *          The modified Kaiser-Bessel window evaluated at x / width.         *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          None.                                                             *
+ *          src/window_functions/auxiliary/                                   *
+ *              tmpl_Double_KBMD20_Remez:                                     *
+ *                  Computes KBMD20(x) using a Remez polynomial.              *
+ *              tmpl_Double_KBMD20_Rat_Remez:                                 *
+ *                  Computes KBMD20(x) using a rational Remez approximation.  *
+ *              tmpl_Double_KBMD20_Tail_End:                                  *
+ *                  Computes KBMD20(x) using a Remez expansion in x - 1 / 2.  *
  *      Method:                                                               *
- *          Compute the value 1 - (2x/W)^2. Check that sign bit. It the       *
- *          value is negative, then x falls outside the window and 0 is       *
- *          returned. Otherwise a (9, 9) Pade approximant is used.            *
+ *          Set x = x / width, then do the following.                         *
+ *          x is NaN:                                                         *
+ *              Return NaN.                                                   *
+ *          |x| < 2^-30:                                                      *
+ *              Return 1. Error is O(x^2), accurate to double precision.      *
+ *          |x| < 2^-5:                                                       *
+ *              Use a degree 8 Remez polynomial for:                          *
+ *                                                                            *
+ *                         KBMD20(x) - 1                                      *
+ *                  f(x) = -------------                                      *
+ *                                2                                           *
+ *                               x                                            *
+ *                                                                            *
+ *              Return 1 + x^2 P(x) where P is the degree 8 Remez polynomial  *
+ *              for f. Note, since f is even, only 5 of the terms in P are    *
+ *              non-zero.                                                     *
+ *          |x| < 2^-2:                                                       *
+ *              Use a degree (10, 8) rational Remez approximation. Since the  *
+ *              window is even, there are only 6 non-zero terms in the        *
+ *              numerator and 5 non-zero terms in the denominator.            *
+ *          2^-2 <= x < 2^-1:                                                 *
+ *              Use a rational Remez approximation in terms of x - 1 / 2 for  *
+ *              the function:                                                 *
+ *                                                                            *
+ *                         KBMD20(x + 1 / 2)                                  *
+ *                  g(x) = -----------------                                  *
+ *                                 x                                          *
+ *                                                                            *
+ *              We shift the argument x using:                                *
+ *                                                                            *
+ *                                                                            *
+ *                             1                                              *
+ *                  t(x) = x - -                                              *
+ *                             2                                              *
+ *                                                                            *
+ *              and then return t(x) * P(t(x)) / Q(t(x)), where P and Q are   *
+ *              the numerator and denominator, respectively, for the degree   *
+ *              (8, 6) rational Remez approximation for g on the interval     *
+ *              [-1/4, 0]. Since t(x) tends to zero as x approaches 1 / 2,    *
+ *              this method ensures the endpoints of the window are zero.     *
+ *          -2^-1 < x <= -2^-2:                                               *
+ *              Compute |x| by setting the sign bit of x to zero, and then    *
+ *              use the previous case since 2^-2 <= |x| < 2^-1.               *
+ *          |x| >= 2^-1 (including + / - infinity):                           *
+ *              Return 0.                                                     *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          None.                                                             *
+ *          src/math/                                                         *
+ *              tmpl_Double_Abs:                                              *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Double_Is_NaN:                                           *
+ *                  Determines if a double is Not-a-Number.                   *
+ *          src/window_functions/auxiliary/                                   *
+ *              tmpl_Double_KBMD20_Remez:                                     *
+ *                  Computes KBMD20(x) using a Remez polynomial.              *
+ *              tmpl_Double_KBMD20_Rat_Remez:                                 *
+ *                  Computes KBMD20(x) using a rational Remez approximation.  *
+ *              tmpl_Double_KBMD20_Tail_End:                                  *
+ *                  Computes KBMD20(x) using a Remez expansion in x - 1 / 2.  *
  *      Method:                                                               *
- *          Same as IEEE-754 method but check if 1 - (2x/W)^2 is negative     *
- *          using comparisons, rather than examining the sign bit. This is    *
- *          slightly slower on some machines, but not by much.                *
+ *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
+ *          function, and compute the absolute value using the Abs function.  *
  *  Error:                                                                    *
- *      Max Relative Error: 2E-18                                             *
- *      RMS Relative Error: 7E-19                                             *
- *                                                                            *
- *      These values are theoretical errors from the Pade approximant.        *
- *      Actual error for 64-bit double is 1 ULP, 2^-52 ~= 2.22E-16.           *
+ *          Based on 100,000 samples with -1/2 < x < 1/2 and w = 1            *
+ *              max relative error: 4.0601393205672930E-16                    *
+ *              rms relative error: 9.4801254822121640E-17                    *
+ *              max absolute error: 2.3104267411232817E-16                    *
+ *              rms absolute error: 4.9954916555948700E-17                    *
+ *          Values were computed using the Python library mpmath with 224     *
+ *          bits of precision (1 ULP ~= 10^-68).                              *
  *  Notes:                                                                    *
- *      No checks for x = NaN or x = +/- Inf are performed. For x = +/- inf,  *
- *      1 - (x/W)^2 will be negative, so zero is returned. For NaN the result *
- *      can be +/- NaN or zero.                                               *
+ *      1.) Accurate to double precision.                                     *
  *                                                                            *
- *      No checks for W = NaN, +/- Inf, or zero are performed. W = zero will  *
- *      result in divide-by-zero, and NaN or Inf may return.                  *
+ *      2.) There are no checks for negative window widths, or zero widths.   *
+ *          Negative window widths have no effect since the window function   *
+ *          is even, and hence KBMD20(x / w) = KBMD20(x / -w). Zero windows   *
+ *          produce division-by-zero, and may result in an output that is     *
+ *          either NaN (if x = 0) or 0 (if |x| > 0 and |x| / 0 is treated as  *
+ *          infinity).                                                        *
+ *  References:                                                               *
+ *      1.) Maguire, Ryan (2024)                                              *
+ *          tmpld                                                             *
+ *          https://github.com/ryanmaguire/libtmpl_data                       *
+ *                                                                            *
+ *          Python library providing an implementation of the rational        *
+ *          Remez exchange algorithm. The coefficients for the                *
+ *          approximations used by this function were computed using this.    *
+ *                                                                            *
+ *      2.) Tasissa, Abiy (2019)                                              *
+ *          Function Approximation and the Remez Exchange Algorithm.          *
+ *          https://sites.tufts.edu/atasissa/files/2019/09/remez.pdf          *
+ *                                                                            *
+ *          Survey of the Remez polynomial and Remez exchange algorithm,      *
+ *          including an excellent discussion on the rational Remez exchange  *
+ *          algorithm. The implementation in tmpld is based on these notes.   *
+ *                                                                            *
+ *      3.) Marouf, E., Tyler, G., Rosen, P. (June 1986)                      *
+ *          Profiling Saturn's Rings by Radio Occultation                     *
+ *          Icarus Vol. 68, Pages 120-166.                                    *
+ *                                                                            *
+ *          A description of the (normal) Kaiser-Bessel window is provided    *
+ *          here, and how it is used in Fourier optics.                       *
+ *                                                                            *
+ *      4.) Kaiser, James, Schafer, Ronald (1980)                             *
+ *          On the Use of the I0-Sinh Window for Spectrum Analysis            *
+ *          IEEE Transactions on Acoustics, Speech, and Signal Processing     *
+ *          Vol 28, Pages 105-107                                             *
+ *                                                                            *
+ *          The original paper describing the (normal) Kaiser window.         *
+ *          The original window tends to 1 / I0(alpha * pi) at the endpoints, *
+ *          which is not zero. The modification here makes the endpoints tend *
+ *          to zero, exactly, at the endpoints.                               *
+ *                                                                            *
+ *      5.) https://en.wikipedia.org/wiki/Kaiser_window                       *
+ *                                                                            *
+ *          Wikipedia article discussing the (normal) Kaiser window.          *
+ *                                                                            *
+ *      6.) https://en.wikipedia.org/wiki/Window_function                     *
+ *                                                                            *
+ *          Wikipedia article discussing tapers in general.                   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file containing TMPL_HAS_IEEE754_DOUBLE macro.             *
- *  2.) tmpl_window_functions.h:                                              *
- *          Header file with the functions prototype.                         *
+ *  1.) tmpl_nan_double.h:                                                    *
+ *          Header file providing double precision NaN (Not-a-Number).        *
+ *  2.) tmpl_ieee754_double.h:                                                *
+ *          Header file where the tmpl_IEEE754_Double type is defined.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 27, 2020                                             *
@@ -87,11 +199,14 @@
  *      improves the precision from 1E-10 to 2E-16, double precision.         *
  *  2023/01/06: Ryan Maguire                                                  *
  *      Added license and comments.                                           *
+ *  2026/02/19: Ryan Maguire                                                  *
+ *      Swapped Pade approximants for Remez polynomials and rational minimax  *
+ *      approximations, ensuring the function tends to zero at the endpoints, *
+ *      and improving the performance.                                        *
  ******************************************************************************/
 
-/*  Function prototype found here.                                            */
-extern double
-tmpl_Double_Modified_Kaiser_Bessel_2_0(const double x, const double width);
+/*  Function prototype / forward declaration.                                 */
+extern double tmpl_Double_KBMD20(const double x, const double width);
 
 /*  TMPL_NAN macro found here which provides double precision NaN.            */
 #include <libtmpl/include/nan/tmpl_nan_double.h>
@@ -103,6 +218,9 @@ tmpl_Double_Modified_Kaiser_Bessel_2_0(const double x, const double width);
  *                         Static / Inlined Functions                         *
  ******************************************************************************/
 
+/*  Remez polynomial for the modified Kaiser-Bessel window.                   */
+#include "auxiliary/tmpl_kbmd20_remez_double.h"
+
 /*  Rational Remez approximation for the modified Kaiser-Bessel window.       */
 #include "auxiliary/tmpl_kbmd20_rat_remez_double.h"
 
@@ -113,55 +231,118 @@ tmpl_Double_Modified_Kaiser_Bessel_2_0(const double x, const double width);
  *  more efficiently. This gives a slight performance boost.                  */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-/*  Double precision Kaiser-Bessel window with alpha = 2 pi.                  */
-double tmpl_Double_Modified_Kaiser_Bessel_2_0(const double x, const double width)
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
+/*  Double precision Kaiser-Bessel window with alpha = 2.                     */
+double tmpl_Double_KBMD20(const double x, const double width)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Double w;
 
-    /*  The Function is I_0(2 pi sqrt(1 - (2x/W)^2))/I_0(2pi) for values      *
-     *  inside the window. To determine if x falls in the window we need to   *
-     *  check if 1 - (2x/W)^2 is non-negative. Compute this.                  */
+    /*  The interval [-w/2, w/2] is compressed to [-1/2, 1/2] by computing    *
+     *  the ratio of the inputs. This is the main argument for the window.    */
     w.r = x / width;
 
+    /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x02U)
-        return tmpl_Double_KBMD20_Rat_Remez(w.r);
+    {
+        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x05U)
+        {
+            /*  For very small inputs, |x| < 2^-30, return 1. The error is    *
+             *  O(x^2), the value of the window is 1 to double precision.     */
+            if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x1EU)
+                return 1.0;
 
+            /*  Otherwise, use a Remez polynomial with a few terms.           */
+            return tmpl_Double_KBMD20_Remez(w.r);
+        }
+
+        /*  For 1 / 32 <= |x| < 1 / 4, use a rational Remez approximation.    */
+        return tmpl_Double_KBMD20_Rat_Remez(w.r);
+    }
+
+    /*  For arguments on the tail-end of the window, we use an expansion in   *
+     *  terms of x - 1 / 2. This helps ensure the window goes to zero at the  *
+     *  endpoints.                                                            */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x01U)
     {
+        /*  The tail-end function assumes 1 / 4 <= x <= 1 / 2. Since the      *
+         *  window function is symmetric, we can handle negative values by    *
+         *  using the absolute value. Set the sign bit to zero.               */
         w.bits.sign = 0x00U;
+
+        /*  Compute using a rational Remez approximation that is expanded in  *
+         *  terms of x - 1 / 2.                                               */
         return tmpl_Double_KBMD20_Tail_End(w.r);
     }
 
+    /*  Special case, if the input is NaN, then the output is too.            */
+    if (TMPL_DOUBLE_IS_NAN(w))
+        return w.r;
+
+    /*  All other values (including + / - infinity) fall outside of the       *
+     *  domain of the window. Return zero.                                    */
     return 0.0;
 }
-/*  End of tmpl_Double_Kaiser_Bessel_2_0.                                     */
+/*  End of tmpl_Double_KBMD20.                                                */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
-/*  Double precision Kaiser-Bessel window with alpha = 2 pi.                  */
-double tmpl_Double_Kaiser_Bessel_2_0(double x, double W)
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Double precision Kaiser-Bessel window with alpha = 2.                     */
+double tmpl_Double_KBMD20(const double x, const double width)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double numer, denom;
+    double abs_arg;
 
-    /*  The Function is I_0(2 pi sqrt(1 - (2x/W)^2))/I_0(2pi) for values      *
-     *  inside the window. To determine if x falls in the window we need to   *
-     *  check if 1 - (2x/W)^2 is non-negative. Compute this.                  */
-    const double c = 2.0*x/W;
-    const double arg = 1.0 - c*c;
+    /*  The interval [-w/2, w/2] is compressed to [-1/2, 1/2] by computing    *
+     *  the ratio of the inputs. This is the main argument for the window.    */
+    const double arg = x / width;
 
-    /*  Negative means the input falls outside of the window. Return 0.       */
-    if (arg < 0.0)
-        return 0.0;
+    /*  Special case, if the argument is NaN, return NaN.                     */
+    if (tmpl_Double_Is_NaN(arg))
+        return arg;
 
-    /*  Otherwise x falls inside the window. Compute via the Pade approximant.*/
-    numer = TMPL_PADE_HELPER(arg, P);
-    denom = TMPL_PADE_HELPER(arg, Q);
-    return numer / denom;
+    /*  The window function is even, compute the absolute value and use that. */
+    abs_arg = tmpl_Double_Abs(arg);
+
+    /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
+    if (abs_arg < 0.25)
+    {
+        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        if (abs_arg < 0.03125)
+        {
+            /*  For very small inputs, |x| < 2^-30, return 1. The error is    *
+             *  O(x^2), the value of the window is 1 to double precision.     */
+            if (abs_arg < 9.313225746154785E-10)
+                return 1.0;
+
+            /*  Otherwise, use a Remez polynomial with a few terms.           */
+            return tmpl_Double_KBMD20_Remez(abs_arg);
+        }
+
+        /*  For 1 / 32 <= |x| < 1 / 4, use a rational Remez approximation.    */
+        return tmpl_Double_KBMD20_Rat_Remez(abs_arg);
+    }
+
+    /*  For arguments on the tail-end of the window, we use an expansion in   *
+     *  terms of x - 1 / 2. This helps ensure the window goes to zero at the  *
+     *  endpoints.                                                            */
+    if (abs_arg < 0.5)
+        return tmpl_Double_KBMD20_Tail_End(abs_arg);
+
+    /*  All other values (including + / - infinity) fall outside of the       *
+     *  domain of the window. Return zero.                                    */
+    return 0.0;
 }
-/*  End of tmpl_Double_Kaiser_Bessel_2_0.                                     */
+/*  End of tmpl_Double_KBMD20.                                                */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
