@@ -15,38 +15,6 @@
 #define MODIFIED_KAISER_BESSEL_2_0_A11 6.30869723716497460710444914139e-7
 #define MODIFIED_KAISER_BESSEL_2_0_A12 4.32391291785164657063120476020e-8
 
-float tmpl_Float_Modified_Kaiser_Bessel_2_0(float x, float W)
-{
-    float bessel_x, arg;
-    arg = 2.0F*x/W;
-    arg = 1.0F - arg*arg;
-
-    /*  arg > 0 means x is within the window. We use a Taylor series for the  *
-     *  modified Kaiser-Bessel function.                                      */
-    if (arg > 0.0F)
-    {
-        bessel_x = (float)MODIFIED_KAISER_BESSEL_2_0_A12;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A11;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A10;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A09;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A08;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A07;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A06;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A05;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A04;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A03;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A02;
-        bessel_x = arg*bessel_x + (float)MODIFIED_KAISER_BESSEL_2_0_A01;
-        bessel_x = arg*bessel_x;
-    }
-
-    /*  For values outside of the window, we return 0.                        */
-    else
-        bessel_x = 0.0F;
-
-    return bessel_x;
-}
-
 long double
 tmpl_LDouble_Modified_Kaiser_Bessel_2_0(long double x, long double W)
 {
