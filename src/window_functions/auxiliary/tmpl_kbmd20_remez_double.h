@@ -79,7 +79,7 @@
 #define A03 (+2.7705116556164322602637283132126030991626751129013E+02)
 #define A04 (-3.4279667454271110061935060435601473032453227839005E+02)
 
-/*  Helper macro for evaluating the numerator via Horner's method.            */
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
 
 /*  Computes the modified Kaiser-Bessel window using a Remez polynomial.      */
