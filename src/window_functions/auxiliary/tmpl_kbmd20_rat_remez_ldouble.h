@@ -256,10 +256,10 @@ B00 + z*(\
 #define B05 (+7.4698604431351457479772425500363624729998674496715E-02L)
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
-#define TMPL_NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05+z*A06)))))
+#define TMPL_NUM_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*A06)))))
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
-#define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*(B04 + z*B05))))
+#define TMPL_DEN_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*B05))))
 
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */

@@ -163,12 +163,14 @@
  *          function, and compute the absolute value using the Abs function.  *
  *  Error:                                                                    *
  *          Based on 100,000 samples with -1/2 < x < 1/2 and w = 1            *
- *              max relative error: 4.0601393205672930E-16                    *
- *              rms relative error: 9.4801254822121640E-17                    *
- *              max absolute error: 2.3104267411232817E-16                    *
- *              rms absolute error: 4.9954916555948700E-17                    *
+ *              max relative error: 2.4161819325413287E-19                    *
+ *              rms relative error: 5.1212833655092076E-20                    *
+ *              max absolute error: 1.2567243193193376E-19                    *
+ *              rms absolute error: 2.6449198885812206E-20                    *
  *          Values were computed using the Python library mpmath with 224     *
- *          bits of precision (1 ULP ~= 10^-68).                              *
+ *          bits of precision (1 ULP ~= 10^-68) and assume 80-bit extended    *
+ *          precision long double. Similar error values (1-2 ULP) are found   *
+ *          for double, double-double, and quadruple precisions.              *
  *  Notes:                                                                    *
  *      1.) Accurate to long double precision.                                *
  *                                                                            *
