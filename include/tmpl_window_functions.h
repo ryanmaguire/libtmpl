@@ -63,6 +63,21 @@ tmpl_Double_Kaiser_Bessel_3_5(double x, double W);
 extern long double
 tmpl_LDouble_Kaiser_Bessel_3_5(long double x, long double W);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_KBMD20                                                    *
+ *  Purpose:                                                                  *
+ *      Evaluates the modified Kaiser-Bessel window with alpha = 2.0 * pi.    *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A point in the window.                                            *
+ *      width (const double):                                                 *
+ *          The width of the window. x varies from -width/2 to +width/2.      *
+ *  Output:                                                                   *
+ *      kbmd20_x (double):                                                    *
+ *          The modified Kaiser-Bessel window with alpha = 2.0 * pi evaluated *
+ *          at x with window size given by width.                             *
+ ******************************************************************************/
 extern float
 tmpl_Float_KBMD20(const float x, const float width);
 
