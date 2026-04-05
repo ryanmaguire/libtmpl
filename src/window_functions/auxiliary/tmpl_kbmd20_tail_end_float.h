@@ -55,7 +55,7 @@
  *                     2                                                      *
  *                                                                            *
  *      and then return t(x) * P(t(x)) / Q(t(x)), where P and Q are the       *
- *      numerator and denominator, respectively, for the degree (8, 6)        *
+ *      numerator and denominator, respectively, for the degree (4, 3)        *
  *      rational minimax approximation for f.                                 *
  *                                                                            *
  *      Note that since we scale the result by t(x), the approximation is     *
