@@ -45,7 +45,7 @@
  *          Implementation        | Numerator | Denominator                   *
  *          -----------------------------------------------                   *
  *          64-bit double         |        10 |           8                   *
- *          80-bit extended       |        10 |          10                   *
+ *          80-bit extended       |        12 |          10                   *
  *          128-bit double-double |        16 |          14                   *
  *          128-bit quadruple     |        16 |          16                   *
  *                                                                            *
