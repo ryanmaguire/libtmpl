@@ -37,7 +37,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      The coefficients for the degree N Remez polynomial for function f     *
+ *      The coefficients for the degree N Remez polynomial for the function f *
  *      given by:                                                             *
  *                                                                            *
  *                 KBMD20(x) - 1                                              *
