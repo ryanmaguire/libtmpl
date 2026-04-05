@@ -171,7 +171,7 @@
  *                                                                            *
  *          The original paper describing the (normal) Kaiser window.         *
  *          The original window tends to 1 / I0(alpha * pi) at the endpoints, *
- *          which is not zero. The modification here makes the endpoints tend *
+ *          which is not zero. The modification here makes the function tend  *
  *          to zero, exactly, at the endpoints.                               *
  *                                                                            *
  *      5.) https://en.wikipedia.org/wiki/Kaiser_window                       *
