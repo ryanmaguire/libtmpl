@@ -124,13 +124,13 @@
  *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
  *          function, and compute the absolute value using the Abs function.  *
  *  Error:                                                                    *
- *          Based on 100,000 samples with -1/2 < x < 1/2 and w = 1            *
- *              max relative error: 3.7227902705101654E-07                    *
- *              rms relative error: 7.7574008765223670E-08                    *
- *              max absolute error: 1.1831117390820891E-07                    *
- *              rms absolute error: 2.7601964705094504E-08                    *
- *          Values were computed using the Python library mpmath with 224     *
- *          bits of precision (1 ULP ~= 10^-68).                              *
+ *      Based on 100,000 samples with -1/2 < x < 1/2 and w = 1                *
+ *          max relative error: 3.7227902705101654E-07                        *
+ *          rms relative error: 7.7574008765223670E-08                        *
+ *          max absolute error: 1.1831117390820891E-07                        *
+ *          rms absolute error: 2.7601964705094504E-08                        *
+ *      Values were computed using the Python library mpmath with 224         *
+ *      bits of precision (1 ULP ~= 10^-68).                                  *
  *  Notes:                                                                    *
  *      1.) Accurate to single precision.                                     *
  *                                                                            *
