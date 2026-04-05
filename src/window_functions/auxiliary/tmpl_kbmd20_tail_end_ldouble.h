@@ -161,7 +161,7 @@ B00 + z*(\
  *                           128-bit Double-Double                            *
  ******************************************************************************/
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (-4.5847288850771499858078489078021537492833265455446E-01L)
 #define A01 (+3.8304070782953068608132646180100697975442878156307E+00L)
 #define A02 (-9.6330920760737561982159156373937321052867221986096E+00L)
@@ -176,7 +176,7 @@ B00 + z*(\
 #define A11 (+4.3301302265523161811340990234752164027819035778781E+00L)
 #define A12 (+3.8137578819974222893803472088438037130496333670098E+00L)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the rational Remez approximation.     */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define B01 (+5.1489646893024622461538376392055428423871102925535E-01L)
 #define B02 (+2.0244652871808327844583482589171184527670731983671E+00L)
@@ -250,7 +250,7 @@ B00 + z*(\
  *                             128-bit Quadruple                              *
  ******************************************************************************/
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (-4.5847288850771499858078489078020801140394891932787E-01L)
 #define A01 (+3.8706474183851924127965209964873616090315977132097E+00L)
 #define A02 (-9.8319105591237874432534768011881823944226910310655E+00L)
@@ -267,7 +267,7 @@ B00 + z*(\
 #define A13 (-2.1436572245078936195665941741016376033331336646462E+00L)
 #define A14 (-1.5170096728401630923080372128245678203774089765452E+00L)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the rational Remez approximation.     */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define B01 (+4.2712608795774428436462763487213343302309402550272E-01L)
 #define B02 (+1.6796304703890656012410302014128491952580705620144E+00L)
@@ -345,7 +345,7 @@ B00 + z*(\
  *                         80-Bit Extended / Portable                         *
  ******************************************************************************/
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (-4.5847288850771499859819148705902600542188565169189E-01L)
 #define A01 (+3.7354080495939655805445280812424673219091514691267E+00L)
 #define A02 (-9.1263456777439517898748561821330677435458253553074E+00L)
@@ -356,7 +356,7 @@ B00 + z*(\
 #define A07 (+9.1006891686145828177113243750679842065658020240886E+00L)
 #define A08 (+1.7458027427611389178586109293332718481444204682122E+01L)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the rational Remez approximation.     */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define B01 (+7.2210398562889750899253710025293864693932024664842E-01L)
 #define B02 (+2.7570220275193878985028422804462565873221431298682E+00L)
