@@ -65,6 +65,54 @@ tmpl_LDouble_Kaiser_Bessel_3_5(long double x, long double W);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_KBMD10                                                    *
+ *  Purpose:                                                                  *
+ *      Evaluates the modified Kaiser-Bessel window with alpha = 1.0 * pi.    *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A point in the window.                                            *
+ *      width (const double):                                                 *
+ *          The width of the window. x varies from -width/2 to +width/2.      *
+ *  Output:                                                                   *
+ *      kbmd10_x (double):                                                    *
+ *          The modified Kaiser-Bessel window with alpha = 1.0 * pi evaluated *
+ *          at x with window size given by width.                             *
+ ******************************************************************************/
+extern float
+tmpl_Float_KBMD10(const float x, const float width);
+
+extern double
+tmpl_Double_KBMD10(const double x, const double width);
+
+extern long double
+tmpl_LDouble_KBMD10(const long double x, const long double width);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_KBMD15                                                    *
+ *  Purpose:                                                                  *
+ *      Evaluates the modified Kaiser-Bessel window with alpha = 1.5 * pi.    *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A point in the window.                                            *
+ *      width (const double):                                                 *
+ *          The width of the window. x varies from -width/2 to +width/2.      *
+ *  Output:                                                                   *
+ *      kbmd15_x (double):                                                    *
+ *          The modified Kaiser-Bessel window with alpha = 1.5 * pi evaluated *
+ *          at x with window size given by width.                             *
+ ******************************************************************************/
+extern float
+tmpl_Float_KBMD15(const float x, const float width);
+
+extern double
+tmpl_Double_KBMD15(const double x, const double width);
+
+extern long double
+tmpl_LDouble_KBMD15(const long double x, const long double width);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_KBMD20                                                    *
  *  Purpose:                                                                  *
  *      Evaluates the modified Kaiser-Bessel window with alpha = 2.0 * pi.    *
