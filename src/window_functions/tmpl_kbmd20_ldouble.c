@@ -227,7 +227,7 @@
  *  1.) tmpl_ieee754_ldouble.h:                                               *
  *          Header file where the tmpl_IEEE754_LDouble type is defined.       *
  *  2.) tmpl_math.h:                                                          *
- *          Contains abs and isnan function (used in portable version only).  *
+ *          Contains abs and isnan functions (used in portable version only). *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 27, 2020                                             *
