@@ -224,10 +224,10 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_nan_ldouble.h:                                                   *
- *          Header file providing long double precision NaN (Not-a-Number).   *
- *  2.) tmpl_ieee754_ldouble.h:                                               *
+ *  1.) tmpl_ieee754_ldouble.h:                                               *
  *          Header file where the tmpl_IEEE754_LDouble type is defined.       *
+ *  2.) tmpl_math.h:                                                          *
+ *          Contains abs and isnan function (used in portable version only).  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 27, 2020                                             *
@@ -247,9 +247,6 @@
 /*  Function prototype / forward declaration.                                 */
 extern long double
 tmpl_LDouble_KBMD20(const long double x, const long double width);
-
-/*  TMPL_NAN macro found here which provides long double precision NaN.       */
-#include <libtmpl/include/nan/tmpl_nan_ldouble.h>
 
 /*  TMPL_HAS_IEEE754_LDOUBLE macro and tmpl_IEEE754_LDouble type given here.  */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
@@ -380,6 +377,9 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
+
+/*  tmpl_LDouble_Abs and tmpl_LDouble_Is_NaN declared here.                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Long double precision Kaiser-Bessel window with alpha = 2.                */
 long double tmpl_LDouble_KBMD20(const long double x, const long double width)
