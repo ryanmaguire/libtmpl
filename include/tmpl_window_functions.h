@@ -36,6 +36,30 @@ tmpl_Complex_Window_Normalization(tmpl_ComplexDouble *ker,
  *  performed, so we can't just typedef it here. We'll need to declare it     *
  *  individually for each diffraction correction method instead.              */
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Coss                                                      *
+ *  Purpose:                                                                  *
+ *      Evaluates the squared cosine window.                                  *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A point in the window.                                            *
+ *      width (const double):                                                 *
+ *          The width of the window. x varies from -width/2 to +width/2.      *
+ *  Output:                                                                   *
+ *      coss_xw (double):                                                     *
+ *          The squared cosine window evaluated at x with window size         *
+ *          given by width.                                                   *
+ ******************************************************************************/
+extern float
+tmpl_Float_Coss(const float x, const float width);
+
+extern double
+tmpl_Double_Coss(const double x, const double width);
+
+extern long double
+tmpl_LDouble_Coss(const long double x, const long double width);
+
 extern float
 tmpl_Float_Kaiser_Bessel_2_0(float x, float W);
 
@@ -161,15 +185,6 @@ tmpl_Double_Rect_Window(double x, double W);
 
 extern long double
 tmpl_LDouble_Rect_Window(long double x, long double W);
-
-extern float
-tmpl_Float_Coss(const float x, const float width);
-
-extern double
-tmpl_Double_Coss(const double x, const double width);
-
-extern long double
-tmpl_LDouble_Coss(const long double x, const long double width);
 
 extern float
 tmpl_Float_Kaiser_Bessel(float x, float W, float alpha);
