@@ -184,10 +184,10 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_nan_float.h:                                                     *
- *          Header file providing single precision NaN (Not-a-Number).        *
- *  2.) tmpl_ieee754_float.h:                                                 *
+ *  1.) tmpl_ieee754_float.h:                                                 *
  *          Header file where the tmpl_IEEE754_Float type is defined.         *
+ *  2.) tmpl_math.h:                                                          *
+ *          Contains abs and isnan function (used in portable version only).  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 27, 2020                                             *
@@ -206,9 +206,6 @@
 
 /*  Function prototype / forward declaration.                                 */
 extern float tmpl_Float_KBMD20(const float x, const float width);
-
-/*  TMPL_NAN macro found here which provides single precision NaN.            */
-#include <libtmpl/include/nan/tmpl_nan_float.h>
 
 /*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
 #include <libtmpl/include/types/tmpl_ieee754_float.h>
@@ -294,6 +291,9 @@ float tmpl_Float_KBMD20(const float x, const float width)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
+
+/*  tmpl_Float_Abs and tmpl_Float_Is_NaN declared here.                       */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Single precision Kaiser-Bessel window with alpha = 2.                     */
 float tmpl_Float_KBMD20(const float x, const float width)
