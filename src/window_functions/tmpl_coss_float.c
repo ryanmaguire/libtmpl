@@ -1,47 +1,320 @@
-/*  TMPL_USE_INLINE macro is found here.                                      */
-#include <libtmpl/include/tmpl_config.h>
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                              tmpl_coss_float                               *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the squared cosine window.                                   *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Float_Coss                                                       *
+ *  Purpose:                                                                  *
+ *      Computes the squared cosine window:                                   *
+ *                                                                            *
+ *                            -     -  2                                      *
+ *                           |    x  |                                        *
+ *          coss(x, w) = cos | pi -  |                                        *
+ *                           |    w  |                                        *
+ *                            -     -                                         *
+ *                                                                            *
+ *  Arguments:                                                                *
+ *      x (const float):                                                      *
+ *          A real number, the input data value.                              *
+ *      width (const float):                                                  *
+ *          The width of the window. Units are the same as x.                 *
+ *  Output:                                                                   *
+ *      coss_xw (float):                                                      *
+ *          The squared cosine window evaluated at x / width.                 *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          src/window_functions/auxiliary/                                   *
+ *              tmpl_Float_Coss_Remez:                                        *
+ *                  Computes Coss(x) using a Remez polynomial.                *
+ *              tmpl_Float_Coss_Rat_Remez:                                    *
+ *                  Computes Coss(x) using a rational Remez approximation.    *
+ *              tmpl_Float_Coss_Tail_End:                                     *
+ *                  Computes Coss(x) using a Remez expansion in x - 1 / 2.    *
+ *      Method:                                                               *
+ *          Set x = x / width, then do the following.                         *
+ *          x is NaN:                                                         *
+ *              Return NaN.                                                   *
+ *          |x| < 2^-15:                                                      *
+ *              Return 1. Error is O(x^2), accurate to single precision.      *
+ *          |x| < 2^-5:                                                       *
+ *              Use a degree 4 Remez polynomial for:                          *
+ *                                                                            *
+ *                         Coss(x) - 1                                        *
+ *                  f(x) = -----------                                        *
+ *                              2                                             *
+ *                             x                                              *
+ *                                                                            *
+ *              Return 1 + x^2 P(x) where P is the degree 4 Remez polynomial  *
+ *              for f. Note, since f is even, only 3 of the terms in P are    *
+ *              non-zero.                                                     *
+ *          |x| < 2^-2:                                                       *
+ *              Use a degree (4, 4) rational Remez approximation. Since the   *
+ *              window is even, there are only 3 non-zero terms in the        *
+ *              numerator and 3 non-zero terms in the denominator.            *
+ *          2^-2 <= x < 2^-1:                                                 *
+ *              Use a rational Remez approximation in terms of x - 1 / 2 for  *
+ *              the function:                                                 *
+ *                                                                            *
+ *                         Coss(x + 1 / 2)                                    *
+ *                  g(x) = ---------------                                    *
+ *                                2                                           *
+ *                               x                                            *
+ *                                                                            *
+ *              We shift the argument x using:                                *
+ *                                                                            *
+ *                                                                            *
+ *                             1                                              *
+ *                  t(x) = x - -                                              *
+ *                             2                                              *
+ *                                                                            *
+ *              and then return t(x)^2 * P(t(x)) / Q(t(x)), where P and Q are *
+ *              the numerator and denominator, respectively, for the degree   *
+ *              (4, 3) rational Remez approximation for g on the interval     *
+ *              [-1/4, 0]. Since t(x) tends to zero as x approaches 1 / 2,    *
+ *              this method ensures the endpoints of the window are zero.     *
+ *          -2^-1 < x <= -2^-2:                                               *
+ *              Compute |x| by setting the sign bit of x to zero, and then    *
+ *              use the previous case since 2^-2 <= |x| < 2^-1.               *
+ *          |x| >= 2^-1 (including + / - infinity):                           *
+ *              Return 0.                                                     *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          src/math/                                                         *
+ *              tmpl_Float_Abs:                                               *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Float_Is_NaN:                                            *
+ *                  Determines if a float is Not-a-Number.                    *
+ *          src/window_functions/auxiliary/                                   *
+ *              tmpl_Float_Coss_Remez:                                        *
+ *                  Computes Coss(x) using a Remez polynomial.                *
+ *              tmpl_Float_Coss_Rat_Remez:                                    *
+ *                  Computes Coss(x) using a rational Remez approximation.    *
+ *              tmpl_Float_Coss_Tail_End:                                     *
+ *                  Computes Coss(x) using a Remez expansion in x - 1 / 2.    *
+ *      Method:                                                               *
+ *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
+ *          function, and compute the absolute value using the Abs function.  *
+ *  Error:                                                                    *
+ *      Based on 100,000 samples with -1/2 < x < 1/2 and w = 1                *
+ *          max relative error: 2.6522737337590151E-07                        *
+ *          rms relative error: 6.3663185680450900E-08                        *
+ *          max absolute error: 1.4955313321074474E-07                        *
+ *          rms absolute error: 3.3050716486593983E-08                        *
+ *      Values were computed using the Python library mpmath with 224         *
+ *      bits of precision (1 ULP ~= 10^-68).                                  *
+ *  Notes:                                                                    *
+ *      1.) Accurate to single precision.                                     *
+ *                                                                            *
+ *      2.) There are no checks for negative window widths, or zero widths.   *
+ *          Negative window widths have no effect since the window function   *
+ *          is even, and hence Coss(x / w) = Coss(x / -w). Zero windows       *
+ *          produce division-by-zero, and may result in an output that is     *
+ *          either NaN (if x = 0) or 0 (if |x| > 0 and |x| / 0 is treated as  *
+ *          infinity).                                                        *
+ *  References:                                                               *
+ *      1.) Maguire, Ryan (2024)                                              *
+ *          tmpld                                                             *
+ *          https://github.com/ryanmaguire/libtmpl_data                       *
+ *                                                                            *
+ *          Python library providing an implementation of the rational        *
+ *          Remez exchange algorithm. The coefficients for the                *
+ *          approximations used by this function were computed using this.    *
+ *                                                                            *
+ *      2.) Tasissa, Abiy (2019)                                              *
+ *          Function Approximation and the Remez Exchange Algorithm.          *
+ *          https://sites.tufts.edu/atasissa/files/2019/09/remez.pdf          *
+ *                                                                            *
+ *          Survey of the Remez polynomial and Remez exchange algorithm,      *
+ *          including an excellent discussion on the rational Remez exchange  *
+ *          algorithm. The implementation in tmpld is based on these notes.   *
+ *                                                                            *
+ *      3.) Marouf, E., Tyler, G., Rosen, P. (June 1986)                      *
+ *          Profiling Saturn's Rings by Radio Occultation                     *
+ *          Icarus Vol. 68, Pages 120-166.                                    *
+ *                                                                            *
+ *          A description of the squared cosine window is provided            *
+ *          here, and how it is used in Fourier optics.                       *
+ *                                                                            *
+ *      4.) https://en.wikipedia.org/wiki/Window_function                     *
+ *                                                                            *
+ *          Wikipedia article discussing tapers in general.                   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_nan_float.h:                                                     *
+ *          Header file providing single precision NaN (Not-a-Number).        *
+ *  2.) tmpl_ieee754_float.h:                                                 *
+ *          Header file where the tmpl_IEEE754_Float type is defined.         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       April 19, 2020                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/04/07: Ryan Maguire                                                  *
+ *      Changed algorithm to use Remez polynomials and rational minimax       *
+ *      functions, and ensure the function goes to zero at the endpoints.     *
+ ******************************************************************************/
 
-/*  Forward declaration / function prototype.                                 */
-extern float tmpl_Float_Coss_Window(const float x, const float width);
+/*  Function prototype / forward declaration.                                 */
+extern float tmpl_Float_Coss(const float x, const float width);
 
-/*  Mathematical constants like pi and pi / 2 are found here.                 */
-#include <libtmpl/include/constants/tmpl_math_constants.h>
+/*  TMPL_NANF macro found here which provides single precision NaN.           */
+#include <libtmpl/include/nan/tmpl_nan_float.h>
 
-/*  The coss window is even, symmetric about the origin. We use the absolute  *
- *  value function to reduce the argument to a non-negative value.            */
-#if TMPL_USE_INLINE == 1
+/*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
-/*  The absolute value function is small and should be inlined.               */
-#include <libtmpl/include/inline/math/tmpl_abs_float.h>
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Remez polynomial for the squared cosine window.                           */
+#include "auxiliary/tmpl_coss_remez_float.h"
+
+/*  Rational Remez approximation for the squared cosine window.               */
+#include "auxiliary/tmpl_coss_rat_remez_float.h"
+
+/*  Tail-end expansion using a shifted rational Remez approximation.          */
+#include "auxiliary/tmpl_coss_tail_end_float.h"
+
+/*  With IEEE-754 support we can check if the input falls within the window   *
+ *  more efficiently. This gives a slight performance boost.                  */
+#if TMPL_HAS_IEEE754_FLOAT == 1
+
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
+/*  Single precision squared cosine window.                                   */
+float tmpl_Float_Coss(const float x, const float width)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_IEEE754_Float w;
+
+    /*  The interval [-w/2, w/2] is compressed to [-1/2, 1/2] by computing    *
+     *  the ratio of the inputs. This is the main argument for the window.    */
+    w.r = x / width;
+
+    /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
+    if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 0x02U)
+    {
+        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 0x05U)
+        {
+            /*  For very small inputs, |x| < 2^-15, return 1. The error is    *
+             *  O(x^2), the value of the window is 1 to single precision.     */
+            if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 0x0FU)
+                return 1.0F;
+
+            /*  Otherwise, use a Remez polynomial with a few terms.           */
+            return tmpl_Float_Coss_Remez(w.r);
+        }
+
+        /*  For 1 / 32 <= |x| < 1 / 4, use a rational Remez approximation.    */
+        return tmpl_Float_Coss_Rat_Remez(w.r);
+    }
+
+    /*  For arguments on the tail-end of the window, we use an expansion in   *
+     *  terms of x - 1 / 2. This helps ensure the window goes to zero at the  *
+     *  endpoints.                                                            */
+    if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 0x01U)
+    {
+        /*  The tail-end function assumes 1 / 4 <= x <= 1 / 2. Since the      *
+         *  window function is symmetric, we can handle negative values by    *
+         *  using the absolute value. Set the sign bit to zero.               */
+        w.bits.sign = 0x00U;
+
+        /*  Compute using a rational Remez approximation that is expanded in  *
+         *  terms of x - 1 / 2.                                               */
+        return tmpl_Float_Coss_Tail_End(w.r);
+    }
+
+    /*  Special case, if the input is NaN, then the output is too.            */
+    if (TMPL_FLOAT_IS_NAN(w))
+        return w.r;
+
+    /*  All other values (including + / - infinity) fall outside of the       *
+     *  domain of the window. Return zero.                                    */
+    return 0.0F;
+}
+/*  End of tmpl_Float_Coss.                                                   */
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
-/*  Lacking inline support, tell the compiler about the function.             */
-extern float tmpl_Float_Abs(float x);
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Single precision squared cosine window.                                   */
+float tmpl_Float_Coss(const float x, const float width)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    float abs_arg;
+
+    /*  The interval [-w/2, w/2] is compressed to [-1/2, 1/2] by computing    *
+     *  the ratio of the inputs. This is the main argument for the window.    */
+    const float arg = x / width;
+
+    /*  Special case, if the argument is NaN, return NaN.                     */
+    if (tmpl_Float_Is_NaN(arg))
+        return arg;
+
+    /*  The window function is even, compute the absolute value and use that. */
+    abs_arg = tmpl_Float_Abs(arg);
+
+    /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
+    if (abs_arg < 0.25F)
+    {
+        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        if (abs_arg < 0.03125F)
+        {
+            /*  For very small inputs, |x| < 2^-15, return 1. The error is    *
+             *  O(x^2), the value of the window is 1 to single precision.     */
+            if (abs_arg < 3.0517578125E-05F)
+                return 1.0F;
+
+            /*  Otherwise, use a Remez polynomial with a few terms.           */
+            return tmpl_Float_Coss_Remez(abs_arg);
+        }
+
+        /*  For 1 / 32 <= |x| < 1 / 4, use a rational Remez approximation.    */
+        return tmpl_Float_Coss_Rat_Remez(abs_arg);
+    }
+
+    /*  For arguments on the tail-end of the window, we use an expansion in   *
+     *  terms of x - 1 / 2. This helps ensure the window goes to zero at the  *
+     *  endpoints.                                                            */
+    if (abs_arg < 0.5F)
+        return tmpl_Float_Coss_Tail_End(abs_arg);
+
+    /*  All other values (including + / - infinity) fall outside of the       *
+     *  domain of the window. Return zero.                                    */
+    return 0.0F;
+}
+/*  End of tmpl_Float_Coss.                                                   */
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/*  Tell the compiler about the cosine function as well.                      */
-extern float tmpl_Float_Cos(const float x);
-
-/*  Function for computing the squared cosine window (coss).                  */
-float tmpl_Float_Coss_Window(const float x, const float width)
-{
-    /*  Declare necessary variables. C89 requires declaring these at the top. */
-    float cos_arg, arg;
-
-    /*  Get the absolute value of x. The coss window is symmetric about zero. */
-    const float abs_x = tmpl_Float_Abs(x);
-
-    /*  For points outside of the window width, the window is zero.           */
-    if (abs_x > 0.5F * width)
-        return 0.0F;
-
-    /*  The Coss window is cos(pi x / w)^2. Compute this.                     */
-    arg = abs_x * tmpl_float_pi / width;
-    cos_arg = tmpl_Float_Cos(arg);
-    return cos_arg * cos_arg;
-}
-/*  End of tmpl_Float_Coss_Window.                                            */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
