@@ -117,10 +117,10 @@
  *          function, and compute the absolute value using the Abs function.  *
  *  Error:                                                                    *
  *      Based on 100,000 samples with -1/2 < x < 1/2 and w = 1                *
- *          max relative error: 4.0601393205672930E-16                        *
- *          rms relative error: 9.4801254822121640E-17                        *
- *          max absolute error: 2.3104267411232817E-16                        *
- *          rms absolute error: 4.9954916555948700E-17                        *
+ *          max relative error: 4.4768082656804111E-16                        *
+ *          rms relative error: 1.2047284579047005E-16                        *
+ *          max absolute error: 2.2204460492503130E-16                        *
+ *          rms absolute error: 5.8481680453745493E-17                        *
  *      Values were computed using the Python library mpmath with 224         *
  *      bits of precision (1 ULP ~= 10^-68).                                  *
  *  Notes:                                                                    *
