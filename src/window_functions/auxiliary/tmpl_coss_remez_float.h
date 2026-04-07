@@ -78,7 +78,7 @@
 #define A02 (-4.2684306942006719234244723006281095883952442171987E+01F)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
+#define TMPL_POLY_EVAL(z) A00 + z * (A01 + z * A02)
 
 /*  Computes the squared cosine window using a Remez polynomial.              */
 TMPL_STATIC_INLINE
