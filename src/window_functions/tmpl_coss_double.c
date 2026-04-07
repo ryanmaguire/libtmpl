@@ -162,10 +162,10 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_nan_double.h:                                                    *
- *          Header file providing double precision NaN (Not-a-Number).        *
- *  2.) tmpl_ieee754_double.h:                                                *
+ *  1.) tmpl_ieee754_double.h:                                                *
  *          Header file where the tmpl_IEEE754_Double type is defined.        *
+ *  2.) tmpl_math.h:                                                          *
+ *          Contains abs and isnan function (used in portable version only).  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 19, 2020                                                *
@@ -179,9 +179,6 @@
 
 /*  Function prototype / forward declaration.                                 */
 extern double tmpl_Double_Coss(const double x, const double width);
-
-/*  TMPL_NAN macro found here which provides double precision NaN.            */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
@@ -267,6 +264,9 @@ double tmpl_Double_Coss(const double x, const double width)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
+
+/*  tmpl_Double_Abs and tmpl_Double_Is_NaN declared here.                     */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Double precision squared cosine window.                                   */
 double tmpl_Double_Coss(const double x, const double width)
