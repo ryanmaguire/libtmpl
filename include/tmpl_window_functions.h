@@ -163,13 +163,13 @@ extern long double
 tmpl_LDouble_Rect_Window(long double x, long double W);
 
 extern float
-tmpl_Float_Coss_Window(float x, float W);
+tmpl_Float_Coss(const float x, const float width);
 
 extern double
-tmpl_Double_Coss_Window(double x, double W);
+tmpl_Double_Coss(const double x, const double width);
 
 extern long double
-tmpl_LDouble_Coss_Window(long double x, long double W);
+tmpl_LDouble_Coss(const long double x, const long double width);
 
 extern float
 tmpl_Float_Kaiser_Bessel(float x, float W, float alpha);
