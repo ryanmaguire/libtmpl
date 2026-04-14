@@ -11,14 +11,9 @@
 #include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
 /*  Functionals f:R^3 -> R at single, double, and long double precision.      */
-typedef float
-(*tmpl_3DFloat_Functional)(const tmpl_ThreeVectorFloat * const);
-
-typedef double
-(*tmpl_3DDouble_Functional)(const tmpl_ThreeVectorDouble * const);
-
-typedef long double
-(*tmpl_3DLDouble_Functional)(const tmpl_ThreeVectorLongDouble * const);
+#include <libtmpl/include/types/tmpl_vec3_functional_double.h>
+#include <libtmpl/include/types/tmpl_vec3_functional_float.h>
+#include <libtmpl/include/types/tmpl_vec3_functional_ldouble.h>
 
 /*  Vector fields F:R^3 -> R^3 at single, double, and long double precision.  */
 typedef tmpl_ThreeVectorFloat
