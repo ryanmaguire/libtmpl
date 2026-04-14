@@ -43,7 +43,7 @@
  *      coefficients are zero, meaning we only have 5 non-zero terms in the   *
  *      numerator and 5 non-zero terms in the denominator. The approximation  *
  *      is performed using Horner's method for the numerator and denominator, *
- *      and then returning the ratio.                                         *
+ *      and then returning their ratio.                                       *
  *  Notes:                                                                    *
  *      1.) Accurate to double precision for |x| < 0.25.                      *
  *                                                                            *

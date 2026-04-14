@@ -52,7 +52,7 @@
  *      zero, meaning we only have (N / 2) + 1 non-zero terms in the          *
  *      numerator and (M / 2) + 1 non-zero terms in the denominator. The      *
  *      approximation is performed using Horner's method for the numerator    *
- *      and denominator, and then returning the ratio.                        *
+ *      and denominator, and then returning their ratio.                      *
  *  Notes:                                                                    *
  *      1.) Accurate to long double precision for |x| < 0.25.                 *
  *                                                                            *
