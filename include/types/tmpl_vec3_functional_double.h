@@ -38,7 +38,11 @@
 #include "tmpl_vec3_double.h"
 
 /*  Function pointer for double precision 3D functionals.                     */
-typedef double (*tmpl_ThreeVectorDoubleFunctional)(tmpl_ThreeVectorDouble);
+typedef
+double
+(*tmpl_ThreeVectorDoubleFunctional)(
+    const tmpl_ThreeVectorDouble * const
+);
 
 #endif
 /*  End of include guard.                                                     */

@@ -38,7 +38,11 @@
 #include "tmpl_vec3_float.h"
 
 /*  Function pointer for single precision 3D functionals.                     */
-typedef float (*tmpl_ThreeVectorFloatFunctional)(tmpl_ThreeVectorFloat);
+typedef
+float
+(*tmpl_ThreeVectorFloatFunctional)(
+    const tmpl_ThreeVectorFloat * const
+);
 
 #endif
 /*  End of include guard.                                                     */

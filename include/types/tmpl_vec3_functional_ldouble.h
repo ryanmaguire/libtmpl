@@ -39,7 +39,10 @@
 
 /*  Function pointer for long double precision 3D functionals.                */
 typedef
-long double (*tmpl_ThreeVectorLongDoubleFunctional)(tmpl_ThreeVectorLongDouble);
+long double
+(*tmpl_ThreeVectorLongDoubleFunctional)(
+    const tmpl_ThreeVectorLongDouble * const
+);
 
 #endif
 /*  End of include guard.                                                     */
