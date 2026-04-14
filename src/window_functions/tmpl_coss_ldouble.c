@@ -168,7 +168,7 @@
  *      2.) There are no checks for negative window widths, or zero widths.   *
  *          Negative window widths have no effect since the window function   *
  *          is even, and hence Coss(x / w) = Coss(x / -w). Zero windows       *
- *          produce division-by-zero, and may result in an output that is     *
+ *          produce a division by zero, and may result in an output that is   *
  *          either NaN (if x = 0) or 0 (if |x| > 0 and |x| / 0 is treated as  *
  *          infinity).                                                        *
  *  References:                                                               *
