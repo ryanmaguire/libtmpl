@@ -83,7 +83,6 @@
  *                                                                            *
  *              We shift the argument x using:                                *
  *                                                                            *
- *                                                                            *
  *                             1                                              *
  *                  t(x) = x - -                                              *
  *                             2                                              *
