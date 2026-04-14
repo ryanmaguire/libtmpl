@@ -323,7 +323,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  Little-endian, 128-bit quadruple precision long double.                   */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
 
-/*  128-bit quadruple precision, 15 bit exponent, 112 bit mantissa.           */
+/*  128-bit quadruple precision, 15-bit exponent, 112-bit mantissa.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man6 : 16;
@@ -342,7 +342,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  Big-endian, 128-bit quadruple precision long double.                      */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
 
-/*  128-bit quadruple precision, 15 bit exponent, 112 bit mantissa.           */
+/*  128-bit quadruple precision, 15-bit exponent, 112-bit mantissa.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
