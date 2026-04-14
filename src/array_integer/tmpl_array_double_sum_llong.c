@@ -172,7 +172,7 @@ tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len)
     for (n = 0; n < len; ++n)
     {
         /*  long long is required to be at least 64 bits, and double usually  *
-         *  has a 53 bit mantissa. On most platforms long long is exactly 64  *
+         *  has a 53-bit mantissa. On most platforms long long is exactly 64  *
          *  bits, meaning long long has 11 bits too many to perform the sum   *
          *  using double. We mitigate using double-double splitting the input *
          *  input into a low and a high part, and then using Neumaier 2Sum on *
