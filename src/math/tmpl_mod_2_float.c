@@ -214,7 +214,7 @@ float tmpl_Float_Mod_2(float x)
 #else
 /*  Else for #if TMPL_HAS_32_BIT_INT == 1.                                    */
 
-/*  This method does not require 32 bit integer types be available. It does   *
+/*  This method does not require 32-bit integer types be available. It does   *
  *  require that IEEE-754 support for float is available. It is a little      *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
