@@ -199,7 +199,7 @@ float tmpl_Float_Log(float x)
 
     /*  Variable for the exponent of the float x. x is written as             *
      *  1.m * 2^(expo - bias). signed int is guaranteed to be at least 15     *
-     *  bits, per the standard, which is wide enough to store the 8 bit       *
+     *  bits, per the standard, which is wide enough to store the 8-bit       *
      *  unsigned exponent in a float.                                         */
     signed int exponent;
 

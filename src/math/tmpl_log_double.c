@@ -292,7 +292,7 @@ double tmpl_Double_Log(double x)
 
     /*  Variable for the exponent of the double x. x is written as            *
      *  1.m * 2^(expo - bias). signed int is guaranteed to be at least 15     *
-     *  bits, per the standard, which is wide enough to store the 11 bit      *
+     *  bits, per the standard, which is wide enough to store the 11-bit      *
      *  unsigned exponent in a double.                                        */
     signed int exponent;
 
