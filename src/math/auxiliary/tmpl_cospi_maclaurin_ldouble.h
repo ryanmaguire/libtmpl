@@ -150,7 +150,7 @@ long double tmpl_LDouble_CosPi_Maclaurin(long double x)
 /*  End of 128-quadruple / 128-bit double-double version.                     */
 
 /******************************************************************************
- *                         80 BIT EXTENDED PRECISION                          *
+ *                         80-BIT EXTENDED PRECISION                          *
  *                                    and                                     *
  *                                  PORTABLE                                  *
  ******************************************************************************/
