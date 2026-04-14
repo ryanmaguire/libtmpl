@@ -207,7 +207,7 @@
  *  it is safe to use for |x| < 2^-4.                                         */
 #define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 4U)
 
-/*  Lastly, extended precision. 15-bit exponent and 64 bit mantissa.          */
+/*  Lastly, extended precision. 15-bit exponent and 64-bit mantissa.          */
 #else
 
 /*  For |x| < 2^-65 asin(x) = x to extended precision.                        */

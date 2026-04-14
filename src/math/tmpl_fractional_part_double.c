@@ -256,7 +256,7 @@ double tmpl_Double_Fractional_Part(double x)
  *                  IEEE-754 Version without 64-Bit Integers                  *
  ******************************************************************************/
 
-/*  This method does not require 64 bit integer types be available. It does   *
+/*  This method does not require 64-bit integer types be available. It does   *
  *  require that IEEE-754 support for double is available. It is a little     *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 

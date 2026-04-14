@@ -296,7 +296,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
  *                  IEEE-754 Version without 64-Bit Integers                  *
  ******************************************************************************/
 
-/*  This method does not require 64 bit integer types be available. It does   *
+/*  This method does not require 64-bit integer types be available. It does   *
  *  require that IEEE-754 support for long double is available. It is a bit   *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
@@ -477,7 +477,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
  *                   80-Bit Extended without 64-Bit Integers                  *
  ******************************************************************************/
 
-/*  This method does not require 64 bit integer types be available. It does   *
+/*  This method does not require 64-bit integer types be available. It does   *
  *  require that IEEE-754 support for double is available. It is a little     *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 

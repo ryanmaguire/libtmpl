@@ -133,7 +133,7 @@ double tmpl_Double_Mod_2(double x)
 #elif TMPL_HAS_IEEE754_DOUBLE == 1
 /*  Else for #if TMPL_HAS_FLOATINT64 == 1.                                    */
 
-/*  This method does not require 64 bit integer types be available. It does   *
+/*  This method does not require 64-bit integer types be available. It does   *
  *  require that IEEE-754 support for double is available. It is a little     *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
