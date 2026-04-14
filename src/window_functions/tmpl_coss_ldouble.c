@@ -376,7 +376,7 @@ long double tmpl_LDouble_Coss(const long double x, const long double width)
         /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
         if (abs_arg < 0.03125L)
         {
-            /*  For very small inputs, |x| < 2^-30, return 1. The error is    *
+            /*  For very small inputs, |x| < 2^-34, return 1. The error is    *
              *  O(x^2), the value of the window is 1 to double precision.     */
             if (abs_arg < 5.82076609134674072265625E-11L)
                 return 1.0L;
