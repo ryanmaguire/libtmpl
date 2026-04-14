@@ -47,7 +47,7 @@
  *                       x                                                    *
  *                                                                            *
  *      on the interval [-1/4, 0] (the limit of f at zero is used to avoid a  *
- *      division-by-zero), where Coss represents the squared cosine window,   *
+ *      division by zero), where Coss represents the squared cosine window,   *
  *      have been pre-computed below. Given x with 1 / 4 <= x <= 1 / 2, we    *
  *      translate x into this interval using:                                 *
  *                                                                            *

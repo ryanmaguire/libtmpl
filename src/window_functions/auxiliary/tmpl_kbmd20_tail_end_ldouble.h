@@ -46,7 +46,7 @@
  *                         x                                                  *
  *                                                                            *
  *      on the interval [-1/4, 0] (the limit of f at zero is used to avoid a  *
- *      division-by-zero), where KBMD20 represents the modified Kaiser-Bessel *
+ *      division by zero), where KBMD20 represents the modified Kaiser-Bessel *
  *      window with alpha = 2, have been pre-computed below. N and M depend   *
  *      on how long double is represented:                                    *
  *                                                                            *

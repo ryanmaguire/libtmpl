@@ -47,7 +47,7 @@
  *                       x                                                    *
  *                                                                            *
  *      on the interval [-1/4, 0] (the limit of f at zero is used to avoid a  *
- *      division-by-zero), where Coss represents the squared cosine window,   *
+ *      division by zero), where Coss represents the squared cosine window,   *
  *      have been pre-computed below. The values for M and N depend on how    *
  *      long double is implemented:                                           *
  *                                                                            *
