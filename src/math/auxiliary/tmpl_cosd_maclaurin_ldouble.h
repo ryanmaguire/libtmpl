@@ -107,9 +107,9 @@ long double tmpl_LDouble_Cosd_Maclaurin(long double x)
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
 
 /******************************************************************************
- *                        128 BIT QUADRUPLE PRECISION                         *
+ *                        128-BIT QUADRUPLE PRECISION                         *
  *                                    and                                     *
- *                      128 BIT DOUBLE-DOUBLE PRECISION                       *
+ *                      128-BIT DOUBLE-DOUBLE PRECISION                       *
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
