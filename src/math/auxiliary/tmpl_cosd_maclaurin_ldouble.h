@@ -70,7 +70,7 @@
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
 
 /******************************************************************************
- *                          64 BIT DOUBLE PRECISION                           *
+ *                          64-BIT DOUBLE PRECISION                           *
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
