@@ -20,12 +20,6 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_ULong_Trailing_Zeros)
-.p2align ALIGN
-#endif
-
 ASM_BEGIN(tmpl_ULong_Trailing_Zeros)
 
     rbit    x1, x0          /* Reverse the order of the input.                */

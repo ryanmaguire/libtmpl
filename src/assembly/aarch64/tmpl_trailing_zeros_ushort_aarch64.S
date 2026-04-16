@@ -20,12 +20,6 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_UShort_Trailing_Zeros)
-.p2align ALIGN
-#endif
-
 ASM_BEGIN(tmpl_UShort_Trailing_Zeros)
 
     ands    w0, w0, 0xFFFF  /* Zero out all but the lowest 16 bits.           */
