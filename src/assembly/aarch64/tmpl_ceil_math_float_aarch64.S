@@ -34,7 +34,8 @@
  *      ceil_x (float):                                                       *
  *          The ceiling of x at single precision.                             *
  *  Called Functions:                                                         *
- *      frintp                                                                *
+ *      frintp:                                                               *
+ *          Floating-point round (to integer) towards positive infinity.      *
  *  Method:                                                                   *
  *      Use frintp on the argument.                                           *
  ******************************************************************************
