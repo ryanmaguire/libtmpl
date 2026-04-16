@@ -33,8 +33,17 @@
  *  Output:                                                                   *
  *      x_mod_2 (double):                                                     *
  *          The remainder after division by 2 at double precision.            *
+ *  Called Functions:                                                         *
+ *      fmov:                                                                 *
+ *          Copies a floating-point constant into a register.                 *
+ *      fmul:                                                                 *
+ *          Multiplies two floating-point numbers.                            *
+ *      frintz:                                                               *
+ *          Truncates a real number, or "rounds to zero."                     *
+ *      fmsub:                                                                *
+ *          Fused multipy-subtract operation, computes c - a * b.             *                                           *
  *  Method:                                                                   *
- *      Compute x - 2*trunc(x/2). trunc(x) is computed with roundsd.          *
+ *      Compute x - 2 * trunc(x / 2). trunc(x) is computed with frintz.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 8, 2024                                              *
@@ -43,12 +52,7 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Double_Mod_2)
-.p2align ALIGN
-#endif
-
+/*  Double-precision mod 2 function, aarch64 architecture, GAS syntax.        */
 ASM_BEGIN(tmpl_Double_Mod_2)
 
     /*  Create constant 0.5.                                                  */
@@ -57,10 +61,10 @@ ASM_BEGIN(tmpl_Double_Mod_2)
     /*  Create constant 2.0.                                                  */
     fmov d30, 2.0e+0
 
-    /*  y = 0.5*x;                                                            */
+    /*  y = 0.5 * x;                                                          */
     fmul d31, d0, d31
 
-    /*  y = trunc(0.5*x); frintz is round-to-zero (truncate).                 */
+    /*  y = trunc(0.5 * x); frintz is round-to-zero (truncate).               */
     frintz  d31, d31
 
     /*  y = x - 2.0 * trunc(0.5 * x);                                         */
