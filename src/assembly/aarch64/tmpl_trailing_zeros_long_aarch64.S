@@ -15,21 +15,62 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                          tmpl_trailing_zeros_long                          *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Contains code for counting the number of trailing zeros in an integer.*
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Long_Trailing_Zeros                                              *
+ *  Purpose:                                                                  *
+ *      Computes the number of trailing zeros in the binary representation    *
+ *      of the input.                                                         *
+ *  Arguments:                                                                *
+ *      x (signed long int):                                                  *
+ *          A 64-bit integer.                                                 *
+ *  Output:                                                                   *
+ *      ctz_x (int):                                                          *
+ *          The number of trailing zeros in x (binary representation).        *
+ *  Called Functions:                                                         *
+ *      rbit:                                                                 *
+ *          Performs a bit reversal on the input.                             *
+ *      clz:                                                                  *
+ *          Counts the number of leading zeros in a word.                     *
+ *      cmp:                                                                  *
+ *          Performs a comparison.                                            *
+ *      csel:                                                                 *
+ *          Conditional select, returns the first argument if condition is    *
+ *          satisfied, and the second argument otherwise.                     *
+ *  Method:                                                                   *
+ *      if the input is zero, return zero. Otherwise, flip the bit order of   *
+ *      the input and then count the number of leading zeros.                 *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 10, 2024                                             *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Long_Trailing_Zeros)
-.p2align ALIGN
-#endif
-
+/*  64-bit trailing zeros function, aarch64 architecture, GAS syntax.         */
 ASM_BEGIN(tmpl_Long_Trailing_Zeros)
 
-    rbit x0, x0     /*  Reverse the bits of the input.          */
-    clz  x0, x0     /*  Count the leading zeros of the reverse. */
-    ret             /*  Return the count.                       */
+    /*  Reverse the order of the bits in the input.                           */
+    rbit x1, x0
+
+    /*  Check if the input is zero.                                           */
+    cmp x0, 0
+
+    /*  Count the number of leading zeros.                                    */
+    clz x1, x1
+
+    /*  Set count to zero if input is zero.                                   */
+    csel w0, w1, wzr, ne
+
+    /*  Return the count.                                                     */
+    ret
 
 ASM_END(tmpl_Long_Trailing_Zeros)
