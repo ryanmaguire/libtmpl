@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Ceil                                                      *
  *  Purpose:                                                                  *
- *      Computes y = ceil(x), the largest integer less than or equal to x.    *
+ *      Computes y = ceil(x), the smallest integer greater than or equal to x.*
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -45,15 +45,11 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Double_Ceil)
-.p2align ALIGN
-#endif
-
+/*  Double-precision ceiling function, aarch64 architecture, GAS syntax.      */
 ASM_BEGIN(tmpl_Double_Ceil)
 
-    /*  frintp is Round-to-Positive-Infinity (ceiling function).              */
+    /*  frintp is Round-to-Positive-Infinity (ceiling function). The d0       *
+     *  registers are for double-precision floating-point numbers.            */
     frintp d0, d0
     ret
 
