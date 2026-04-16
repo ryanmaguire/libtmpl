@@ -45,15 +45,11 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Double_Floor)
-.p2align ALIGN
-#endif
-
+/*  Double-precision floor function, aarch64 architecture, GAS syntax.        */
 ASM_BEGIN(tmpl_Double_Floor)
 
-    /*  frintm is Round-to-Minus-Infinity (floor function).                   */
+    /*  frintm is Round-to-Minus-Infinity (floor function). The d0 registers  *
+     *  are for double-precision floating-point numbers.                      */
     frintm d0, d0
     ret
 

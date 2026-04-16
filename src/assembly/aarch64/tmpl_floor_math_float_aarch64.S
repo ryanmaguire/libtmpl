@@ -45,15 +45,11 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Float_Floor)
-.p2align ALIGN
-#endif
-
+/*  Single-precision floor function, aarch64 architecture, GAS syntax.        */
 ASM_BEGIN(tmpl_Float_Floor)
 
-    /*  frintm is Round-to-Minus-Infinity (floor function).                   */
+    /*  frintm is Round-to-Minus-Infinity (floor function). The s0 registers  *
+     *  are for single-precision floating-point numbers.                      */
     frintm s0, s0
     ret
 
