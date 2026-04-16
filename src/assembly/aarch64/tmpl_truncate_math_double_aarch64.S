@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Truncate                                                  *
  *  Purpose:                                                                  *
- *      Computes y = trunc(x), the fractional part of the input x.            *
+ *      Computes y = trunc(x), the truncation (round to zero) of the input x. *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -34,7 +34,8 @@
  *      trunc_x (double):                                                     *
  *          The truncation of x at double precision.                          *
  *  Called Functions:                                                         *
- *      frintz                                                                *
+ *      frintz:                                                               *
+ *          Truncates a real number, or "rounds to zero."                     *
  *  Method:                                                                   *
  *      Use frintz on the argument.                                           *
  ******************************************************************************
@@ -45,12 +46,7 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Double_Truncate)
-.p2align ALIGN
-#endif
-
+/*  Double-precision truncate, aarch64 architecture, GAS syntax.              */
 ASM_BEGIN(tmpl_Double_Truncate)
 
     /*  frintz is Round-to-Zero (truncation). Compute y = trunc(x).           */
