@@ -61,12 +61,15 @@
 #define EXT(x) x
 #endif
 
+.macro MACRO_ASM_BEGIN func
+    .section __TEXT, __text, regular, pure_instructions
+    .globl \func
+    .p2align ALIGN
+    \func:
+.endm
+
+#define ASM_BEGIN(func) MACRO_ASM_BEGIN EXT(func)
 #define ASM_END(func) ELF_SIZE(EXT(func))
-#define ASM_BEGIN(func)                                 \
-.section __TEXT, __text, regular, pure_instructions;    \
-.globl EXT(func);                                       \
-.p2align ALIGN;                                         \
-EXT(func):
 
 /******************************************************************************
  *                           GNU/Linux and FreeBSD                            *
