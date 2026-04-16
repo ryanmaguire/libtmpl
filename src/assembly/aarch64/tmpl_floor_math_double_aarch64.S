@@ -34,7 +34,8 @@
  *      floor_x (double):                                                     *
  *          The floor of x at double precision.                               *
  *  Called Functions:                                                         *
- *      frintm                                                                *
+ *      frintm:                                                               *
+ *          Floating-point round (to integer) towards minus infinity.         *
  *  Method:                                                                   *
  *      Use frintm on the argument.                                           *
  ******************************************************************************
