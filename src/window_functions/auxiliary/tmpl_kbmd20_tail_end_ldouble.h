@@ -68,7 +68,7 @@
  *      rational minimax approximation for f.                                 *
  *                                                                            *
  *      Note that since we scale the result by t(x), the approximation is     *
- *      zero, exact, when x = 1 / 2. That is, the window goes to zero at the  *
+ *      exactly zero when x = 1 / 2. That is, the window goes to zero at the  *
  *      right endpoint in the window.                                         *
  *  Notes:                                                                    *
  *      1.) Accurate to long double precision for 0.25 <= x <= 0.5.           *
