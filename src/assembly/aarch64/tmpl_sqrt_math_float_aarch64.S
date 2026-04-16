@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Float_Sqrt                                                       *
  *  Purpose:                                                                  *
- *      Computes y = sqrt(x), the largest integer less than or equal to x.    *
+ *      Computes y = sqrt(x), the square root of x.                           *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
@@ -34,7 +34,8 @@
  *      sqrt_x (float):                                                       *
  *          The square root of x at single precision.                         *
  *  Called Functions:                                                         *
- *      fsqrt                                                                 *
+ *      fsqrt:                                                                *
+ *          Computes the floating-point square root.                          *
  *  Method:                                                                   *
  *      Use fsqrt on the argument.                                            *
  ******************************************************************************
@@ -45,15 +46,11 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Float_Sqrt)
-.p2align ALIGN
-#endif
-
+/*  Single-precision square root function, aarch64 architecture, GAS syntax.  */
 ASM_BEGIN(tmpl_Float_Sqrt)
 
-    /*  fsqrt is floating-point square root. Compute y = sqrt(x).             */
+    /*  fsqrt is floating-point square root. Compute y = sqrt(x). The s0      *
+     *  registers are for single-precision floating-point numbers.            */
     fsqrt s0, s0
 
     /*  return y;                                                             */
