@@ -48,12 +48,7 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-#ifdef __APPLE__
-.section __TEXT, __text, regular, pure_instructions
-.globl EXT(tmpl_Double_Fractional_Part)
-.p2align ALIGN
-#endif
-
+/*  Double-precision fractional part, aarch64 architecture, GAS syntax.       */
 ASM_BEGIN(tmpl_Double_Fractional_Part)
 
     /*  frintz is Round-to-Zero (truncate function). Compute y = trunc(x).    */
