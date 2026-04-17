@@ -61,7 +61,7 @@ ASM_BEGIN(tmpl_UChar_Trailing_Zeros)
 
     /*  Zero out the higher order bits of the word, ensure we are only        *
      *  examining the lower 8 bits using bit-wise and with 255 (8 ones's).    */
-    ands w0, w0, 0xFF
+    ands w0, w0, #0xFF
 
     /*  Reverse the order of the bits in the input.                           */
     rbit w1, w0

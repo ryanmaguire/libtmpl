@@ -61,7 +61,7 @@ ASM_BEGIN(tmpl_UShort_Trailing_Zeros)
 
     /*  Zero out the higher order bits of the word, ensure we are only        *
      *  examining the lower 16 bits using bit-wise and with 65535 (16 ones's).*/
-    ands w0, w0, 0xFFFF
+    ands w0, w0, #0xFFFF
 
     /*  Reverse the order of the bits in the input.                           */
     rbit w1, w0
