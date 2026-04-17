@@ -338,52 +338,52 @@ ifndef NO_ASM
 
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
-ifeq ($(ARCH),$(filter $(ARCH),x86_64 amd64))
+ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 ifdef FASM
 
 FASM_SRCS = $(wildcard src/assembly/fasm/*.fasm)
-EXCLUDE += $(patsubst %_x86_64.fasm,-not -name "*%.c",$(notdir $(FASM_SRCS)))
+EXCLUDE += $(patsubst %_x86_64.fasm, -not -name "*%.c", $(notdir $(FASM_SRCS)))
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
-# the Portable C Compiler (PCC) are also able to compile this, tested on
-# Debian GNU/Linux 11 and 12.
+# the Portable C Compiler (PCC) are also able to use this, tested on
+# Debian GNU/Linux 11, 12, and 13.
 else
 
 ASM_SRCS = $(wildcard src/assembly/x86_64/*.S)
-EXCLUDE += $(patsubst %_x86_64.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_x86_64.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
 
 endif
 # End of ifdef FASM.
 
 # x86 / i386 assembly is also available using GNU assembly (GAS).
-else ifeq ($(ARCH),$(filter $(ARCH),i386 x86))
+else ifeq ($(ARCH), $(filter $(ARCH), i386 x86))
 
 ASM_SRCS = $(wildcard src/assembly/i386/*.S)
-EXCLUDE += $(patsubst %_i386.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_i386.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
-else ifeq ($(ARCH),$(filter $(ARCH),aarch64 arm64))
+else ifeq ($(ARCH), $(filter $(ARCH), aarch64 arm64))
 
 ASM_SRCS = $(wildcard src/assembly/aarch64/*.S)
-EXCLUDE += $(patsubst %_aarch64.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_aarch64.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
-else ifeq ($(ARCH),$(filter $(ARCH),armv7l))
+else ifeq ($(ARCH), $(filter $(ARCH), armv7l))
 
 ASM_SRCS = $(wildcard src/assembly/armv7l/*.S)
-EXCLUDE += $(patsubst %_armv7l.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_armv7l.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
-else ifeq ($(ARCH),$(filter $(ARCH),ppc64le))
+else ifeq ($(ARCH), $(filter $(ARCH), ppc64le))
 
 ASM_SRCS = $(wildcard src/assembly/ppc64le/*.S)
-EXCLUDE += $(patsubst %_ppc64le.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_ppc64le.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
 
 endif
-# End of ifeq ($(ARCH),$(filter $(ARCH),x86_64 amd64))
+# End of ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
 
 endif
 # End of ifndef NO_ASM.
