@@ -228,11 +228,14 @@ endif
 # which literally enables every warning. This helps check for standards
 # compliance. This Makefile has far fewer warnings enabled.
 CWARN = -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
+
+# Config flags and exclude flags depends on the architecture.
+# We'll set these later when we examine the ARCH variable.
 CONFIG_FLAGS =
 EXCLUDE =
 
-# A common trick in numerical analysis with floating point number is to
-# "split" a double, or long double, into two parts to preserver accuracy.
+# A common trick in numerical analysis with floating-point number is to
+# "split" a double, or long double, into two parts to preserve accuracy.
 # Some architectures need the volatile keyword to prevent optimizing the split
 # away, and some architectures (i386) need several volatile keywords used.
 # Below is a non-exhaustive list of architectures that require the keyword.
