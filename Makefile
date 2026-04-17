@@ -332,8 +332,8 @@ ASM_SRCS =
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
-# and armv7l (armhf) this is only advised if your C compiler cannot compile
-# assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
+# and armv7l (armhf) this is only advised if your C compiler cannot handle
+# assembly code. GCC, Clang, and PCC can. TCC cannot.
 ifndef NO_ASM
 
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
