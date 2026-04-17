@@ -40,14 +40,12 @@
 #               icx:   Intel's C compiler.
 #                   NOTE: icc not tested, but this compiler is deprecated.
 #               nvc:   NVIDIA's C compiler.
-#                   NOTE: The -flto option must be removed from CFLAGS and
-#                         LFLAGS for nvc to compile this.
-#               Enable with:
-#                   make CC=c_compiler_name [other-options]
+#           Enable with:
+#               make CC=c_compiler_name [other-options]
 #       AR:
 #           Set the archiver. This is only used if a static
 #           build is being created. Enable with:
-#               make AR=archiver_name
+#               make AR=archiver_name [other-options]
 #       ARCH:
 #           Manually set the output of uname -m. The Makefile uses this to see
 #           which architecture you are using in order to select the correct
@@ -86,12 +84,15 @@
 #           If you do not wish to use inlined code, set this option. Enable via:
 #               make NO_INLINE=1 [other-options]
 #       NO_IEEE:
-#           Many functions use type punning to take advantage of the IEEE-754
-#           format for floating point numbers. Type punning is technically
-#           undefined behavior, but every compiler I know supports it. The
-#           config.c file will check if you have IEEE-754 support with type
-#           punning. If you wish to force the portable code to be used, set this
-#           option. Note, the portable algorithms are significantly slower.
+#           Many functions use unions to take advantage of the IEEE-754
+#           format for floating-point numbers. This behavior is implementation
+#           defined in C89, but every compiler I know supports it. Indeed, every
+#           implementation of libm that I am aware of makes use of this trick.
+#           The config.c file will check if you have IEEE-754 support and can
+#           access the bits using a union. If you wish to force the portable
+#           code to be used, set this option. Note, the portable algorithms are
+#           significantly slower, in some cases about 10x or worse. Note, in
+#           C11 and C23, type-punning via unions is well-defined behavior.
 #               make NO_IEEE=1 [other-options]
 #       NO_INT:
 #           It is sometimes useful to have fixed-width (8, 16, 32, and 64) bit
@@ -195,11 +196,15 @@ EXTRA_FLAGS =
 # The architecture libtmpl is being built on.
 ARCH = $(shell uname -m)
 
-# Default C flags. Note, some compilers (NVIDIA's, for example) do not
-# support the flto flag. Remove whichever flags your compiler does not
-# support. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
+# Default C flags. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
 CFLAGS = -I../ -O3 -flto -fPIC -DNDEBUG -c
 LFLAGS = -O3 -fPIC -flto -DNDEBUG -shared
+
+# NVIDIA's C compiler (nvc) does not support the -flto flag.
+ifeq ($(CC), nvc)
+CFLAGS := $(filter-out -flto, $(CFLAGS))
+LFLAGS := $(filter-out -flto, $(LFLAGS))
+endif
 
 ifdef BUILD_STATIC
 TARGET_LIB = $(TARGET_LIB_STATIC)
@@ -213,10 +218,8 @@ CFLAGS += -fopenmp
 LFLAGS += -fopenmp
 endif
 
-# Some old functions still call math.h. This will be replaced soon.
+# If libtmpl's libm implementation is not being used, we need to link with libm.
 ifdef NO_MATH
-LFLAGS += -lm
-else
 LFLAGS += -lm
 endif
 
@@ -267,11 +270,11 @@ endif
 
 # Enable splitting flags if requested, or if required. Cautious split
 # gets precedence over volatile split.
-ifeq ($(ARCH),$(filter $(ARCH), $(CAUTIOUS_SPLIT_ARCHS)))
+ifeq ($(ARCH), $(filter $(ARCH), $(CAUTIOUS_SPLIT_ARCHS)))
 
 CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
 
-else ifeq ($(ARCH),$(filter $(ARCH), $(VOLATILE_SPLIT_ARCHS)))
+else ifeq ($(ARCH), $(filter $(ARCH), $(VOLATILE_SPLIT_ARCHS)))
 
 CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
 
