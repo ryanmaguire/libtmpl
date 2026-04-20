@@ -52,8 +52,10 @@
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_ieee754_ldouble.h:                                               *
  *          Header file with the tmpl_IEEE754_LDouble data type.              *
- *  2.) tmpl_floatint_ldouble.h:                                              *
+ *  3.) tmpl_floatint_ldouble.h:                                              *
  *          Header file with the tmpl_FloatIntLongDouble data type.           *
+ *  4.) tmpl_cast.h:                                                          *
+ *          Header file with the TMPL_CAST macro.                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
@@ -68,6 +70,9 @@
 
 /*  TMPL_HAS_IEEE754_LDOUBLE macro found here.                                */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+
+/*  TMPL_CAST macro found here, used for casting with C vs. C++ compatibility.*/
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  64-bit long double is implemented the same way as double.                 */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -120,7 +125,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     unsigned int n;
 
     /*  Set the word to the input.                                            */
-    u.f = (double)w.r;
+    u.f = w.r;
 
     /*  The shift is obtained by zeroing out the bits that are more           *
      *  significant than 1/32. The index n is also computed from these bits.  *
@@ -135,7 +140,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     n = 9U * ((u.n >> 47U) & 0x1FU);
 
     /*  Shift the input to [0, 1/32) by subtracting off this new value.       */
-    w.r -= (long double)u.f;
+    w.r -= u.f;
 
     /*  Compute the Remez polynomial and return.                              */
     return TMPL_POLY_EVAL(w.r);
@@ -158,7 +163,9 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
      *  5 bits of the mantissa. man0 has the upper 4 bits, and man1 has 16    *
      *  bits. We can disregard the lower 15 bits of man1 by shifting. There   *
      *  are 9 coefficients for each polynomial, so we scale the result by 9.  */
-    const unsigned int n = 9U * ((w.bits.man0 << 1U) + (w.bits.man1 >> 15U));
+    const unsigned int mantissa_hi = TMPL_CAST(w.bits.man0, unsigned int);
+    const unsigned int mantissa_lo = TMPL_CAST(w.bits.man1, unsigned int);
+    const unsigned int n = 9U * ((mantissa_hi << 1U) + (mantissa_lo >> 15U));
 
     /*  We now shift the input to [0, 1/32) by zeroing out these upper 5 bits *
      *  and subtracting off one from the input. First, zero the bits.         */
@@ -254,7 +261,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     n = 15U * ((u.n >> 47U) & 0x1FU);
 
     /*  Shift the input to [0, 1/32) by subtracting off this new value.       */
-    w.r -= (long double)u.f;
+    w.r -= TMPL_CAST(u.f, long double);
 
     /*  Compute the Remez polynomial and return.                              */
     return TMPL_POLY_EVAL(w.r);
@@ -280,7 +287,9 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
      *  5 bits of the mantissa. man0 has the upper 4 bits, and man1 has 16    *
      *  bits. We can disregard the lower 15 bits of man1 by shifting. There   *
      *  are 15 coefficients for each polynomial, so we scale the result by 15.*/
-    const unsigned int n = 15U * ((w.bits.man0 << 1U) + (w.bits.man1 >> 15U));
+    const unsigned int mantissa_hi = TMPL_CAST(w.bits.man0, unsigned int);
+    const unsigned int mantissa_lo = TMPL_CAST(w.bits.man1, unsigned int);
+    const unsigned int n = 15U * ((mantissa_hi << 1U) + (mantissa_lo >> 15U));
 
     /*  We now shift the input to [0, 1/32) by zeroing out these upper 5 bits *
      *  and subtracting off one from the input. First, zero the bits.         */
@@ -353,7 +362,8 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
      *  There are 16 coefficients for each polynomial, so we scale by 16.     *
      *  This is equivalent to shifting up by 4. The shifts cancel, so we need *
      *  to shift down by 7 and zero out the lower 4 bits.                     */
-    const unsigned int n = (w.bits.man0 >> 7U) & 0xFFF0;
+    const unsigned int mantissa = TMPL_CAST(w.bits.man0, unsigned int);
+    const unsigned int n = (mantissa >> 7U) & 0xFFF0U;
 
     /*  Zero out the upper 5 bits. There are 16 bits total, so the bit-mask   *
      *  is 0x7FF.                                                             */
@@ -417,7 +427,8 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
      *  5 bits of the mantissa. man0 has the upper 15, so we shift down by    *
      *  10. There are 10 coefficients for each polynomial, so we scale by 10. */
-    const unsigned int n = 10U * (w.bits.man0 >> 10U);
+    const unsigned int mantissa = TMPL_CAST(w.bits.man0, unsigned int);
+    const unsigned int n = 10U * (mantissa >> 10U);
 
     /*  Zero out the upper 5 bits. There are 15 bits total, so the bit-mask   *
      *  is 0x3FF.                                                             */
@@ -452,7 +463,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(long double x)
     const long double n_by_10 = tmpl_LDouble_Floor(32.0L * (x - 1.0L));
 
     /*  There are 10 coefficients for each polynomial. Scale by 10.           */
-    const unsigned int n = (unsigned int)n_by_10 * 10U;
+    const unsigned int n = TMPL_CAST(n_by_10, unsigned int) * 10U;
 
     /*  The shift is floor(32 x) / 32. We've computed floor(32(x-1)) already  *
      *  so we can save a second call to the floor function.                   */
