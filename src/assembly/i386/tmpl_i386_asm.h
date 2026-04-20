@@ -88,7 +88,7 @@ EXT(func):
  ******************************************************************************/
 #else
 #define ASM_END(func)       \
-ELF_SIZE(func)              \
+ELF_SIZE(func);             \
 GNU_STACK_PROTECTION
 #define ASM_BEGIN(func)     \
 .text;                      \
