@@ -72,6 +72,10 @@ USEMEMCPY=0
 # Whether or not certain variables must be volatile.
 USEVOLATILE=0
 
+# Whether to split with extra volatile statements.
+USEVOLATILESPLIT=0
+USECAUTIOUSSPLIT=0
+
 # Compile the entire library by #include'ing all files into one translation
 # unit. The compiler get's to the see the entire library at once and make many
 # optimizations.
@@ -134,6 +138,12 @@ for arg in "$@"; do
 
     elif [ "$arg" == "-volatile" ]; then
         USEVOLATILE=1
+
+    elif [ "$arg" == "-volatilesplit" ]; then
+        USEVOLATILESPLIT=1
+
+    elif [ "$arg" == "-cautioussplit" ]; then
+        USECAUTIOUSSPLIT=1
 
     elif [ "$arg" == "-remove" ]; then
         SONAME="libtmpl.so"
@@ -254,6 +264,12 @@ fi
 
 if [ $USEVOLATILE == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_USE_VOLATILE"
+fi
+
+if [ $USECAUTIOUSSPLIT == 1 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT"
+elif [ $USEVOLATILESPLIT == 1 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_USE_VOLATILE_DOUBLE_SPLIT"
 fi
 
 # Name of the created Shared Object file (.so).
