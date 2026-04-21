@@ -197,8 +197,13 @@ EXTRA_FLAGS =
 ARCH = $(shell uname -m)
 
 # Default C flags. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
+ifdef DEBUG_BUILD
+CFLAGS = -I../ -g -fPIC -c
+LFLAGS = -fPIC -g -shared
+else
 CFLAGS = -I../ -O3 -flto -fPIC -DNDEBUG -c
 LFLAGS = -O3 -fPIC -flto -DNDEBUG -shared
+endif
 
 # NVIDIA's C compiler (nvc) does not support the -flto flag.
 ifeq ($(CC), nvc)
