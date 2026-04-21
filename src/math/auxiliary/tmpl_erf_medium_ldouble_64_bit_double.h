@@ -173,7 +173,7 @@ long double tmpl_LDouble_Erf_Medium(tmpl_IEEE754_LDouble w)
 {
     tmpl_IEEE754_LDouble shift;
     const unsigned int mantissa = TMPL_CAST(w.bits.man0, unsigned int);
-    const unsigned int = (mantissa << 3U);
+    const unsigned int n = (mantissa << 3U);
     shift = w;
     shift.bits.man1 = 0x8000U;
     shift.bits.man2 = 0x0000U;
