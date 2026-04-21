@@ -61,8 +61,10 @@
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_ieee754_double.h:                                                *
  *          Header file with the tmpl_IEEE754_Double data type.               *
- *  2.) tmpl_floatint_double.h:                                               *
+ *  3.) tmpl_floatint_double.h:                                               *
  *          Header file with the tmpl_FloatInt64 data type.                   *
+ *  4.) tmpl_cast.h:                                                          *
+ *          Header file with the TMPL_CAST macro.                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
@@ -77,6 +79,9 @@
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  TMPL_CAST macro found here, used for casting with C vs. C++ compatibility.*/
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
 extern const double tmpl_double_normalized_fresnel_sin_table[288];
@@ -152,9 +157,9 @@ double tmpl_Double_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_Double w)
      *  5 bits of the mantissa. man0 has the upper 4 bits, and man1 has 16    *
      *  bits. We can disregard the lower 15 bits of man1 by shifting. There   *
      *  are 9 coefficients for each polynomial, so we scale the result by 9.  */
-    const unsigned int hi = w.bits.man0 << 1U;
-    const unsigned int lo = w.bits.man1 >> 15U;
-    const unsigned int n = 9U * (hi + lo);
+    const unsigned int mantissa_hi = TMPL_CAST(w.bits.man0, unsigned int);
+    const unsigned int mantissa_lo = TMPL_CAST(w.bits.man1, unsigned int);
+    const unsigned int n = 9U * ((mantissa_hi << 1U) + (mantissa_lo >> 15U));
 
     /*  We now shift the input to [0, 1/32) by zeroing out these upper 5 bits *
      *  and subtracting off one from the input. First, zero the bits.         */
@@ -186,7 +191,7 @@ double tmpl_Double_Normalized_Fresnel_Sin_Remez(double x)
     const double n_by_9 = tmpl_Double_Floor(32.0 * (x - 1.0));
 
     /*  There are 9 coefficients for each polynomial. Scale by 9.             */
-    const unsigned int n = (unsigned int)n_by_9 * 9U;
+    const unsigned int n = 9U * TMPL_CAST(n_by_9, unsigned int);
 
     /*  The shift is floor(32 x) / 32. We've computed floor(32(x-1)) already  *
      *  so we can save a second call to the floor function.                   */
