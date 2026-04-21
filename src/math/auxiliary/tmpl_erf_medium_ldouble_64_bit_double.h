@@ -23,6 +23,7 @@
 
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
+#include <libtmpl/include/compat/tmpl_cast.h>
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 static long double tmpl_erfdm_coeffs[128] = {
@@ -171,7 +172,8 @@ TMPL_STATIC_INLINE
 long double tmpl_LDouble_Erf_Medium(tmpl_IEEE754_LDouble w)
 {
     tmpl_IEEE754_LDouble shift;
-    const unsigned int n = (w.bits.man0) << 3;
+    const unsigned int mantissa = TMPL_CAST(w.bits.man0, unsigned int);
+    const unsigned int = (mantissa << 3U);
     shift = w;
     shift.bits.man1 = 0x8000U;
     shift.bits.man2 = 0x0000U;
