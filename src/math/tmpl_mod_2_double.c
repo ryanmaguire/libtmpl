@@ -126,7 +126,7 @@ double tmpl_Double_Mod_2(double x)
 
     /*  The first "expo" bits of the mantissa are for the integer part of x.  *
      *  mod 2 kills all of these, so shift the decimal point expo to the left.*/
-    word64.n = word64.n & (0xFFFFFFFFFFFFFFFU << expo);
+    word64.n = word64.n & (0xFFFFFFFFFFFFFFFFU << expo);
     return x - word64.w.r;
 }
 
