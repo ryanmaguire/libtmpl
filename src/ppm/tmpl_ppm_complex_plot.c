@@ -84,10 +84,10 @@ void tmpl_PPM_Complex_Plot(const char *func_name,
     fp[3] = fopen(arg_file, "w");
 
     /*  Needed to create the output ppm file. This is the preamble.           */
-    fprintf(fp[0], "P6\n%d %d\n255\n", x_size, y_size);
-    fprintf(fp[1], "P6\n%d %d\n255\n", x_size, y_size);
-    fprintf(fp[2], "P6\n%d %d\n255\n", x_size, y_size);
-    fprintf(fp[3], "P6\n%d %d\n255\n", x_size, y_size);
+    fprintf(fp[0], "P6\n%u %u\n255\n", x_size, y_size);
+    fprintf(fp[1], "P6\n%u %u\n255\n", x_size, y_size);
+    fprintf(fp[2], "P6\n%u %u\n255\n", x_size, y_size);
+    fprintf(fp[3], "P6\n%u %u\n255\n", x_size, y_size);
 
     for (y=0; y<y_size; ++y)
     {

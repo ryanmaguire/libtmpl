@@ -54,7 +54,7 @@ void tmpl_PPM_Plot(const char *filename,
     }
 
     /*  Needed to create the output pgm file. This is the preamble.           */
-    fprintf(fp, "P5\n%d %d\n255\n", x_size, y_size);
+    fprintf(fp, "P5\n%u %u\n255\n", x_size, y_size);
 
     for (x = 0U; x < x_size; ++x)
     {
