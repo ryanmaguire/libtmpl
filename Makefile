@@ -294,13 +294,13 @@ endif
 # long and long long are the same thing), set this option.
 ifdef NO_LONGLONG
 CONFIG_FLAGS += -DTMPL_SET_LONGLONG_FALSE
-EXCLUDE += -not -name "*llong.c"
+EXCLUDE += ! -name "*llong.c"
 endif
 
 # libtmpl provides its own implementation of libm. If you wish to use the
 # default libm implementation (if it exists) for your system enable this option.
 ifdef NO_MATH
-EXCLUDE += -not -name "*_math_*.c" -not -name "*_math_*.S"
+EXCLUDE += ! -name "*_math_*.c" ! -name "*_math_*.S"
 else
 CONFIG_FLAGS += -DTMPL_SET_USE_MATH_TRUE
 endif
@@ -309,7 +309,7 @@ endif
 # want to inline functions, set this option.
 ifndef NO_INLINE
 CONFIG_FLAGS += -DTMPL_SET_INLINE_TRUE
-EXCLUDE += -not -name "*_no_inline_*.c"
+EXCLUDE += ! -name "*_no_inline_*.c"
 endif
 
 # Whether or not to use the strictly portable code, or IEEE-754 compliant code.
@@ -350,7 +350,7 @@ ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
 ifdef FASM
 
 FASM_SRCS = $(wildcard src/assembly/fasm/*.fasm)
-EXCLUDE += $(patsubst %_x86_64.fasm, -not -name "*%.c", $(notdir $(FASM_SRCS)))
+EXCLUDE += $(patsubst %_x86_64.fasm, ! -name "*%.c", $(notdir $(FASM_SRCS)))
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to use this, tested on
@@ -358,7 +358,7 @@ EXCLUDE += $(patsubst %_x86_64.fasm, -not -name "*%.c", $(notdir $(FASM_SRCS)))
 else
 
 ASM_SRCS = $(wildcard src/assembly/x86_64/*.S)
-EXCLUDE += $(patsubst %_x86_64.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_x86_64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 endif
 # End of ifdef FASM.
@@ -367,25 +367,25 @@ endif
 else ifeq ($(ARCH), $(filter $(ARCH), i386 x86))
 
 ASM_SRCS = $(wildcard src/assembly/i386/*.S)
-EXCLUDE += $(patsubst %_i386.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_i386.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(ARCH), $(filter $(ARCH), aarch64 arm64))
 
 ASM_SRCS = $(wildcard src/assembly/aarch64/*.S)
-EXCLUDE += $(patsubst %_aarch64.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_aarch64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(ARCH), $(filter $(ARCH), armv7l))
 
 ASM_SRCS = $(wildcard src/assembly/armv7l/*.S)
-EXCLUDE += $(patsubst %_armv7l.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_armv7l.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
 else ifeq ($(ARCH), $(filter $(ARCH), ppc64le))
 
 ASM_SRCS = $(wildcard src/assembly/ppc64le/*.S)
-EXCLUDE += $(patsubst %_ppc64le.S, -not -name "*%.c", $(notdir $(ASM_SRCS)))
+EXCLUDE += $(patsubst %_ppc64le.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 endif
 # End of ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
