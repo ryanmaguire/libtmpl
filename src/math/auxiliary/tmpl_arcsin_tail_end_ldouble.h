@@ -42,11 +42,13 @@
  *          asin(x) = pi/2 - 2*asin(sqrt((1-x)/2))                            *
  *      Compute this using a Remez rational minimax approximation.            *
  *          64-bit double:                                                    *
- *              Order (10, 8) approximant.                                    *
+ *              Order (8, 8) approximation.                                   *
  *          80-bit extended / portable:                                       *
- *              Order (12, 10) approximant.                                   *
- *          128-bit quadruple / 128-bit double-double:                        *
- *              Order (18, 18) approximant.                                   *
+ *              Order (10, 10) approximation.                                 *
+ *          128-bit double-double:                                            *
+ *              Order (18, 16) approximation.                                 *
+ *          128-bit quadruple:                                                *
+ *              Order (18, 18) approximation.                                 *
  *  Notes:                                                                    *
  *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
@@ -97,37 +99,74 @@ extern long double tmpl_LDouble_Sqrt(long double x);
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
 #define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
-/*  128-bit quadruple and double-double, a few more terms.                    */
-#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
-      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+/*  128-bit double-double, needs more terms.                                  */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
- *                 128-bit Quadruple / 128-bit Double-Double                  *
+ *                       128-Bit Double-Double Version                        *
  ******************************************************************************/
 
-/*  Coefficients for the numerator.                                           */
-#define A00 (+1.66666666666666666666666666666700314E-01L)
-#define A01 (-7.32816946414566252574527475428622708E-01L)
-#define A02 (+1.34215708714992334609030036562143589E+00L)
-#define A03 (-1.32483151677116409805070261790752040E+00L)
-#define A04 (+7.61206183613632558824485341162121989E-01L)
-#define A05 (-2.56165783329023486777386833928147375E-01L)
-#define A06 (+4.80718586374448793411019434585413855E-02L)
-#define A07 (-4.42523267167024279410230886239774718E-03L)
-#define A08 (+1.44551535183911458253205638280410064E-04L)
-#define A09 (-2.10558957916600254061591040482706179E-07L)
+/*  Coefficients for the numerator of the rational Remez approximation.       */
+#define A00 (+1.6666666666666666666666666666664788350189799631388E-01L)
+#define A01 (-6.7953487712343915574629405476556772441017491044686E-01L)
+#define A02 (+1.1355619701185383396809502073437485674503112281478E+00L)
+#define A03 (-9.9979136861031466933084901065494659727226368799419E-01L)
+#define A04 (+4.9542222658058914988889870432900282258468548407047E-01L)
+#define A05 (-1.3619497632729465917010549488509051327066923409678E-01L)
+#define A06 (+1.8893779497378076181367383073424468319568918871776E-02L)
+#define A07 (-1.0127751917585769797088507439230121924663387007820E-03L)
+#define A08 (+4.1609143699953575338552391698200117907397110245559E-06L)
+#define A09 (+6.4696737362761237061122472460464127042098844745215E-08L)
 
-/*  Coefficients for the denominator.                                         */
-#define B00 (+1.00000000000000000000000000000000000E+00L)
-#define B01 (-4.84690167848739751544716485245697428E+00L)
-#define B02 (+9.96619113536172610135016921140206980E+00L)
-#define B03 (-1.13177895428973036660836798461641458E+01L)
-#define B04 (+7.74004374389488266169304117714658761E+00L)
-#define B05 (-3.25871986053534084709023539900339905E+00L)
-#define B06 (+8.27830318881232209752469022352928864E-01L)
-#define B07 (-1.18768052702942805423330715206348004E-01L)
-#define B08 (+8.32600764660522313269101537926539470E-03L)
-#define B09 (-1.99407384882605586705979504567947007E-04L)
+/*  Coefficients for the denominator of the rational Remez approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
+#define B01 (-4.5272092627406349344777643288466317806594588091439E+00L)
+#define B02 (+8.5827588460873729014578381443554824724815994789507E+00L)
+#define B03 (-8.8306360208337738451441152531141366926804404474047E+00L)
+#define B04 (+5.3384058738222081336161251070080734212567758116369E+00L)
+#define B05 (-1.9150848930384390299612099877658282688028004983951E+00L)
+#define B06 (+3.9045152646266604165940541749287272445233674531396E-01L)
+#define B07 (-4.0182950418624211402578721577444719860456633216405E-02L)
+#define B08 (+1.5253118366932057306896123733715782641557910872142E-03L)
+
+/*  Helper macro for evaluating the numerator of the minimax approximation.   */
+#define TMPL_NUM_EVAL(z) \
+A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
+
+/*  Helper macro for evaluating the denominator of the minimax approximation. */
+#define TMPL_DEN_EVAL(z) \
+B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
+
+/*  128-bit quadruple, one more term than double-double.                      */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+
+/******************************************************************************
+ *                         128-Bit Quadruple Version                          *
+ ******************************************************************************/
+
+/*  Coefficients for the numerator of the rational Remez approximation.       */
+#define A00 (+1.6666666666666666666666666666666694706933946298950E-01L)
+#define A01 (-7.3144709334175817512762531348508944088120313226673E-01L)
+#define A02 (+1.3368369867017129703977436941625958610948526767792E+00L)
+#define A03 (-1.3164457448338078898680515898399898883183856946743E+00L)
+#define A04 (+7.5433447772390026447745048361121104864822141175686E-01L)
+#define A05 (-2.5305623011757570478996213419242526094866179872734E-01L)
+#define A06 (+4.7313332272611269610015425840407483047031537556424E-02L)
+#define A07 (-4.3361995096656108677667878009793595389518727216915E-03L)
+#define A08 (+1.4087190715202195938465702311593468262447436322608E-04L)
+#define A09 (-2.0328626084732569115240530375825287148402561696861E-07L)
+
+/*  Coefficients for the denominator of the rational Remez approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
+#define B01 (-4.8386825600505490507657518809063303704994296482532E+00L)
+#define B02 (+9.9305719293758820380881933667670676755911673699658E+00L)
+#define B03 (-1.1253647818160835284416693673889480035561042302542E+01L)
+#define B04 (+7.6779923143729025203841464458693002845067905250317E+00L)
+#define B05 (-3.2239304092346372000140864131217032195928519148161E+00L)
+#define B06 (+8.1647784902583048535525297530145980584299894277043E-01L)
+#define B07 (-1.1672244212330846346297892822136598340504167438939E-01L)
+#define B08 (+8.1483736398505318670509521365312690155985702378105E-03L)
+#define B09 (-1.9417708181167947671251189418713447040829557241161E-04L)
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
 #define TMPL_NUM_EVAL(z) \
