@@ -114,6 +114,7 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
+/*  64-bit double and 128-bit double-double need the same values.             */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT || \
     TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
@@ -121,30 +122,50 @@
  *                   64-Bit Double / 128-Bit Double-Double                    *
  ******************************************************************************/
 
-#define TMPL_BIG_SCALE (1.34078079299425970995740249982058461274793658205E+154L)
-#define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965315462933837376471E-155L)
+/*  Big scale, 2^(2^9), roughly sqrt(LDBL_MAX) for 64-bit double precision.   */
+#define TMPL_BIG_SCALE (1.34078079299425970995740249982058461274793658206E+154L)
+
+/*  Denormal scale, 2^(2^9 + 52), which is big scale times 2^63. The          *
+ *  mantissa has 52 bits, so this scales denormal values into normal ones.    */
+#define TMPL_DENORMAL_SCALE (6.038339879714466163586487329581230225467074E+169L)
+
+/*  Cutoffs, 2^512 and 2-486.                                                 */
 #define TMPL_EXPO_TOO_HIGH (TMPL_LDOUBLE_BIAS + 0x200U)
 #define TMPL_EXPO_TOO_LOW (TMPL_LDOUBLE_BIAS - 0x1E6U)
 
+/*  80-bit extended, larger scales and exponents.                             */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
 
 /******************************************************************************
  *                               80-Bit Extended                              *
  ******************************************************************************/
 
+/*  Big scale, 2^(2^13), roughly sqrt(LDBL_MAX) for 80-bit extended precision.*/
 #define TMPL_BIG_SCALE (1.0907481356194159294629842447337828624482641619E+2466L)
-#define TMPL_RCPR_BIG_SCALE (9.16801933777423582810706196024241582978182E-2467L)
+
+/*  Denormal scale, 2^(2^13 + 63), which is big scale times 2^63. The         *
+ *  mantissa has 63 bits, so this scales denormal values into normal ones.    */
+#define TMPL_DENORMAL_SCALE (1.00603758533236015414104172115809464818849E+2485L)
+
+/*  Cutoffs, 2^8192 and 2-8160.                                               */
 #define TMPL_EXPO_TOO_HIGH (TMPL_LDOUBLE_BIAS + 0x2000U)
 #define TMPL_EXPO_TOO_LOW (TMPL_LDOUBLE_BIAS - 0x1FE0U)
 
+/*  128-bit quadruple, same big scale, larger denormal scale.                 */
 #else
 
 /******************************************************************************
  *                             128-Bit Quadruple                              *
  ******************************************************************************/
 
+/*  Big scale, 2^(2^13), roughly sqrt(LDBL_MAX) for 128-bit quadruple.        */
 #define TMPL_BIG_SCALE (1.0907481356194159294629842447337828624482641619E+2466L)
-#define TMPL_RCPR_BIG_SCALE (9.16801933777423582810706196024241582978182E-2467L)
+
+/*  Denormal scale, 2^(2^13 + 112), which is big scale times 2^112. The       *
+ *  mantissa has 112 bits, so this scales denormal values into normal ones.   */
+#define TMPL_DENORMAL_SCALE (5.66348811802941345304319513558459057391824E+2499L)
+
+/*  Cutoffs, 2^8192 and 2-8136.                                               */
 #define TMPL_EXPO_TOO_HIGH (TMPL_LDOUBLE_BIAS + 0x2000U)
 #define TMPL_EXPO_TOO_LOW (TMPL_LDOUBLE_BIAS - 0x1FC8U)
 
@@ -175,13 +196,13 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
         if (TMPL_LDOUBLE_EXPO_BITS(w) == 0x00U)
         {
             /*  Normalize inputs, and also scale by 2^512.                    */
-            abs_x *= TMPL_BIG_SCALE*TMPL_LDOUBLE_NORMALIZE;
-            abs_y *= TMPL_BIG_SCALE*TMPL_LDOUBLE_NORMALIZE;
+            abs_x *= TMPL_DENORMAL_SCALE;
+            abs_y *= TMPL_DENORMAL_SCALE;
 
             /*  We compute via 2^512 * sqrt(x^2 + y^2), but we now need to    *
              *  divide out by the normalization factor as well.               */
-            return (TMPL_RCPR_BIG_SCALE / TMPL_LDOUBLE_NORMALIZE) *
-                   tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
+            return tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y) /
+                   TMPL_DENORMAL_SCALE;
         }
 
         /*  Small inputs. Scale by 2^n.                                       */
@@ -189,12 +210,12 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
         abs_y *= TMPL_BIG_SCALE;
 
         /*  We can compute ||P|| via ||P|| = 2^-n * sqrt(x^2 + y^2).          */
-        return TMPL_RCPR_BIG_SCALE*tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
+        return tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y) / TMPL_BIG_SCALE;
     }
 
     /*  Large inputs. Scale by 2^-n.                                          */
-    abs_x *= TMPL_RCPR_BIG_SCALE;
-    abs_y *= TMPL_RCPR_BIG_SCALE;
+    abs_x /= TMPL_BIG_SCALE;
+    abs_y /= TMPL_BIG_SCALE;
 
     /*  We can compute ||P|| via ||P|| = 2^n * sqrt(x^2 + y^2).               */
     return TMPL_BIG_SCALE * tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
@@ -203,7 +224,7 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
 
 /*  Undefine these macros in case someone wants to #include this file.        */
 #undef TMPL_BIG_SCALE
-#undef TMPL_RCPR_BIG_SCALE
+#undef TMPL_DENORMAL_SCALE
 #undef TMPL_EXPO_TOO_HIGH
 #undef TMPL_EXPO_TOO_LOW
 
@@ -223,31 +244,25 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
 /*  Function for computing the magnitude of the vector (x, y) in the plane.   */
 long double tmpl_LDouble_Hypot(long double x, long double y)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double rcpr_t;
-
-    /*  Given P = (x, y), compute |x| and |y|.                                */
+    /*  Given p = (x, y), compute |x| and |y|.                                */
     long double abs_x = tmpl_LDouble_Abs(x);
     long double abs_y = tmpl_LDouble_Abs(y);
 
     /*  Compute the maximum of |x| and |y|.                                   */
-    const long double t = TMPL_MAX(abs_x, abs_y);
+    const long double max_arg = TMPL_MAX(abs_x, abs_y);
 
     /*  Division by zero is generally viewed as bad. If the max of |x| and    *
-     *  |y| is zero, then ||P|| = 0. Return this.                             */
-    if (t == 0.0L)
+     *  |y| is zero, then ||P|| = 0. Return zero.                             */
+    if (max_arg == 0.0L)
         return 0.0L;
 
-    /*  Precompute 1/t to turn 2 divisions into 1 division and 2 products.    */
-    rcpr_t = 1.0L / t;
+    /*  Scale |x| and |y| by 1 / max(|x|, |y|).                               */
+    abs_x /= max_arg;
+    abs_y /= max_arg;
 
-    /*  Scale x and y by 1/t.                                                 */
-    abs_x *= rcpr_t;
-    abs_y *= rcpr_t;
-
-    /*  ||P|| can safely be computed via ||P|| = t * sqrt((x/t)^2 + (y/t)^2)  *
-     *  without risk of underflow or overflow.                                */
-    return t * tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
+    /*  ||P|| can safely be computed via ||P|| = t * sqrt((x/t)^2 + (y/t)^2), *
+     *  where t = max(|x|, |y|), without the risk of underflow or overflow.   */
+    return max_arg * tmpl_LDouble_Sqrt(abs_x * abs_x + abs_y * abs_y);
 }
 /*  End of tmpl_LDouble_Hypot.                                                */
 
