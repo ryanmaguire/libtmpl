@@ -153,8 +153,14 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration / function prototype.                                 */
+extern long double tmpl_LDouble_Arcsin(const long double x);
+
+/*  TMPL_NANL macro found here which provides long double precision NaN.      */
+#include <libtmpl/include/nan/tmpl_nan_ldouble.h>
+
+/*  TMPL_HAS_IEEE754_LDOUBLE macro found here.                                */
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -181,41 +187,60 @@
 
 /*  The trade off from very tiny to very small to small depends on how long   *
  *  double is implemented. Save these values as macros.                       */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
+
+/******************************************************************************
+ *                               64-Bit Double                                *
+ ******************************************************************************/
 
 /*  asin(x) = x to double precision for |x| < 2^-57.                          */
-#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 57U)
+#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x39U)
 
 /*  For 64-bit double the Maclaurin series is accurate to double precision    *
  *  |x| < 0.15 meaning we can safely use this for |x| < 2^-3.                 */
-#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
+#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x03U)
 
-/*  128-bit quadruple and double-double require smaller exponents.            */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+/*  128-bit double-double require smaller exponents.                          */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
-/*  For |x| < 2^-105 asin(x) = x to double-double precision and for           *
- *  |x| < 2^-116 asin(x) = x to quadruple precision. Use 2^-116 for both      *
- *  double-double and quadruple precisions for simplicity.                    */
-#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 116U)
+/******************************************************************************
+ *                           128-Bit Double-Double                            *
+ ******************************************************************************/
+
+/*  For |x| < 2^-106, asin(x) = x to double-double precision.                 */
+#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x6AU)
+
+/*  The Maclaurin series is accurate to double-double precision for |x| < 0.1 *
+ *  so it is safe to use for |x| < 2^-4.                                      */
+#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x04U)
+
+/*  128-bit quadruple requres and even smaller exponent.                      */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+
+/******************************************************************************
+ *                             128-Bit Quadruple                              *
+ ******************************************************************************/
+
+/*  For |x| < 2^-116, asin(x) = x to quadruple precision.                     */
+#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x74U)
 
 /*  The Maclaurin series is accurate to quadruple precision for |x| < 0.1 so  *
  *  it is safe to use for |x| < 2^-4.                                         */
-#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 4U)
+#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x04U)
 
 /*  Lastly, extended precision. 15-bit exponent and 64-bit mantissa.          */
 #else
 
-/*  For |x| < 2^-65 asin(x) = x to extended precision.                        */
-#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 65U)
+/******************************************************************************
+ *                         80-Bit Extended / Portable                         *
+ ******************************************************************************/
+
+/*  For |x| < 2^-65, asin(x) = x to extended precision.                       */
+#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x41U)
 
 /*  The Maclaurin series is accurate to extended precision for |x| < 0.17.    *
  *  The function is thus safe to use for |x| < 2^-3.                          */
-#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
+#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 0x03U)
 
 #endif
 /*  End of double vs. extended vs. double-double vs. quadruple.               */
@@ -229,7 +254,7 @@
  *  IEEE-754 method a slight performance boost over the portable one below.   */
 
 /*  Long double precision inverse sine (asinl equivalent).                    */
-long double tmpl_LDouble_Arcsin(long double x)
+long double tmpl_LDouble_Arcsin(const long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_LDouble w;
@@ -284,8 +309,23 @@ long double tmpl_LDouble_Arcsin(long double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
+/*  Check for inline support.                                                 */
+#if TMPL_USE_INLINE == 1
+
+/*  The absolute value function is small and should be inlined.               */
+#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, tell the compiler about the function.             */
+extern long double tmpl_LDouble_Abs(const long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
 /*  Long double precision inverse sine (asinl equivalent).                    */
-long double tmpl_LDouble_Arcsin(long double x)
+long double tmpl_LDouble_Arcsin(const long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const long double abs_x = tmpl_LDouble_Abs(x);
