@@ -182,7 +182,7 @@ BUILD_DIR = build
 prefix = /usr/local
 
 # Location of all .c and .S files.
-SRC_DIRS = src
+SRC_DIR = src
 
 # Compiler to be used. Override this to whatever you choose.
 CC = cc
@@ -349,7 +349,7 @@ ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
 # much better times than the default C code.
 ifdef FASM
 
-FASM_SRCS = $(wildcard src/assembly/fasm/*.fasm)
+FASM_SRCS = $(wildcard $(SRC_DIR)/assembly/fasm/*.fasm)
 EXCLUDE += $(patsubst %_x86_64.fasm, ! -name "*%.c", $(notdir $(FASM_SRCS)))
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
@@ -357,7 +357,7 @@ EXCLUDE += $(patsubst %_x86_64.fasm, ! -name "*%.c", $(notdir $(FASM_SRCS)))
 # Debian GNU/Linux 11, 12, and 13.
 else
 
-ASM_SRCS = $(wildcard src/assembly/x86_64/*.S)
+ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.S)
 EXCLUDE += $(patsubst %_x86_64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 endif
@@ -366,25 +366,25 @@ endif
 # x86 / i386 assembly is also available using GNU assembly (GAS).
 else ifeq ($(ARCH), $(filter $(ARCH), i386 x86))
 
-ASM_SRCS = $(wildcard src/assembly/i386/*.S)
+ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/i386/*.S)
 EXCLUDE += $(patsubst %_i386.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(ARCH), $(filter $(ARCH), aarch64 arm64))
 
-ASM_SRCS = $(wildcard src/assembly/aarch64/*.S)
+ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/aarch64/*.S)
 EXCLUDE += $(patsubst %_aarch64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(ARCH), $(filter $(ARCH), armv7l))
 
-ASM_SRCS = $(wildcard src/assembly/armv7l/*.S)
+ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/armv7l/*.S)
 EXCLUDE += $(patsubst %_armv7l.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
 else ifeq ($(ARCH), $(filter $(ARCH), ppc64le))
 
-ASM_SRCS = $(wildcard src/assembly/ppc64le/*.S)
+ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64le/*.S)
 EXCLUDE += $(patsubst %_ppc64le.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 endif
@@ -393,7 +393,7 @@ endif
 endif
 # End of ifndef NO_ASM.
 
-C_SRCS = $(shell find $(SRC_DIRS) $(EXCLUDE) -name "*.c")
+C_SRCS = $(shell find $(SRC_DIR) $(EXCLUDE) -name "*.c")
 C_OBJS = $(C_SRCS:%=$(BUILD_DIR)/%.o)
 ASM_OBJS = $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
 FASM_OBJS = $(FASM_SRCS:%=$(BUILD_DIR)/%.o)
