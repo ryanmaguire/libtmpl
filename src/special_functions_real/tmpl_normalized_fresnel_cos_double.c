@@ -426,7 +426,7 @@ double tmpl_Double_Normalized_Fresnel_Cos(const double x)
      *  is dominated by the 1 / pi x term that appears in the asymptotic      *
      *  expansion for C(x).                                                   */
     else if (abs_x < 1.34217728E+08)
-        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(w.r);
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(abs_x);
 
     /*  For very large x, the error in xlo^2 can reduce the accuracy in the   *
      *  calculation. We split x = xhi + xlo down the middle so that x^2 can   *
@@ -436,7 +436,7 @@ double tmpl_Double_Normalized_Fresnel_Cos(const double x)
      *  spltting down the middle, the evaluations for xhi * xlo and xlo * xlo *
      *  are exact.                                                            */
     else if (abs_x < 4.503599627370496E+15)
-        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Large(w.r);
+        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic_Large(abs_x);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
