@@ -514,9 +514,6 @@ long double tmpl_LDouble_Sqrt(long double x)
     /*  Variable for storing the exponent mod 2.                              */
     unsigned int parity;
 
-    /*  Variable used in Halley's method at the end.                          */
-    long double w2;
-
     /*  Set the long double part of the union to the input.                   */
     w.r = x;
 
@@ -667,13 +664,43 @@ long double tmpl_LDouble_Sqrt(long double x)
          *  need two iterations to achieve quadruple precision, whereas       *
          *  Halley's method only needs one. Nevertheless, we avoid overflow   *
          *  and underflow.                                                    */
-        w.r = 0.5L * (w.r + x / w.r);
-        return 0.5L * (w.r + x / w.r);
+        const long double root = 0.5L * (w.r + x / w.r);
+
+        /*  Double-double split to improve the rounding.                      */
+        w.r = x;
+        lo = w.r;
+        w.bits.man6 = 0x00U;
+        w.bits.man5 = 0x00U;
+        w.bits.man4 = 0x00U;
+        lo = lo - w.r;
+
+        /*  Final iteration of Newton's method.                               */
+        return 0.5L * ((root + w.r / root) + lo / root);
     }
 
     /*  Apply 1 iteration of Halley's method and return.                      */
-    w2 = w.r * w.r;
-    return w.r * (w2 + 3.0L * x) / (x + 3.0L * w2);
+    else
+    {
+        const long double root = w.r;
+        const long double root_sq = root * root;
+        long double lo, factor, denom, update, correction;
+
+        /*  Double-double split to improve the rounding.                      */
+        w.r = x;
+        lo = w.r;
+        w.bits.man6 = 0x00U;
+        w.bits.man5 = 0x00U;
+        w.bits.man4 = 0x00U;
+        lo = lo - w.r;
+
+        /*  Halley's method using the double-double split.                    */
+        denom = w.r + 3.0L * root_sq;
+        factor = root / denom;
+        update = factor * (root_sq + 3.0L * w.r);
+        correction = 8.0L * lo * factor * (root_sq / denom);
+
+        return update + correction;
+    }
 }
 /*  End of tmpl_LDouble_Sqrt.                                                 */
 
