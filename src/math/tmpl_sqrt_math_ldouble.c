@@ -665,6 +665,7 @@ long double tmpl_LDouble_Sqrt(long double x)
          *  Halley's method only needs one. Nevertheless, we avoid overflow   *
          *  and underflow.                                                    */
         const long double root = 0.5L * (w.r + x / w.r);
+        long double lo;
 
         /*  Double-double split to improve the rounding.                      */
         w.r = x;
