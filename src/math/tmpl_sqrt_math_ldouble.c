@@ -651,14 +651,6 @@ long double tmpl_LDouble_Sqrt(long double x)
      *  sqrt(u/t) by sqrt(t) using the table, giving us sqrt(u).              */
     w.r *= tmpl_ldouble_sqrt_data[parity] * tmpl_ldouble_sqrt_table[ind];
 
-    /*  The quicker Halley's method used for normal numbers has the fault of  *
-     *  causing underflow for very small inputs and overflow for very large   *
-     *  ones. We need to be able to compute w^2 as an intermediate step,      *
-     *  which may cause problems. Newton's method only requires w in the      *
-     *  intermediate steps, but the convergence is slower, quadratic instead  *
-     *  of cubic. For very small and very large numbers use Newton's method.  */
-    if (TMPL_LDOUBLE_EXPO_BITS(w) <= TMPL_LDOUBLE_UBIAS - 0x2000U ||
-        TMPL_LDOUBLE_EXPO_BITS(w) >= TMPL_LDOUBLE_UBIAS + 0x1FFFU)
     {
         /*  As mentioned, the convergence is slower for Newton's method. We   *
          *  need two iterations to achieve quadruple precision, whereas       *
@@ -673,35 +665,13 @@ long double tmpl_LDouble_Sqrt(long double x)
         w.bits.man6 = 0x00U;
         w.bits.man5 = 0x00U;
         w.bits.man4 = 0x00U;
+        w.bits.man3 = 0x00U;
         lo = lo - w.r;
 
         /*  Final iteration of Newton's method.                               */
         return 0.5L * ((root + w.r / root) + lo / root);
     }
 
-    /*  Apply 1 iteration of Halley's method and return.                      */
-    else
-    {
-        const long double root = w.r;
-        const long double root_sq = root * root;
-        long double lo, factor, denom, update, correction;
-
-        /*  Double-double split to improve the rounding.                      */
-        w.r = x;
-        lo = w.r;
-        w.bits.man6 = 0x00U;
-        w.bits.man5 = 0x00U;
-        w.bits.man4 = 0x00U;
-        lo = lo - w.r;
-
-        /*  Halley's method using the double-double split.                    */
-        denom = w.r + 3.0L * root_sq;
-        factor = root / denom;
-        update = factor * (root_sq + 3.0L * w.r);
-        correction = 8.0L * lo * factor * (root_sq / denom);
-
-        return update + correction;
-    }
 }
 /*  End of tmpl_LDouble_Sqrt.                                                 */
 
