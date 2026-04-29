@@ -344,7 +344,7 @@ long double tmpl_LDouble_Coss(const long double x, const long double width)
 #undef TMPL_SMALL_THRESHOLD
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
 
 /******************************************************************************
  *                              Portable Version                              *
@@ -402,4 +402,4 @@ long double tmpl_LDouble_Coss(const long double x, const long double width)
 /*  End of tmpl_LDouble_Coss.                                                 */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
