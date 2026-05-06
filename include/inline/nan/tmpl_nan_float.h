@@ -71,7 +71,7 @@ float tmpl_Float_NaN(void)
      *      0 11111111 10000000000000000000001                                *
      *  This number is 2143289345 in decimal, or  0x7FC00001 in hexidecimal.  *
      *  Set the integer part of the union to this value.                      */
-    u.n = 0x7FC00001U;
+    u.n = TMPL_UINT32_LITERAL(0x7FC00001);
 
     /*  Return the float part of the word. This is now a NaN.                 */
     return u.f;
