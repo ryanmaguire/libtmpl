@@ -228,135 +228,187 @@ static int make_integer_h(void)
 
     if (tmpl_uchar_width == 8)
     {
-        fprintf(fp, "#define TMPL_HAS_8_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned char tmpl_UInt8;\n");
-        fprintf(fp, "typedef signed char tmpl_SInt8;\n");
-        fprintf(fp, "#define tmpl_UInt8_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt8_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt8_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_8_BIT_INT 1\n"
+            "typedef unsigned char tmpl_UInt8;\n"
+            "typedef signed char tmpl_SInt8;\n"
+            "#define tmpl_UInt8_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n"
+            "#define tmpl_SInt8_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n"
+            "#define tmpl_UInt8_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n"
+            "#define TMPL_UINT8_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else
-        fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n\n");
+        fputs("#define TMPL_HAS_8_BIT_INT 0\n\n", fp);
 
     if (tmpl_uchar_width == 16)
     {
-        fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned char tmpl_UInt16;\n");
-        fprintf(fp, "typedef signed char tmpl_SInt16;\n");
-        fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_16_BIT_INT 1\n"
+            "typedef unsigned char tmpl_UInt16;\n"
+            "typedef signed char tmpl_SInt16;\n"
+            "#define tmpl_UInt16_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n"
+            "#define tmpl_SInt16_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n"
+            "#define tmpl_UInt16_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n"
+            "#define TMPL_UINT16_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_ushort_width == 16 && tmpl_number_of_bits_in_ushort == 16)
     {
-        fputs("#define TMPL_HAS_16_BIT_INT 1\n", fp);
-        fputs("typedef unsigned short int tmpl_UInt16;\n", fp);
-        fputs("typedef signed short int tmpl_SInt16;\n", fp);
-        fputs("#define tmpl_UInt16_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n", fp);
-        fputs("#define tmpl_SInt16_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n", fp);
-        fputs("#define tmpl_UInt16_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n\n", fp);
+        fputs(
+            "#define TMPL_HAS_16_BIT_INT 1\n"
+            "typedef unsigned short int tmpl_UInt16;\n"
+            "typedef signed short int tmpl_SInt16;\n"
+            "#define tmpl_UInt16_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n"
+            "#define tmpl_SInt16_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n"
+            "#define tmpl_UInt16_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n"
+            "#define TMPL_UINT16_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_uint_width == 16 && tmpl_number_of_bits_in_uint == 16)
     {
-        fputs("#define TMPL_HAS_16_BIT_INT 1\n", fp);
-        fputs("typedef unsigned int tmpl_UInt16;\n", fp);
-        fputs("typedef signed int tmpl_SInt16;\n", fp);
-        fputs("#define tmpl_UInt16_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n", fp);
-        fputs("#define tmpl_SInt16_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n", fp);
-        fputs("#define tmpl_UInt16_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n\n", fp);
+        fputs(
+            "#define TMPL_HAS_16_BIT_INT 1\n"
+            "typedef unsigned int tmpl_UInt16;\n"
+            "typedef signed int tmpl_SInt16;\n"
+            "#define tmpl_UInt16_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n"
+            "#define tmpl_SInt16_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n"
+            "#define tmpl_UInt16_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n"
+            "#define TMPL_UINT16_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else
-        fprintf(fp, "#define TMPL_HAS_16_BIT_INT 0\n\n");
+        fputs("#define TMPL_HAS_16_BIT_INT 0\n\n", fp);
 
     if (tmpl_uchar_width == 32)
     {
-        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned char tmpl_UInt32;\n");
-        fprintf(fp, "typedef signed char tmpl_SInt32;\n");
-        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_32_BIT_INT 1\n"
+            "typedef unsigned char tmpl_UInt32;\n"
+            "typedef signed char tmpl_SInt32;\n"
+            "#define tmpl_UInt32_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n"
+            "#define tmpl_SInt32_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n"
+            "#define tmpl_UInt32_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n"
+            "#define TMPL_UINT32_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_ushort_width == 32 && tmpl_number_of_bits_in_ushort == 32)
     {
-        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned short int tmpl_UInt32;\n");
-        fprintf(fp, "typedef signed short int tmpl_SInt32;\n");
-        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_32_BIT_INT 1\n"
+            "typedef unsigned short int tmpl_UInt32;\n"
+            "typedef signed short int tmpl_SInt32;\n"
+            "#define tmpl_UInt32_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n"
+            "#define tmpl_SInt32_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n"
+            "#define tmpl_UInt32_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n"
+            "#define TMPL_UINT32_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_uint_width == 32 && tmpl_number_of_bits_in_uint == 32)
     {
-        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned int tmpl_UInt32;\n");
-        fprintf(fp, "typedef signed int tmpl_SInt32;\n");
-        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_32_BIT_INT 1\n"
+            "typedef unsigned int tmpl_UInt32;\n"
+            "typedef signed int tmpl_SInt32;\n"
+            "#define tmpl_UInt32_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n"
+            "#define tmpl_SInt32_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n"
+            "#define tmpl_UInt32_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n"
+            "#define TMPL_UINT32_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_ulong_width == 32 && tmpl_number_of_bits_in_ulong == 32)
     {
-        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned long int tmpl_UInt32;\n");
-        fprintf(fp, "typedef signed long int tmpl_SInt32;\n");
-        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_32_BIT_INT 1\n"
+            "typedef unsigned long int tmpl_UInt32;\n"
+            "typedef signed long int tmpl_SInt32;\n"
+            "#define tmpl_UInt32_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n"
+            "#define tmpl_SInt32_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n"
+            "#define tmpl_UInt32_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n"
+            "#define TMPL_UINT32_LITERAL(x) (x##UL)\n\n",
+            fp
+        );
     }
     else
-        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 0\n\n");
+        fputs("#define TMPL_HAS_32_BIT_INT 0\n\n", fp);
 
     if (tmpl_uchar_width == 64)
     {
-        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned char tmpl_UInt64;\n");
-        fprintf(fp, "typedef signed char tmpl_SInt64;\n");
-        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_64_BIT_INT 1\n"
+            "typedef unsigned char tmpl_UInt64;\n"
+            "typedef signed char tmpl_SInt64;\n"
+            "#define tmpl_UInt64_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n"
+            "#define tmpl_SInt64_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n"
+            "#define tmpl_UInt64_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n"
+            "#define TMPL_UINT64_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_ushort_width == 64 && tmpl_number_of_bits_in_ushort == 64)
     {
-        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned short int tmpl_UInt64;\n");
-        fprintf(fp, "typedef signed short int tmpl_SInt64;\n");
-        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_64_BIT_INT 1\n"
+            "typedef unsigned short int tmpl_UInt64;\n"
+            "typedef signed short int tmpl_SInt64;\n"
+            "#define tmpl_UInt64_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n"
+            "#define tmpl_SInt64_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n"
+            "#define tmpl_UInt64_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n"
+            "#define TMPL_UINT64_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_uint_width == 64 && tmpl_number_of_bits_in_uint == 64)
     {
-        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned int tmpl_UInt64;\n");
-        fprintf(fp, "typedef signed int tmpl_SInt64;\n");
-        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_64_BIT_INT 1\n"
+            "typedef unsigned int tmpl_UInt64;\n"
+            "typedef signed int tmpl_SInt64;\n"
+            "#define tmpl_UInt64_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n"
+            "#define tmpl_SInt64_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n"
+            "#define tmpl_UInt64_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n"
+            "#define TMPL_UINT64_LITERAL(x) (x##U)\n\n",
+            fp
+        );
     }
     else if (tmpl_ulong_width == 64 && tmpl_number_of_bits_in_ulong == 64)
     {
-        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned long int tmpl_UInt64;\n");
-        fprintf(fp, "typedef signed long int tmpl_SInt64;\n");
-        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_64_BIT_INT 1\n"
+            "typedef unsigned long int tmpl_UInt64;\n"
+            "typedef signed long int tmpl_SInt64;\n"
+            "#define tmpl_UInt64_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n"
+            "#define tmpl_SInt64_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n"
+            "#define tmpl_UInt64_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n"
+            "#define TMPL_UINT64_LITERAL(x) (x##UL)\n\n",
+            fp
+        );
     }
 
 #ifdef TMPL_LONG_LONG_IS_AVAILABLE
     else if (tmpl_ullong_width == 64 && tmpl_number_of_bits_in_ullong == 64)
     {
-        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-        fprintf(fp, "typedef unsigned long long int tmpl_UInt64;\n");
-        fprintf(fp, "typedef signed long long int tmpl_SInt64;\n");
-        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULLONG_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LLONG_TRAILING_ZEROS\n");
-        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULLONG_LEADING_ZEROS\n\n");
+        fputs(
+            "#define TMPL_HAS_64_BIT_INT 1\n"
+            "typedef unsigned long long int tmpl_UInt64;\n"
+            "typedef signed long long int tmpl_SInt64;\n"
+            "#define tmpl_UInt64_Trailing_Zeros TMPL_ULLONG_TRAILING_ZEROS\n"
+            "#define tmpl_SInt64_Trailing_Zeros TMPL_LLONG_TRAILING_ZEROS\n"
+            "#define tmpl_UInt64_Leading_Zeros TMPL_ULLONG_LEADING_ZEROS\n"
+            "#define TMPL_UINT64_LITERAL(x) (x##ULL)\n\n",
+            fp
+        );
     }
 #endif
     else
-        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n\n");
+        fputs("#define TMPL_HAS_64_BIT_INT 0\n\n", fp);
 
 #endif
 /*  End of #ifdef TMPL_SET_NO_INT.                                            */
