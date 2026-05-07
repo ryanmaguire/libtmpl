@@ -160,7 +160,7 @@
  *  3.) tmpl_ieee754_double.h:                                                *
  *          Contains the tmpl_IEEE754_Double union used for type punning.     *
  *  4.) tmpl_floatint_double.h:                                               *
- *          Contains the tmpl_IEEE754_FloatInt64 union for type punning.      *
+ *          Contains the tmpl_FloatInt64 union for type punning.              *
  *  5.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -190,14 +190,14 @@
 /*  Fixed-width integers are found here.                                      */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  tmpl_IEEE754_FloatInt64 data type provided here.                          */
+/*  tmpl_FloatInt64 data type provided here.                                  */
 #include <libtmpl/include/types/tmpl_floatint_double.h>
 
 /*  Function for computing the fractional part of a double.                   */
 double tmpl_Double_Fractional_Part(double x)
 {
     /*  Union of a 64-bit int and a double.                                   */
-    tmpl_IEEE754_FloatInt64 word64;
+    tmpl_FloatInt64 word64;
 
     /*  The lower fractional bits (non-integral) will be stored here.         */
     tmpl_UInt64 fractional_bits;
