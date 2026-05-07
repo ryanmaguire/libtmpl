@@ -26,7 +26,7 @@
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
  *  2.) tmpl_floatint_double.h:                                               *
- *          Provides the tmpl_IEEE754_FloatInt64 type. Used for type punning. *
+ *          Provides the tmpl_FloatInt64 type. Used for type punning.         *
  *          Only included if 64-bit unsigned integers are available.          *
  *  3.) tmpl_ieee754_double.h:                                                *
  *          Provides tmpl_IEEE754_Double. Also used for type punning. Used if *
@@ -63,7 +63,7 @@ TMPL_INLINE_DECL
 double tmpl_Double_NaN(void)
 {
     /*  Union of a double and a 64-bit unsigned integer.                      */
-    tmpl_IEEE754_FloatInt64 u;
+    tmpl_FloatInt64 u;
 
     /*  NaN is given by a zero in the sign bit, all ones in the exponent bits,*
      *  and a one in the least and most significant mantissa bits (zero for   *
