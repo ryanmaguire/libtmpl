@@ -152,7 +152,7 @@ float tmpl_Float_Ceil(float x)
     /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
      *  represents 52 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x007FFFFFU >> exponent;
+    fractional_bits = TMPL_UINT32_LITERAL(0x007FFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
@@ -165,7 +165,7 @@ float tmpl_Float_Ceil(float x)
      *  part. This is perfectly fine since a carry means the exponent must    *
      *  increase by 1, which is what the sum does.                            */
     if (!word32.w.bits.sign)
-        word32.n += 0x00800000U >> exponent;
+        word32.n += TMPL_UINT32_LITERAL(0x00800000) >> exponent;
 
     /*  For negative non-integer values, we have ceil(x) = -floor(-x), and    *
      *  for positive numbers we have ceil(x) = floor(x+1). In either case we  *

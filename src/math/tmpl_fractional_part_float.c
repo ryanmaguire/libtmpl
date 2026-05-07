@@ -233,7 +233,7 @@ float tmpl_Float_Fractional_Part(float x)
     /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
      *  represents 52 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x007FFFFFU >> exponent;
+    fractional_bits = TMPL_UINT32_LITERAL(0x007FFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return zero.                                      */

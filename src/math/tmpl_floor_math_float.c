@@ -123,7 +123,7 @@ float tmpl_Float_Floor(float x)
     /*  There are 23-bits in the mantissa. The bit-mask 0x007FFFFFU           *
      *  represents 23 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x007FFFFFU >> exponent;
+    fractional_bits = TMPL_UINT32_LITERAL(0x007FFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
@@ -136,7 +136,7 @@ float tmpl_Float_Floor(float x)
      *  part. This is perfectly fine since a carry means the exponent must    *
      *  increase by 1, which is what the sum does.                            */
     if (word32.w.bits.sign)
-        word32.n += 0x00800000U >> exponent;
+        word32.n += TMPL_UINT32_LITERAL(0x00800000) >> exponent;
 
     /*  The floor function can be computed by zeroing out all of the          *
      *  fractional bits. This is achieved by using bit-wise and with the      *
