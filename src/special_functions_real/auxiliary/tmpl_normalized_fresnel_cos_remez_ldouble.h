@@ -240,7 +240,7 @@ TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
-    tmpl_IEEE754_FloatInt64 u;
+    tmpl_FloatInt64 u;
 
     /*  Integer for the index of the Remez polynomial.                        */
     unsigned int n;
