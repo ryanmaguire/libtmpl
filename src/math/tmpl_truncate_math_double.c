@@ -226,7 +226,7 @@ double tmpl_Double_Truncate(double x)
     /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
      *  represents 52 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x000FFFFFFFFFFFFFU >> exponent;
+    fractional_bits = TMPL_UINT64_LITERAL(0x000FFFFFFFFFFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
