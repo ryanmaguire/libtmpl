@@ -52,7 +52,7 @@
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Union for type-punning a 64-bit double with a 64-bit int.                 */
-typedef union tmpl_IEEE754_FloatInt64_Def {
+typedef union tmpl_FloatInt64_Type {
 
     /*  The "word" the data represents. This splits the double into its bits. */
     tmpl_IEEE754_Double w;
@@ -62,7 +62,7 @@ typedef union tmpl_IEEE754_FloatInt64_Def {
 
     /*  The actual floating point number.                                     */
     double f;
-} tmpl_IEEE754_FloatInt64;
+} tmpl_FloatInt64;
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */

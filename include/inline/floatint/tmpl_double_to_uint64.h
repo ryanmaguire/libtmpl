@@ -69,7 +69,7 @@
 /*  Fixed-width integers found here.                                          */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  tmpl_IEEE754_FloatInt64 union is typedef'd here.                          */
+/*  tmpl_FloatInt64 union is typedef'd here.                                  */
 #include <libtmpl/include/types/tmpl_floatint_double.h>
 
 /*  Function for type-punning a double as a 64-bit unsigned integer.          */
@@ -77,7 +77,7 @@ TMPL_STATIC_INLINE
 tmpl_UInt64 tmpl_Double_To_UInt64(double x)
 {
     /*  Union for type-punning a double with an integer.                      */
-    tmpl_IEEE754_FloatInt64 u;
+    tmpl_FloatInt64 u;
 
     /*  Set the double part of the union to the input.                        */
     u.f = x;
