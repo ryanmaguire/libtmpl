@@ -115,7 +115,7 @@ float tmpl_Float_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Float w)
      *  Zero out all other bits. There are 8 bits for the exponent and 5      *
      *  bits for the mantissa needed, the bits for 1/2, 1/4, 1/8, 1/16, and   *
      *  1/32. 0x7FFC0000, in hexidecimal, is the bit-mask for this.           */
-    u.n &= 0x7FFC0000;
+    u.n &= TMPL_UINT32_LITERAL(0x7FFC0000);
 
     /*  The 5 bits for the mantissa give the index. Read this off by          *
      *  shifting over and zeroing out the bits for the exponent. There are 4  *

@@ -141,7 +141,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
      *  Zero out all other bits. There are 11 bits for the exponent and 5     *
      *  bits for the mantissa needed, the bits for 1/2, 1/4, 1/8, 1/16, and   *
      *  1/32. 0x7FFF800000000000, in hexidecimal, is the bit-mask for this.   */
-    u.n &= 0x7FFF800000000000U;
+    u.n &= TMPL_UINT64_LITERAL(0x7FFF800000000000);
 
     /*  The 5 bits for the mantissa give the index. Read this off by by       *
      *  shifting over and zeroing out the bits for the exponent. There are 9  *
