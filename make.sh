@@ -221,6 +221,7 @@ fi
 if [ "$CC" == "clang" ]; then
     ExtraArgs="$ExtraArgs -Weverything"
     ExtraArgs="$ExtraArgs -Wno-padded -Wno-float-equal -Wno-switch-enum"
+    ExtraArgs="$ExtraArgs -Wno-unsafe-buffer-usage"
 fi
 
 # If we're inlining small functions, we must not also compile the files
