@@ -94,7 +94,7 @@ double tmpl_Double_Mod_2(double x)
 {
     /*  64-bit integers available, we can get a speed boost using this. Use   *
      *  a union with an unsigned 64-bit integer and an IEEE-754 double.       */
-    tmpl_IEEE754_FloatInt64 word64;
+    tmpl_FloatInt64 word64;
 
     /*  Two variables for the exponent of the input and the number of leading *
      *  zeroes in the mantissa after shifting.                                */
