@@ -52,7 +52,7 @@
 #include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Union for type-punning a 32-bit float with a 32-bit int.                  */
-typedef union tmpl_IEEE754_FloatInt32_Def {
+typedef union tmpl_FloatInt32_Type {
 
     /*  The "word" the data represents. This splits the float into its bits.  */
     tmpl_IEEE754_Float w;
@@ -62,7 +62,7 @@ typedef union tmpl_IEEE754_FloatInt32_Def {
 
     /*  The actual floating point number.                                     */
     float f;
-} tmpl_IEEE754_FloatInt32;
+} tmpl_FloatInt32;
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */

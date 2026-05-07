@@ -69,7 +69,7 @@
 /*  Fixed-width integers found here.                                          */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  tmpl_IEEE754_FloatInt32 union is typedef'd here.                          */
+/*  tmpl_FloatInt32 union is typedef'd here.                                  */
 #include <libtmpl/include/types/tmpl_floatint_float.h>
 
 /*  Function for type-punning a 32-bit unsigned integer as a float.           */
@@ -77,7 +77,7 @@ TMPL_STATIC_INLINE
 float tmpl_UInt32_To_Float(tmpl_UInt32 n)
 {
     /*  Union for type-punning a float with an integer.                       */
-    tmpl_IEEE754_FloatInt32 u;
+    tmpl_FloatInt32 u;
 
     /*  Set the integer part of the union to the input.                       */
     u.n = n;

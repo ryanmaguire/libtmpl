@@ -26,7 +26,7 @@
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
  *  2.) tmpl_floatint_float.h:                                                *
- *          Provides the tmpl_IEEE754_FloatInt32 type. Used for type punning. *
+ *          Provides the tmpl_FloatInt32 type. Used for type punning.         *
  *          Only included if 32-bit unsigned integers are available.          *
  *  3.) tmpl_ieee754_float.h:                                                 *
  *          Provides tmpl_IEEE754_Float. Also used for type punning. Used if  *
@@ -63,7 +63,7 @@ TMPL_INLINE_DECL
 float tmpl_Float_NaN(void)
 {
     /*  Union of a float and a 32-bit unsigned integer.                       */
-    tmpl_IEEE754_FloatInt32 u;
+    tmpl_FloatInt32 u;
 
     /*  NaN is given by a zero in the sign bit, all ones in the exponent bits,*
      *  and a one in the least and most significant mantissa bits (zero for   *

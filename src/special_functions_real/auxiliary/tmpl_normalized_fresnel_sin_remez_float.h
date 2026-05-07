@@ -102,7 +102,7 @@ TMPL_STATIC_INLINE
 float tmpl_Float_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_Float w)
 {
     /*  Union of a 32-bit integer and an IEEE-754 struct.                     */
-    tmpl_IEEE754_FloatInt32 u;
+    tmpl_FloatInt32 u;
 
     /*  Integer for the index of the Remez polynomial.                        */
     unsigned int n;

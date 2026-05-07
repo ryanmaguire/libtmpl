@@ -90,7 +90,7 @@ float tmpl_Float_Mod_2(float x)
 {
     /*  32-bit integers available, we can get a speed boost using this. Use   *
      *  a union with an unsigned 32-bit integer and an IEEE-754 float.        */
-    tmpl_IEEE754_FloatInt32 word32;
+    tmpl_FloatInt32 word32;
 
     /*  Two variables for the exponent of the input and the number of leading *
      *  zeroes in the mantissa after shifting.                                */
