@@ -62,7 +62,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_inttype.h:                                                       *
- *          Header file containing TMPL_HAS_32_BIT_INT macro.                 *
+ *          Header file containing TMPL_HAS_FLOATINT32 macro.                 *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -76,143 +76,59 @@
 /*  Check for IEEE-754 support. Significant speed boost if available.         */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
-/*  TMPL_HAS_32_BIT_INT macro found here. tmpl_UInt32 is here if available.   */
+/*  TMPL_HAS_FLOATINT32 macro found here. tmpl_UInt32 is here if available.   */
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  We can get a speed boost if 32-bit int is available.                      */
-#if TMPL_HAS_32_BIT_INT == 1
+#if TMPL_HAS_FLOATINT32 == 1
 
-/*  Functions for counting the number of leading zeros in an integer are here.*/
-#include <libtmpl/include/tmpl_integer.h>
+/*  Union of 32-bit unsigned integers and 32-bit floats found here.           */
+#include <libtmpl/include/types/tmpl_floatint_float.h>
 
 /*  Function for computing the remainder after division by 2.                 */
 float tmpl_Float_Mod_2(float x)
 {
-    /*  32-bit integer available, we can get a speed boost using this. Create *
+    /*  32-bit integers available, we can get a speed boost using this. Use   *
      *  a union with an unsigned 32-bit integer and an IEEE-754 float.        */
-    union {
-        tmpl_IEEE754_Float w;
-        tmpl_UInt32 n;
-    } word32;
-
-    /*  This variable is for preserving the sign of x at the end. mod 2 is an *
-     *  odd function, so we'll compute the absolute value of the input.       */
-    tmpl_IEEE754_Float tmp;
+    tmpl_IEEE754_FloatInt32 word32;
 
     /*  Two variables for the exponent of the input and the number of leading *
      *  zeroes in the mantissa after shifting.                                */
-    unsigned int expo, leading;
+    unsigned int expo;
 
     /*  Set the float part of the IEEE-754 union to the input.                */
     word32.w.r = x;
 
-    /*  We'll be altering this variable. Preserve the sign by copying it.     */
-    tmp = word32.w;
-
     /*  If the exponent is negative, or zero, then |x| < 2. Return x.         */
-    if (word32.w.bits.expo <= TMPL_FLOAT_BIAS)
+    if (TMPL_FLOAT_EXPO_BITS(word32.w) <= TMPL_FLOAT_UBIAS)
         return x;
 
-    /*  If the exponent is greater than or equal to 23 all bits of the        *
-     *  mantissa represent the integer part of x. That is, x is an integer    *
-     *  to single precision. The answer is either -1, 0, or 1 depending on    *
-     *  the sign of x and whether the last bit of the mantissa is 0 or 1.     */
-    else if (word32.w.bits.expo > TMPL_FLOAT_BIAS + 22U)
+    /*  If the exponent is greater than 23, then the input is either          *
+     *  NaN / infinity, or is an even integer. Handle these cases.            */
+    if (TMPL_FLOAT_EXPO_BITS(word32.w) > TMPL_FLOAT_UBIAS + 23U)
     {
         /*  Special case, infinity or NaN. Return NaN.                        */
-        if (word32.w.bits.expo == TMPL_FLOAT_NANINF_EXP)
+        if (TMPL_FLOAT_IS_NAN_OR_INF(word32.w))
             return TMPL_NANF;
 
         /*  Large number. One's place is not included in mantissa. Return 0.  */
-        else if (word32.w.bits.expo > TMPL_FLOAT_BIAS + 23U)
-        {
-            word32.w.r = 0.0F;
-
-            /*  Return a signed zero with the same sign as the input.         */
-            word32.w.bits.sign = tmp.bits.sign;
-            return word32.w.r;
-        }
-
-        /*  For all other cases, the one's case is included in the mantissa.  *
-         *  We just need to check the very last bit.                          */
-
-        /*  If the last bit of the mantissa is 1, the number is odd.          */
-        if (word32.w.bits.man1 & 0x01U)
-        {
-            /*  Odd integer, mod 2 is +/- 1.                                  */
-            word32.w.r = 1.0F;
-
-            /*  tmp still has the sign of x, copy this to the output.         */
-            word32.w.bits.sign = tmp.bits.sign;
-            return word32.w.r;
-        }
-
-        /*  Otherwise we have an even integer, return 0.                      */
-        else
-        {
-            /*  Even integer, mod 2 is 0.                                     */
-            word32.w.r = 0.0F;
-
-            /*  Preserve the sign of the input (i.e. if x is "negative" 0).   *
-             *  tmp still has the sign of the input, copy this to the output. */
-            word32.w.bits.sign = tmp.bits.sign;
-            return word32.w.r;
-        }
+        return 0.0F;
     }
 
     /*  Compute the exponent of the float. This is the expo bits minus the    *
      *  offset. We've checked that expo is not negative, so we can safely     *
      *  subtract off the bias and the result is a positive integer.           */
-    expo = word32.w.bits.expo - TMPL_FLOAT_BIAS;
+    expo = 24U - (TMPL_FLOAT_EXPO_BITS(word32.w) - TMPL_FLOAT_UBIAS);
 
     /*  The first "expo" bits of the mantissa are for the integer part of x.  *
      *  mod 2 kills all of these, so shift the decimal point expo to the left.*/
-    word32.n = word32.n << expo;
-
-    /*  If the 24th bit is 1, the number is now in the form 1.xxx. We just    *
-     *  need to reset the exponent to 1 and we have the answer.               */
-    if (word32.n & 0x00800000)
-        word32.w.bits.expo = TMPL_FLOAT_BIAS;
-
-    /*  Otherwise the number is of the form 0.xxx. We need to get this into   *
-     *  scientific notation. To do this we count how many leading zeros there *
-     *  are in the mantissa.                                                  */
-    else
-    {
-        /*  Zero out the exponent and sign part of the word. We only want to  *
-         *  count leading zeros in the mantissa.                              */
-        word32.n = 0x007FFFFF & word32.n;
-
-        /*  There are 9 bits for the sign and exponent, and these are all     *
-         *  zero. These do not contribute to the leading zeros in the         *
-         *  mantissa so subtract off 9. We also want the answer in the form   *
-         *  1.xxx, not 0.1xxx, so shift one more to the left. The result is   *
-         *  shifting by the number of leading zeros minus 9 plus 1, so shift  *
-         *  by the number of leading zeros minus 8.                           */
-        leading = (unsigned int)tmpl_UInt32_Leading_Zeros(word32.n) - 8U;
-        word32.n = word32.n << leading;
-
-        /*  If the 24th bit is 1, we have 1.xxx as desired. The exponent is   *
-         *  now -leading, so set this. We need to add the bias back, so the   *
-         *  final exponent is TMPL_FLOAT_BIAS - leading.                      */
-        if (word32.n & 0x00800000)
-            word32.w.bits.expo = (TMPL_FLOAT_BIAS - leading) & 0xFF;
-
-        /*  In this case the number was an even integer to begin with.        *
-         *  The result is zero.                                               */
-        else
-            word32.w.r = 0.0;
-    }
-
-    /*  mod 2 is an odd function and we've computed |x| mod 2. The variable   *
-     *  tmp still has the original sign of x. Copy this into the answer.      */
-    word32.w.bits.sign = tmp.bits.sign;
-    return word32.w.r;
+    word32.n = word32.n & (TMPL_UINT32_LITERAL(0xFFFFFFFF) << expo);
+    return x - word32.w.r;
 }
 /*  End of tmpl_Float_Mod_2.                                                  */
 
 #else
-/*  Else for #if TMPL_HAS_32_BIT_INT == 1.                                    */
+/*  Else for #if TMPL_HAS_FLOATINT32 == 1.                                    */
 
 /*  This method does not require 32-bit integer types be available. It does   *
  *  require that IEEE-754 support for float is available. It is a little      *
@@ -302,7 +218,7 @@ float tmpl_Float_Mod_2(float x)
 #undef TMPL_EXPO_SHIFT
 
 #endif
-/*  End of #if TMPL_HAS_32_BIT_INT == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */

@@ -89,6 +89,12 @@
 /*  Union of 64-bit unsigned integers and 64-bit doubles found here.          */
 #include <libtmpl/include/types/tmpl_floatint_double.h>
 
+/*  TODO:
+ *      Update comments and algorithm description.
+ *      The comments have not been modified since the algorithm drastically
+ *      changed, this needs to be corrected. Same for float and long double.
+ */
+
 /*  Function for computing the remainder after division by 2.                 */
 double tmpl_Double_Mod_2(double x)
 {
@@ -126,9 +132,10 @@ double tmpl_Double_Mod_2(double x)
 
     /*  The first "expo" bits of the mantissa are for the integer part of x.  *
      *  mod 2 kills all of these, so shift the decimal point expo to the left.*/
-    word64.n = word64.n & (0xFFFFFFFFFFFFFFFFU << expo);
+    word64.n = word64.n & (TMPL_UINT64_LITERAL(0xFFFFFFFFFFFFFFFF) << expo);
     return x - word64.w.r;
 }
+/*  End of tmpl_Double_Mod_2.                                                 */
 
 #elif TMPL_HAS_IEEE754_DOUBLE == 1
 /*  Else for #if TMPL_HAS_FLOATINT64 == 1.                                    */
