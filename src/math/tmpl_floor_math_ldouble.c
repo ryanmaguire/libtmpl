@@ -164,7 +164,7 @@ long double tmpl_LDouble_Floor(long double x)
     /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
      *  represents 52 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x000FFFFFFFFFFFFFU >> exponent;
+    fractional_bits = TMPL_UINT64_LITERAL(0x000FFFFFFFFFFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
@@ -177,7 +177,7 @@ long double tmpl_LDouble_Floor(long double x)
      *  part. This is perfectly fine since a carry means the exponent must    *
      *  increase by 1, which is what the sum does.                            */
     if (word.w.bits.sign)
-        word.n += 0x0010000000000000 >> exponent;
+        word.n += TMPL_UINT64_LITERAL(0x0010000000000000) >> exponent;
 
     /*  The floor function can be computed by zeroing out all of the          *
      *  fractional bits. This is achieved by using bit-wise and with the      *
@@ -365,7 +365,7 @@ long double tmpl_LDouble_Floor(long double x)
     /*  There are 63-bits in the mantissa. The bit-mask 0x7FFFFFFFFFFFFFFF    *
      *  represents 63 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x7FFFFFFFFFFFFFFFU >> exponent;
+    fractional_bits = TMPL_UINT64_LITERAL(0x7FFFFFFFFFFFFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
@@ -378,7 +378,7 @@ long double tmpl_LDouble_Floor(long double x)
     if (word.w.bits.sign)
     {
         /*  Add one to the 1's bit in the mantissa.                           */
-        word.words.lo += 0x8000000000000000U >> exponent;
+        word.words.lo += TMPL_UINT64_LITERAL(0x8000000000000000) >> exponent;
 
         /*  If a carry occurred, the integer part will be flipped to zero.    *
          *  All of the mantissa bits are zero, and we need to increment the   *
@@ -682,7 +682,7 @@ long double tmpl_LDouble_Floor(long double x)
         /*  Low word can be zeroed out. The high word has 48 bits. Create a   *
          *  bit-mask by shifting 0xFFFFFFFFFFFF (48 1's in binary) down by    *
          *  exponent.                                                         */
-        fractional_bits = 0x0000FFFFFFFFFFFFU >> exponent;
+        fractional_bits = TMPL_UINT64_LITERAL(0x0000FFFFFFFFFFFF) >> exponent;
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
@@ -695,7 +695,7 @@ long double tmpl_LDouble_Floor(long double x)
          *  exponent part. This is perfectly fine since a carry means the     *
          *  exponent must increase by 1, which is what the sum does.          */
         if (word.w.bits.sign)
-            word.words.hi += 0x1000000000000U >> exponent;
+            word.words.hi += TMPL_UINT64_LITERAL(0x1000000000000) >> exponent;
 
         /*  The floor function can be computed by zeroing out all of the      *
          *  fractional bits. This is achieved by using bit-wise and with the  *
@@ -712,7 +712,8 @@ long double tmpl_LDouble_Floor(long double x)
     else
     {
         /*  Similar bit-mask as before, but with 64 1's instead of 48.        */
-        fractional_bits = 0xFFFFFFFFFFFFFFFFU >> (exponent - 48U);
+        fractional_bits =
+            TMPL_UINT64_LITERAL(0xFFFFFFFFFFFFFFFF) >> (exponent - 48U);
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */

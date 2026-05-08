@@ -272,7 +272,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
     /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
      *  represents 52 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x000FFFFFFFFFFFFFU >> exponent;
+    fractional_bits = TMPL_UINT64_LITERAL(0x000FFFFFFFFFFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return zero.                                      */
@@ -453,7 +453,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
     /*  There are 63-bits in the mantissa. The bit-mask 0x7FFFFFFFFFFFFFFF    *
      *  represents 63 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x7FFFFFFFFFFFFFFFU >> exponent;
+    fractional_bits = TMPL_UINT64_LITERAL(0x7FFFFFFFFFFFFFFF) >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
@@ -722,7 +722,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
         /*  Low word can be zeroed out. The high word has 48 bits. Create a   *
          *  bit-mask by shifting 0xFFFFFFFFFFFF (48 1's in binary) down by    *
          *  exponent.                                                         */
-        fractional_bits = 0x0000FFFFFFFFFFFFU >> exponent;
+        fractional_bits = TMPL_UINT64_LITERAL(0x0000FFFFFFFFFFFF) >> exponent;
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
@@ -744,7 +744,8 @@ long double tmpl_LDouble_Fractional_Part(long double x)
     else
     {
         /*  Similar bit-mask as before, but with 64 1's instead of 48.        */
-        fractional_bits = 0xFFFFFFFFFFFFFFFFU >> (exponent - 48U);
+        fractional_bits =
+            TMPL_UINT64_LITERAL(0xFFFFFFFFFFFFFFFF) >> (exponent - 48U);
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
