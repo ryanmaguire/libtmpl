@@ -211,6 +211,11 @@ CFLAGS := $(filter-out -flto, $(CFLAGS))
 LFLAGS := $(filter-out -flto, $(LFLAGS))
 endif
 
+ifdef NO_LTO
+CFLAGS := $(filter-out -flto, $(CFLAGS))
+LFLAGS := $(filter-out -flto, $(LFLAGS))
+endif
+
 ifdef BUILD_STATIC
 TARGET_LIB = $(TARGET_LIB_STATIC)
 else
