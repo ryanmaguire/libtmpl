@@ -682,7 +682,7 @@ long double tmpl_LDouble_Ceil(long double x)
         /*  Low word can be zeroed out. The high word has 48 bits. Create a   *
          *  bit-mask by shifting 0xFFFFFFFFFFFF (48 1's in binary) down by    *
          *  exponent.                                                         */
-        fractional_bits = 0x0000FFFFFFFFFFFFU >> exponent;
+        fractional_bits = TMPL_UINT64_LITERAL(0x0000FFFFFFFFFFFF) >> exponent;
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
@@ -695,7 +695,7 @@ long double tmpl_LDouble_Ceil(long double x)
          *  exponent part. This is perfectly fine since a carry means the     *
          *  exponent must increase by 1, which is what the sum does.          */
         if (!word.w.bits.sign)
-            word.words.hi += 0x1000000000000U >> exponent;
+            word.words.hi += TMPL_UINT64_LITERAL(0x1000000000000) >> exponent;
 
         /*  The floor function can be computed by zeroing out all of the      *
          *  fractional bits. This is achieved by using bit-wise and with the  *
@@ -712,7 +712,8 @@ long double tmpl_LDouble_Ceil(long double x)
     else
     {
         /*  Similar bit-mask as before, but with 64 1's instead of 48.        */
-        fractional_bits = 0xFFFFFFFFFFFFFFFFU >> (exponent - 48U);
+        fractional_bits =
+            TMPL_UINT64_LITERAL(0xFFFFFFFFFFFFFFFF) >> (exponent - 48U);
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
