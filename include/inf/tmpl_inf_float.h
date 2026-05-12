@@ -32,8 +32,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INF_INFINITY_FLOAT_H
-#define TMPL_INF_INFINITY_FLOAT_H
+#ifndef TMPL_INF_INF_FLOAT_H
+#define TMPL_INF_INF_FLOAT_H
 
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
