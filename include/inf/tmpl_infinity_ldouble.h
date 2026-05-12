@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_inf_float                               *
+ *                            tmpl_infinity_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides an inlined inf function, or a forward declaration if inline  *
@@ -32,8 +32,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INF_INF_FLOAT_H
-#define TMPL_INF_INF_FLOAT_H
+#ifndef TMPL_INF_INFINITY_LDOUBLE_H
+#define TMPL_INF_INFINITY_LDOUBLE_H
 
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
@@ -42,19 +42,19 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Implemented in the inline directory.                                      */
-#include <libtmpl/include/inline/inf/tmpl_inf_float.h>
+#include <libtmpl/include/inline/inf/tmpl_inf_ldouble.h>
 
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
 
-/*  Function for producing single precision infinity.                         */
-extern float tmpl_Float_Infinity(void);
+/*  Function for producing long double precision infinity.                    */
+extern long double tmpl_LDouble_Infinity(void);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Helper macro to improve readability.                                      */
-#define TMPL_INFINITYF (tmpl_Float_Infinity())
+#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
 
 #endif
 /*  End of include guard.                                                     */
