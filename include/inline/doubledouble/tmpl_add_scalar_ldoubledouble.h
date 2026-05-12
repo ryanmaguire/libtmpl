@@ -121,7 +121,7 @@ tmpl_LDouble_Fast_Two_Sum(const long double x,
 
 /*  Performs addition for a double-double with a double.                      */
 TMPL_INLINE_DECL
-tmpl_DoubleDouble
+tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Add_Scalar(const long double x,
                               const tmpl_LongDoubleDouble * const y)
 {
@@ -132,11 +132,11 @@ tmpl_LDoubleDouble_Add_Scalar(const long double x,
     long double low_sum;
 
     /*  The rough guess is the sum of the high part of y with x.              */
-    tmpl_LDouble_Two_Sum(x, y.dat[0], &sum.dat[0], &sum.dat[1]);
+    tmpl_LDouble_Two_Sum(x, y->dat[0], &sum.dat[0], &sum.dat[1]);
 
     /*  Recover the bits from the low part of y, add these to the low part of *
      *  the current sum. Note, |low_sum| < |sum_high|.                        */
-    low_sum = y.dat[1] + sum.dat[1];
+    low_sum = y->dat[1] + sum.dat[1];
 
     /*  Since |low_sum| < |sum_high|, we can do Fast2Sum to compute the sum   *
      *  of these terms. The Fast2Sum of these values produces the final       *

@@ -131,11 +131,11 @@ tmpl_DoubleDouble_Add_Scalar(const double x, const tmpl_DoubleDouble * const y)
     double low_sum;
 
     /*  The rough guess is the sum of the high part of y with x.              */
-    tmpl_Double_Two_Sum(x, y.dat[0], &sum.dat[0], &sum.dat[1]);
+    tmpl_Double_Two_Sum(x, y->dat[0], &sum.dat[0], &sum.dat[1]);
 
     /*  Recover the bits from the low part of y, add these to the low part of *
      *  the current sum. Note, |low_sum| < |sum_high|.                        */
-    low_sum = y.dat[1] + sum.dat[1];
+    low_sum = y->dat[1] + sum.dat[1];
 
     /*  Since |low_sum| < |sum_high|, we can do Fast2Sum to compute the sum   *
      *  of these terms. The Fast2Sum of these values produces the final       *
