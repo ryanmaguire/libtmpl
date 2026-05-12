@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_inf_ldouble                              *
+ *                            tmpl_infinity_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provide infinity for long double precision numbers.                   *
@@ -36,8 +36,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_INF_LDOUBLE_H
-#define TMPL_INLINE_INF_LDOUBLE_H
+#ifndef TMPL_INLINE_INFINITY_LDOUBLE_H
+#define TMPL_INLINE_INFINITY_LDOUBLE_H
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>

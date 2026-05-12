@@ -42,7 +42,7 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Implemented in the inline directory.                                      */
-#include <libtmpl/include/inline/inf/tmpl_inf_ldouble.h>
+#include <libtmpl/include/inline/inf/tmpl_infinity_ldouble.h>
 
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else

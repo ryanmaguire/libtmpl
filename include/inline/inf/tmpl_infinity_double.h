@@ -16,21 +16,21 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_inf_float                               *
+ *                            tmpl_infinity_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides infinity for single precision numbers.                       *
+ *      Provides infinity for double precision numbers.                       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
- *  2.) tmpl_floatint_float.h:                                                *
- *          Provides the tmpl_FloatInt32 type. Used for type punning.         *
- *          Only included if 32-bit unsigned integers are available.          *
- *  3.) tmpl_ieee754_float.h:                                                 *
- *          Provides tmpl_IEEE754_Float. Also used for type punning. Used if  *
- *          IEEE-754 support is available, but 32-bit integers are not.       *
+ *  2.) tmpl_floatint_double.h:                                               *
+ *          Provides the tmpl_FloatInt64 type. Used for type punning.         *
+ *          Only included if 64-bit unsigned integers are available.          *
+ *  3.) tmpl_ieee754_double.h:                                                *
+ *          Provides tmpl_IEEE754_Double. Also used for type punning. Used if *
+ *          IEEE-754 support is available, but 64-bit integers are not.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
@@ -42,96 +42,98 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_INF_FLOAT_H
-#define TMPL_INLINE_INF_FLOAT_H
+#ifndef TMPL_INLINE_INFINITY_DOUBLE_H
+#define TMPL_INLINE_INFINITY_DOUBLE_H
 
 /*  Function prototype and IEEE-754 data types defined here.                  */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Simplest method uses 32-bit integers for type punning. Check for support. */
-#if TMPL_HAS_FLOATINT32 == 1
+/*  Simplest method uses 64-bit integers for type punning. Check for support. */
+#if TMPL_HAS_FLOATINT64 == 1
 
 /******************************************************************************
- *                   IEEE-754 Version with 32-Bit Integers                    *
+ *                   IEEE-754 Version with 64-Bit Integers                    *
  ******************************************************************************/
 
-/*  Union providing type-punning for 32-bit floats with 32-bit integers.      */
-#include <libtmpl/include/types/tmpl_floatint_float.h>
+/*  Union providing type-punning for 64-bit doubles with 64-bit integers.     */
+#include <libtmpl/include/types/tmpl_floatint_double.h>
 
-/*  Function for producing single precision infinity.                         */
+/*  Function for producing double precision infinity.                         */
 TMPL_INLINE_DECL
-float tmpl_Float_Infinity(void)
+double tmpl_Double_Infinity(void)
 {
-    /*  Union of a float and a 32-bit unsigned integer.                       */
-    tmpl_FloatInt32 u;
+    /*  Union of a double and a 64-bit unsigned integer.                      */
+    tmpl_FloatInt64 u;
 
-    /*  IEEE-754 declares single precision positive infinity to have zero for *
+    /*  IEEE-754 declares double precision positive infinity to have zero for *
      *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
-     *  sign. Set the bits to this and then return the resulting float. In    *
+     *  sign. Set the bits to this and then return the resulting double. In   *
      *  binary this is:                                                       *
-     *      0 11111111 00000000000000000000000                                *
-     *  This number is 2139095040 in decimal, or  0x7f800000 in hexidecimal.  *
-     *  Set the integer part of the union to this value.                      */
-    u.n = TMPL_UINT32_LITERAL(0x7f800000);
+     *      0 11111111111 0000000000000000000000000000000000000000000000000000*
+     *  This number is 9218868437227405312 in decimal, or  0x7FF0000000000000 *
+     *  in hexidecimal. Set the integer part of the union to this value.      */
+    u.n = TMPL_UINT64_LITERAL(0x7FF0000000000000);
 
-    /*  Return the float part of the word. This is now infinity.              */
+    /*  Return the double part of the word. This is now infinity.             */
     return u.f;
 }
-/*  End of tmpl_Float_Infinity.                                               */
+/*  End of tmpl_Double_Infinity.                                              */
 
-/*  Lacking 32-bit fixed-width integers, we can try to set the bits of the    *
- *  float using a bit-field. Check for IEEE-754 support.                      */
-#elif TMPL_FLOAT_ENDIANNESS != TMPL_UNKNOWN_ENDIAN
+/*  Lacking 64-bit fixed-width integers, we can try to set the bits of the    *
+ *  double using a bit-field. Check for IEEE-754 support.                     */
+#elif TMPL_DOUBLE_ENDIANNESS != TMPL_UNKNOWN_ENDIAN
 
 /******************************************************************************
- *                  IEEE-754 Version without 32-Bit Integers                  *
+ *                  IEEE-754 Version without 64-Bit Integers                  *
  ******************************************************************************/
 
-/*  Union used for type-punning floats using a bit-field found here.          */
-#include <libtmpl/include/types/tmpl_ieee754_float.h>
+/*  Union used for type-punning doubles using a bit-field found here.         */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
-/*  Function for producing single precision infinity.                         */
+/*  Function for producing double precision infinity.                         */
 TMPL_INLINE_DECL
-float tmpl_Float_Infinity(void)
+double tmpl_Double_Infinity(void)
 {
-    /*  Union used for type-punning a float with the bits it represents.      */
-    tmpl_IEEE754_Float x;
+    /*  Union used for type-punning a double with the bits it represents.     */
+    tmpl_IEEE754_Double x;
 
-    /*  IEEE-754 declares single precision positive infinity to have zero for *
+    /*  IEEE-754 declares double precision positive infinity to have zero for *
      *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
-     *  sign. Set the bits to this and then return the resulting float.       */
+     *  sign. Set the bits to this and then return the resulting double.      */
     x.bits.sign = 0x0U;
-    x.bits.expo = 0xFFU;
-    x.bits.man0 = 0x00U;
-    x.bits.man1 = 0x00U;
+    x.bits.expo = 0x7FFU;
+    x.bits.man0 = 0x0U;
+    x.bits.man1 = 0x0U;
+    x.bits.man2 = 0x0U;
+    x.bits.man3 = 0x0U;
 
-    /*  Return the float part of the word. This is now infinity.              */
+    /*  Return the double part of the word. This is now infinity.             */
     return x.r;
 }
-/*  End of tmpl_Float_Infinity.                                               */
+/*  End of tmpl_Double_Infinity.                                              */
 
 #else
-/*  Else for #if TMPL_HAS_FLOATINT32 == 1.                                    */
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Single-precision real positive infinity.                                  */
+/*  Double-precision real positive infinity.                                  */
 TMPL_INLINE_DECL
-float tmpl_Float_Infinity(void)
+double tmpl_Double_Infinity(void)
 {
     /*  glibc sets the infinity to 1.0E10000 for compilers lacking IEEE       *
      *  support. This works, in practice, but is undefined behavior and may   *
      *  result in compiler warnings. Because of this, a compiler diagnostic   *
      *  may be issued when using the portable version of this function. On    *
      *  compilers like GCC or clang, use -Wno-overflow to disable this.       */
-    return 1.0E10000F;
+    return 1.0E10000;
 }
-/*  End of tmpl_Float_Infinity.                                               */
+/*  End of tmpl_Double_Infinity.                                              */
 
 #endif
-/*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
 
 #endif
 /*  End of include guard.                                                     */

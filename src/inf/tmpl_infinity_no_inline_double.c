@@ -16,13 +16,13 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_inf_ldouble                              *
+ *                            tmpl_infinity_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns inf. Source: libtmpl/include/inline/inf/tmpl_inf_ldouble.h.   *
+ *      Returns inf. See libtmpl/include/inline/inf/tmpl_infinity_double.h.   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 16, 2021                                             *
+ *  Date:       May 12, 2026                                                  *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -32,10 +32,10 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype / forward declaration.                                 */
-extern long double tmpl_LDouble_Infinity(void);
+extern double tmpl_Double_Infinity(void);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/inf/tmpl_inf_ldouble.h"
+#include "../../include/inline/inf/tmpl_infinity_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_inf_double                               *
+ *                            tmpl_infinity_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns inf. Source: libtmpl/include/inline/inf/tmpl_inf_double.h.    *
+ *      Returns inf. See libtmpl/include/inline/inf/tmpl_infinity_float.h.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 12, 2026                                                  *
@@ -32,10 +32,10 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype / forward declaration.                                 */
-extern double tmpl_Double_Infinity(void);
+extern float tmpl_Float_Infinity(void);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/inf/tmpl_inf_double.h"
+#include "../../include/inline/inf/tmpl_infinity_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
