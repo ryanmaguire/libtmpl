@@ -44,6 +44,9 @@
 #ifndef TMPL_IS_INF_H
 #define TMPL_IS_INF_H
 
+/*  Booleans found here.                                                      */
+#include <libtmpl/include/tmpl_bool.h>
+
 /*  libtmpl's implementation of isinf given here.                             */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -52,19 +55,31 @@
 #ifdef __cplusplus
 
 /*  C++ function overloading for checking if a floating point number is inf.  */
-static inline tmpl_Bool TMPL_IS_INF(float x)
+static inline tmpl_Bool TMPL_IS_INF(const float x)
 {
     return tmpl_Float_Is_Inf(x);
 }
 
-static inline tmpl_Bool TMPL_IS_INF(double x)
+static inline tmpl_Bool TMPL_IS_INF(const double x)
 {
     return tmpl_Double_Is_Inf(x);
 }
 
-static inline tmpl_Bool TMPL_IS_INF(long double x)
+static inline tmpl_Bool TMPL_IS_INF(const long double x)
 {
     return tmpl_LDouble_Is_Inf(x);
+}
+
+static inline tmpl_Bool TMPL_IS_INF(const signed long long int x)
+{
+    (void)x;
+    return tmpl_False;
+}
+
+static inline tmpl_Bool TMPL_IS_INF(const unsigned long long int x)
+{
+    (void)x;
+    return tmpl_False;
 }
 
 /*  C11 introduced the _Generic keyword instead of function overloading.      */
@@ -72,10 +87,11 @@ static inline tmpl_Bool TMPL_IS_INF(long double x)
 
 /*  C11 generic macro for checking if a floating point number is infinite.    */
 #define TMPL_IS_INF(x) _Generic((x),                                           \
-    long double: tmpl_LDouble_Is_Inf,                                          \
-    default:     tmpl_Double_Is_Inf,                                           \
-    float:       tmpl_Float_Is_Inf                                             \
-)(x)
+    long double: tmpl_LDouble_Is_Inf((x)),                                     \
+    double:      tmpl_Double_Is_Inf((x)),                                      \
+    float:       tmpl_Float_Is_Inf((x)),                                       \
+    default:     tmpl_False                                                    \
+)
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */

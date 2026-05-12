@@ -33,8 +33,14 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file with support for NaN.                                 *
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header file providing Booleans (True and False).                  *
+ *  2.) tmpl_nan_double.h:                                                    *
+ *          Header file providing double precision isnan.                     *
+ *  3.) tmpl_nan_float.h:                                                     *
+ *          Header file providing single precision isnan.                     *
+ *  4.) tmpl_nan_ldouble.h:                                                   *
+ *          Header file providing long double precision isnan.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2024                                            *
@@ -44,27 +50,44 @@
 #ifndef TMPL_IS_NAN_H
 #define TMPL_IS_NAN_H
 
-/*  libtmpl's implementation of isnan given here.                             */
-#include <libtmpl/include/tmpl_math.h>
+/*  Booleans found here.                                                      */
+#include <libtmpl/include/tmpl_bool.h>
+
+/*  libtmpl's implementation of isinf given here.                             */
+#include <libtmpl/include/nan/tmpl_nan_double.h>
+#include <libtmpl/include/nan/tmpl_nan_float.h>
+#include <libtmpl/include/nan/tmpl_nan_ldouble.h>
 
 /*  C++ does not have the _Generic keyword, which is a C11 extension. C++     *
  *  does have function overloading, which achieves the same goal.             */
 #ifdef __cplusplus
 
 /*  C++ function overloading for checking if a floating point number is NaN.  */
-static inline tmpl_Bool TMPL_IS_NAN(float x)
+static inline tmpl_Bool TMPL_IS_NAN(const float x)
 {
     return tmpl_Float_Is_NaN(x);
 }
 
-static inline tmpl_Bool TMPL_IS_NAN(double x)
+static inline tmpl_Bool TMPL_IS_NAN(const double x)
 {
     return tmpl_Double_Is_NaN(x);
 }
 
-static inline tmpl_Bool TMPL_IS_NAN(long double x)
+static inline tmpl_Bool TMPL_IS_NAN(const long double x)
 {
     return tmpl_LDouble_Is_NaN(x);
+}
+
+static inline tmpl_Bool TMPL_IS_NAN(const signed long long int x)
+{
+    (void)x;
+    return tmpl_False;
+}
+
+static inline tmpl_Bool TMPL_IS_NAN(const unsigned long long int x)
+{
+    (void)x;
+    return tmpl_False;
 }
 
 /*  C11 introduced the _Generic keyword instead of function overloading.      */
@@ -72,10 +95,11 @@ static inline tmpl_Bool TMPL_IS_NAN(long double x)
 
 /*  C11 generic macro for checking if a floating point number is NaN.         */
 #define TMPL_IS_NAN(x) _Generic((x),                                           \
-    long double: tmpl_LDouble_Is_NaN,                                          \
-    default:     tmpl_Double_Is_NaN,                                           \
-    float:       tmpl_Float_Is_NaN                                             \
-)(x)
+    long double: tmpl_LDouble_Is_NaN((x)),                                     \
+    double:      tmpl_Double_Is_NaN((x)),                                      \
+    float:       tmpl_Float_Is_NaN((x)),                                       \
+    default:     tmpl_False                                                    \
+)
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
