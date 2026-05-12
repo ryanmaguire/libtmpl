@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -21,7 +21,7 @@
  *  Purpose:                                                                  *
  *      Provide Not-a-Number for long double precision numbers.               *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file containing the function prototype.                    *
