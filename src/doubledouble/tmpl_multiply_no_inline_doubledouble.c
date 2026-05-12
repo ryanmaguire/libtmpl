@@ -16,13 +16,13 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_add_ldoubledouble                           *
+ *                         tmpl_multiply_doubledouble                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      DWAdd algorithm. See include/doubledouble/tmpl_add_ldoubledouble.h.   *
+ *      Double-word multiplication implementation.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 29, 2024                                             *
+ *  Date:       May 12, 2026                                                  *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -31,16 +31,16 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  tmpl_LongDoubleDouble typedef provided here.                              */
-#include <libtmpl/include/types/tmpl_doubledouble_ldouble.h>
+/*  tmpl_DoubleDouble typedef provided here.                                  */
+#include <libtmpl/include/types/tmpl_doubledouble_double.h>
 
 /*  Function prototype / forward declaration.                                 */
-extern tmpl_LongDoubleDouble
-tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
-                       const tmpl_LongDoubleDouble * const y);
+extern tmpl_DoubleDouble
+tmpl_DoubleDouble_Multiply(const tmpl_DoubleDouble * const x,
+                           const tmpl_DoubleDouble * const y);
 
-/*  Implemented in include/doubledouble/tmpl_add_ldoubledouble.h.             */
-#include "../../include/inline/doubledouble/tmpl_add_ldoubledouble.h"
+/*  Implemented in include/doubledouble/tmpl_multiply_doubledouble.h.         */
+#include "../../include/inline/doubledouble/tmpl_multiply_doubledouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

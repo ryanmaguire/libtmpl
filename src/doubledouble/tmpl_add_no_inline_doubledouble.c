@@ -31,8 +31,13 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_doubledouble.h>
+/*  tmpl_DoubleDouble typedef provided here.                                  */
+#include <libtmpl/include/types/tmpl_doubledouble_double.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_DoubleDouble
+tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
+                      const tmpl_DoubleDouble * const y);
 
 /*  Implemented in include/doubledouble/tmpl_add_doubledouble.h.              */
 #include "../../include/inline/doubledouble/tmpl_add_doubledouble.h"
