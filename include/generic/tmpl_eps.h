@@ -52,19 +52,19 @@
 #ifdef __cplusplus
 
 /*  C++ function overloading for getting machine epsilon for a given type.    */
-static inline float TMPL_EPS(float x)
+static inline float TMPL_EPS(const float x)
 {
     (void)x;
     return TMPL_FLT_EPS;
 }
 
-static inline double TMPL_EPS(double x)
+static inline double TMPL_EPS(const double x)
 {
     (void)x;
     return TMPL_DBL_EPS;
 }
 
-static inline long double TMPL_EPS(long double x)
+static inline long double TMPL_EPS(const long double x)
 {
     (void)x;
     return TMPL_LDBL_EPS;
