@@ -101,8 +101,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TWO_SUM_DOUBLE_H
-#define TMPL_TWO_SUM_DOUBLE_H
+#ifndef TMPL_TWO_DIFF_DOUBLE_H
+#define TMPL_TWO_DIFF_DOUBLE_H
 
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
 #include <libtmpl/include/tmpl_config.h>
