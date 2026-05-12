@@ -32,7 +32,7 @@
  *                              Revision History                              *
  ******************************************************************************
  *  2026/05/12: Ryan Maguire                                                  *
- *      Migrated INF functions to their own directory. Added inline support.  *
+ *      Migrated inf functions to their own directory. Added inline support.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */

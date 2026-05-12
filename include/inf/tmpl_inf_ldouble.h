@@ -19,7 +19,7 @@
  *                              tmpl_inf_ldouble                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides an inlined INF function, or a forward declaration if inline  *
+ *      Provides an inlined inf function, or a forward declaration if inline  *
  *      support is not available.                                             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
@@ -38,7 +38,7 @@
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  INF function is small enough that it can be inlined. Check for support.   */
+/*  Inf function is small enough that it can be inlined. Check for support.   */
 #if TMPL_USE_INLINE == 1
 
 /*  Implemented in the inline directory.                                      */
