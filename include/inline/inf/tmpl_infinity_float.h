@@ -66,7 +66,7 @@ float tmpl_Float_Infinity(void)
     tmpl_FloatInt32 u;
 
     /*  IEEE-754 declares single precision positive infinity to have zero for *
-     *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
+     *  all mantissa components, 1 for all the exponents bits, and 0 for the  *
      *  sign. Set the bits to this and then return the resulting float. In    *
      *  binary this is:                                                       *
      *      0 11111111 00000000000000000000000                                *

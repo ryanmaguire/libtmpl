@@ -23,8 +23,10 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file containing the function prototype.                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
+ *  3.) tmpl_ieee754_ldouble.h:                                               *
+ *          Provides tmpl_IEEE754_LDouble, used for type punning.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
@@ -175,7 +177,7 @@ long double tmpl_LDouble_Infinity(void)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Long double precision Not-A-Number.                                       */
+/*  Long double precision real positive infinity.                             */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Infinity(void)
 {

@@ -22,7 +22,7 @@
  *      Returns inf. See libtmpl/include/inline/inf/tmpl_infinity_ldouble.h.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 16, 2021                                             *
+ *  Date:       May 12, 2026                                                  *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */

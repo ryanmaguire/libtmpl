@@ -66,7 +66,7 @@ double tmpl_Double_Infinity(void)
     tmpl_FloatInt64 u;
 
     /*  IEEE-754 declares double precision positive infinity to have zero for *
-     *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
+     *  all mantissa components, 1 for all the exponents bits, and 0 for the  *
      *  sign. Set the bits to this and then return the resulting double. In   *
      *  binary this is:                                                       *
      *      0 11111111111 0000000000000000000000000000000000000000000000000000*
