@@ -33,7 +33,9 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header file providing Booleans (True and False).                  *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file with support for infinity.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *

@@ -35,12 +35,8 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans (True and False).                  *
- *  2.) tmpl_nan_double.h:                                                    *
- *          Header file providing double precision isnan.                     *
- *  3.) tmpl_nan_float.h:                                                     *
- *          Header file providing single precision isnan.                     *
- *  4.) tmpl_nan_ldouble.h:                                                   *
- *          Header file providing long double precision isnan.                *
+ *  2.) tmpl_math.h:                                                          *
+ *          Header file with support for NaN.                                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2024                                            *
@@ -53,10 +49,8 @@
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  libtmpl's implementation of isinf given here.                             */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
-#include <libtmpl/include/nan/tmpl_nan_float.h>
-#include <libtmpl/include/nan/tmpl_nan_ldouble.h>
+/*  libtmpl's implementation of isnan given here.                             */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  C++ does not have the _Generic keyword, which is a C11 extension. C++     *
  *  does have function overloading, which achieves the same goal.             */
