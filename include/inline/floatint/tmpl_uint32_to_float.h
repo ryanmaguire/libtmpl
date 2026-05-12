@@ -57,8 +57,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_FLOAT_TO_UINT32_H
-#define TMPL_FLOAT_TO_UINT32_H
+#ifndef TMPL_UINT32_TO_FLOAT_H
+#define TMPL_UINT32_TO_FLOAT_H
 
 /*  Location of the TMPL_HAS_FLOATINT32 macro.                                */
 #include <libtmpl/include/tmpl_config.h>
