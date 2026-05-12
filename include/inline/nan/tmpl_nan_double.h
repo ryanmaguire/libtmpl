@@ -130,7 +130,7 @@ double tmpl_Double_NaN(void)
     double x = 0.0;
     return x / x;
 }
-/*  End of tmpl_Double_Infinity.                                              */
+/*  End of tmpl_Double_NaN.                                                   */
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
