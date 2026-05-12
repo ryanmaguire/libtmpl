@@ -23,8 +23,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Provides the TMPL_USE_INLINE macro.                               *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 23, 2025                                                *
@@ -33,9 +32,6 @@
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_NAN_H
 #define TMPL_NAN_H
-
-/*  Provides the TMPL_USE_INLINE macro for inlining functions.                */
-#include <libtmpl/include/tmpl_config.h>
 
 /******************************************************************************
  *  Function:                                                                 *
