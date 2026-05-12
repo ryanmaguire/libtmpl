@@ -443,6 +443,9 @@ extern const long double tmpl_Min_LDouble_Base_E;
 /*  Float, double, and long double precision NaN found here.                  */
 #include <libtmpl/include/tmpl_nan.h>
 
+/*  Float, double, and long double precision infinity found here.             */
+#include <libtmpl/include/tmpl_inf.h>
+
 /******************************************************************************
  *                              Tables and Data                               *
  ******************************************************************************/
@@ -1249,30 +1252,6 @@ extern long double tmpl_LDouble_Floor(long double x);
 extern float tmpl_Float_Fractional_Part(float x);
 extern double tmpl_Double_Fractional_Part(double x);
 extern long double tmpl_LDouble_Fractional_Part(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Float_Infinity                                                   *
- *  Purpose:                                                                  *
- *      Returns positive infinity.                                            *
- *  Arguments:                                                                *
- *      None (void).                                                          *
- *  Output:                                                                   *
- *      inf (float):                                                          *
- *          Positive infinity.                                                *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
- *      If IEEE-754 support is available, this code creates infinity using    *
- *      the format. If not, the function mimics glibc's method, returning     *
- *      the number 1.0E10000 which is guaranteed to overflow.                 *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_infinity.c                                      *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_infinity_example.c                *
- ******************************************************************************/
-extern float tmpl_Float_Infinity(void);
-extern double tmpl_Double_Infinity(void);
-extern long double tmpl_LDouble_Infinity(void);
 
 /******************************************************************************
  *  Function:                                                                 *
