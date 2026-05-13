@@ -41,7 +41,7 @@
 #include <cstdlib>
 
 /*  Macro for reallocating memory. The output is a void pointer.              */
-#define TMPL_REALLOC(ptr, size) std::realloc(ptr, sizeof(*(ptr)) * (size))
+#define TMPL_REALLOC(ptr, size) std::realloc((ptr), sizeof(*(ptr)) * (size))
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
@@ -50,7 +50,7 @@
 #include <stdlib.h>
 
 /*  Macro for reallocating memory. The output is a void pointer.              */
-#define TMPL_REALLOC(ptr, size) realloc(ptr, sizeof(*(ptr)) * (size))
+#define TMPL_REALLOC(ptr, size) realloc((ptr), sizeof(*(ptr)) * (size))
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
