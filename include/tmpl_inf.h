@@ -48,7 +48,7 @@
  *                                                                            *
  *      2.) If IEEE-754 support is available, this code creates infinity      *
  *          using the format. If not, the function mimics glibc's method,     *
- *          returning the number 1.0E10000 which is guaranteed to overflow.   *
+ *          returning the number 1.0E100000 which is guaranteed to overflow.  *
  ******************************************************************************/
 #include <libtmpl/include/inf/tmpl_inf_double.h>
 #include <libtmpl/include/inf/tmpl_inf_float.h>
