@@ -72,13 +72,8 @@ static inline tmpl_Bool TMPL_IS_INF(const long double x)
     return tmpl_LDouble_Is_Inf(x);
 }
 
-static inline tmpl_Bool TMPL_IS_INF(const signed long long int x)
-{
-    (void)x;
-    return tmpl_False;
-}
-
-static inline tmpl_Bool TMPL_IS_INF(const unsigned long long int x)
+template <typename T>
+static inline tmpl_Bool TMPL_IS_INF(T x)
 {
     (void)x;
     return tmpl_False;
