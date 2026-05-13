@@ -37,13 +37,13 @@
 #ifdef __cplusplus
 
 /*  Macro for casting data using C++ static_cast syntax.                      */
-#define TMPL_CAST(x, type) static_cast<type>((x))
+#define TMPL_CAST(x, type) (static_cast<type>((x)))
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
 
 /*  Macro for casting data using the standard C syntax.                       */
-#define TMPL_CAST(x, type) (type)((x))
+#define TMPL_CAST(x, type) ((type)((x)))
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
