@@ -48,8 +48,8 @@
  *                                                                            *
  *      2.) If IEEE-754 support is available, this code creates NaN using     *
  *          the format. If not, the function mimics glibc's method, returning *
- *          the number 0.0 / 0.0 which should be NaN. This works in practice, *
- *          but it is technically undefined behavior.                         *
+ *          the expression 0.0 / 0.0 which should be NaN. This works in       *
+ *          practice, but it is technically undefined behavior.               *
  ******************************************************************************/
 #include <libtmpl/include/nan/tmpl_nan_double.h>
 #include <libtmpl/include/nan/tmpl_nan_float.h>
