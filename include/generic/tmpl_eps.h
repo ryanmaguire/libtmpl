@@ -76,7 +76,7 @@ static inline long double TMPL_EPS(const long double x)
 /*  C11 generic macro for getting machine epsilon for a given data type.      */
 #define TMPL_EPS(x) _Generic((x),                                              \
     long double: TMPL_LDBL_EPS,                                                \
-    default:     TMPL_DBL_EPS,                                                 \
+    double:      TMPL_DBL_EPS,                                                 \
     float:       TMPL_FLT_EPS                                                  \
 )
 
