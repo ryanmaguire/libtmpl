@@ -45,7 +45,7 @@
 #ifndef TMPL_INLINE_INFINITY_DOUBLE_H
 #define TMPL_INLINE_INFINITY_DOUBLE_H
 
-/*  Function prototype and IEEE-754 data types defined here.                  */
+/*  TMPL_INLINE_DECL and other helper macros found here.                      */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Simplest method uses 64-bit integers for type punning. Check for support. */
