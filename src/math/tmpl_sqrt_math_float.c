@@ -205,7 +205,7 @@ float tmpl_Float_Sqrt(float x)
          *                                                                    *
          *      exponent = 0x33 + ((n + 1) >> 1)                              *
          *                                                                    *
-         *  where 0x33 is 51 in hexidecimal. Compute this.                    */
+         *  where 0x33 is 51 in hexadecimal. Compute this.                    */
         exponent = 0x33U + ((w.bits.expo + 0x01U) >> 1U);
     }
 

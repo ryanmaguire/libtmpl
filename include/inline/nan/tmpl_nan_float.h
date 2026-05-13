@@ -69,7 +69,7 @@ float tmpl_Float_NaN(void)
      *  and a one in the least and most significant mantissa bits (zero for   *
      *  the other mantissa bits). In binary this is:                          *
      *      0 11111111 10000000000000000000001                                *
-     *  This number is 2143289345 in decimal, or  0x7FC00001 in hexidecimal.  *
+     *  This number is 2143289345 in decimal, or  0x7FC00001 in hexadecimal.  *
      *  Set the integer part of the union to this value.                      */
     u.n = TMPL_UINT32_LITERAL(0x7FC00001);
 

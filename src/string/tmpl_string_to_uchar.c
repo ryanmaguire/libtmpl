@@ -95,7 +95,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
 {
     /*  Constant for the number 10. The string is assumed to represent a      *
      *  base 10 number, so we use this to set the digits of the output. 10 is *
-     *  equivalent to 0x0A in hexidecimal.                                    */
+     *  equivalent to 0x0A in hexadecimal.                                    */
     const unsigned char ten = 0x0AU;
 
     /*  Initialize the output to zero. This serves two purposes. Firstly, it  *
@@ -151,7 +151,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
          *  character does not fall between 0 and 9, then it is not a digit.  *
          *  We may break out of the while loop and return the output. Since   *
          *  we cast digit to unsigned char, this is equivalent to checking    *
-         *  if digit is greater than 9, which is 0x09 in hexidecimal.         */
+         *  if digit is greater than 9, which is 0x09 in hexadecimal.         */
         if (digit > 0x09U)
             break;
 
@@ -189,7 +189,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
 {
     /*  Constant for the number 10. The string is assumed to represent a      *
      *  base 10 number, so we use this to set the digits of the output. 10 is *
-     *  equivalent to 0x0A in hexidecimal.                                    */
+     *  equivalent to 0x0A in hexadecimal.                                    */
     const unsigned char ten = 0x0AU;
 
     /*  Initialize the output to zero. This serves two purposes. Firstly, it  *

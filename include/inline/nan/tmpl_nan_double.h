@@ -70,7 +70,7 @@ double tmpl_Double_NaN(void)
      *  the other mantissa bits). In binary this is:                          *
      *      0 11111111111 1000000000000000000000000000000000000000000000000001*
      *  This number is 9221120237041090561 in decimal, or  0x7FF8000000000001 *
-     *  in hexidecimal. Set the integer part of the union to this value.      */
+     *  in hexadecimal. Set the integer part of the union to this value.      */
     u.n = TMPL_UINT64_LITERAL(0x7FF8000000000001);
 
     /*  Return the double part of the word. This is now a NaN.                */

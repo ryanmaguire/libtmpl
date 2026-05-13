@@ -138,7 +138,7 @@ float tmpl_Float_Hypot3(float x, float y, float z)
     w.r = TMPL_MAX3(abs_x, abs_y, abs_z);
 
     /*  We want to check if the exponent is less than 64, which is 0x40 in    *
-     *  hexidecimal. The exponent of a float is offset by a bias. To check    *
+     *  hexadecimal. The exponent of a float is offset by a bias. To check    *
      *  if the exponent is less than 64, check if the exponent part of the    *
      *  float is less than 64 plus the bias.                                  */
     if (w.bits.expo < TMPL_FLOAT_BIAS + 0x40U)

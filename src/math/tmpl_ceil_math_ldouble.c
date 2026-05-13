@@ -243,7 +243,7 @@ long double tmpl_LDouble_Ceil(long double x)
         /*  We create a bit-mask that zeros out the lowest bits, which        *
          *  represent the fractional part of the number. After this, w is     *
          *  an integer value. The mask is created as follows. 0xFFFF is the   *
-         *  hexidecimal representation of 16 1's in binary. We want the lower *
+         *  hexadecimal representation of 16 1's in binary. We want the lower *
          *  bits to be zero so that bit-wise and will kill these off. The     *
          *  exact bits we want to be zero is given by the exponent of the     *
          *  input. There are 52 (0x34 in hex) bits total, so we want the last *
@@ -458,7 +458,7 @@ long double tmpl_LDouble_Ceil(long double x)
         /*  We create a bit-mask that zeros out the lowest bits, which        *
          *  represent the fractional part of the number. After this, w is     *
          *  an integer value. The mask is created as follows. 0xFFFF is the   *
-         *  hexidecimal representation of 16 1's in binary. We want the lower *
+         *  hexadecimal representation of 16 1's in binary. We want the lower *
          *  bits to be zero so that bit-wise and will kill these off. The     *
          *  exact bits we want to be zero is given by the exponent of the     *
          *  input. There are 63 (0x3F in hex) bits total, so we want the last *
@@ -803,7 +803,7 @@ long double tmpl_LDouble_Ceil(long double x)
         /*  We create a bit-mask that zeros out the lowest bits, which        *
          *  represent the fractional part of the number. After this, w is     *
          *  an integer value. The mask is created as follows. 0xFFFF is the   *
-         *  hexidecimal representation of 16 1's in binary. We want the lower *
+         *  hexadecimal representation of 16 1's in binary. We want the lower *
          *  bits to be zero so that bit-wise and will kill these off. The     *
          *  exact bits we want to be zero is given by the exponent of the     *
          *  input. There are 112 (0x70 in hex) bits total so we want the last *

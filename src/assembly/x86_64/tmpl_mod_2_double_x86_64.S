@@ -72,7 +72,7 @@ ASM_BEGIN(tmpl_Double_Mod_2)
     /*  Return y = x - 2.0 * trunc(0.5 * x).                                  */
     ret
 
-/*  The hexidecimal representation (IEEE-754 format) of x = 0.5.              */
+/*  The hexadecimal representation (IEEE-754 format) of x = 0.5.              */
 .TMPL_DOUBLE_MOD2_HALF_AS_HEX:
     .quad 0x3FE0000000000000
 ASM_END(tmpl_Double_Mod_2)

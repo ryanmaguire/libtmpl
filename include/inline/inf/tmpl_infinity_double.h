@@ -71,7 +71,7 @@ double tmpl_Double_Infinity(void)
      *  binary this is:                                                       *
      *      0 11111111111 0000000000000000000000000000000000000000000000000000*
      *  This number is 9218868437227405312 in decimal, or  0x7FF0000000000000 *
-     *  in hexidecimal. Set the integer part of the union to this value.      */
+     *  in hexadecimal. Set the integer part of the union to this value.      */
     u.n = TMPL_UINT64_LITERAL(0x7FF0000000000000);
 
     /*  Return the double part of the word. This is now infinity.             */

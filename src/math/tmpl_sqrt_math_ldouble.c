@@ -219,7 +219,7 @@ long double tmpl_LDouble_Sqrt(long double x)
          *                                                                    *
          *      exponent = 0x1E5 + ((n + 1) >> 1)                             *
          *                                                                    *
-         *  where 0x1E5 is 485 in hexidecimal. Compute this.                  */
+         *  where 0x1E5 is 485 in hexadecimal. Compute this.                  */
         exponent = 0x1E5U + ((w.bits.expo + 0x01U) >> 1U);
     }
 
@@ -394,7 +394,7 @@ long double tmpl_LDouble_Sqrt(long double x)
          *                                                                    *
          *      exponent = 0x1FDF + ((n + 1) >> 1)                            *
          *                                                                    *
-         *  where 0x1FDF is 8159 in hexidecimal. Compute this.                */
+         *  where 0x1FDF is 8159 in hexadecimal. Compute this.                */
         exponent = 0x1FDFU + ((w.bits.expo + 0x01U) >> 1U);
     }
 
@@ -558,7 +558,7 @@ long double tmpl_LDouble_Sqrt(long double x)
          *                                                                    *
          *      exponent = 0x1FC7 + ((n + 1) >> 1)                            *
          *                                                                    *
-         *  where 0x1FC7 is 8135 in hexidecimal. Compute this.                */
+         *  where 0x1FC7 is 8135 in hexadecimal. Compute this.                */
         exponent = 0x1FC7U + ((w.bits.expo + 0x01U) >> 1U);
     }
 
@@ -800,7 +800,7 @@ long double tmpl_LDouble_Sqrt(long double x)
          *                                                                    *
          *      exponent = 0x1E5 + ((n + 1) >> 1)                             *
          *                                                                    *
-         *  where 0x1E5 is 485 in hexidecimal. Compute this.                  */
+         *  where 0x1E5 is 485 in hexadecimal. Compute this.                  */
         exponent = 0x1E5U + ((whi.bits.expo + 1) >> 1);
     }
 

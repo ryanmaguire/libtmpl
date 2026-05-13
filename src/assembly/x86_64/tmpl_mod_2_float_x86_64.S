@@ -55,7 +55,7 @@ ASM_BEGIN(tmpl_Float_Mod_2)
     movaps  %xmm1, %xmm0
     ret
 
-/*  The hexidecimal representation (IEEE-754 format) of x = 0.5.              */
+/*  The hexadecimal representation (IEEE-754 format) of x = 0.5.              */
 .TMPL_FLOAT_MOD2_HALF_AS_HEX:
     .long 0x3F000000
 ASM_END(tmpl_Float_Mod_2)

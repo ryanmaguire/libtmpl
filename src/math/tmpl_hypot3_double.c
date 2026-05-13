@@ -138,7 +138,7 @@ double tmpl_Double_Hypot3(double x, double y, double z)
     max_expo = TMPL_MAX3(wx.bits.expo, wy.bits.expo, wz.bits.expo);
 
     /*  We want to check if the exponent is less than 512, which is 0x200 in  *
-     *  hexidecimal. The exponent of a double is offset by a biased. To check *
+     *  hexadecimal. The exponent of a double is offset by a biased. To check *
      *  if the exponent is less than 512, check if the exponent part of the   *
      *  double is less than 512 plus the bias.                                */
     if (max_expo < TMPL_DOUBLE_UBIAS + 0x200U)
@@ -152,7 +152,7 @@ double tmpl_Double_Hypot3(double x, double y, double z)
          *  -486. If the difference in the exponents of the largest and       *
          *  second largest of |x|, |y|, and |z| is greater than 26, then to   *
          *  at least 16 decimals we have ||P|| = max(|x|, |y|, |z|). 486 is   *
-         *  0x1E6 in hexidecimal.                                             */
+         *  0x1E6 in hexadecimal.                                             */
         if (max_expo > TMPL_DOUBLE_UBIAS - 0x1E6U)
             return tmpl_Double_Sqrt(wx.r*wx.r + wy.r*wy.r + wz.r*wz.r);
 

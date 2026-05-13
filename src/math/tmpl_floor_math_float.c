@@ -205,7 +205,7 @@ float tmpl_Float_Floor(float x)
          *  of the input. Taking into account the bias, this is:              *
          *      expo = w.bits.expo - TMPL_FLOAT_UBIAS                         *
          *  To lower out the lower expo bits, we take the bit-mask 0x7F,      *
-         *  which is the hexidecimal representation of 7 1's in binary, and   *
+         *  which is the hexadecimal representation of 7 1's in binary, and   *
          *  shift this up 7 - expo bits. We then perform bit-wise and.        */
         w.bits.man0 &= (0x7FU << (0x07U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
     }

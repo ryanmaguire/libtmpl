@@ -113,7 +113,7 @@ float tmpl_Float_Hypot(float x, float y)
     w.r = TMPL_MAX(abs_x, abs_y);
 
     /*  We want to check if the exponent is less than 64, which is 0x40 in    *
-     *  hexidecimal. The exponent of a float is offset by a bias. To check    *
+     *  hexadecimal. The exponent of a float is offset by a bias. To check    *
      *  if the exponent is less than 64, check if the exponent part of the    *
      *  float is less than 64 plus the bias.                                  */
     if (w.bits.expo < TMPL_FLOAT_BIAS + 0x40U)
@@ -126,7 +126,7 @@ float tmpl_Float_Hypot(float x, float y)
          *  accuracy to 8 decimals, check if the exponent is greater than     *
          *  -52. If the difference in the exponents of |x| and |y| is         *
          *  greater than 12, then to at least 8 decimals we have              *
-         *  ||P|| = max(|x|, |y|). 52 is 0x34 in hexidecimal.                 */
+         *  ||P|| = max(|x|, |y|). 52 is 0x34 in hexadecimal.                 */
         if (w.bits.expo > TMPL_FLOAT_BIAS - 0x34U)
             return tmpl_Float_Sqrt(abs_x*abs_x + abs_y*abs_y);
 

@@ -70,7 +70,7 @@ float tmpl_Float_Infinity(void)
      *  sign. Set the bits to this and then return the resulting float. In    *
      *  binary this is:                                                       *
      *      0 11111111 00000000000000000000000                                *
-     *  This number is 2139095040 in decimal, or  0x7f800000 in hexidecimal.  *
+     *  This number is 2139095040 in decimal, or  0x7f800000 in hexadecimal.  *
      *  Set the integer part of the union to this value.                      */
     u.n = TMPL_UINT32_LITERAL(0x7f800000);
 

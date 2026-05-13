@@ -287,7 +287,7 @@ long double tmpl_LDouble_Cbrt(long double x)
      *      E' = (E + 2B) / 3                                                 *
      *                                                                        *
      *  The bias for 64-bit double is 1023, so 2*1023 / 3 = 682. This is      *
-     *  0x2AA in hexidecimal. We compute the exponent using this.             */
+     *  0x2AA in hexadecimal. We compute the exponent using this.             */
     else
         exponent = 0x2AAU + w.bits.expo / 3U;
 
@@ -426,7 +426,7 @@ long double tmpl_LDouble_Cbrt(long double x)
      *      E' = (E + 2B) / 3                                                 *
      *                                                                        *
      *  The bias for 80-bit extended is 16383, so 2*16383 / 3 = 10922. This   *
-     *  0x2AAA in hexidecimal. We compute the exponent using this.            */
+     *  0x2AAA in hexadecimal. We compute the exponent using this.            */
     else
         exponent = 0x2AAAU + w.bits.expo / 3U;
 
@@ -568,7 +568,7 @@ long double tmpl_LDouble_Cbrt(long double x)
      *      E' = (E + 2B) / 3                                                 *
      *                                                                        *
      *  The bias for 80-bit extended is 16383, so 2*16383 / 3 = 10922. This   *
-     *  0x2AAA in hexidecimal. We compute the exponent using this.            */
+     *  0x2AAA in hexadecimal. We compute the exponent using this.            */
     else
         exponent = 0x2AAAU + w.bits.expo / 3U;
 
@@ -743,7 +743,7 @@ long double tmpl_LDouble_Cbrt(long double x)
      *      E' = (E + 2B) / 3                                                 *
      *                                                                        *
      *  The bias for 64-bit double is 1023, so 2*1023 / 3 = 682. This is      *
-     *  0x2AA in hexidecimal. We compute the exponent using this.             */
+     *  0x2AA in hexadecimal. We compute the exponent using this.             */
     else
         exponent = 0x2AAU + w.bits.expo / 3U;
 

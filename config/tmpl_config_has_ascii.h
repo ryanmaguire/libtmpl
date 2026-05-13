@@ -88,11 +88,11 @@ static int tmpl_has_ascii(void)
     int n;
 
     /*  Numbers 0 to 32 represent special ASCII characters. The count starts  *
-     *  starts at 33, which is 0x21 in hexidecimal.                           */
+     *  starts at 33, which is 0x21 in hexadecimal.                           */
     const int start = 0x21;
 
     /*  There are 94 characters total in the table, the final numeric value   *
-     *  is 126, which is 0x7E in hexidecimal.                                 */
+     *  is 126, which is 0x7E in hexadecimal.                                 */
     const int end = 0x7E;
 
     /*  Loop through and check if n, as a numerical value, corresponds to the *
