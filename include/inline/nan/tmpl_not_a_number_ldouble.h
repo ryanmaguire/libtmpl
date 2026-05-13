@@ -19,12 +19,14 @@
  *                         tmpl_not_a_number_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide Not-a-Number for long double precision numbers.               *
+ *      Provides Not-a-Number for long double precision numbers.              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file containing the function prototype.                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
+ *  3.) tmpl_ieee754_ldouble.h:                                               *
+ *          Provides tmpl_IEEE754_LDouble, used for type punning.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
@@ -34,7 +36,7 @@
 #ifndef TMPL_INLINE_NOT_A_NUMBER_LDOUBLE_H
 #define TMPL_INLINE_NOT_A_NUMBER_LDOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  TMPL_INLINE_DECL and other helper macros found here.                      */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  With IEEE-754 support we can set the value of NaN bit-by-bit.             */
@@ -54,17 +56,21 @@
 TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
+    /*  Union used for type-punning a long double with the bits it represents.*/
+    tmpl_IEEE754_LDouble x;
+
     /*  This is the same as 64-bit double precision. IEEE-754 declares double *
      *  precision positive NaN to have 1 in the first and last mantissa bits, *
-     *  1 for the all exponents bits, and 0 for the sign. Set the bits to     *
+     *  1 for all the exponents bits, and 0 for the sign. Set the bits to     *
      *  this and then return the resulting double.                            */
-    tmpl_IEEE754_LDouble x;
     x.bits.sign = 0x0U;
     x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
     x.bits.man0 = 0x8U;
     x.bits.man1 = 0x0U;
     x.bits.man2 = 0x0U;
     x.bits.man3 = 0x1U;
+
+    /*  Return the long double part of the word. This is now NaN.             */
     return x.r;
 }
 /*  End of tmpl_LDouble_NaN.                                                  */
@@ -81,16 +87,20 @@ long double tmpl_LDouble_NaN(void)
 TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
-    /*  80-bit extended. Similar to double but need to set the integer bit to *
-     *  1. 32-bit float and 64-bit double do not have an integer bit.         */
+    /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
+
+    /*  80-bit extended. Similar to double but we need to set the integer bit *
+     *  to 1. 32-bit float and 64-bit double do not have an integer bit.      */
     x.bits.sign = 0x0U;
     x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
+    x.bits.intr = 0x1U;
     x.bits.man0 = 0x4000U;
     x.bits.man1 = 0x0U;
     x.bits.man2 = 0x0U;
     x.bits.man3 = 0x1U;
-    x.bits.intr = 0x1U;
+
+    /*  Return the long double part of the word. This is now NaN.             */
     return x.r;
 }
 /*  End of tmpl_LDouble_NaN.                                                  */
@@ -106,8 +116,10 @@ long double tmpl_LDouble_NaN(void)
 TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
-    /*  128-bit quadruple. Similar to double but with more mantissa parts.    */
+    /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
+
+    /*  128-bit quadruple. Similar to double but with more mantissa parts.    */
     x.bits.sign = 0x0U;
     x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
     x.bits.man0 = 0x8000U;
@@ -117,6 +129,8 @@ long double tmpl_LDouble_NaN(void)
     x.bits.man4 = 0x0U;
     x.bits.man5 = 0x0U;
     x.bits.man6 = 0x1U;
+
+    /*  Return the long double part of the word. This is now NaN.             */
     return x.r;
 }
 /*  End of tmpl_LDouble_NaN.                                                  */
@@ -163,8 +177,10 @@ long double tmpl_LDouble_NaN(void)
 TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
-    /*  Simply cast the double version and return.                            */
-    long double x = 0.0L;
+    /*  glibc sets the following when IEEE-754 support is unavailable. This   *
+     *  may result in compiler warnings, and may also result in undefined     *
+     *  behavior, but often works in practice.                                */
+    volatile const long double x = 0.0L;
     return x / x;
 }
 /*  End of tmpl_LDouble_NaN.                                                  */

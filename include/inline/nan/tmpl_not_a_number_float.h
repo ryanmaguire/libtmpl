@@ -97,7 +97,7 @@ float tmpl_Float_NaN(void)
     tmpl_IEEE754_Float x;
 
     /*  IEEE-754 declares single precision NaN to have 1 for first and last   *
-     *  bits of the mantissa, 1 for the all exponents bits, and 0 for the     *
+     *  bits of the mantissa, 1 for all the exponents bits, and 0 for the     *
      *  sign. Set the bits to this and then return the resulting float.       */
     x.bits.sign = 0x0U;
     x.bits.expo = 0xFFU;
@@ -125,7 +125,7 @@ float tmpl_Float_NaN(void)
     /*  glibc sets the following when IEEE-754 support is unavailable. This   *
      *  may result in compiler warnings, and may also result in undefined     *
      *  behavior, but often works in practice.                                */
-    float x = 0.0F;
+    volatile const float x = 0.0F;
     return x / x;
 }
 /*  End of tmpl_Float_NaN.                                                    */

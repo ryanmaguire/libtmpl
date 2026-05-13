@@ -94,8 +94,8 @@ long double tmpl_LDouble_Infinity(void)
     /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
 
-    /*  80-bit extended. Similar to double but need to set the integer bit to *
-     *  1. 32-bit float and 64-bit double do not have an integer bit.         */
+    /*  80-bit extended. Similar to double but we need to set the integer bit *
+     *  to 1. 32-bit float and 64-bit double do not have an integer bit.      */
     x.bits.sign = 0x0U;
     x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
     x.bits.intr = 0x1U;

@@ -97,7 +97,7 @@ double tmpl_Double_NaN(void)
     tmpl_IEEE754_Double x;
 
     /*  IEEE-754 declares double precision NaN to have 1 for first and last   *
-     *  bits of the mantissa, 1 for the all exponents bits, and 0 for the     *
+     *  bits of the mantissa, 1 for all the exponents bits, and 0 for the     *
      *  sign. Set the bits to this and then return the resulting double.      */
     x.bits.sign = 0x0U;
     x.bits.expo = 0x7FFU;
@@ -127,7 +127,7 @@ double tmpl_Double_NaN(void)
     /*  glibc sets the following when IEEE-754 support is unavailable. This   *
      *  may result in compiler warnings, and may also result in undefined     *
      *  behavior, but often works in practice.                                */
-    double x = 0.0;
+    volatile const double x = 0.0;
     return x / x;
 }
 /*  End of tmpl_Double_NaN.                                                   */
