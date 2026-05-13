@@ -346,10 +346,12 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos(long double x)
             out = tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary(abs_x);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^63, a single term of the       *
+    /*  For very large inputs, 2^21 <= |x| < 2^63, a single term of the       *
      *  asymptotic series is all that is needed. Use this.                    */
-    else if (abs_x < 9.223372036854775808E+18L)
+    else if (abs_x < 8.589934592E+09L)
         out = tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(abs_x);
+    else if (abs_x < 9.223372036854775808E+18L)
+        out = tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic_Large(abs_x);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */

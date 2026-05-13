@@ -116,6 +116,9 @@ double tmpl_Double_Bessel_J1(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
+/*  The absolute value function is found here.                                */
+#include <libtmpl/include/tmpl_math.h>
+
 /*  Compute the Bessel J1 function for a double precision number x.           */
 double tmpl_Double_Bessel_J1(double x)
 {

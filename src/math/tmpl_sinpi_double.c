@@ -385,6 +385,9 @@ double tmpl_Double_SinPi(const double x)
 /*  Helper macro for C vs. C++ compatibility with casting.                    */
 #include <libtmpl/include/compat/tmpl_cast.h>
 
+/*  The Is_NaN_Or_Inf function is declared here.                              */
+#include <libtmpl/include/tmpl_math.h>
+
 /*  Computes sin(pi x) at double precision.                                   */
 double tmpl_Double_SinPi(const double x)
 {
