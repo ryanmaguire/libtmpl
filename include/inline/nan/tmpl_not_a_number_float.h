@@ -96,7 +96,7 @@ float tmpl_Float_NaN(void)
     /*  Union used for type-punning a float with the bits it represents.      */
     tmpl_IEEE754_Float x;
 
-    /*  IEEE-754 declares single precision nan to have 1 for first and last   *
+    /*  IEEE-754 declares single precision NaN to have 1 for first and last   *
      *  bits of the mantissa, 1 for the all exponents bits, and 0 for the     *
      *  sign. Set the bits to this and then return the resulting float.       */
     x.bits.sign = 0x0U;

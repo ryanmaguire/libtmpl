@@ -96,7 +96,7 @@ double tmpl_Double_NaN(void)
     /*  Union used for type-punning a double with the bits it represents.     */
     tmpl_IEEE754_Double x;
 
-    /*  IEEE-754 declares double precision nan to have 1 for first and last   *
+    /*  IEEE-754 declares double precision NaN to have 1 for first and last   *
      *  bits of the mantissa, 1 for the all exponents bits, and 0 for the     *
      *  sign. Set the bits to this and then return the resulting double.      */
     x.bits.sign = 0x0U;
