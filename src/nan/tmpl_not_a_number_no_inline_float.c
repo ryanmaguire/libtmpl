@@ -16,10 +16,11 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_nan_float                               *
+ *                          tmpl_not_a_number_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns NaN. Source: libtmpl/include/inline/nan/tmpl_nan_float.h.     *
+ *      Returns NaN.                                                          *
+ *      See libtmpl/include/inline/nan/tmpl_not_a_number_float.h.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -35,7 +36,7 @@
 extern float tmpl_Float_NaN(void);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/nan/tmpl_nan_float.h"
+#include "../../include/inline/nan/tmpl_not_a_number_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

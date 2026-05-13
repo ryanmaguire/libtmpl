@@ -45,6 +45,7 @@
  *          Not-a-Number.                                                     *
  *  Notes:                                                                    *
  *      1.) Double and long double equivalents are also provided.             *
+ *                                                                            *
  *      2.) If IEEE-754 support is available, this code creates NaN using     *
  *          the format. If not, the function mimics glibc's method, returning *
  *          the number 0.0 / 0.0 which should be NaN. This works in practice, *

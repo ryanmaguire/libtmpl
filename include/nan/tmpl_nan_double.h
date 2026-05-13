@@ -42,7 +42,7 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Implemented in the inline directory.                                      */
-#include <libtmpl/include/inline/nan/tmpl_nan_double.h>
+#include <libtmpl/include/inline/nan/tmpl_not_a_number_double.h>
 
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
