@@ -45,8 +45,12 @@
 /*  free is provided here in the std namespace.                               */
 #include <cstdlib>
 
-/*  Free's a pointer and sets it to NULL to avoid double free's.              */
-#define TMPL_FREE(var) if (var) std::free(var); var = NULL
+/*  Frees a pointer and sets it to NULL to avoid double frees.                */
+#define TMPL_FREE(var)                                                         \
+    do {                                                                       \
+        std::free(var);                                                        \
+        var = NULL;                                                            \
+    } while (0)
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
@@ -54,8 +58,12 @@
 /*  Standard library header file providing the free function.                 */
 #include <stdlib.h>
 
-/*  Free's a pointer and sets it to NULL to avoid double free's.              */
-#define TMPL_FREE(var) if (var) free(var); var = NULL
+/*  Frees a pointer and sets it to NULL to avoid double frees.                */
+#define TMPL_FREE(var)                                                         \
+    do {                                                                       \
+        free(var);                                                             \
+        var = NULL;                                                            \
+    } while (0)
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
