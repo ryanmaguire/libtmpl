@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_nan_float                               *
+ *                          tmpl_not_a_number_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides Not-a-Number for single precision numbers.                   *
@@ -42,8 +42,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_NAN_FLOAT_H
-#define TMPL_INLINE_NAN_FLOAT_H
+#ifndef TMPL_INLINE_NOT_A_NUMBER_FLOAT_H
+#define TMPL_INLINE_NOT_A_NUMBER_FLOAT_H
 
 /*  Function prototype and IEEE-754 data types defined here.                  */
 #include <libtmpl/include/tmpl_config.h>
