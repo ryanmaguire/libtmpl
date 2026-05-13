@@ -25,7 +25,7 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
- *  3.) tmpl_ieee754_ldouble.h:                                               *
+ *  2.) tmpl_ieee754_ldouble.h:                                               *
  *          Provides tmpl_IEEE754_LDouble, used for type punning.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
