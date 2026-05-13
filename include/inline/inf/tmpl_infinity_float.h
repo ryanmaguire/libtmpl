@@ -45,7 +45,7 @@
 #ifndef TMPL_INLINE_INFINITY_FLOAT_H
 #define TMPL_INLINE_INFINITY_FLOAT_H
 
-/*  Function prototype and IEEE-754 data types defined here.                  */
+/*  TMPL_INLINE_DECL and other helper macros found here.                      */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Simplest method uses 32-bit integers for type punning. Check for support. */
@@ -121,12 +121,23 @@ float tmpl_Float_Infinity(void)
 TMPL_INLINE_DECL
 float tmpl_Float_Infinity(void)
 {
-    /*  glibc sets the infinity to 1.0E10000 for compilers lacking IEEE       *
-     *  support. This works, in practice, but is undefined behavior and may   *
-     *  result in compiler warnings. Because of this, a compiler diagnostic   *
-     *  may be issued when using the portable version of this function. On    *
-     *  compilers like GCC or clang, use -Wno-overflow to disable this.       */
-    return 1.0E10000F;
+    /*  glibc sets HUGE_VAL to 1.0E10000 for compilers lacking IEEE support.  *
+     *  This works in practice, but is undefined behavior and may result in   *
+     *  compiler warnings. Because of this, a compiler diagnostic may be      *
+     *  issued when using the portable version of this function. On compilers *
+     *  like GCC or Clang, use -Wno-overflow to disable this warning. glibc   *
+     *  contains the following note:                                          *
+     *      This may provoke compiler warnings, and may not be rounded to     *
+     *      +Infinity in all IEEE 754 rounding modes, but is the best that    *
+     *      can be done in ISO C while remaining a constant expression.       *
+     *      10,000 is greater than the maximum (decimal) exponent for all     *
+     *      supported floating-point formats and widths.                      *
+     *  256-bit octuple precision does indeed have a width large enough to    *
+     *  fit 1.0E10000, but as of 2026 there is no hardware support for this   *
+     *  type of floating-point number. Adding an extra zero to the exponent   *
+     *  (1.0E100000 instead of 1.0E10000) means 256-bit octuple-precision     *
+     *  floating-point numbers cannot fit this value either.                  */
+    return 1.0E100000F;
 }
 /*  End of tmpl_Float_Infinity.                                               */
 
