@@ -66,7 +66,7 @@ long double tmpl_LDouble_Infinity(void)
 
     /*  IEEE-754 declares double precision positive infinity to have zero for *
      *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
-     *  sign. Set the bits to this and then return the resulting double.      */
+     *  sign. Set the bits to this and then return the resulting long double. */
     x.bits.sign = 0x0U;
     x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
     x.bits.man0 = 0x00U;
@@ -74,7 +74,7 @@ long double tmpl_LDouble_Infinity(void)
     x.bits.man2 = 0x00U;
     x.bits.man3 = 0x00U;
 
-    /*  Return the double part of the word. This is now infinity.             */
+    /*  Return the long double part of the word. This is now infinity.        */
     return x.r;
 }
 /*  End of tmpl_LDouble_Infinity.                                             */
@@ -104,7 +104,7 @@ long double tmpl_LDouble_Infinity(void)
     x.bits.man2 = 0x00U;
     x.bits.man3 = 0x00U;
 
-    /*  Return the double part of the word. This is now infinity.             */
+    /*  Return the long double part of the word. This is now infinity.        */
     return x.r;
 }
 /*  End of tmpl_LDouble_Infinity.                                            */
@@ -134,7 +134,7 @@ long double tmpl_LDouble_Infinity(void)
     x.bits.man5 = 0x00U;
     x.bits.man6 = 0x00U;
 
-    /*  Return the double part of the word. This is now infinity.             */
+    /*  Return the long double part of the word. This is now infinity.        */
     return x.r;
 }
 /*  End of tmpl_LDouble_Infinity.                                             */
