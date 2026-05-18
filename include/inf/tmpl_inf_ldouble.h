@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_infinity_ldouble                           *
+ *                              tmpl_inf_ldouble                              *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides an inlined inf function, or a forward declaration if inline  *
