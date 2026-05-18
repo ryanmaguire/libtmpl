@@ -56,10 +56,10 @@
 #include <cstdlib>
 
 /*  Frees a pointer and sets it to NULL to avoid double frees.                */
-#define TMPL_FREE(var)                                                         \
+#define TMPL_FREE(ptr)                                                         \
     do {                                                                       \
-        std::free(var);                                                        \
-        var = NULL;                                                            \
+        std::free(ptr);                                                        \
+        ptr = NULL;                                                            \
     } while (0)
 
 #else
@@ -69,10 +69,10 @@
 #include <stdlib.h>
 
 /*  Frees a pointer and sets it to NULL to avoid double frees.                */
-#define TMPL_FREE(var)                                                         \
+#define TMPL_FREE(ptr)                                                         \
     do {                                                                       \
-        free(var);                                                             \
-        var = NULL;                                                            \
+        free(ptr);                                                             \
+        ptr = NULL;                                                            \
     } while (0)
 
 #endif
