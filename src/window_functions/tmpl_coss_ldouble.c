@@ -90,9 +90,9 @@
  *                                                                            *
  *          |x| < 2^-2:                                                       *
  *              Use a degree (M, N) rational Remez approximation. Since the   *
- *              window is even, there are only (N/2)+1 non-zero terms in the  *
- *              numerator and (M/2)+1 non-zero terms in the denominator. N    *
- *              and M are given by:                                           *
+ *              window is even, there are only (M/2)+1 non-zero terms in the  *
+ *              numerator and (N/2)+1 non-zero terms in the denominator. M    *
+ *              and N are given by:                                           *
  *                                                                            *
  *                  Implementation        | Numerator | Denominator           *
  *                  -----------------------------------------------           *
@@ -121,7 +121,7 @@
  *              (M, N) rational Remez approximation for g on the interval     *
  *              [-1/4, 0]. Since t(x) tends to zero as x approaches 1 / 2,    *
  *              this method ensures the endpoints of the window are zero.     *
- *              N and M are given by:                                         *
+ *              M and N are given by:                                         *
  *                                                                            *
  *                  Implementation        | Numerator | Denominator           *
  *                  -----------------------------------------------           *
@@ -299,7 +299,7 @@ long double tmpl_LDouble_Coss(const long double x, const long double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 0x02U)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 0x05U)
         {
             /*  For very small inputs, return 1. The error is O(x^2), the     *
@@ -373,7 +373,7 @@ long double tmpl_LDouble_Coss(const long double x, const long double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (abs_arg < 0.25L)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (abs_arg < 0.03125L)
         {
             /*  For very small inputs, |x| < 2^-34, return 1. The error is    *

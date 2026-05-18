@@ -97,7 +97,7 @@ double tmpl_Double_Coss_Remez(const double x)
 }
 /*  End of tmpl_Double_Coss_Remez.                                            */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "../../math/auxiliary/tmpl_math_undef.h"
 
 #endif

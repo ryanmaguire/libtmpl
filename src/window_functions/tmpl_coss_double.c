@@ -216,7 +216,7 @@ double tmpl_Double_Coss(const double x, const double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x02U)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x05U)
         {
             /*  For very small inputs, |x| < 2^-30, return 1. The error is    *
@@ -287,7 +287,7 @@ double tmpl_Double_Coss(const double x, const double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (abs_arg < 0.25)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (abs_arg < 0.03125)
         {
             /*  For very small inputs, |x| < 2^-30, return 1. The error is    *

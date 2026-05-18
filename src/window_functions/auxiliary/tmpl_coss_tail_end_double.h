@@ -129,7 +129,7 @@ double tmpl_Double_Coss_Tail_End(const double x)
 }
 /*  End of tmpl_Double_Coss_Tail_End.                                         */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "../../math/auxiliary/tmpl_math_undef.h"
 
 #endif
