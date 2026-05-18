@@ -328,7 +328,21 @@ B00 + z*(\
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
 #define TMPL_NUM_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
+A00 + z*(\
+    A01 + z*(\
+        A02 + z*(\
+            A03 + z*(\
+                A04 + z*(\
+                    A05 + z*(\
+                        A06 + z*(\
+                            A07 + z*A08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
 #define TMPL_DEN_EVAL(z) \

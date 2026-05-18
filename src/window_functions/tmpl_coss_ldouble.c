@@ -265,7 +265,7 @@ extern long double tmpl_LDouble_Abs(const long double x);
 /*  52-bit mantissa, threshold for small values is 2^-30.                     */
 #define TMPL_SMALL_THRESHOLD (TMPL_LDOUBLE_UBIAS - 0x1EU)
 
-/*  128-bit double-double needs a much smaller threshold.                     */
+/*  128-bit double-double needs a much smaller threshold than 64-bit double.  */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  104-bit mantissa, threshold for small values is 2^-56.                    */
