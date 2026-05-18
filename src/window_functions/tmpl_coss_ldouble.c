@@ -89,7 +89,7 @@
  *                  128-bit quadruple     |     16                            *
  *                                                                            *
  *          |x| < 2^-2:                                                       *
- *              Use a degree (N, M) rational Remez approximation. Since the   *
+ *              Use a degree (M, N) rational Remez approximation. Since the   *
  *              window is even, there are only (N/2)+1 non-zero terms in the  *
  *              numerator and (M/2)+1 non-zero terms in the denominator. N    *
  *              and M are given by:                                           *
@@ -118,7 +118,7 @@
  *                                                                            *
  *              and then return t(x)^2 * P(t(x)) / Q(t(x)), where P and Q are *
  *              the numerator and denominator, respectively, for the degree   *
- *              (N, M) rational Remez approximation for g on the interval     *
+ *              (M, N) rational Remez approximation for g on the interval     *
  *              [-1/4, 0]. Since t(x) tends to zero as x approaches 1 / 2,    *
  *              this method ensures the endpoints of the window are zero.     *
  *              N and M are given by:                                         *
@@ -322,7 +322,7 @@ long double tmpl_LDouble_Coss(const long double x, const long double width)
     {
         /*  The tail-end function assumes 1 / 4 <= x <= 1 / 2. Since the      *
          *  window function is symmetric, we can handle negative values by    *
-         *  using the absolute value. Set the sign bit to zero.               */
+         *  using the absolute value. Compute this.                           */
         w.r = tmpl_LDouble_Abs(w.r);
 
         /*  Compute using a rational Remez approximation that is expanded in  *

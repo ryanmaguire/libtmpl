@@ -37,9 +37,9 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      The coefficients for the (N, M) rational Remez approximation for the  *
+ *      The coefficients for the (M, N) rational Remez approximation for the  *
  *      squared cosine window have been pre-computed on the interval          *
- *      [-1/4, 1/4], where N and M depend on how long double is implemented:  *
+ *      [-1/4, 1/4], where M and N depend on how long double is implemented:  *
  *                                                                            *
  *          Implementation        | Numerator | Denominator                   *
  *          -----------------------------------------------                   *
