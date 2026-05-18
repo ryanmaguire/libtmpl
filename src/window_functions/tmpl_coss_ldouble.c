@@ -153,15 +153,15 @@
  *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
  *          function, and compute the absolute value using the Abs function.  *
  *  Error:                                                                    *
- *          Based on 100,000 samples with -1/2 < x < 1/2 and w = 1            *
- *              max relative error: 2.1666215840670744E-19                    *
- *              rms relative error: 5.5350868331901679E-20                    *
- *              max absolute error: 1.0842021724855044E-19                    *
- *              rms absolute error: 2.7622733003332319E-20                    *
- *          Values were computed using the Python library mpmath with 224     *
- *          bits of precision (1 ULP ~= 10^-68) and assume 80-bit extended    *
- *          precision long double. Similar error values (1-2 ULP) are found   *
- *          for double, double-double, and quadruple precisions.              *
+ *      Based on 100,000 samples with -1/2 < x < 1/2 and w = 1                *
+ *          max relative error: 2.1666215840670744E-19                        *
+ *          rms relative error: 5.5350868331901679E-20                        *
+ *          max absolute error: 1.0842021724855044E-19                        *
+ *          rms absolute error: 2.7622733003332319E-20                        *
+ *      Values were computed using the Python library mpmath with 224         *
+ *      bits of precision (1 ULP ~= 10^-68) and assume 80-bit extended        *
+ *      precision long double. Similar error values (1-2 ULP) are found       *
+ *      for double, double-double, and quadruple precisions.                  *
  *  Notes:                                                                    *
  *      1.) Accurate to long double precision.                                *
  *                                                                            *
