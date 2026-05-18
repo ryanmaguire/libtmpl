@@ -19,7 +19,37 @@
  *                            tmpl_infinity_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide infinity for long double precision numbers.                   *
+ *      Provides infinity for long double precision numbers.                  *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_LDouble_Infinity                                                 *
+ *  Purpose:                                                                  *
+ *      Returns long double precision infinity.                               *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      inf (long double):                                                    *
+ *          Infinity.                                                         *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Set the bits to represent long double infinity. For 64-bit double,*
+ *          80-bit extended, and 128-bit quadruple implementations of long    *
+ *          double, this can be achieved by setting the bit-field in a        *
+ *          tmpl_IEEE754_LDouble object. For 128-bit double-double, we set    *
+ *          the high double to double-precision infinity using a similar      *
+ *          bit-field trick, and set the low double to zero.                  *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Mimic glibc's method, return the literal 1.0E100000L. This value  *
+ *          is too large to fit into any realistic implementation of long     *
+ *          double, including 256-bit octuple precision. Use of such a large  *
+ *          literal may invoke compiler warnings, but this works in practice. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -65,7 +95,7 @@ long double tmpl_LDouble_Infinity(void)
     tmpl_IEEE754_LDouble x;
 
     /*  IEEE-754 declares double precision positive infinity to have zero for *
-     *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
+     *  all mantissa components, 1 for all the exponents bits, and 0 for the  *
      *  sign. Set the bits to this and then return the resulting long double. */
     x.bits.sign = 0x0U;
     x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
