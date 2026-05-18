@@ -33,7 +33,7 @@
  *          A real number, the input for the window.                          *
  *  Output:                                                                   *
  *      coss_x (float):                                                       *
- *          The squared cosine of x.                                          *
+ *          The squared cosine window of x.                                   *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
