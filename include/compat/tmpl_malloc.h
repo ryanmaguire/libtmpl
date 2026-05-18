@@ -42,7 +42,7 @@
 /*  Standard macro for C++ usage. Check for this.                             */
 #ifdef __cplusplus
 
-/*  malloc provided here.                                                     */
+/*  malloc provided here in the std namespace.                                */
 #include <cstdlib>
 
 /*  Macro for allocating memory. In C++ one must cast the result of malloc.   */

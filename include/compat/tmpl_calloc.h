@@ -37,7 +37,7 @@
 /*  Standard macro for C++ usage. Check for this.                             */
 #ifdef __cplusplus
 
-/*  calloc provided here.                                                     */
+/*  calloc provided here in the std namespace.                                */
 #include <cstdlib>
 
 /*  Macro for allocating memory. In C++ one must cast the result of calloc.   */
