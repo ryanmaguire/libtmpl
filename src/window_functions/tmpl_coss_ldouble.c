@@ -340,7 +340,7 @@ long double tmpl_LDouble_Coss(const long double x, const long double width)
 }
 /*  End of tmpl_LDouble_Coss.                                                 */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine the threshold macro to avoid collisions with other files.        */
 #undef TMPL_SMALL_THRESHOLD
 
 #else
