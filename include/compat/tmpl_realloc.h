@@ -21,23 +21,27 @@
  *  Purpose:                                                                  *
  *      Provides a macro for realloc with C vs. C++ compatibility.            *
  *  Notes:                                                                    *
- *      This macro does not provide a cast; the output is a void pointer.     *
- *      The user is required to examine the output and check for NULL.        *
- *      Intended usage:                                                       *
+ *      1.) This macro does not provide a cast; the output is a void pointer. *
+ *          The user is required to examine the output and check for NULL.    *
+ *          Intended usage:                                                   *
  *                                                                            *
- *          void * const tmp = TMPL_REALLOC(ptr, n);                          *
+ *              void * const tmp = TMPL_REALLOC(ptr, n);                      *
  *                                                                            *
- *          if (!tmp)                                                         *
- *              handle_error();                                               *
- *          else                                                              *
- *              ptr = TMPL_CAST(tmp, type);                                   *
+ *              if (!tmp)                                                     *
+ *                  handle_error();                                           *
+ *              else                                                          *
+ *                  ptr = TMPL_CAST(tmp, ptr_type);                           *
  *                                                                            *
- *      where "type" is the type of ptr. Writing                              *
+ *          where "ptr_type" is the type of ptr. Writing                      *
  *                                                                            *
- *          ptr = TMPL_REALLOC(ptr, n);                                       *
+ *              ptr = TMPL_REALLOC(ptr, n);                                   *
  *                                                                            *
- *      risks introducing memory leaks in C, and will not compile in C++      *
- *      since void pointers are not implicitly converted to typed pointers.   *
+ *          risks introducing memory leaks in C, and will not compile in C++  *
+ *          since void pointers are not implicitly converted to typed         *
+ *          pointers.                                                         *
+ *                                                                            *
+ *      2.) The input must not be a void pointer. That is, sizeof(*ptr) must  *
+ *          be a valid expression.                                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -55,7 +59,7 @@
 /*  Standard macro for C++ usage. Check for this.                             */
 #ifdef __cplusplus
 
-/*  realloc provided here.                                                    */
+/*  realloc provided here in the std namespace.                               */
 #include <cstdlib>
 
 /*  Macro for reallocating memory. The output is a void pointer.              */
