@@ -29,6 +29,8 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 21, 2024                                            *
  ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
  *  2025/04/10: Ryan Maguire                                                  *
  *      Moved macro to its own file.                                          *
  ******************************************************************************/
@@ -44,7 +46,8 @@
 #include <cstdlib>
 
 /*  Macro for allocating memory. In C++ one must cast the result of malloc.   */
-#define TMPL_MALLOC(type, n) static_cast<type *>(std::malloc(sizeof(type)*(n)))
+#define TMPL_MALLOC(type, n) \
+    static_cast<type *>(std::malloc(sizeof(type) * (n)))
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */

@@ -20,6 +20,16 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides a macro for free with C vs. C++ compatibility.               *
+ *  Notes:                                                                    *
+ *      The TMPL_FREE macro expands the input twice: once to free the data,   *
+ *      and once to set the input to NULL. Do not use this macro with the     *
+ *      ++ or -- operators:                                                   *
+ *                                                                            *
+ *          TMPL_FREE(ptr);         good                                      *
+ *          TMPL_FREE(++ptr);       bad                                       *
+ *          TMPL_FREE(ptr[n++]);    bad                                       *
+ *                                                                            *
+ *      Improper use may lead to unintended results or crashes.               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
