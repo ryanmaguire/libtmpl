@@ -49,8 +49,8 @@
  *          128-bit quadruple     |        14 |          14                   *
  *                                                                            *
  *      Since the window is an even function, half of the coefficients are    *
- *      zero, meaning we only have (N / 2) + 1 non-zero terms in the          *
- *      numerator and (M / 2) + 1 non-zero terms in the denominator. The      *
+ *      zero, meaning we only have (M / 2) + 1 non-zero terms in the          *
+ *      numerator and (N / 2) + 1 non-zero terms in the denominator. The      *
  *      approximation is performed using Horner's method for the numerator    *
  *      and denominator, and then returning their ratio.                      *
  *  Notes:                                                                    *
