@@ -59,8 +59,8 @@
  *      rational minimax approximation for f.                                 *
  *                                                                            *
  *      Note that since we scale the result by t(x), the approximation is     *
- *      exactly zero when x = 1 / 2. That is, the window goes to zero at the  *
- *      right endpoint in the window.                                         *
+ *      exactly zero when x = 1 / 2. That is, the function goes to zero at    *
+ *      the right endpoint in the window.                                     *
  *  Notes:                                                                    *
  *      1.) Accurate to single precision for 0.25 <= x <= 0.5.                *
  *                                                                            *
@@ -121,7 +121,7 @@ float tmpl_Float_KBMD20_Tail_End(const float x)
 }
 /*  End of tmpl_Float_KBMD20_Tail_End.                                        */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "../../math/auxiliary/tmpl_math_undef.h"
 
 #endif
