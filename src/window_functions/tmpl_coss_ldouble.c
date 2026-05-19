@@ -159,7 +159,7 @@
  *          max absolute error: 1.0842021724855044E-19                        *
  *          rms absolute error: 2.7622733003332319E-20                        *
  *      Error values were computed using the Python library mpmath with 224   *
- *      bits of precision (1 ULP ~= 10^-68) and assumed 80-bit extended       *
+ *      bits of precision (1 ULP ~= 10^-68) assuming 80-bit extended          *
  *      precision long double. Similar error values (1-2 ULP) are found       *
  *      for double, double-double, and quadruple precisions.                  *
  *  Notes:                                                                    *
@@ -174,7 +174,7 @@
  *                                                                            *
  *      3.) The long double implementation of Coss uses the absolute value    *
  *          function directly, whereas the float and double versions simply   *
- *          set the sign bit to zero. This if for the sake of portability. On *
+ *          set the sign bit to zero. This is for the sake of portability. On *
  *          systems using the IBM 128-bit double-double representation of     *
  *          long double, the sign-bit method does not work.                   *
  *  References:                                                               *
