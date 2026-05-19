@@ -26,8 +26,8 @@
  *  Function Name:                                                            *
  *      tmpl_LDouble_KBMD20                                                   *
  *  Purpose:                                                                  *
- *      Computes the Kaiser-Bessel window with alpha = 2. This is defined in  *
- *      terms of the zeroth modified Bessel function, I_0:                    *
+ *      Computes the modified Kaiser-Bessel window with alpha = 2. This is    *
+ *      defined in terms of the zeroth modified Bessel function, I_0:         *
  *                                                                            *
  *                              -             ___________ -                   *
  *                             |             /    -   - 2  |                  *
@@ -62,7 +62,7 @@
  *              tmpl_LDouble_KBMD20_Rat_Remez:                                *
  *                  Computes KBMD20(x) using a rational Remez approximation.  *
  *              tmpl_LDouble_KBMD20_Tail_End:                                 *
- *                  Computes KBMD20(x) using a Remez expansion in x - 1 / 2.  *
+ *                  Computes KBMD20(x) via a shifted rational Remez expansion.*
  *      Method:                                                               *
  *          Set x = x / width, then do the following.                         *
  *          x is NaN:                                                         *
@@ -78,7 +78,7 @@
  *                  128-bit double-double |  56                               *
  *                  128-bit quadruple     |  69                               *
  *                                                                            *
- *          |x| < 2^-5:                                                       *
+ *          2^-deg <= |x| < 2^-5:                                             *
  *              Use a degree N Remez polynomial for:                          *
  *                                                                            *
  *                         KBMD20(x) - 1                                      *
@@ -87,8 +87,8 @@
  *                               x                                            *
  *                                                                            *
  *              Return 1 + x^2 P(x) where P is the degree N Remez polynomial  *
- *              for f. Note, since f is even, only (N / 2)+1 of the terms in  *
- *              P are  non-zero. The value for N is given below.              *
+ *              for f. Note, since f is even, only (N/2) + 1 of the terms in  *
+ *              P are non-zero. The value for N is given below.               *
  *                                                                            *
  *                  Implementation        | Degree                            *
  *                  ------------------------------                            *
@@ -97,11 +97,11 @@
  *                  128-bit double-double |     16                            *
  *                  128-bit quadruple     |     16                            *
  *                                                                            *
- *          |x| < 2^-2:                                                       *
- *              Use a degree (N, M) rational Remez approximation. Since the   *
- *              window is even, there are only (N/2)+1 non-zero terms in the  *
- *              numerator and (M/2)+1 non-zero terms in the denominator. N    *
- *              and M are given by:                                           *
+ *          2^-5 <= |x| < 2^-2:                                               *
+ *              Use a degree (M, N) rational Remez approximation. Since the   *
+ *              window is even, there are only (M/2)+1 non-zero terms in the  *
+ *              numerator and (N/2)+1 non-zero terms in the denominator. M    *
+ *              and N are given by:                                           *
  *                                                                            *
  *                  Implementation        | Numerator | Denominator           *
  *                  -----------------------------------------------           *
@@ -127,10 +127,10 @@
  *                                                                            *
  *              and then return t(x) * P(t(x)) / Q(t(x)), where P and Q are   *
  *              the numerator and denominator, respectively, for the degree   *
- *              (N, M) rational Remez approximation for g on the interval     *
+ *              (M, N) rational Remez approximation for g on the interval     *
  *              [-1/4, 0]. Since t(x) tends to zero as x approaches 1 / 2,    *
  *              this method ensures the endpoints of the window are zero.     *
- *              N and M are given by:                                         *
+ *              M and N are given by:                                         *
  *                                                                            *
  *                  Implementation        | Numerator | Denominator           *
  *                  -----------------------------------------------           *
@@ -140,7 +140,7 @@
  *                  128-bit quadruple     |        14 |          12           *
  *                                                                            *
  *          -2^-1 < x <= -2^-2:                                               *
- *              Compute |x| by setting the sign bit of x to zero, and then    *
+ *              Compute |x| using the absolute value function, and then       *
  *              use the previous case since 2^-2 <= |x| < 2^-1.               *
  *          |x| >= 2^-1 (including + / - infinity):                           *
  *              Return 0.                                                     *
@@ -157,20 +157,20 @@
  *              tmpl_LDouble_KBMD20_Rat_Remez:                                *
  *                  Computes KBMD20(x) using a rational Remez approximation.  *
  *              tmpl_LDouble_KBMD20_Tail_End:                                 *
- *                  Computes KBMD20(x) using a Remez expansion in x - 1 / 2.  *
+ *                  Computes KBMD20(x) via a shifted rational Remez expansion.*
  *      Method:                                                               *
  *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
  *          function, and compute the absolute value using the Abs function.  *
  *  Error:                                                                    *
- *          Based on 100,000 samples with -1/2 < x < 1/2 and w = 1            *
- *              max relative error: 2.4161819325413287E-19                    *
- *              rms relative error: 5.1212833655092076E-20                    *
- *              max absolute error: 1.2567243193193376E-19                    *
- *              rms absolute error: 2.6449198885812206E-20                    *
- *          Values were computed using the Python library mpmath with 224     *
- *          bits of precision (1 ULP ~= 10^-68) and assume 80-bit extended    *
- *          precision long double. Similar error values (1-2 ULP) are found   *
- *          for double, double-double, and quadruple precisions.              *
+ *      Based on 100,000 samples with -1/2 < x < 1/2 and w = 1                *
+ *          max relative error: 2.4161819325413287E-19                        *
+ *          rms relative error: 5.1212833655092076E-20                        *
+ *          max absolute error: 1.2567243193193376E-19                        *
+ *          rms absolute error: 2.6449198885812206E-20                        *
+ *      Error values were computed using the Python library mpmath with 224   *
+ *      bits of precision (1 ULP ~= 10^-68) assuming 80-bit extended          *
+ *      precision long double. Similar error values (1-2 ULP) are found       *
+ *      for double, double-double, and quadruple precisions.                  *
  *  Notes:                                                                    *
  *      1.) Accurate to long double precision.                                *
  *                                                                            *
@@ -180,6 +180,12 @@
  *          produce a division by zero, and may result in an output that is   *
  *          either NaN (if x = 0) or 0 (if |x| > 0 and |x| / 0 is treated as  *
  *          infinity).                                                        *
+ *                                                                            *
+ *      3.) The long double implementation of KBMD20 uses the absolute value  *
+ *          function directly, whereas the float and double versions simply   *
+ *          set the sign bit to zero. This is for the sake of portability. On *
+ *          systems using the IBM 128-bit double-double representation of     *
+ *          long double, the sign-bit method does not work.                   *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -293,7 +299,7 @@ extern long double tmpl_LDouble_Abs(const long double x);
 /*  52-bit mantissa, threshold for small values is 2^-30.                     */
 #define TMPL_SMALL_THRESHOLD (TMPL_LDOUBLE_UBIAS - 0x1EU)
 
-/*  128-bit double-double needs a much smaller threshold.                     */
+/*  128-bit double-double needs a much smaller threshold than 64-bit double.  */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  104-bit mantissa, threshold for small values is 2^-56.                    */
@@ -314,7 +320,7 @@ extern long double tmpl_LDouble_Abs(const long double x);
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */
 
-/*  Long double precision Kaiser-Bessel window with alpha = 2.                */
+/*  Long double precision modified Kaiser-Bessel window with alpha = 2.       */
 long double tmpl_LDouble_KBMD20(const long double x, const long double width)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -327,7 +333,7 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 0x02U)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 0x05U)
         {
             /*  For very small inputs, return 1. The error is O(x^2), the     *
@@ -350,7 +356,7 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
     {
         /*  The tail-end function assumes 1 / 4 <= x <= 1 / 2. Since the      *
          *  window function is symmetric, we can handle negative values by    *
-         *  using the absolute value. Set the sign bit to zero.               */
+         *  using the absolute value. Compute this.                           */
         w.r = tmpl_LDouble_Abs(w.r);
 
         /*  Compute using a rational Remez approximation that is expanded in  *
@@ -368,7 +374,7 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
 }
 /*  End of tmpl_LDouble_KBMD20.                                               */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine the threshold macro to avoid collisions with other files.        */
 #undef TMPL_SMALL_THRESHOLD
 
 #else
@@ -381,7 +387,7 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
 /*  tmpl_LDouble_Abs and tmpl_LDouble_Is_NaN declared here.                   */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Long double precision Kaiser-Bessel window with alpha = 2.                */
+/*  Long double precision modified Kaiser-Bessel window with alpha = 2.       */
 long double tmpl_LDouble_KBMD20(const long double x, const long double width)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -401,7 +407,7 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (abs_arg < 0.25L)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (abs_arg < 0.03125L)
         {
             /*  For very small inputs, |x| < 2^-30, return 1. The error is    *

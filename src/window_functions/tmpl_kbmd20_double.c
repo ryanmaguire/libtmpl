@@ -26,8 +26,8 @@
  *  Function Name:                                                            *
  *      tmpl_Double_KBMD20                                                    *
  *  Purpose:                                                                  *
- *      Computes the Kaiser-Bessel window with alpha = 2. This is defined in  *
- *      terms of the zeroth modified Bessel function, I_0:                    *
+ *      Computes the modified Kaiser-Bessel window with alpha = 2. This is    *
+ *      defined in terms of the zeroth modified Bessel function, I_0:         *
  *                                                                            *
  *                              -             ___________ -                   *
  *                             |             /    -   - 2  |                  *
@@ -59,14 +59,14 @@
  *              tmpl_Double_KBMD20_Rat_Remez:                                 *
  *                  Computes KBMD20(x) using a rational Remez approximation.  *
  *              tmpl_Double_KBMD20_Tail_End:                                  *
- *                  Computes KBMD20(x) using a Remez expansion in x - 1 / 2.  *
+ *                  Computes KBMD20(x) via a shifted rational Remez expansion.*
  *      Method:                                                               *
  *          Set x = x / width, then do the following.                         *
  *          x is NaN:                                                         *
  *              Return NaN.                                                   *
  *          |x| < 2^-30:                                                      *
  *              Return 1. Error is O(x^2), accurate to double precision.      *
- *          |x| < 2^-5:                                                       *
+ *          2^-30 <= |x| < 2^-5:                                              *
  *              Use a degree 8 Remez polynomial for:                          *
  *                                                                            *
  *                         KBMD20(x) - 1                                      *
@@ -77,7 +77,7 @@
  *              Return 1 + x^2 P(x) where P is the degree 8 Remez polynomial  *
  *              for f. Note, since f is even, only 5 of the terms in P are    *
  *              non-zero.                                                     *
- *          |x| < 2^-2:                                                       *
+ *          2^-5 <= |x| < 2^-2:                                               *
  *              Use a degree (10, 8) rational Remez approximation. Since the  *
  *              window is even, there are only 6 non-zero terms in the        *
  *              numerator and 5 non-zero terms in the denominator.            *
@@ -119,7 +119,7 @@
  *              tmpl_Double_KBMD20_Rat_Remez:                                 *
  *                  Computes KBMD20(x) using a rational Remez approximation.  *
  *              tmpl_Double_KBMD20_Tail_End:                                  *
- *                  Computes KBMD20(x) using a Remez expansion in x - 1 / 2.  *
+ *                  Computes KBMD20(x) via a shifted rational Remez expansion.*
  *      Method:                                                               *
  *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
  *          function, and compute the absolute value using the Abs function.  *
@@ -232,7 +232,7 @@ extern double tmpl_Double_KBMD20(const double x, const double width);
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Double precision Kaiser-Bessel window with alpha = 2.                     */
+/*  Double precision modified Kaiser-Bessel window with alpha = 2.            */
 double tmpl_Double_KBMD20(const double x, const double width)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -245,7 +245,7 @@ double tmpl_Double_KBMD20(const double x, const double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x02U)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 0x05U)
         {
             /*  For very small inputs, |x| < 2^-30, return 1. The error is    *
@@ -296,7 +296,7 @@ double tmpl_Double_KBMD20(const double x, const double width)
 /*  tmpl_Double_Abs and tmpl_Double_Is_NaN declared here.                     */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Double precision Kaiser-Bessel window with alpha = 2.                     */
+/*  Double precision modified Kaiser-Bessel window with alpha = 2.            */
 double tmpl_Double_KBMD20(const double x, const double width)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -316,7 +316,7 @@ double tmpl_Double_KBMD20(const double x, const double width)
     /*  If |x| < 1 / 4, use one of the Remez approximations.                  */
     if (abs_arg < 0.25)
     {
-        /*  Avoid underflow, check for small inputs, |x| < 1 / 32.            */
+        /*  Check for small inputs, |x| < 1 / 32.                             */
         if (abs_arg < 0.03125)
         {
             /*  For very small inputs, |x| < 2^-30, return 1. The error is    *
