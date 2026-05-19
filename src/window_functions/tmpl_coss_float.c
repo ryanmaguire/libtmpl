@@ -57,7 +57,7 @@
  *              Return NaN.                                                   *
  *          |x| < 2^-15:                                                      *
  *              Return 1. Error is O(x^2), accurate to single precision.      *
- *          |x| < 2^-5:                                                       *
+ *          2^-15 <= |x| < 2^-5:                                              *
  *              Use a degree 4 Remez polynomial for:                          *
  *                                                                            *
  *                         Coss(x) - 1                                        *
@@ -68,7 +68,7 @@
  *              Return 1 + x^2 P(x) where P is the degree 4 Remez polynomial  *
  *              for f. Note, since f is even, only 3 of the terms in P are    *
  *              non-zero.                                                     *
- *          |x| < 2^-2:                                                       *
+ *          2^-5 <= |x| < 2^-2:                                               *
  *              Use a degree (4, 4) rational Remez approximation. Since the   *
  *              window is even, there are only 3 non-zero terms in the        *
  *              numerator and 3 non-zero terms in the denominator.            *

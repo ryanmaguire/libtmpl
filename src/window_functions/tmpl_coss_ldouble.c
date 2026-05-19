@@ -69,7 +69,7 @@
  *                  128-bit double-double |  56                               *
  *                  128-bit quadruple     |  60                               *
  *                                                                            *
- *          |x| < 2^-5:                                                       *
+ *          2^-deg <= |x| < 2^-5:                                             *
  *              Use a degree N Remez polynomial for:                          *
  *                                                                            *
  *                         Coss(x) - 1                                        *
@@ -88,7 +88,7 @@
  *                  128-bit double-double |     16                            *
  *                  128-bit quadruple     |     16                            *
  *                                                                            *
- *          |x| < 2^-2:                                                       *
+ *          2^-5 <= |x| < 2^-2:                                               *
  *              Use a degree (M, N) rational Remez approximation. Since the   *
  *              window is even, there are only (M/2)+1 non-zero terms in the  *
  *              numerator and (N/2)+1 non-zero terms in the denominator. M    *
