@@ -19,35 +19,40 @@
  *                                  tmpl_eps                                  *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides machine epsilon helper macro using the _Generic keyword.     *
+ *      Provides a machine epsilon helper macro using the _Generic keyword.   *
  *  Notes:                                                                    *
- *      Using this header file requires a C11 compatible compiler. Because of *
- *      this, tmpl_eps.h is not directly included in tmpl.h, in order to      *
- *      preserve portability. To use this header you must explicitly include  *
- *      it via #include <libtmpl/include/generic/tmpl_eps.h>. That is,        *
- *      #include <libtmpl/include/tmpl.h> will skip this header file.         *
+ *      1.) Using this file requires a C11-compatible or C++ compiler.        *
+ *          Because of this, tmpl_eps.h is not directly included in tmpl.h    *
+ *          in order to preserve portability. To use this header you must     *
+ *          explicitly include it via                                         *
+ *          #include <libtmpl/include/generic/tmpl_eps.h>. That is,           *
+ *          #include <libtmpl/include/tmpl.h> will skip this header file.     *
  *                                                                            *
- *      If using libtmpl with a C++ compiler, this file uses function         *
- *      overloading instead of the _Generic keyword since _Generic is a C11   *
- *      extension, and not required by C++ compilers.                         *
+ *      2.) If using libtmpl with a C++ compiler, this file uses function     *
+ *          overloading instead of the _Generic keyword since _Generic is a   *
+ *          C11 feature and not required by C++ compilers.                    *
+ *                                                                            *
+ *      3.) The TMPL_EPS macro only supports float, double, and long double   *
+ *          types. Passing 'int' or other types will result in a compiler     *
+ *          error.                                                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_float.h:                                                         *
- *          Header file providing the limits of various floating point types. *
+ *          Header file providing the limits of various floating-point types. *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2024                                            *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_EPS_H
-#define TMPL_EPS_H
+#ifndef TMPL_GENERIC_EPS_H
+#define TMPL_GENERIC_EPS_H
 
 /*  Machine precision macros found here.                                      */
 #include <libtmpl/include/tmpl_float.h>
 
-/*  C++ does not have the _Generic keyword, which is a C11 extension. C++     *
+/*  C++ does not have the _Generic keyword, which is a C11 feature. C++       *
  *  does have function overloading, which achieves the same goal.             */
 #ifdef __cplusplus
 

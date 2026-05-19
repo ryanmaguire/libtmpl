@@ -19,17 +19,18 @@
  *                                tmpl_is_nan                                 *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides helper isnan macro using the _Generic keyword.               *
+ *      Provides an isnan helper macro using the _Generic keyword.            *
  *  Notes:                                                                    *
- *      Using this header file requires a C11 compatible compiler. Because of *
- *      this, tmpl_is_nan.h is not directly included in tmpl.h, in order to   *
- *      preserve portability. To use this header you must explicitly include  *
- *      it via #include <libtmpl/include/generic/tmpl_is_nan.h>. That is,     *
- *      #include <libtmpl/include/tmpl.h> will skip this header file.         *
+ *      1.) Using this file requires a C11-compatible or C++ compiler.        *
+ *          Because of this, tmpl_is_nan.h is not directly included in tmpl.h *
+ *          in order to preserve portability. To use this header you must     *
+ *          explicitly include it via                                         *
+ *          #include <libtmpl/include/generic/tmpl_is_nan.h>. That is,        *
+ *          #include <libtmpl/include/tmpl.h> will skip this header file.     *
  *                                                                            *
- *      If using libtmpl with a C++ compiler, this file uses function         *
- *      overloading instead of the _Generic keyword since _Generic is a C11   *
- *      extension, and not required by C++ compilers.                         *
+ *      2.) If using libtmpl with a C++ compiler, this file uses function     *
+ *          overloading instead of the _Generic keyword since _Generic is a   *
+ *          C11 feature and not required by C++ compilers.                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -43,8 +44,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_IS_NAN_H
-#define TMPL_IS_NAN_H
+#ifndef TMPL_GENERIC_IS_NAN_H
+#define TMPL_GENERIC_IS_NAN_H
 
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
@@ -52,11 +53,11 @@
 /*  libtmpl's implementation of isnan given here.                             */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  C++ does not have the _Generic keyword, which is a C11 extension. C++     *
+/*  C++ does not have the _Generic keyword, which is a C11 feature. C++       *
  *  does have function overloading, which achieves the same goal.             */
 #ifdef __cplusplus
 
-/*  C++ function overloading for checking if a floating point number is NaN.  */
+/*  C++ function overloading for checking if a floating-point number is NaN.  */
 static inline tmpl_Bool TMPL_IS_NAN(const float x)
 {
     return tmpl_Float_Is_NaN(x);
@@ -73,7 +74,7 @@ static inline tmpl_Bool TMPL_IS_NAN(const long double x)
 }
 
 template <typename T>
-static inline tmpl_Bool TMPL_IS_NAN(T x)
+static inline tmpl_Bool TMPL_IS_NAN(const T x)
 {
     (void)x;
     return tmpl_False;
@@ -82,7 +83,7 @@ static inline tmpl_Bool TMPL_IS_NAN(T x)
 /*  C11 introduced the _Generic keyword instead of function overloading.      */
 #else
 
-/*  C11 generic macro for checking if a floating point number is NaN.         */
+/*  C11 generic macro for checking if a floating-point number is NaN.         */
 #define TMPL_IS_NAN(x) _Generic((x),                                           \
     long double: tmpl_LDouble_Is_NaN((x)),                                     \
     double:      tmpl_Double_Is_NaN((x)),                                      \
