@@ -101,8 +101,8 @@
 
 /*  128-bit quadruple and 128-bit double-double conveniently need the same    *
  *  number of terms to achieve 1 ULP (~10^-34 and ~10^-32, respectively).     */
-#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
-      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE || \
+      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
  *                     128-bit Double-Double / Quadruple                      *
