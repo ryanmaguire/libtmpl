@@ -100,8 +100,9 @@
  *      Changed behavior so that a NULL product is treated as zero.           *
  ******************************************************************************/
 
-/*  realloc found here.                                                       */
-#include <stdlib.h>
+/*  TMPL_REALLOC found here.                                                  */
+#include <libtmpl/include/compat/tmpl_realloc.h>
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Boolean given here.                                                       */
 #include <libtmpl/include/tmpl_bool.h>
@@ -148,7 +149,7 @@ tmpl_IntPolynomial_Multiply_Naive_Kernel(const tmpl_IntPolynomial *P,
         const size_t len = deg + one;
 
         /*  Try to allocate memory for the product.                           */
-        void *tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*len);
+        void * const tmp = TMPL_REALLOC(prod->coeffs, len);
 
         /*  Check if realloc failed. Abort the computation if it did.         */
         if (!tmp)
@@ -164,7 +165,7 @@ tmpl_IntPolynomial_Multiply_Naive_Kernel(const tmpl_IntPolynomial *P,
         }
 
         /*  Otherwise reset the coefficient pointer.                          */
-        prod->coeffs = tmp;
+        prod->coeffs = TMPL_CAST(tmp, int *);
         prod->degree = deg;
     }
 
@@ -206,7 +207,7 @@ tmpl_IntPolynomial_Multiply_Naive_Kernel(const tmpl_IntPolynomial *P,
         const size_t len = deg + one;
 
         /*  Try to allocate memory for the product.                           */
-        void *tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*len);
+        void * const tmp = TMPL_REALLOC(prod->coeffs, len);
 
         /*  Check if realloc failed. Abort the computation if it did.         */
         if (!tmp)
@@ -222,7 +223,7 @@ tmpl_IntPolynomial_Multiply_Naive_Kernel(const tmpl_IntPolynomial *P,
         }
 
         /*  Otherwise reset the coefficient pointer.                          */
-        prod->coeffs = tmp;
+        prod->coeffs = TMPL_CAST(tmp, int *);
         prod->degree = deg;
     }
 

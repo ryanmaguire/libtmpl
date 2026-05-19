@@ -1,6 +1,6 @@
 
 
-#include <stdlib.h>
+#include <libtmpl/include/compat/tmpl_malloc.h>
 #include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_string.h>
@@ -25,7 +25,7 @@ tmpl_IntPolynomial_Create_From_Data(const int *data, size_t len)
         return out;
     }
 
-    out.coeffs = malloc(sizeof(*out.coeffs) * len);
+    out.coeffs = TMPL_MALLOC(int, len);
 
     if (!out.coeffs)
     {

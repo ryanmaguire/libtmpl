@@ -49,8 +49,11 @@
  *  Date:       April 27, 2023                                                *
  ******************************************************************************/
 
-/*  realloc is provided here.                                                 */
-#include <stdlib.h>
+/*  TMPL_REALLOC is provided here.                                            */
+#include <libtmpl/include/compat/tmpl_realloc.h>
+
+/*  TMPL_CAST macro provided here.                                            */
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  tmpl_strdup given here.                                                   */
 #include <libtmpl/include/tmpl_string.h>
@@ -74,7 +77,7 @@ void tmpl_IntPolynomial_Make_Zero(tmpl_IntPolynomial *poly)
 
     /*  The zero polynomial can be efficiently represented with a single      *
      *  element coefficient array containing zero. Try to resize the array.   */
-    tmp = realloc(poly->coeffs, sizeof(*poly->coeffs));
+    tmp = TMPL_REALLOC(poly->coeffs, 1);
 
     /*  realloc returns NULL on failure. Check this.                          */
     if (!tmp)
@@ -93,8 +96,8 @@ void tmpl_IntPolynomial_Make_Zero(tmpl_IntPolynomial *poly)
     /*  Otherwise set the data pointer and make the coefficient zero.         */
     else
     {
-        poly->coeffs = tmp;
-        poly->degree = (size_t)0;
+        poly->coeffs = TMPL_CAST(tmp, int *);
+        poly->degree = 0;
         poly->coeffs[0] = 0;
     }
 }

@@ -1,5 +1,3 @@
-
-#include <stdlib.h>
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_string.h>
 #include <libtmpl/include/tmpl_polynomial_integer.h>
@@ -56,3 +54,4 @@ tmpl_IntPolynomial_Multiply_Monomial(const tmpl_IntPolynomial *poly, size_t deg,
     tmpl_IntPolynomial_Multiply_Monomial_Kernel(poly, deg, coeff, prod);
 }
 /*  End of tmpl_IntPolynomial_Multiply_Monomial.                              */
+
