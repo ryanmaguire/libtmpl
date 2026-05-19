@@ -76,7 +76,7 @@
  *                  64-bit double         |  30                               *
  *                  80-bit extended       |  34                               *
  *                  128-bit double-double |  56                               *
- *                  128-bit quadruple     |  69                               *
+ *                  128-bit quadruple     |  60                               *
  *                                                                            *
  *          2^-deg <= |x| < 2^-5:                                             *
  *              Use a degree N Remez polynomial for:                          *
@@ -106,7 +106,7 @@
  *                  Implementation        | Numerator | Denominator           *
  *                  -----------------------------------------------           *
  *                  64-bit double         |        10 |           8           *
- *                  80-bit extended       |        10 |          10           *
+ *                  80-bit extended       |        12 |          10           *
  *                  128-bit double-double |        16 |          14           *
  *                  128-bit quadruple     |        16 |          16           *
  *                                                                            *
@@ -217,7 +217,7 @@
  *                                                                            *
  *          The original paper describing the (normal) Kaiser window.         *
  *          The original window tends to 1 / I0(alpha * pi) at the endpoints, *
- *          which is not zero. The modification here makes the endpoints tend *
+ *          which is not zero. The modification here makes the function tend  *
  *          to zero, exactly, at the endpoints.                               *
  *                                                                            *
  *      5.) https://en.wikipedia.org/wiki/Kaiser_window                       *
@@ -378,7 +378,7 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
 #undef TMPL_SMALL_THRESHOLD
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
 
 /******************************************************************************
  *                              Portable Version                              *
@@ -410,8 +410,8 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
         /*  Check for small inputs, |x| < 1 / 32.                             */
         if (abs_arg < 0.03125L)
         {
-            /*  For very small inputs, |x| < 2^-30, return 1. The error is    *
-             *  O(x^2), the value of the window is 1 to double precision.     */
+            /*  For very small inputs, |x| < 2^-34, return 1. The error is    *
+             *  O(x^2), the value of the window is 1 to long double precision.*/
             if (abs_arg < 5.82076609134674072265625E-11L)
                 return 1.0L;
 
@@ -436,4 +436,4 @@ long double tmpl_LDouble_KBMD20(const long double x, const long double width)
 /*  End of tmpl_LDouble_KBMD20.                                               */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
