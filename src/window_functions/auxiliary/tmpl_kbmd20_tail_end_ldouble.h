@@ -38,7 +38,7 @@
  *      None.                                                                 *
  *  Method:                                                                   *
  *      The modified Kaiser-Bessel window can be expanded about x = 1 / 2 in  *
- *      terms of x - 1 / 2. The coefficients for the (N, M) rational Remez    *
+ *      terms of x - 1 / 2. The coefficients for the (M, N) rational Remez    *
  *      approximation for the function:                                       *
  *                                                                            *
  *                 KBMD20(x + 1 / 2)                                          *
@@ -47,7 +47,7 @@
  *                                                                            *
  *      on the interval [-1/4, 0] (the limit of f at zero is used to avoid a  *
  *      division by zero), where KBMD20 represents the modified Kaiser-Bessel *
- *      window with alpha = 2, have been pre-computed below. N and M depend   *
+ *      window with alpha = 2, have been pre-computed below. M and N depend   *
  *      on how long double is represented:                                    *
  *                                                                            *
  *          Implementation        | Numerator | Denominator                   *
@@ -64,7 +64,7 @@
  *                     2                                                      *
  *                                                                            *
  *      and then return t(x) * P(t(x)) / Q(t(x)), where P and Q are the       *
- *      numerator and denominator, respectively, for the degree (N, M)        *
+ *      numerator and denominator, respectively, for the degree (M, N)        *
  *      rational minimax approximation for f.                                 *
  *                                                                            *
  *      Note that since we scale the result by t(x), the approximation is     *

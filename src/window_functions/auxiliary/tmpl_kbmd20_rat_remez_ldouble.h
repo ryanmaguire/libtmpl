@@ -103,7 +103,8 @@
 A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
-#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
+#define TMPL_DEN_EVAL(z) \
+B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  128-bit double-double, more terms needed.                                 */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
