@@ -101,8 +101,8 @@
 
 /*  128-bit quadruple and 128-bit double-double conveniently need the same    *
  *  number of terms to achieve 1 ULP (~10^-34 and ~10^-32, respectively).     */
-#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
-      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE || \
+      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
  *                     128-bit Double-Double / Quadruple                      *
@@ -121,14 +121,14 @@
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*A08\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * A08\
                         )\
                     )\
                 )\
@@ -153,7 +153,8 @@ A00 + z*(\
 #define A05 (+3.1250295245067092990271257367781810395653169900680E+02L)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define TMPL_POLY_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */
