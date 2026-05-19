@@ -101,10 +101,10 @@
 #define B03 (-4.9818395626363871012852858986496663904001906717768E-01F)
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
-#define TMPL_NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
+#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
-#define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*B03))
+#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * B03))
 
 /*  Computes the squared cosine window via a rational Remez expansion.        */
 TMPL_STATIC_INLINE

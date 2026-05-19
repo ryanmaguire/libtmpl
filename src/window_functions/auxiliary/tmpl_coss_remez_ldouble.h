@@ -121,14 +121,14 @@
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*A08\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * A08\
                         )\
                     )\
                 )\
@@ -153,7 +153,8 @@ A00 + z*(\
 #define A05 (+3.9492576445308184817804711194238581314141607578836E+00L)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define TMPL_POLY_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */

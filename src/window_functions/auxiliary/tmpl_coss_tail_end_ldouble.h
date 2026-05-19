@@ -124,11 +124,11 @@
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
 #define TMPL_NUM_EVAL(z) \
-A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*A06)))))
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * (A05 + z * A06)))))
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
 #define TMPL_DEN_EVAL(z) \
-B00 + z*(B01 + z*(B02 + z*(B03 + z*(B04 + z*(B05 + z*B06)))))
+B00 + z * (B01 + z * (B02 + z * (B03 + z * (B04 + z * (B05 + z * B06)))))
 
 /*  128-bit double-double, more terms needed.                                 */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -167,18 +167,18 @@ B00 + z*(B01 + z*(B02 + z*(B03 + z*(B04 + z*(B05 + z*B06)))))
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
 #define TMPL_NUM_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*(\
-                                A08 + z*(\
-                                    A09 + z*(\
-                                        A10 + z*(\
-                                            A11 + z*A12\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * (\
+                                    A09 + z * (\
+                                        A10 + z * (\
+                                            A11 + z * A12\
                                         )\
                                     )\
                                 )\
@@ -193,16 +193,16 @@ A00 + z*(\
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
 #define TMPL_DEN_EVAL(z) \
-B00 + z*(\
-    B01 + z*(\
-        B02 + z*(\
-            B03 + z*(\
-                B04 + z*(\
-                    B05 + z*(\
-                        B06 + z*(\
-                            B07 + z*(\
-                                B08 + z*(\
-                                    B09 + z*B10\
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * (\
+                            B07 + z * (\
+                                B08 + z * (\
+                                    B09 + z * B10\
                                 )\
                             )\
                         )\
@@ -251,18 +251,18 @@ B00 + z*(\
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
 #define TMPL_NUM_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*(\
-                                A08 + z*(\
-                                    A09 + z*(\
-                                        A10 + z*(\
-                                            A11 + z*A12\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * (\
+                                    A09 + z * (\
+                                        A10 + z * (\
+                                            A11 + z * A12\
                                         )\
                                     )\
                                 )\
@@ -277,17 +277,17 @@ A00 + z*(\
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
 #define TMPL_DEN_EVAL(z) \
-B00 + z*(\
-    B01 + z*(\
-        B02 + z*(\
-            B03 + z*(\
-                B04 + z*(\
-                    B05 + z*(\
-                        B06 + z*(\
-                            B07 + z*(\
-                                B08 + z*(\
-                                    B09 + z*(\
-                                        B10 + z*B11\
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * (\
+                            B07 + z * (\
+                                B08 + z * (\
+                                    B09 + z * (\
+                                        B10 + z * B11\
                                     )\
                                 )\
                             )\
@@ -328,14 +328,14 @@ B00 + z*(\
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
 #define TMPL_NUM_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*A08\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * A08\
                         )\
                     )\
                 )\
@@ -346,7 +346,17 @@ A00 + z*(\
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
 #define TMPL_DEN_EVAL(z) \
-B00 + z*(B01 + z*(B02 + z*(B03 + z*(B04 + z*(B05 + z*B06)))))
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * B06\
+                )\
+            )\
+        )\
+    )\
+)
 
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */
