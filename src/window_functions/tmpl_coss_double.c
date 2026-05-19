@@ -110,7 +110,7 @@
  *              tmpl_Double_Coss_Rat_Remez:                                   *
  *                  Computes Coss(x) using a rational Remez approximation.    *
  *              tmpl_Double_Coss_Tail_End:                                    *
- *                  Computes Coss(x) using a Remez expansion in x - 1 / 2.    *
+ *                  Computes Coss(x) via a rational Remez expansion in x-1/2. *
  *      Method:                                                               *
  *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
  *          function, and compute the absolute value using the Abs function.  *

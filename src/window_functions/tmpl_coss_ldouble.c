@@ -131,7 +131,7 @@
  *                  128-bit quadruple     |        12 |          11           *
  *                                                                            *
  *          -2^-1 < x <= -2^-2:                                               *
- *              Compute |x| by setting the sign bit of x to zero, and then    *
+ *              Compute |x| using the absolute value function, and then       *
  *              use the previous case since 2^-2 <= |x| < 2^-1.               *
  *          |x| >= 2^-1 (including + / - infinity):                           *
  *              Return 0.                                                     *
@@ -148,7 +148,7 @@
  *              tmpl_LDouble_Coss_Rat_Remez:                                  *
  *                  Computes Coss(x) using a rational Remez approximation.    *
  *              tmpl_LDouble_Coss_Tail_End:                                   *
- *                  Computes Coss(x) using a Remez expansion in x - 1 / 2.    *
+ *                  Computes Coss(x) via a rational Remez expansion in x-1/2. *
  *      Method:                                                               *
  *          Same as the IEEE-754 method but check for NaN using the Is_NaN    *
  *          function, and compute the absolute value using the Abs function.  *
@@ -158,8 +158,8 @@
  *          rms relative error: 5.5350868331901679E-20                        *
  *          max absolute error: 1.0842021724855044E-19                        *
  *          rms absolute error: 2.7622733003332319E-20                        *
- *      Values were computed using the Python library mpmath with 224         *
- *      bits of precision (1 ULP ~= 10^-68) and assume 80-bit extended        *
+ *      Error values were computed using the Python library mpmath with 224   *
+ *      bits of precision (1 ULP ~= 10^-68) and assumed 80-bit extended       *
  *      precision long double. Similar error values (1-2 ULP) are found       *
  *      for double, double-double, and quadruple precisions.                  *
  *  Notes:                                                                    *
@@ -171,6 +171,12 @@
  *          produce a division by zero, and may result in an output that is   *
  *          either NaN (if x = 0) or 0 (if |x| > 0 and |x| / 0 is treated as  *
  *          infinity).                                                        *
+ *                                                                            *
+ *      3.) The long double implementation of Coss uses the absolute value    *
+ *          function directly, whereas the float and double versions simply   *
+ *          set the sign bit to zero. This if for the sake of portability. On *
+ *          systems using the IBM 128-bit double-double representation of     *
+ *          long double, the sign-bit method does not work.                   *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
