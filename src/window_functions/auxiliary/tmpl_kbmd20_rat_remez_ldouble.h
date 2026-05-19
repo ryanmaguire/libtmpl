@@ -37,9 +37,9 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      The coefficients for the (N, M) rational Remez approximation for the  *
+ *      The coefficients for the (M, N) rational Remez approximation for the  *
  *      modified Kaiser-Bessel window (alpha = 2) have been pre-computed on   *
- *      the interval [-1/4, 1/4], where N and M depend on how long double is  *
+ *      the interval [-1/4, 1/4], where M and N depend on how long double is  *
  *      implemented:                                                          *
  *                                                                            *
  *          Implementation        | Numerator | Denominator                   *
@@ -50,8 +50,8 @@
  *          128-bit quadruple     |        16 |          16                   *
  *                                                                            *
  *      Since the window is an even function, half of the coefficients are    *
- *      zero, meaning we only have (N / 2) + 1 non-zero terms in the          *
- *      numerator and (M / 2) + 1 non-zero terms in the denominator. The      *
+ *      zero, meaning we only have (M / 2) + 1 non-zero terms in the          *
+ *      numerator and (N / 2) + 1 non-zero terms in the denominator. The      *
  *      approximation is performed using Horner's method for the numerator    *
  *      and denominator, and then returning their ratio.                      *
  *  Notes:                                                                    *
@@ -256,10 +256,11 @@ B00 + z*(\
 #define B05 (+7.4698604431351457479772425500363624729998674496715E-02L)
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
-#define TMPL_NUM_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*A06)))))
+#define TMPL_NUM_EVAL(z) \
+A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*A06)))))
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
-#define TMPL_DEN_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*B05))))
+#define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*(B04 + z*B05))))
 
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */
