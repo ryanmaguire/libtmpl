@@ -20,6 +20,19 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides a helper macro for computing the absolute value of a number. *
+ *  Notes:                                                                    *
+ *      1.) The argument for this macro is expanded three times. Use this     *
+ *          with variable-like expressions and not function calls.            *
+ *                                                                            *
+ *      2.) To avoid unexpected results, do not combine this macro with the   *
+ *          ++ or -- operators.                                               *
+ *                                                                            *
+ *      3.) If the input is a signed integer (signed int, signed long, etc.), *
+ *          then this macro may exhibit undefined behavior if the parameter   *
+ *          has the most negative number allowed by the type. For example, if *
+ *          signed int x = INT_MIN, then -x is undefined in two's complement, *
+ *          but it is well-defined in the sign-and-magnitude representation.  *
+ *          Avoid using this macro with such values.                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -33,7 +46,7 @@
 #ifndef TMPL_HELPER_ABS_H
 #define TMPL_HELPER_ABS_H
 
-/*  Computes the absolute value of a number (integer or floating point).      */
+/*  Computes the absolute value of a number (integer / floating point).       */
 #define TMPL_ABS(x) ((x) < 0 ? -(x) : (x))
 
 #endif

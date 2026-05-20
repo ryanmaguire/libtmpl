@@ -20,6 +20,11 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides a helper macro for swapping two variables.                   *
+ *  Notes:                                                                    *
+ *      1.) This macro expects variable-like arguments (lvalues).             *
+ *                                                                            *
+ *      2.) To avoid unexpected results, do not combine this macro with the   *
+ *          ++ or -- operators.                                               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -33,7 +38,7 @@
 #ifndef TMPL_HELPER_SWAP_H
 #define TMPL_HELPER_SWAP_H
 
-/*  Swaps two variables, a becomes b, and b becomes a.                        */
+/*  Swaps the values of two variables: a becomes b, and b becomes a.          */
 #define TMPL_SWAP(type, a, b)                                                  \
     do {                                                                       \
         const type tmpl_swap_tmp = a;                                          \

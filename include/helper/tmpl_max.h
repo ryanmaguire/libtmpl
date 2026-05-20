@@ -19,7 +19,15 @@
  *                                  tmpl_max                                  *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides type-independent macros for computing maximums.              *
+ *      Provides type-independent helper macros for computing maximums.       *
+ *  Notes:                                                                    *
+ *      1.) If the inputs are floating-point numbers, then the output may be  *
+ *          meaningless if one of the parameters is NaN (Not-a-Number). NaN   *
+ *          always produces false when used in a comparison, and hence        *
+ *          NaN < x and x < NaN both return false, regardless of what x is.   *
+ *                                                                            *
+ *      2.) To avoid unexpected results, do not combine this macro with the   *
+ *          ++ or -- operators.                                               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -33,10 +41,10 @@
 #ifndef TMPL_HELPER_MAX_H
 #define TMPL_HELPER_MAX_H
 
-/*  Computes the max of two real numbers (ints or floats).                    */
+/*  Computes the max of two real numbers (integer / floating point).          */
 #define TMPL_MAX(x, y) ((x) < (y) ? (y) : (x))
 
-/*  Computes the max of three real numbers (ints or floats).                  */
+/*  Computes the max of three real numbers (integer / floating point).        */
 #define TMPL_MAX3(x, y, z) TMPL_MAX((x), TMPL_MAX((y), (z)))
 
 #endif

@@ -19,7 +19,16 @@
  *                             tmpl_relative_error                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides a macro for computing the relative error between two values. *
+ *      Provides a helper macro for computing relative errors.                *
+ *  Notes:                                                                    *
+ *      1.) There are no checks for division by zero. If you are unsure if    *
+ *          the latter argument is zero, use the TMPL_ERROR_VALUE macro.      *
+ *                                                                            *
+ *      2.) The arguments for this macro are expanded several times. Use this *
+ *          with variable-like expressions and not function calls.            *
+ *                                                                            *
+ *      3.) To avoid unexpected results, do not combine this macro with the   *
+ *          ++ or -- operators.                                               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

@@ -21,6 +21,12 @@
  *  Purpose:                                                                  *
  *      Provides a helper macro for computing the size (number of elements)   *
  *      in a static array.                                                    *
+ *  Notes:                                                                    *
+ *      1.) Do not pass raw pointers to this macro. sizeof(ptr) describes the *
+ *          size of the pointer (usually 4 or 8 bytes), whereas the number of *
+ *          elements in the array the pointer is pointing to may be anything. *
+ *          Only use this with fixed-width arrays whose size can be           *
+ *          determined at compile time.                                       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -34,8 +40,8 @@
 #ifndef TMPL_HELPER_ARRAY_SIZE_H
 #define TMPL_HELPER_ARRAY_SIZE_H
 
-/*  Computes the size of a non-dynamically allocated array.                   */
-#define TMPL_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+/*  Computes the number of elements in a fixed-width array.                   */
+#define TMPL_ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 #endif
 /*  End of include guard.                                                     */

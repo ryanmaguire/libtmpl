@@ -19,7 +19,16 @@
  *                              tmpl_error_value                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides a macro for computing the error between two values.          *
+ *      Provides a helper macro for computing the error between two values.   *
+ *  Notes:                                                                    *
+ *      1.) This macro computes the relative error of x with respect to y     *
+ *          when y is non-zero, and the absolute error otherwise.             *
+ *                                                                            *
+ *      2.) The arguments for this macro are expanded several times. Use this *
+ *          with variable-like expressions and not function calls.            *
+ *                                                                            *
+ *      3.) To avoid unexpected results, do not combine this macro with the   *
+ *          ++ or -- operators.                                               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -37,7 +46,7 @@
 /*  Absolute value helper macro found here.                                   */
 #include <libtmpl/include/helper/tmpl_abs.h>
 
-/*  Computes the error between two values (integer or float).                 */
+/*  Computes the error between two values (integer / floating point).         */
 #define TMPL_ERROR_VALUE(x, y) \
     ((y) == 0 ? TMPL_ABS((x) - (y)) : TMPL_ABS(((x) - (y)) / (y)))
 

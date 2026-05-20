@@ -19,12 +19,17 @@
  *                             tmpl_absolute_error                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides a macro for computing the absolute error between two values. *
+ *      Provides a helper macro for computing absolute error.                 *
+ *  Notes:                                                                    *
+ *      1.) The arguments for this macro are expanded three times. Use this   *
+ *          with variable-like expressions and not function calls.            *
+ *                                                                            *
+ *      2.) To avoid unexpected results, do not combine this macro with the   *
+ *          ++ or -- operators.                                               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_abs.h:                                                           *
- *          Provides the TMPL_ABS macro for computing absolute values.        *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 29, 2026                                              *
@@ -34,11 +39,8 @@
 #ifndef TMPL_HELPER_ABSOLUTE_ERROR_H
 #define TMPL_HELPER_ABSOLUTE_ERROR_H
 
-/*  Absolute value helper macro found here.                                   */
-#include <libtmpl/include/helper/tmpl_abs.h>
-
-/*  Computes the absolute error between two values (integer or float).        */
-#define TMPL_ABSOLUTE_ERROR(x, y) (TMPL_ABS((x) - (y)))
+/*  Computes the absolute error between two values (integer / floating point).*/
+#define TMPL_ABSOLUTE_ERROR(x, y) ((x) < (y) ? ((y) - (x)) : ((x) - (y)))
 
 #endif
 /*  End of include guard.                                                     */
