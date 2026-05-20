@@ -33,7 +33,7 @@
  *          A real number, the input for the window.                          *
  *  Output:                                                                   *
  *      kbmd20_x (double):                                                    *
- *          The Kaiser-Bessel window (alpha = 2) of x.                        *
+ *          The modified Kaiser-Bessel window (alpha = 2) of x.               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -60,7 +60,7 @@
  *                                                                            *
  *      Note that since we scale the result by t(x), the approximation is     *
  *      exactly zero when x = 1 / 2. That is, the function goes to zero at    *
- *      the right endpoint in the window.                                     *
+ *      the right endpoint of the window.                                     *
  *  Notes:                                                                    *
  *      1.) Accurate to double precision for 0.25 <= x <= 0.5.                *
  *                                                                            *
@@ -149,7 +149,7 @@ double tmpl_Double_KBMD20_Tail_End(const double x)
     const double numer = TMPL_NUM_EVAL(shift);
     const double denom = TMPL_DEN_EVAL(shift);
 
-    /*  The Kaiser-Bessel window is the ratio scaled by the translation.      */
+    /*  The modified Kaiser-Bessel window is the ratio scaled by the shift.   */
     return shift * numer / denom;
 }
 /*  End of tmpl_Double_KBMD20_Tail_End.                                       */

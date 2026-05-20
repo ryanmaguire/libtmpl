@@ -60,7 +60,7 @@
  *                                                                            *
  *      Note that since we scale the result by t(x), the approximation is     *
  *      exactly zero when x = 1 / 2. That is, the function goes to zero at    *
- *      the right endpoint in the window.                                     *
+ *      the right endpoint of the window.                                     *
  *  Notes:                                                                    *
  *      1.) Accurate to single precision for 0.25 <= x <= 0.5.                *
  *                                                                            *
@@ -116,7 +116,7 @@ float tmpl_Float_KBMD20_Tail_End(const float x)
     const float numer = TMPL_NUM_EVAL(shift);
     const float denom = TMPL_DEN_EVAL(shift);
 
-    /*  The Kaiser-Bessel window is the ratio scaled by the translation.      */
+    /*  The modified Kaiser-Bessel window is the ratio scaled by the shift.   */
     return shift * numer / denom;
 }
 /*  End of tmpl_Float_KBMD20_Tail_End.                                        */
