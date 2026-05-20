@@ -106,7 +106,7 @@
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
- *                           128-bit Double-Double                            *
+ *                           128-Bit Double-Double                            *
  ******************************************************************************/
 
 /*  Coefficients for the numerator of the rational Remez approximation.       */
@@ -162,7 +162,7 @@ B00 + z * (\
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
- *                             128-bit Quadruple                              *
+ *                             128-Bit Quadruple                              *
  ******************************************************************************/
 
 /*  Coefficients for the numerator of the rational Remez approximation.       */

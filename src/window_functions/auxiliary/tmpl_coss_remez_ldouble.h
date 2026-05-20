@@ -105,7 +105,7 @@
       TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
- *                     128-bit Double-Double / Quadruple                      *
+ *                     128-Bit Double-Double / Quadruple                      *
  ******************************************************************************/
 
 /*  Degree 16 Remez polynomial, peak theoretical error ~1.16 x 10^-35.        */
