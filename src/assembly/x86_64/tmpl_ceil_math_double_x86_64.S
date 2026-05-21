@@ -88,8 +88,6 @@ ASM_BEGIN(tmpl_Double_Ceil)
     /*  AVX supports the vroundsd instruction.                                */
 #elif defined(__AVX__) || defined(__AVX2__)
 
-#error "BOB"
-
     /*  VEX.128 encoded version of the roundsd instruction used below. This   *
      *  is available on CPUs that support AVX, introduced in 2011.            */
     vroundsd $10, %xmm0, %xmm0, %xmm0
