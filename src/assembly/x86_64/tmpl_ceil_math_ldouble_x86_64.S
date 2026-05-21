@@ -40,6 +40,14 @@
  *          Load an 80-bit extended-precision value onto the FPU stack.       *
  *      frndint:                                                              *
  *          Round to an integer using the current rounding mode.              *
+ *      movzwl:                                                               *
+ *          Moves a word and extends its size by padding zeros.               *
+ *      movw:                                                                 *
+ *          Moves a word.                                                     *
+ *      andb:                                                                 *
+ *          Performs bit-wise and on a register.                              *
+ *      orb:                                                                  *
+ *          Performs bit-wise or on a register.                               *
  *  Method:                                                                   *
  *      Set the rounding mode to "towards positive infinity", and then round  *
  *      the input to an integer.                                              *
@@ -80,7 +88,8 @@ ASM_BEGIN(tmpl_LDouble_Ceil)
     /*  The rounding mode is governed by the 10th and 11th bits, which        *
      *  correspond to the second and third bits of the high part (ah). Clear  *
      *  these bits. This corresponds to the bitmask 11110011_2, which is 0xF3 *
-     *  in hexadecimal. Use bit-wise and with this value.                     */
+     *  in hexadecimal (note, the lowest bit is the "zeroth" bit). Use        *
+     *  bit-wise and with this value.                                         */
     andb $0xF3, %ah
 
     /*  Set the third bit, which sets the rounding mode to round towards      *

@@ -103,6 +103,7 @@ ASM_BEGIN(tmpl_Float_Ceil)
     roundss $0x0A, %xmm0, %xmm0
 
 #endif
+/*  End of #if defined(__AVX512F__).                                          */
 
     /*  We have now computed ceil(x). Return to the caller.                   */
     ret
