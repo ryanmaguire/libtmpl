@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_fractional_part_ldouble                        *
+ *                             tmpl_floor_ldouble                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing the fractional part of a long double.     *
+ *      Computes the fractional part of a long double.                        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -33,24 +33,88 @@
  *  Output:                                                                   *
  *      frac_x (long double):                                                 *
  *          The fractional part of x at long double precision.                *
+ *  Called Instructions:                                                      *
+ *      fnstcw / fldcw:                                                       *
+ *          Store and load the FPU control word.                              *
+ *      fldt / fld:                                                           *
+ *          Load an 80-bit extended-precision value onto the FPU stack.       *
+ *      frndint:                                                              *
+ *          Round to an integer using the current rounding mode.              *
+ *      movzwl:                                                               *
+ *          Moves a word and extends its size by padding zeros.               *
+ *      movw:                                                                 *
+ *          Moves a word.                                                     *
+ *      andb:                                                                 *
+ *          Performs bit-wise and on a register.                              *
+ *      orb:                                                                  *
+ *          Performs bit-wise or on a register.                               *
+ *      fsubrp:                                                               *
+ *          Performs floating-point subtraction.                              *
+ *  Method:                                                                   *
+ *      Compute x - trunc(x).                                                 *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_x86_64_asm.h:                                                    *
+ *          Provides x86_64 / amd64 helper macros to improve portability.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 6, 2024                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/21: Ryan Maguire                                                  *
+ *      Added comments, updated docstring.                                    *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
 #include "tmpl_x86_64_asm.h"
 
-ASM_BEGIN(tmpl_LDouble_Fractional_Part)
-    fnstcw  -10(%rsp)
-    fldt    8(%rsp)
-    movzwl  -10(%rsp), %eax
-    fld     %st(0)
-    orb     $12, %ah
-    movw    %ax, -12(%rsp)
-    fldcw   -12(%rsp)
+/*  Long double precision fractional part function for x86_64 machines.       */
+ASM_BEGIN(tmpl_LDouble_Floor)
+
+    /*  Save the current FPU control word so that we may restore it before    *
+     *  returning to the caller. The 16-bit control word occupies bytes -10   *
+     *  and -9.                                                               */
+    fnstcw -10(%rsp)
+
+    /*  Load the input onto the FPU stack.                                    */
+    fldt 8(%rsp)
+
+    /*  Save the current 80-bit extended precision input. We will need it     *
+     *  later in order to compute x - trunc(x).                               */
+    fld %st(0)
+
+    /*  Edit the control word so that the rounding mode in the FPU is         *
+     *  towards zero. First, pull the control word into the eax register so   *
+     *  we can edit it.                                                       */
+    movzwl -10(%rsp), %eax
+
+    /*  The rounding mode is governed by the 10th and 11th bits, which        *
+     *  correspond to the second and third bits of the high part (ah). Set    *
+     *  these both to 1 using bit-wise or, which sets the rounding mode to    *
+     *  round towards zero. This is equivalent to truncating the input.       */
+    orb $0x0C, %ah
+
+    /*  Store the modified control word so that the FPU can use it.           */
+    movw %ax, -12(%rsp)
+
+    /*  Set the FPU to round towards zero.                                    */
+    fldcw -12(%rsp)
+
+    /*  Round the top of the FPU stack towards an integer in the current      *
+     *  rounding mode. Since we've set this to "round towards zero", this     *
+     *  instruction computes trunc(x).                                        */
     frndint
-    fldcw   -10(%rsp)
-    fsubrp  %st, %st(1)
+
+    /*  Restore the original FPU control word before returning.               */
+    fldcw -10(%rsp)
+
+    /*  We saved the input "x", and have now computed trunc(x). The           *
+     *  fractional part is given by x - trunc(x). Compute.                    */
+    fsubrp %st, %st(1)
+
+    /*  We have now computed floor(x). Return to the caller.                  */
     ret
-ASM_END(tmpl_LDouble_Fractional_Part)
+
+ASM_END(tmpl_LDouble_Floor)
