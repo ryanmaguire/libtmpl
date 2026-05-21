@@ -33,7 +33,7 @@
  *  Output:                                                                   *
  *      frac_x (float):                                                       *
  *          The fractional part of x at single precision.                     *
- *  Called Functions:                                                         *
+ *  Called Instructions:                                                      *
  *      roundss / vroundss / vrndscaless:                                     *
  *          Rounds a single-precision floating-point number in the requested  *
  *          rounding mode. If AVX-512 support is available, then vrndscaless  *
@@ -99,7 +99,7 @@ ASM_BEGIN(tmpl_Float_Fractional_Part)
     /*  Use SSE4.1 instructions as a fallback. SSE4.1 support is very common. */
 #else
 
-    /*  roundss rounds a single-precision floating-point number to the        *
+    /*  roundss rounds a single-precision floating-point number using the     *
      *  requested rounding mode. Rounding mode "3" is round towards zero,     *
      *  which is equivalent to truncating the input. Rounding mode "11" is    *
      *  the same as rounding mode "3", except that the inexact flag is not    *

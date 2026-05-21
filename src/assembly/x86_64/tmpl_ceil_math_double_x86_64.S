@@ -95,7 +95,7 @@ ASM_BEGIN(tmpl_Double_Ceil)
     /*  Use SSE4.1 instructions as a fallback. SSE4.1 support is very common. */
 #else
 
-    /*  roundsd rounds a double-precision floating-point number to the        *
+    /*  roundsd rounds a double-precision floating-point number using the     *
      *  requested rounding mode. Rounding mode "2" is round towards positive  *
      *  infinity, which is equivalent to computing the ceiling of the input.  *
      *  Rounding mode "10" is the same as rounding mode "2", except the       *

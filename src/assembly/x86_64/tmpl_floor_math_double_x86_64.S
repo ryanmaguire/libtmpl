@@ -95,7 +95,7 @@ ASM_BEGIN(tmpl_Double_Floor)
     /*  Use SSE4.1 instructions as a fallback. SSE4.1 support is very common. */
 #else
 
-    /*  roundsd rounds a double-precision floating-point number to the        *
+    /*  roundsd rounds a double-precision floating-point number using the     *
      *  requested rounding mode. Rounding mode "1" is round towards negative  *
      *  infinity, which is equivalent to computing the floor of the input.    *
      *  Rounding mode "9" is the same as rounding mode "1", except the        *

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_floor_ldouble                             *
+ *                         tmpl_fractional_part_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the fractional part of a long double.                        *
@@ -90,10 +90,10 @@ ASM_BEGIN(tmpl_LDouble_Fractional_Part)
      *  we can edit it.                                                       */
     movzwl -10(%rsp), %eax
 
-    /*  The rounding mode is governed by the 10th and 11th bits, which        *
-     *  correspond to the second and third bits of the high part (ah). Set    *
-     *  these both to 1 using bit-wise or, which sets the rounding mode to    *
-     *  round towards zero. This is equivalent to truncating the input.       */
+    /*  The rounding mode is governed by the 11th and 12th bits, which        *
+     *  correspond to the 3rd and 4th bits of the high part (ah). Set these   *
+     *  both to 1 using bit-wise or, which sets the rounding mode to round    *
+     *  towards zero. This is equivalent to truncating the input.             */
     orb $0x0C, %ah
 
     /*  Store the modified control word so that the FPU can use it.           */
@@ -114,7 +114,7 @@ ASM_BEGIN(tmpl_LDouble_Fractional_Part)
      *  fractional part is given by x - trunc(x). Compute.                    */
     fsubrp %st, %st(1)
 
-    /*  We have now computed floor(x). Return to the caller.                  */
+    /*  We have computed the fractional part of x. Return to the caller.      */
     ret
 
 ASM_END(tmpl_LDouble_Fractional_Part)

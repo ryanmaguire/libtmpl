@@ -85,14 +85,13 @@ ASM_BEGIN(tmpl_LDouble_Ceil)
      *  register so we can edit it.                                           */
     movzwl -10(%rsp), %eax
 
-    /*  The rounding mode is governed by the 10th and 11th bits, which        *
-     *  correspond to the second and third bits of the high part (ah). Clear  *
-     *  these bits. This corresponds to the bitmask 11110011_2, which is 0xF3 *
-     *  in hexadecimal (note, the lowest bit is the "zeroth" bit). Use        *
-     *  bit-wise and with this value.                                         */
+    /*  The rounding mode is governed by the 11th and 12th bits, which        *
+     *  correspond to the 3rd and 4th bits of the high part (ah). Clear these *
+     *  bits. This corresponds to the bit-mask 11110011_2, which is 0xF3 in   *
+     *  hexadecimal. Use bit-wise and with this value.                        */
     andb $0xF3, %ah
 
-    /*  Set the third bit, which sets the rounding mode to round towards      *
+    /*  Set the 4th bit, which sets the rounding mode to round towards        *
      *  positive infinity.                                                    */
     orb $0x08, %ah
 
