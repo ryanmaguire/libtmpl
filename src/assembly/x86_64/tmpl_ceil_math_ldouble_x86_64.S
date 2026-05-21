@@ -73,14 +73,25 @@ ASM_BEGIN(tmpl_LDouble_Ceil)
     fldt 8(%rsp)
 
     /*  Edit the control word so that the rounding mode in the FPU is         *
-     *  towards positive infinity.                                            */
+     *  towards positive infinity. First, pull the control word into the eax  *
+     *  register so we can edit it.                                           */
     movzwl -10(%rsp), %eax
-    andb $-13, %ah
-    orb $8, %ah
+
+    /*  The rounding mode is governed by the 10th and 11th bits, which        *
+     *  correspond to the second and third bits of the high part (ah). Clear  *
+     *  these bits. This corresponds to the bitmask 11110011_2, which is 0xF3 *
+     *  in hexadecimal. Use bit-wise and with this value.                     */
+    andb $0xF3, %ah
+
+    /*  Set the third bit, which sets the rounding mode to round towards      *
+     *  positive infinity.                                                    */
+    orb $0x08, %ah
+
+    /*  Store the modified control word so that the FPU can use it.           */
     movw %ax, -12(%rsp)
 
     /*  Set the FPU to round towards positive infinity.                       */
-    fldcw   -12(%rsp)
+    fldcw -12(%rsp)
 
     /*  Round the top of the FPU stack towards an integer in the current      *
      *  rounding mode. Since we've set this to "towards positive infinity",   *

@@ -83,14 +83,14 @@ ASM_BEGIN(tmpl_Float_Ceil)
      *  extension introduced vrndscaless. It uses a similar syntax to roundss *
      *  but is a bit more general. Using this instruction with rounding mode  *
      *  "10" is equivalent to computing ceil(x) without raising inexact.      */
-    vrndscaless $10, %xmm0, %xmm0, %xmm0
+    vrndscaless $0x0A, %xmm0, %xmm0, %xmm0
 
     /*  AVX supports the vroundss instruction.                                */
 #elif defined(__AVX__) || defined(__AVX2__)
 
     /*  VEX.128 encoded version of the roundss instruction used below. This   *
      *  is available on CPUs that support AVX, introduced in 2011.            */
-    vroundss $10, %xmm0, %xmm0, %xmm0
+    vroundss $0x0A, %xmm0, %xmm0, %xmm0
 
     /*  Use SSE4.1 instructions as a fallback. SSE4.1 support is very common. */
 #else
@@ -100,7 +100,7 @@ ASM_BEGIN(tmpl_Float_Ceil)
      *  infinity, which is equivalent to computing the ceiling of the input.  *
      *  Rounding mode "10" is the same as rounding mode "2", except the       *
      *  inexact flag is not raised. Use this.                                 */
-    roundss $10, %xmm0, %xmm0
+    roundss $0x0A, %xmm0, %xmm0
 
 #endif
 

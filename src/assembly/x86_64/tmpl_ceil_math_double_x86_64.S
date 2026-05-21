@@ -83,14 +83,14 @@ ASM_BEGIN(tmpl_Double_Ceil)
      *  extension introduced vrndscalesd. It uses a similar syntax to roundsd *
      *  but is a bit more general. Using this instruction with rounding mode  *
      *  "10" is equivalent to computing ceil(x) without raising inexact.      */
-    vrndscalesd $10, %xmm0, %xmm0, %xmm0
+    vrndscalesd $0x0A, %xmm0, %xmm0, %xmm0
 
     /*  AVX supports the vroundsd instruction.                                */
 #elif defined(__AVX__) || defined(__AVX2__)
 
     /*  VEX.128 encoded version of the roundsd instruction used below. This   *
      *  is available on CPUs that support AVX, introduced in 2011.            */
-    vroundsd $10, %xmm0, %xmm0, %xmm0
+    vroundsd $0x0A, %xmm0, %xmm0, %xmm0
 
     /*  Use SSE4.1 instructions as a fallback. SSE4.1 support is very common. */
 #else
@@ -100,7 +100,7 @@ ASM_BEGIN(tmpl_Double_Ceil)
      *  infinity, which is equivalent to computing the ceiling of the input.  *
      *  Rounding mode "10" is the same as rounding mode "2", except the       *
      *  inexact flag is not raised. Use this.                                 */
-    roundsd $10, %xmm0, %xmm0
+    roundsd $0x0A, %xmm0, %xmm0
 
 #endif
 

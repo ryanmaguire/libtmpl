@@ -67,7 +67,10 @@ ASM_BEGIN(tmpl_Double_Mod_2)
     ret
 
 /*  The hexadecimal representation (IEEE-754 format) of x = 0.5.              */
+    .section .rodata
+    .p2align 3
 .TMPL_DOUBLE_MOD2_HALF_AS_HEX:
     .quad 0x3FE0000000000000
+    .text
 
 ASM_END(tmpl_Double_Mod_2)
