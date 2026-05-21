@@ -34,18 +34,38 @@
  *      floor_x (float):                                                      *
  *          The floor of x at single precision.                               *
  *  Called Functions:                                                         *
- *      roundss                                                               *
+ *      roundss:                                                              *
+ *          Rounds a single-precision floating-point number in the requested  *
+ *          rounding mode.                                                    *
  *  Method:                                                                   *
  *      The roundss instruction with 1 passed to it computes floor(x).        *
  ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_x86_64_asm.h:                                                    *
+ *          Provides x86_64 / amd64 helper macros to improve portability.     *
+ ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 5, 2022                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/21: Ryan Maguire                                                  *
+ *      Added comments, updated docstring.                                    *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
 #include "tmpl_x86_64_asm.h"
 
+/*  Single-precision floor function for x86_64 machines.                      */
 ASM_BEGIN(tmpl_Float_Floor)
+
+    /*  roundsd rounds a single-precision floating-point number to the        *
+     *  requested rounding mode. Rounding mode "1" is round towards negative  *
+     *  infinity, which is equivalent to computing the floor of the input.    */
     roundss $1, %xmm0, %xmm0
+
+    /*  We have now set x = floor(x). Return back to the caller.              */
     ret
+
 ASM_END(tmpl_Float_Floor)
