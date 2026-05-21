@@ -28,12 +28,20 @@
 #define ELF_FUNC(f) .type f, @function
 #define ELF_SIZE(f) .size f, . - f
 #define GNU_STACK_PROTECTION .section .note.GNU-stack, "", @progbits
+
+#ifdef __CET__
+#define ASM_ENDBR endbr64
+#else
+#define ASM_ENDBR
+#endif
+
 #else
 /*  Else for #ifdef __ELF__.                                                  */
 
 #define ELF_FUNC(f)
 #define ELF_SIZE(f)
 #define GNU_STACK_PROTECTION
+#define ASM_ENDBR
 #endif
 /*  End of #ifdef __ELF__.                                                    */
 
@@ -85,7 +93,7 @@
 #else
 
 #define ASM_RODATA .section .rodata
-#define ASM_BEGIN(f) .text; .p2align ALIGN; .globl f; ELF_FUNC(f); f:
+#define ASM_BEGIN(f) .text; .p2align ALIGN; .globl f; ELF_FUNC(f); f: ASM_ENDBR
 #define ASM_END(f) ELF_SIZE(f); GNU_STACK_PROTECTION
 
 #endif
