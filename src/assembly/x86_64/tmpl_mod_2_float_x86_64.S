@@ -43,19 +43,31 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_x86_64_asm.h"
 
+/*  Single-precision mod 2 function for x86_64 machines.                      */
 ASM_BEGIN(tmpl_Float_Mod_2)
-    sub     $24, %rsp
-    movss   %xmm0, 12(%rsp)
-    mulss   .TMPL_FLOAT_MOD2_HALF_AS_HEX(%rip), %xmm0
-    roundss $3, %xmm0, %xmm0
-    movss   12(%rsp), %xmm1
-    add     $24, %rsp
-    addss   %xmm0, %xmm0
-    subss   %xmm0, %xmm1
-    movaps  %xmm1, %xmm0
+
+    /*  We compute x mod 2 by returning x - 2 * trunc(x / 2). We need to save *
+     *  the input value "x" for this final subtraction. Copy xmm0 into xmm1.  *
+     *  That is, set y = x.                                                   */
+    movss %xmm0, %xmm1
+
+    /*  Set y = 0.5 * x.                                                      */
+    mulss .TMPL_FLOAT_MOD2_HALF_AS_HEX(%rip), %xmm1
+
+    /*  Compute y = trunc(0.5 * x). roundss $11 is round-to-zero, or truncate.*/
+    roundss $11, %xmm1, %xmm1
+
+    /*  Compute y = 2.0 * trunc(0.5 * x) = trunc(0.5 * x) + trunc(0.5 * x).   */
+    addss %xmm1, %xmm1
+
+    /*  Compute y = x - 2.0 * trunc(0.5 * x). This is x mod 2.                */
+    subss %xmm1, %xmm0
+
+    /*  Return y = x - 2.0 * trunc(0.5 * x).                                  */
     ret
 
 /*  The hexadecimal representation (IEEE-754 format) of x = 0.5.              */
 .TMPL_FLOAT_MOD2_HALF_AS_HEX:
     .long 0x3F000000
+
 ASM_END(tmpl_Float_Mod_2)

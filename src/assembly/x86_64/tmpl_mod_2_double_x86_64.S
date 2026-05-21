@@ -43,31 +43,25 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_x86_64_asm.h"
 
+/*  Double-precision mod 2 function for x86_64 machines.                      */
 ASM_BEGIN(tmpl_Double_Mod_2)
 
-    /*  Some moving around of bits. We are moving the input, xmm0, to a new   *
-     *  spot so we don't overwrite it.                                        */
-    sub     $24, %rsp
-    movsd   %xmm0, 8(%rsp)
+    /*  We compute x mod 2 by returning x - 2 * trunc(x / 2). We need to save *
+     *  the input value "x" for this final subtraction. Copy xmm0 into xmm1.  *
+     *  That is, set y = x.                                                   */
+    movsd %xmm0, %xmm1
 
     /*  Set y = 0.5 * x.                                                      */
-    mulsd   .TMPL_DOUBLE_MOD2_HALF_AS_HEX(%rip), %xmm0
+    mulsd .TMPL_DOUBLE_MOD2_HALF_AS_HEX(%rip), %xmm1
 
-    /*  Compute y = trunc(0.5 * x). roundsd $3 is round-to-zero, or truncate. */
-    roundsd $3, %xmm0, %xmm0
-
-    /*  More bit-shuffling.                                                   */
-    movsd   8(%rsp), %xmm1
-    add     $24, %rsp
+    /*  Compute y = trunc(0.5 * x). roundsd $11 is round-to-zero, or truncate.*/
+    roundsd $11, %xmm1, %xmm1
 
     /*  Compute y = 2.0 * trunc(0.5 * x) = trunc(0.5 * x) + trunc(0.5 * x).   */
-    addsd   %xmm0, %xmm0
+    addsd %xmm1, %xmm1
 
     /*  Compute y = x - 2.0 * trunc(0.5 * x). This is x mod 2.                */
-    subsd   %xmm0, %xmm1
-
-    /*  Move y = x - 2.0 * trunc(0.5 * x) into xmm0.                          */
-    movapd  %xmm1, %xmm0
+    subsd %xmm1, %xmm0
 
     /*  Return y = x - 2.0 * trunc(0.5 * x).                                  */
     ret
@@ -75,4 +69,5 @@ ASM_BEGIN(tmpl_Double_Mod_2)
 /*  The hexadecimal representation (IEEE-754 format) of x = 0.5.              */
 .TMPL_DOUBLE_MOD2_HALF_AS_HEX:
     .quad 0x3FE0000000000000
+
 ASM_END(tmpl_Double_Mod_2)
