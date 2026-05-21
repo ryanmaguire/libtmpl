@@ -46,6 +46,7 @@
  *                                  WINDOWS                                   *
  ******************************************************************************/
 #if defined(_WIN32)
+#define ASM_RODATA .section .rodata
 #define ASM_END(f) .end
 #define ASM_BEGIN(f)        \
     .text;                  \
@@ -74,6 +75,7 @@
 #endif
 /*  End of #ifndef __NO_UNDERSCORES__.                                        */
 
+#define ASM_RODATA .section __TEXT, __const
 #define ASM_BEGIN(f) .text; .globl EXT(f); .p2align ALIGN; EXT(f):
 #define ASM_END(f)
 
@@ -82,6 +84,7 @@
  ******************************************************************************/
 #else
 
+#define ASM_RODATA .section .rodata
 #define ASM_BEGIN(f) .text; .p2align ALIGN; .globl f; ELF_FUNC(f); f:
 #define ASM_END(f) ELF_SIZE(f); GNU_STACK_PROTECTION
 
