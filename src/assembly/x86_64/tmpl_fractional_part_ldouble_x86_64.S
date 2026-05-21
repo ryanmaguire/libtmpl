@@ -71,7 +71,7 @@
 #include "tmpl_x86_64_asm.h"
 
 /*  Long double precision fractional part function for x86_64 machines.       */
-ASM_BEGIN(tmpl_LDouble_Floor)
+ASM_BEGIN(tmpl_LDouble_Fractional_Part)
 
     /*  Save the current FPU control word so that we may restore it before    *
      *  returning to the caller. The 16-bit control word occupies bytes -10   *
@@ -117,4 +117,4 @@ ASM_BEGIN(tmpl_LDouble_Floor)
     /*  We have now computed floor(x). Return to the caller.                  */
     ret
 
-ASM_END(tmpl_LDouble_Floor)
+ASM_END(tmpl_LDouble_Fractional_Part)
