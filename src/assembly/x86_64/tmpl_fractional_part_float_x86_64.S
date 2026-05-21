@@ -39,7 +39,7 @@
  *      subss:                                                                *
  *          Subtracts single precision numbers.                               *
  *  Method:                                                                   *
- *      Compute x - trunc(x). trunc(x) is computed with roundsd.              *
+ *      Compute x - trunc(x). trunc(x) is computed with roundss.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 6, 2024                                              *

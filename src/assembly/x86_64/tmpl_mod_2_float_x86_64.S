@@ -19,7 +19,7 @@
  *                              tmpl_mod_2_float                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing remainder after divison by 2.             *
+ *      Contains code for computing remainder after division by 2.            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -34,7 +34,7 @@
  *      x_mod_2 (float):                                                      *
  *          The remainder after division by 2 at single precision.            *
  *  Method:                                                                   *
- *      Compute x - 2*trunc(x/2). trunc(x) is computed with roundsd.          *
+ *      Compute x - 2 * trunc(x / 2). trunc(x / 2) is computed with roundss.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 6, 2024                                              *

@@ -19,7 +19,7 @@
  *                              tmpl_mod_2_ldouble                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing remainder after divison by 2.             *
+ *      Contains code for computing remainder after division by 2.            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************

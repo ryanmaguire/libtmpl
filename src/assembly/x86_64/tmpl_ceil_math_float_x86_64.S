@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Float_Ceil                                                       *
  *  Purpose:                                                                  *
- *      Computes y = ceil(x), the largest integer less than or equal to x.    *
+ *      Computes y = ceil(x), the smallest integer greater than or equal to x.*
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *

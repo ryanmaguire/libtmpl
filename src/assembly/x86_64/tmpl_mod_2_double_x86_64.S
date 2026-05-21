@@ -19,7 +19,7 @@
  *                              tmpl_mod_2_double                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing remainder after divison by 2.             *
+ *      Contains code for computing remainder after division by 2.            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -34,7 +34,7 @@
  *      x_mod_2 (double):                                                     *
  *          The remainder after division by 2 at double precision.            *
  *  Method:                                                                   *
- *      Compute x - 2*trunc(x/2). trunc(x) is computed with roundsd.          *
+ *      Compute x - 2 * trunc(x / 2). trunc(x / 2) is computed with roundsd.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 6, 2024                                              *
@@ -63,7 +63,7 @@ ASM_BEGIN(tmpl_Double_Mod_2)
     /*  Compute y = 2.0 * trunc(0.5 * x) = trunc(0.5 * x) + trunc(0.5 * x).   */
     addsd   %xmm0, %xmm0
 
-    /*  Compute y = x - 2.0 * trunc(0.5 * x). The is x mod 2.                 */
+    /*  Compute y = x - 2.0 * trunc(0.5 * x). This is x mod 2.                */
     subsd   %xmm0, %xmm1
 
     /*  Move y = x - 2.0 * trunc(0.5 * x) into xmm0.                          */

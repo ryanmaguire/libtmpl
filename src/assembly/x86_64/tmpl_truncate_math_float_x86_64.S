@@ -34,7 +34,7 @@
  *      trunc_x (float):                                                      *
  *          The truncation of x at single precision.                          *
  *  Called Functions:                                                         *
- *      roundsd:                                                              *
+ *      roundss:                                                              *
  *          Rounds a float to the indicated rounding mode.                    *
  *  Method:                                                                   *
  *      Compute trunc(x) using roundss with the proper rounding mode.         *
