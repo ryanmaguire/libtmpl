@@ -40,7 +40,7 @@
  *          is used, and if AVX support is available, then vroundsd is used.  *
  *          All three of these instructions can compute trunc(x).             *
  *      subsd / vsubsd:                                                       *
- *          Subtracts double precision numbers.                               *
+ *          Subtracts double-precision numbers.                               *
  *  Method:                                                                   *
  *      Compute x - trunc(x).                                                 *
  *  Notes:                                                                    *
