@@ -43,13 +43,30 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 6, 2024                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/21: Ryan Maguire                                                  *
+ *      Added comments.                                                       *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_Double_Fractional_Part)
-    roundsd $3, %xmm0, %xmm1    /*  xmm1 = trunc(xmm0)  */
-    subsd %xmm1, %xmm0          /*  xmm0 = xmm0 - xmm1  */
-    ret                         /*  return xmm0.        */
+
+    /*  roundsd rounds a double-precision floating-point number to the        *
+     *  requested rounding mode. Rounding mode "3" is round towards zero,     *
+     *  which is equivalent to truncating the input. Rounding mode "11" is    *
+     *  the same as rounding mode "3", except that the inexact flag is not    *
+     *  raised. Use this.                                                     */
+    roundsd $11, %xmm0, %xmm1
+
+    /*  The xmm1 register now stores trunc(x), and xmm0 still contains x.     *
+     *  Compute x - trunc(x) and store this in the xmm0 register.             */
+    subsd %xmm1, %xmm0
+
+    /*  We have computed x mod 2. Return to the caller.                       */
+    ret
+
 ASM_END(tmpl_Double_Fractional_Part)
