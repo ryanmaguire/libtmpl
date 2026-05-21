@@ -43,7 +43,7 @@
  *      The roundss instruction with 10 passed to it computes ceil(x). The    *
  *      same is true of the vrndscaless and vroundss instructions.            *
  *  Notes:                                                                    *
- *      1.) roundss, vroundss, and vrndscaless correctly handles NaN,         *
+ *      1.) roundss, vroundss, and vrndscaless correctly handle NaN,          *
  *          infinity, and signed zero.                                        *
  *                                                                            *
  *      2.) roundss is part of SSE4.1. Use of this file requires a CPU that   *

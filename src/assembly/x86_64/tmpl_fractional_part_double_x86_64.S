@@ -66,7 +66,7 @@ ASM_BEGIN(tmpl_Double_Fractional_Part)
      *  Compute x - trunc(x) and store this in the xmm0 register.             */
     subsd %xmm1, %xmm0
 
-    /*  We have computed x mod 2. Return to the caller.                       */
+    /*  We have computed the fractional part of x. Return to the caller.      */
     ret
 
 ASM_END(tmpl_Double_Fractional_Part)

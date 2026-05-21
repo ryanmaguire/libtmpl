@@ -63,7 +63,7 @@
 /******************************************************************************
  *                                   APPLE                                    *
  ******************************************************************************/
-#elif defined (__APPLE__)
+#elif defined(__APPLE__)
 
 #ifndef __NO_UNDERSCORES__
 #define EXT(x) _##x
@@ -74,13 +74,14 @@
 #endif
 /*  End of #ifndef __NO_UNDERSCORES__.                                        */
 
-#define ASM_BEGIN(f) .text; .globl EXT(f); .align ALIGN; EXT(f):
+#define ASM_BEGIN(f) .text; .globl EXT(f); .p2align ALIGN; EXT(f):
 #define ASM_END(f)
 
 /******************************************************************************
  *                           GNU/Linux and FreeBSD                            *
  ******************************************************************************/
 #else
+
 #define ASM_BEGIN(f) .text; .p2align ALIGN; .globl f; ELF_FUNC(f); f:
 #define ASM_END(f) ELF_SIZE(f); GNU_STACK_PROTECTION
 

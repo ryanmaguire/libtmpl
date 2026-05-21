@@ -62,8 +62,10 @@ ASM_BEGIN(tmpl_Double_Floor)
 
     /*  roundsd rounds a double-precision floating-point number to the        *
      *  requested rounding mode. Rounding mode "1" is round towards negative  *
-     *  infinity, which is equivalent to computing the floor of the input.    */
-    roundsd $1, %xmm0, %xmm0
+     *  infinity, which is equivalent to computing the floor of the input.    *
+     *  Rounding mode "9" is the same as rounding mode "1", except the        *
+     *  inexact flag is not raised. Use this.                                 */
+    roundsd $9, %xmm0, %xmm0
 
     /*  We have now set x = floor(x). Return back to the caller.              */
     ret

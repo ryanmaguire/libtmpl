@@ -60,10 +60,11 @@
 /*  Single-precision floor function for x86_64 machines.                      */
 ASM_BEGIN(tmpl_Float_Floor)
 
-    /*  roundsd rounds a single-precision floating-point number to the        *
+    /*  roundss rounds a single-precision floating-point number to the        *
      *  requested rounding mode. Rounding mode "1" is round towards negative  *
-     *  infinity, which is equivalent to computing the floor of the input.    */
-    roundss $1, %xmm0, %xmm0
+     *  Rounding mode "9" is the same as rounding mode "1", except the        *
+     *  inexact flag is not raised. Use this.                                 */
+    roundss $9, %xmm0, %xmm0
 
     /*  We have now set x = floor(x). Return back to the caller.              */
     ret

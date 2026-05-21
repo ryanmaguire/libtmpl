@@ -43,7 +43,7 @@
  *      The roundsd instruction with 10 passed to it computes ceil(x). The    *
  *      same is true of the vrndscalesd and vroundsd instructions.            *
  *  Notes:                                                                    *
- *      1.) roundsd, vroundsd, and vrndscalesd correctly handles NaN,         *
+ *      1.) roundsd, vroundsd, and vrndscalesd correctly handle NaN,          *
  *          infinity, and signed zero.                                        *
  *                                                                            *
  *      2.) roundsd is part of SSE4.1. Use of this file requires a CPU that   *
