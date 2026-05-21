@@ -33,12 +33,28 @@
  *  Output:                                                                   *
  *      floor_x (double):                                                     *
  *          The floor of x at double precision.                               *
- *  Called Functions:                                                         *
- *      roundsd:                                                              *
+ *  Called Instructions:                                                      *
+ *      roundsd / vroundsd / vrndscalesd:                                     *
  *          Rounds a double-precision floating-point number in the requested  *
- *          rounding mode.                                                    *
+ *          rounding mode. If AVX-512 support is available, then vrndscalesd  *
+ *          is used, and if AVX support is available, then vroundsd is used.  *
+ *          All three of these instructions can compute floor(x).             *
  *  Method:                                                                   *
- *      The roundsd instruction with 1 passed to it computes floor(x).        *
+ *      The roundsd instruction with 9 passed to it computes floor(x). The    *
+ *      same is true of the vrndscalesd and vroundsd instructions.            *
+ *  Notes:                                                                    *
+ *      1.) roundsd, vroundsd, and vrndscalesd correctly handle NaN,          *
+ *          infinity, and signed zero.                                        *
+ *                                                                            *
+ *      2.) roundsd is part of SSE4.1. Use of this file requires a CPU that   *
+ *          supports SSE4.1 (introduced in 2007). For older x86_64 CPUs, use  *
+ *          the C code instead (set NO_ASM=1 when using the Makefile).        *
+ *                                                                            *
+ *      3.) vrndscalesd requires AVX-512, and vroundsd requires AVX support.  *
+ *          While most modern CPUs support SSE4.1, AVX-512 support is not as  *
+ *          universal at the time of this writing. GCC and Clang set the      *
+ *          __AVX512F__ and __AVX__ macros to indicate support. This file     *
+ *          checks these macros to select the proper instructions.            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -51,7 +67,7 @@
  *                              Revision History                              *
  ******************************************************************************
  *  2026/05/21: Ryan Maguire                                                  *
- *      Added comments, updated docstring.                                    *
+ *      Added comments, updated docstring. Added AVX and AVX-512 versions.    *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
@@ -60,14 +76,36 @@
 /*  Double-precision floor function for x86_64 machines.                      */
 ASM_BEGIN(tmpl_Double_Floor)
 
+    /*  AVX-512 has the vrndscalesd (round scalar) instruction.               */
+#if defined(__AVX512F__)
+
+    /*  SSE4.1 introduced roundsd in 2007 (see below). The newer AVX-512      *
+     *  extension introduced vrndscalesd. It uses a similar syntax to roundsd *
+     *  but is a bit more general. Using this instruction with rounding mode  *
+     *  "9" is equivalent to computing floor(x) without raising inexact.      */
+    vrndscalesd $0x09, %xmm0, %xmm0, %xmm0
+
+    /*  AVX supports the vroundsd instruction.                                */
+#elif defined(__AVX__) || defined(__AVX2__)
+
+    /*  VEX.128 encoded version of the roundsd instruction used below. This   *
+     *  is available on CPUs that support AVX, introduced in 2011.            */
+    vroundsd $0x09, %xmm0, %xmm0, %xmm0
+
+    /*  Use SSE4.1 instructions as a fallback. SSE4.1 support is very common. */
+#else
+
     /*  roundsd rounds a double-precision floating-point number to the        *
      *  requested rounding mode. Rounding mode "1" is round towards negative  *
      *  infinity, which is equivalent to computing the floor of the input.    *
      *  Rounding mode "9" is the same as rounding mode "1", except the        *
      *  inexact flag is not raised. Use this.                                 */
-    roundsd $9, %xmm0, %xmm0
+    roundsd $0x09, %xmm0, %xmm0
 
-    /*  We have now set x = floor(x). Return back to the caller.              */
+#endif
+/*  End of #if defined(__AVX512F__).                                          */
+
+    /*  We have now computed floor(x). Return to the caller.                  */
     ret
 
 ASM_END(tmpl_Double_Floor)
