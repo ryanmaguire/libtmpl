@@ -27,6 +27,7 @@
 .code
 
 PUBLIC tmpl_Float_Sqrt
+
 tmpl_Float_Sqrt PROC
     sqrtss xmm0, xmm0
     ret

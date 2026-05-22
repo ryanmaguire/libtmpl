@@ -16,21 +16,21 @@
 ;   You should have received a copy of the GNU General Public License          ;
 ;   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          ;
 ;------------------------------------------------------------------------------;
-;                               tmpl_sqrt_double                               ;
+;                               tmpl_ceil_float                                ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;       Contains code for computing square roots at double precision.          ;
+;     	Computes the ceiling function at single precision.                     ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
-;   Date:       February 5, 2026                                               ;
+;   Date:       May 22, 2026                                                   ;
 ;------------------------------------------------------------------------------;
 .code
 
-PUBLIC tmpl_Double_Sqrt
+PUBLIC tmpl_Float_Ceil
 
-tmpl_Double_Sqrt PROC
-    sqrtsd xmm0, xmm0
+tmpl_Float_Ceil PROC
+    roundss xmm0, xmm0, 10
     ret
-tmpl_Double_Sqrt ENDP
+tmpl_Float_Ceil ENDP
 
 END
