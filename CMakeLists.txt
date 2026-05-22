@@ -246,10 +246,9 @@ endif()
 # Needed to get libtmpl to compile when using MinGW or MSYS2 on Windows.
 if (MINGW OR MSYS)
     set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS 1)
-    set(CMAKE_C_USE_RESPONSE_FILE_FOR_INCLUDES 1)
-    set(CMAKE_C_USE_RESPONSE_FILE_FOR_LIBRARIES 1)
     set(CMAKE_ASM_USE_RESPONSE_FILE_FOR_OBJECTS 1)
     set(CMAKE_C_RESPONSE_FILE_LINK_FLAG "@")
+    message(STATUS "Building in MinGW / MSYS environment.")
 endif()
 
 # Add sources for libtmpl (C and assembly).
