@@ -73,6 +73,67 @@
 /*  Long double precision fractional part function for x86_64 machines.       */
 ASM_BEGIN(tmpl_LDouble_Fractional_Part)
 
+    /*  When using MinGW, MSYS2, or Cygwin on Microsoft Windows, the          *
+     *  implementation of long double differs from regular GNU / Linux,       *
+     *  FreeBSD, or macOS systems. Check for this.                            */
+#ifdef _WIN64
+
+    /*  Allocate a stack frame.                                               */
+    subq $24, %rsp
+
+    /*  The input is pointed to by rdx. Load this onto the FPU stack.         */
+    fldt (%rdx)
+
+    /*  Save the current 80-bit extended precision input. We will need it     *
+     *  later in order to compute x - trunc(x).                               */
+    fld %st(0)
+
+    /*  The rest of the algorithm mimics the GNU / Linux, FreeBSD, and macOS  *
+     *  Save the original control word so we can restore it later. -10 bytes  *
+     *  back is not reserved for scratch, like it is on other systems, so we  *
+     *  store the word 14 bytes forward.                                      */
+    fnstcw 14(%rsp)
+
+    /*  rcx is a pointer to the output. Move this into rax. rax must equal    *
+     *  the original rcx on return, hence we perform this move now.           */
+    movq %rcx, %rax
+
+    /*  Load the control word into a register so that we may edit it.         */
+    movzwl 14(%rsp), %edx
+
+    /*  The rounding mode is governed by the 11th and 12th bits, which        *
+     *  correspond to the 3rd and 4th bits of the high part (dh). Set these   *
+     *  both to 1 using bit-wise or, which sets the rounding mode to round    *
+     *  towards zero. This is equivalent to truncating the input.             */
+    orb $0x0C, %dh
+
+    /*  Store the modified control word so that the FPU can use it.           */
+    movw %dx, 12(%rsp)
+
+    /*  Set the FPU to round towards zero.                                    */
+    fldcw 12(%rsp)
+
+    /*  Round the top of the FPU stack towards an integer in the current      *
+     *  rounding mode. Since we've set this to "round towards zero", this     *
+     *  instruction computes trunc(x).                                        */
+    frndint
+
+    /*  Restore the original FPU control word before returning.               */
+    fldcw 14(%rsp)
+
+    /*  We saved the input "x", and have now computed trunc(x). The           *
+     *  fractional part is given by x - trunc(x). Compute.                    */
+    fsubrp %st, %st(1)
+
+    /*  For the caller, rcx points to the output. Store the result there.     */
+    fstpt (%rcx)
+
+    /*  Tear down the frame (undo the first "subq $24, %rsp" instruction).    */
+    addq $24, %rsp
+
+#else
+/*  Else for #ifdef _WIN64.                                                   */
+
     /*  Save the current FPU control word so that we may restore it before    *
      *  returning to the caller. The 16-bit control word occupies bytes -10   *
      *  and -9.                                                               */
@@ -116,5 +177,8 @@ ASM_BEGIN(tmpl_LDouble_Fractional_Part)
 
     /*  We have computed the fractional part of x. Return to the caller.      */
     ret
+
+#endif
+/*  End of #ifdef _WIN64.                                                     */
 
 ASM_END(tmpl_LDouble_Fractional_Part)

@@ -44,6 +44,28 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_LDouble_Mod_2)
+
+#ifdef _WIN64
+
+    subq    $24, %rsp
+    fldt    (%rdx)
+    fld     %st(0)
+    fmuls   .TMPL_LDOUBLE_MOD2_HALF_AS_HEX(%rip)
+    fnstcw  14(%rsp)
+    movq    %rcx, %rax
+    movzwl  14(%rsp), %edx
+    orb     $12, %dh
+    movw    %dx, 12(%rsp)
+    fldcw   12(%rsp)
+    frndint
+    fldcw   14(%rsp)
+    fadd    %st(0), %st
+    fsubrp  %st, %st(1)
+    fstpt   (%rcx)
+    addq    $24, %rsp
+
+#else
+
     fnstcw  -10(%rsp)
     fldt    8(%rsp)
     movzwl  -10(%rsp), %eax
@@ -56,7 +78,11 @@ ASM_BEGIN(tmpl_LDouble_Mod_2)
     fldcw   -10(%rsp)
     fadd    %st(0), %st
     fsubrp  %st, %st(1)
+
+#endif
+
     ret
+
 .TMPL_LDOUBLE_MOD2_HALF_AS_HEX:
     .long 0x3F000000
 ASM_END(tmpl_LDouble_Mod_2)
