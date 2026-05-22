@@ -112,10 +112,10 @@ ASM_BEGIN(tmpl_LDouble_Floor)
     /*  Store the modified control word so that the FPU can use it.           */
     movw %dx, 12(%rsp)
 
-    /*  Set the FPU to round towards positive infinity.                       */
+    /*  Set the FPU to round towards negative infinity.                       */
     fldcw 12(%rsp)
 
-    /*  With the control word set, we can compute ceil(x).                    */
+    /*  With the control word set, we can compute floor(x).                   */
     frndint
 
     /*  Restore the original FPU control word before returning.               */
