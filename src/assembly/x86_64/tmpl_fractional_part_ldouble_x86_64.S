@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_fractional_part_double                        *
+ *                        tmpl_fractional_part_ldouble                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the fractional part of a long double.                        *
