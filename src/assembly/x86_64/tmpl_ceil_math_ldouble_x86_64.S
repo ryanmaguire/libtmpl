@@ -67,8 +67,8 @@
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2026/05/21: Ryan Maguire                                                  *
- *      Added comments, updated docstring.                                    *
+ *  2026/05/22: Ryan Maguire                                                  *
+ *      Added comments, updated docstring, created MinGW version.             *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
