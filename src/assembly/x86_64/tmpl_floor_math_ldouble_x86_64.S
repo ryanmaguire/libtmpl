@@ -48,6 +48,11 @@
  *          Performs bit-wise and on a register.                              *
  *      orb:                                                                  *
  *          Performs bit-wise or on a register.                               *
+ *      fstpt:                                                                *
+ *          Store an 80-bit extended precision value from st(0) into memory   *
+ *          and then pop the FPU stack (Windows / MinGW version only).        *
+ *      addq / subq:                                                          *
+ *          Adjust a stack pointer (Windows / MinGW version only).            *
  *  Method:                                                                   *
  *      Set the rounding mode to "towards negative infinity", and then round  *
  *      the input to an integer.                                              *
@@ -62,8 +67,8 @@
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2026/05/21: Ryan Maguire                                                  *
- *      Added comments, updated docstring.                                    *
+ *  2026/05/22: Ryan Maguire                                                  *
+ *      Added comments, updated docstring, created MinGW version.             *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
