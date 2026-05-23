@@ -57,10 +57,8 @@ ASM_BEGIN(tmpl_LDouble_Sqrt)
 #ifdef _WIN64
 
     fldt (%rdx)
-    fld %st(0)
     fsqrt
     movq %rcx, %rax
-    fsubrp %st, %st(1)
     fstpt (%rcx)
 
 #else
