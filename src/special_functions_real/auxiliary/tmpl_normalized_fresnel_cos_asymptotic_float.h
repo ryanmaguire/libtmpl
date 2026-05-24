@@ -89,9 +89,15 @@
 extern const float tmpl_float_pi;
 
 /*  Computes sin(pi t) at single precision.                                   */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern float tmpl_Float_SinPi(const float t);
 
 /*  Computes the remainder of a double after division by 2.                   */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern double tmpl_Double_Mod_2(const double t);
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */

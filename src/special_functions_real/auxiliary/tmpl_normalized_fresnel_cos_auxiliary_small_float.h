@@ -85,7 +85,10 @@
 extern void tmpl_Float_SinCosPi(float t, float *sin_t, float *cos_t);
 
 /*  Computes the remainder of a double after division by 2.                   */
-extern double tmpl_Double_Mod_2(double t);
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+extern double tmpl_Double_Mod_2(const double t);
 
 /*  Coefficients for the numerator of the "f" auxiliary function.             */
 #define A00 (+1.5246280421910551878368225585204082614852964232248E-04F)
