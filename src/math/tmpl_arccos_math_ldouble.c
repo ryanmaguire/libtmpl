@@ -349,6 +349,11 @@ extern long double tmpl_LDouble_Arccos(const long double x);
  *  long double rather than checking the entire input. This gives the         *
  *  IEEE-754 method a slight performance boost over the portable one below.   */
 
+/*   Attributes to improve optimization on C23 compatible compilers.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+
 /*  Long double precision inverse cosine (acosl equivalent).                  */
 long double tmpl_LDouble_Arccos(const long double x)
 {
@@ -426,6 +431,11 @@ extern long double tmpl_LDouble_Abs(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/*   Attributes to improve optimization on C23 compatible compilers.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 
 /*  Long double precision inverse cosine (acosl equivalent).                  */
 long double tmpl_LDouble_Arccos(const long double x)

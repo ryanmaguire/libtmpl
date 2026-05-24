@@ -239,6 +239,11 @@ extern float tmpl_Float_Arccos(const float x);
  *  float rather than checking the entire float. This gives the IEEE-754      *
  *  method a slight performance boost over the portable one below.            */
 
+/*   Attributes to improve optimization on C23 compatible compilers.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+
 /*  Single precision inverse cosine (acosf equivalent).                       */
 float tmpl_Float_Arccos(const float x)
 {
@@ -312,6 +317,11 @@ extern float tmpl_Float_Abs(float x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/*   Attributes to improve optimization on C23 compatible compilers.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 
 /*  Single precision inverse cosine (acosf equivalent).                       */
 float tmpl_Float_Arccos(const float x)
