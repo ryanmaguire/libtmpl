@@ -112,6 +112,8 @@
  *  2024/10/23: Ryan Maguire                                                  *
  *      Added clarification that the portable method does not change signed   *
  *      zeros. That is, negative zero will output negative zero.              *
+ *  2026/05/23: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimization on modern compilers.     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -126,6 +128,15 @@
 
 /*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*   Attributes to improve optimization on C23 compatible compilers.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]]
+[[reproducible]]
+[[unsequenced]]
+[[gnu::const]]
+[[gnu::optimize("ffast-math")]]
+#endif
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
