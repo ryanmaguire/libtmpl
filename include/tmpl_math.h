@@ -1371,17 +1371,17 @@ extern long double tmpl_LDouble_Min(long double x, long double y);
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
 [[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
 #endif
-extern float tmpl_Float_Mod_2(float x);
+extern float tmpl_Float_Mod_2(const float x);
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
 [[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
 #endif
-extern double tmpl_Double_Mod_2(double n);
+extern double tmpl_Double_Mod_2(const double x);
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
 [[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
 #endif
-extern long double tmpl_LDouble_Mod_2(long double x);
+extern long double tmpl_LDouble_Mod_2(const long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
