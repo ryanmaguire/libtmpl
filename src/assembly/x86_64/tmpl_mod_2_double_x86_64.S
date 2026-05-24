@@ -51,7 +51,7 @@
  *      Compute x - 2 * trunc(x / 2).                                         *
  *  Notes:                                                                    *
  *      1.) roundsd, vroundsd, and vrndscalesd correctly handle NaN,          *
- *          infinity, and signed zero. vsubsd and subsd do as well.           *
+ *          infinity, and signed zero. The arithmetic instructions do too.    *
  *                                                                            *
  *      2.) roundsd is part of SSE4.1. Use of this file requires a CPU that   *
  *          supports SSE4.1 (introduced in 2007). For older x86_64 CPUs, use  *
