@@ -51,7 +51,7 @@
  *              needed for the expansion.                                     *
  *          2^-2 <= |x| < 2^-1:                                               *
  *              Use the degree (4, 2) rational Remez approximation for the    *
- *              function R(x) = -(acos(x) - pi/2 + x)/x^3. This function is   *
+ *              function R(x) = -(acos(x) - pi/2 + x)/x^3. This function      *
  *              is even, so the degree (4, 2) rational Remez approximation    *
  *              requires 3 non-zero terms in the numerator and 2 non-zero     *
  *              terms in the denominator, 5 non-zero terms total. acos(x)     *
@@ -90,7 +90,7 @@
  *                                                                            *
  *                  acos(x) = pi - acos(-x)                                   *
  *                                                                            *
- *              we then have 2^-1 <= -x < 1, and hence can use the reflection *
+ *              We then have 2^-1 <= -x < 1, and hence can use the reflection *
  *              formula found in the previous case.                           *
  *          x = -1:                                                           *
  *              return pi.                                                    *
@@ -135,7 +135,7 @@
  *          one is how the size of the input x is determined. The IEEE-754    *
  *          method examines the exponent of the input, the portable method    *
  *          computes the absolute value and compares the size of x directly   *
- *          with the numbers 2^-26, 2^-3, 2^-1, and 1. The IEEE-754 method is *
+ *          with the numbers 2^-26, 2^-2, 2^-1, and 1. The IEEE-754 method is *
  *          hence slightly faster on most computers.                          *
  *                                                                            *
  *      2.) Both methods detect if the input is NaN or infinity. The IEEE-754 *
@@ -270,7 +270,7 @@ float tmpl_Float_Arccos(const float x)
         return tmpl_Float_Arccos_Rat_Remez(x);
     }
 
-    /*  For 0.5 <= |x| < 1 use the formula acos(x) = 2*asin(sqrt(1 - x) / 2). */
+    /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
@@ -346,7 +346,7 @@ float tmpl_Float_Arccos(const float x)
         return tmpl_Float_Arccos_Rat_Remez(x);
     }
 
-    /*  For 0.5 <= |x| < 1 use the formula acos(x) = 2*asin(sqrt(1 - x) / 2). */
+    /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (abs_x < 1.0F)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */

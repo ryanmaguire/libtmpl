@@ -43,7 +43,7 @@
  *      approximation via:                                                    *
  *                                                                            *
  *                                   a0 + a2 x^2 + ... + an x^n               *
- *          acos(x) = pi/2 - x + x^3 --------------------------               *
+ *          acos(x) = pi/2 - x - x^3 --------------------------               *
  *                                   b0 + b2 x^2 + ... + bm x^m               *
  *                                                                            *
  *      Where the coefficients a_n and b_n are for the rational minimax       *
@@ -82,7 +82,7 @@
  *      for double-double, instead of using the same degree (18, 18)          *
  *      coefficients that quadruple uses. Using a (10, 10) approximation for  *
  *      80-bit extended instead of a (12, 10) approximation. Peak theoretical *
- *      error is 2 * 10^-20. Unit test should actual error is still 1 ULP.    *
+ *      error is 2 * 10^-20. Unit test show the actual error is still 1 ULP.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */

@@ -69,7 +69,7 @@
  *      This includes adding (18, 16) approximations for double-double, and   *
  *      making the coefficients for each precision match the output of the    *
  *      Python scripts found in libtmpl_data. This is to help create          *
- *      reproducibible results in libtmpl.                                    *
+ *      reproducible results in libtmpl.                                      *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */

@@ -50,7 +50,7 @@
  *          asin(z) = z + z^3 * P(z) / Q(z)                                   *
  *                                                                            *
  *      where P(z) is the numerator and Q(z) is the denominator of R(z),      *
- *      respectively. acos(x) is the computed by:                             *
+ *      respectively. acos(x) is then computed by:                            *
  *                                                                            *
  *          acos(x) = 2 * asin(z)                                             *
  *                                                                            *

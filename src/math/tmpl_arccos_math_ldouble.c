@@ -51,7 +51,7 @@
  *              64-bit double              | 2^-57  | 2^-3                    *
  *              80-bit extended / portable | 2^-65  | 2^-3                    *
  *              128-bit double-double      | 2^-105 | 2^-4                    *
- *              128-bit quaduple           | 2^-116 | 2^-4                    *
+ *              128-bit quadruple          | 2^-116 | 2^-4                    *
  *                                                                            *
  *          0 <= |x| < "tiny":                                                *
  *              return pi / 2. The error is O(x). This avoids unnecessary     *
@@ -74,7 +74,7 @@
  *                                                                            *
  *                  R(x) = -(acos(x) - pi/2 + x) / x^3                        *
  *                                                                            *
- *              This function is is even, so the degree (N, M) rational Remez *
+ *              This function is even, so the degree (N, M) rational Remez    *
  *              approximation requires N/2+1 non-zero terms in the numerator  *
  *              and M/2+1 non-zero terms in the denominator. acos(x) is       *
  *              computed via:                                                 *
@@ -124,14 +124,14 @@
  *                  64-bit double              | 8  | 8                       *
  *                  80-bit extended / portable | 10 | 10                      *
  *                  128-bit double-double      | 18 | 16                      *
- *                  128-bit quaduple           | 18 | 18                      *
+ *                  128-bit quadruple          | 18 | 18                      *
  *                                                                            *
  *          -1 < x <= -2^-1:                                                  *
  *              Compute using the negation formula:                           *
  *                                                                            *
  *                  acos(x) = pi - acos(-x)                                   *
  *                                                                            *
- *              we then have 2^-1 <= -x < 1, and hence can use the reflection *
+ *              We then have 2^-1 <= -x < 1, and hence can use the reflection *
  *              formula found in the previous case.                           *
  *          x = -1:                                                           *
  *              return pi.                                                    *
@@ -380,8 +380,8 @@ long double tmpl_LDouble_Arccos(const long double x)
         return tmpl_LDouble_Arccos_Rat_Remez(x);
     }
 
-    /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
-    else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
+    /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
@@ -460,7 +460,7 @@ long double tmpl_LDouble_Arccos(const long double x)
         return tmpl_LDouble_Arccos_Rat_Remez(x);
     }
 
-    /*  For 0.5 <= |x| < 1 use the formula acos(x) = 2*asin(sqrt(1 - x) / 2). */
+    /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (abs_x < 1.0L)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
