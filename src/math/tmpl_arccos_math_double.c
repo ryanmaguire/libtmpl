@@ -53,7 +53,7 @@
  *              using floating-point division.                                *
  *          2^-3 <= |x| < 2^-1:                                               *
  *              Use the degree (8, 8) rational Remez approximation for the    *
- *              function R(x) = -(acos(x) - pi/2 + x)/x^3. This function is   *
+ *              function R(x) = -(acos(x) - pi/2 + x)/x^3. This function      *
  *              is even, so the degree (8, 8) rational Remez approximation    *
  *              requires 5 non-zero terms in the numerator and 5 non-zero     *
  *              terms in the denominator, 10 non-zero terms total. acos(x)    *
@@ -92,7 +92,7 @@
  *                                                                            *
  *                  acos(x) = pi - acos(-x)                                   *
  *                                                                            *
- *              we then have 2^-1 <= -x < 1, and hence can use the reflection *
+ *              We then have 2^-1 <= -x < 1, and hence can use the reflection *
  *              formula found in the previous case.                           *
  *          x = -1:                                                           *
  *              return pi.                                                    *
@@ -241,6 +241,11 @@ extern double tmpl_Double_Arccos(const double x);
  *  double rather than checking the entire double. This gives the IEEE-754    *
  *  method a slight performance boost over the portable one below.            */
 
+/*   Attributes to improve optimization on C23 compatible compilers.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+
 /*  Double precision inverse cosine (acos equivalent).                        */
 double tmpl_Double_Arccos(const double x)
 {
@@ -265,7 +270,7 @@ double tmpl_Double_Arccos(const double x)
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
-    /*  For 0.5 <= |x| < 1 use the formula acos(x) = 2*asin(sqrt(1 - x) / 2). */
+    /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
@@ -314,6 +319,11 @@ extern double tmpl_Double_Abs(double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/*   Attributes to improve optimization on C23 compatible compilers.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 
 /*  Double precision inverse cosine (acos equivalent).                        */
 double tmpl_Double_Arccos(const double x)

@@ -569,8 +569,19 @@ extern const long double tmpl_ldouble_pow_2_table[65];
 /*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
 /*  Otherwise use the functions in src/math/.                                 */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern float tmpl_Float_Arccos(const float x);
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern double tmpl_Double_Arccos(const double x);
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern long double tmpl_LDouble_Arccos(const long double x);
 
 #endif
@@ -1803,8 +1814,19 @@ extern long double tmpl_LDouble_Truncate(long double x);
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
 
 /*  Inline not requested, use the external functions in src/math.             */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern float tmpl_Float_Abs(float x);
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern double tmpl_Double_Abs(double x);
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern long double tmpl_LDouble_Abs(long double x);
 
 #endif

@@ -154,11 +154,7 @@
 
 /*   Attributes to improve optimization on C23 compatible compilers.          */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]]
-[[reproducible]]
-[[unsequenced]]
-[[gnu::const]]
-[[gnu::optimize("ffast-math")]]
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
 #endif
 
 /*  Check for IEEE-754 long double support.                                   */
