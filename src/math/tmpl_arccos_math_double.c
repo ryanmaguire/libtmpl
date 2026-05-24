@@ -346,7 +346,7 @@ double tmpl_Double_Arccos(const double x)
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
-    /*  For 0.5 <= |x| < 1 use the formula acos(x) = 2*asin(sqrt(1 - x) / 2). */
+    /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (abs_x < 1.0)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
