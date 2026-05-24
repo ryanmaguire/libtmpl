@@ -257,6 +257,8 @@
  *  2025/04/05: Ryan Maguire                                                  *
  *      Removed tmpl_math.h as a dependency. A forward declaration is now     *
  *      provided for the function in this file and NAN is included directly.  *
+ *  2026/05/23: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimization on modern compilers.     *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -349,7 +351,7 @@ extern long double tmpl_LDouble_Arccos(const long double x);
  *  long double rather than checking the entire input. This gives the         *
  *  IEEE-754 method a slight performance boost over the portable one below.   */
 
-/*   Attributes to improve optimization on C23 compatible compilers.          */
+/*  Attributes to improve optimization on C23 compatible compilers.           */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
 [[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
 #endif
@@ -432,7 +434,7 @@ extern long double tmpl_LDouble_Abs(long double x);
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
-/*   Attributes to improve optimization on C23 compatible compilers.          */
+/*  Attributes to improve optimization on C23 compatible compilers.           */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
 [[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
 #endif

@@ -37,7 +37,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
+ *      The function f(x) = -(acos(x) + x - pi/2) / x^3 is even. Pre-compute  *
  *      the coefficients for the rational minimax function R(x) of degree     *
  *      (8, 8) for f(x). The odd terms have zero coefficients. We may thus    *
  *      compute the minimax approximation via:                                *
