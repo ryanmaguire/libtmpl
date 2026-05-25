@@ -294,6 +294,18 @@ double tmpl_Double_Arccos(const double x)
         return tmpl_Double_Arccos_Tail_End(x);
     }
 
+    /*  Special case, handle NaN and infinity. The fast-math optimization     *
+     *  means the compiler can assume the input is finite. To properly handle *
+     *  NaN or infinity with this optimization, we check for NaN and infinity *
+     *  by examining the bits of the input. Note, if the fast-math            *
+     *  optimization is enabled, then failure to provide this check here      *
+     *  means an input of NaN may reach the if (x == -1.0) branch below and   *
+     *  produce "true," even though NaN is not equal to -1.0. For both NaN    *
+     *  and infinity, the input is outside of the domain of arccos, so the    *
+     *  output is NaN.                                                        */
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
+        return TMPL_NAN;
+
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0)
         return tmpl_double_pi;
@@ -302,10 +314,7 @@ double tmpl_Double_Arccos(const double x)
     if (x == 1.0)
         return 0.0;
 
-    /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN. Note *
-     *  this catches NaN and infinity since we are checking the exponent of   *
-     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
-     *  than TMPL_DOUBLE_UBIAS, hence NaN will return.                        */
+    /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN.      */
     return TMPL_NAN;
 }
 /*  End of tmpl_Double_Arccos.                                                */
