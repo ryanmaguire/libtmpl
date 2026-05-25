@@ -75,18 +75,23 @@ extern const double tmpl_double_pi_by_two;
 #define TMPL_POLY_EVAL(z) \
 A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 
+/*  Attributes to improve optimization on C23 compatible compilers.           */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+
 /*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Maclaurin(double x)
+double tmpl_Double_Arccos_Maclaurin(const double x)
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
-    const double x2 = x*x;
+    const double x2 = x * x;
 
     /*  Compute the Maclaurin series of asin(x) / x.                          */
     const double poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return tmpl_double_pi_by_two - x*poly;
+    return tmpl_double_pi_by_two - x * poly;
 }
 /*  End of tmpl_Double_Arccos_Maclaurin.                                      */
 

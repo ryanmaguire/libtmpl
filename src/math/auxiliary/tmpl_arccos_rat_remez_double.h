@@ -127,12 +127,17 @@
 /*  The constant Pi / 2.                                                      */
 extern const double tmpl_double_pi_by_two;
 
+/*  Attributes to improve optimization on C23 compatible compilers.           */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+
 /*  Function for computing the (8, 8) minimax approximation for acos(x).      */
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Rat_Remez(double x)
+double tmpl_Double_Arccos_Rat_Remez(const double x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const double x2 = x*x;
+    const double x2 = x * x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
     const double p = TMPL_POLYA_EVAL(x2);
@@ -141,7 +146,7 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
 
     /*  p/q is the rational Remez approximation for (acos(x) - pi/2 + x)/x^3. *
      *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
-    return tmpl_double_pi_by_two - (x + x*r);
+    return tmpl_double_pi_by_two - (x + x * r);
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
 

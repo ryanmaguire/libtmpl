@@ -119,9 +119,14 @@ extern double tmpl_Double_Sqrt(double x);
 #define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
 #define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
+/*  Attributes to improve optimization on C23 compatible compilers.           */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Tail_End(double x)
+double tmpl_Double_Arccos_Tail_End(const double x)
 {
     /*  The rational function is computed in terms of (1 - x) / 2.            */
     const double z = 0.5 * (1.0 - x);
