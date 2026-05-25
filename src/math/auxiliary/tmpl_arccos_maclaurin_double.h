@@ -58,6 +58,9 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Only the odd non-constant terms have non-zero coefficients.               */
 #define A00 (1.0000000000000000000000000000000000000000000000000E+00)
 #define A01 (1.6666666666666666666666666666666666666666666666667E-01)
@@ -75,14 +78,10 @@ extern const double tmpl_double_pi_by_two;
 #define TMPL_POLY_EVAL(z) \
 A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Maclaurin(const double x)
+double tmpl_Double_Arccos_Maclaurin(const double x) TMPL_UNSEQUENCED
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
     const double x2 = x * x;

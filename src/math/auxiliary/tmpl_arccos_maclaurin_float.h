@@ -58,6 +58,9 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Only the odd non-constant terms have non-zero coefficients.               */
 #define A00 (1.0000000000000000000000000000000000000000000000000E+00F)
 #define A01 (1.6666666666666666666666666666666666666666666666667E-01F)
@@ -72,17 +75,18 @@
 #define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
 
 /*  Computes the degree 9 Maclaurin polynomial for acos(x).                   */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Arccos_Maclaurin(float x)
+float tmpl_Float_Arccos_Maclaurin(const float x) TMPL_UNSEQUENCED
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
-    const float x2 = x*x;
+    const float x2 = x * x;
 
     /*  Compute the Maclaurin series of asin(x) / x.                          */
     const float poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x*poly;
+    return TMPL_PI_BY_TWO - x * poly;
 }
 /*  End of tmpl_Float_Arccos_Maclaurin.                                       */
 

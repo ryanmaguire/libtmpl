@@ -75,6 +75,9 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The constant Pi / 2.                                                      */
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
 
@@ -241,17 +244,18 @@ A00 + z*(\
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Computes the Maclaurin polynomial for acos(x).                            */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Arccos_Maclaurin(long double x)
+long double tmpl_LDouble_Arccos_Maclaurin(const long double x) TMPL_UNSEQUENCED
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
-    const long double x2 = x*x;
+    const long double x2 = x * x;
 
     /*  Compute the Maclaurin series of asin(x) / x.                          */
     const long double poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x*poly;
+    return TMPL_PI_BY_TWO - x * poly;
 }
 /*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
 
