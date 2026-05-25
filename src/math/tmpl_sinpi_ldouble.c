@@ -1,12 +1,13 @@
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 #include "auxiliary/tmpl_cospi_maclaurin_ldouble.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_ldouble.h"
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-long double tmpl_LDouble_SinPi(const long double x)
+TMPL_CONST_FUNC
+long double tmpl_LDouble_SinPi(const long double x) TMPL_UNSEQUENCED
 {
     long double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;

@@ -172,6 +172,9 @@
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  TMPL_NAN macro found here which provides double precision NaN.            */
 #include <libtmpl/include/nan/tmpl_nan_double.h>
 
@@ -182,16 +185,12 @@
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Forward declaration for the function, also found in tmpl_math.h.          */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_SinPi(const double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED;
 
 /*  Tell the compiler about the mod 2 function, used for argument reduction.  */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_Mod_2(const double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Mod_2(const double x) TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *                                   Tables                                   *
@@ -223,10 +222,8 @@ extern const double tmpl_double_sinpi_table[128];
  ******************************************************************************/
 
 /*  Computes sin(pi x) at double precision.                                   */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-double tmpl_Double_SinPi(const double x)
+TMPL_CONST_FUNC
+double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED
 {
     /*  We compute using the angle sum formula for sin(pi(r + dr)). Set aside *
      *  four variables for the right-hand side of that equation.              */
@@ -398,10 +395,8 @@ double tmpl_Double_SinPi(const double x)
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Computes sin(pi x) at double precision.                                   */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-double tmpl_Double_SinPi(const double x)
+TMPL_CONST_FUNC
+double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED
 {
     double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
