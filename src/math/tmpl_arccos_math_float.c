@@ -208,6 +208,9 @@
 /*  Forward declaration for the function, also found in tmpl_math.h.          */
 extern float tmpl_Float_Arccos(const float x);
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
@@ -230,6 +233,15 @@ extern float tmpl_Float_Arccos(const float x);
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
 #include "auxiliary/tmpl_arccos_tail_end_float.h"
 
+/*  The portable version needs to use the absolute value function.            */
+#if TMPL_HAS_IEEE754_FLOAT != 1
+
+/*  Forward declaration provided here.                                        */
+#include <libtmpl/include/abs/tmpl_abs_float.h>
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_FLOAT != 1.                                   */
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
@@ -241,13 +253,9 @@ extern float tmpl_Float_Arccos(const float x);
  *  float rather than checking the entire float. This gives the IEEE-754      *
  *  method a slight performance boost over the portable one below.            */
 
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Single precision inverse cosine (acosf equivalent).                       */
-float tmpl_Float_Arccos(const float x)
+TMPL_CONST_FUNC
+float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Float w;
@@ -304,29 +312,9 @@ float tmpl_Float_Arccos(const float x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
- *  on the size of the input. We compute this via the absolute value function.*/
-#if TMPL_USE_INLINE == 1
-
-/*  The absolute value function is small and should be inlined.               */
-#include <libtmpl/include/inline/math/tmpl_abs_float.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern float tmpl_Float_Abs(float x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Single precision inverse cosine (acosf equivalent).                       */
-float tmpl_Float_Arccos(const float x)
+TMPL_CONST_FUNC
+float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const float abs_x = tmpl_Float_Abs(x);

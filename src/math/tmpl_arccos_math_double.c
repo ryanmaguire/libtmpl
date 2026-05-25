@@ -212,6 +212,9 @@
 /*  Forward declaration for the function, also found in tmpl_math.h.          */
 extern double tmpl_Double_Arccos(const double x);
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
@@ -243,11 +246,6 @@ extern double tmpl_Double_Arccos(const double x);
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE != 1.                                  */
 
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -260,7 +258,8 @@ extern double tmpl_Double_Arccos(const double x);
  *  method a slight performance boost over the portable one below.            */
 
 /*  Double precision inverse cosine (acos equivalent).                        */
-double tmpl_Double_Arccos(const double x)
+TMPL_CONST_FUNC
+double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Double w;
@@ -327,7 +326,8 @@ double tmpl_Double_Arccos(const double x)
  ******************************************************************************/
 
 /*  Double precision inverse cosine (acos equivalent).                        */
-double tmpl_Double_Arccos(const double x)
+TMPL_CONST_FUNC
+double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const double abs_x = tmpl_Double_Abs(x);

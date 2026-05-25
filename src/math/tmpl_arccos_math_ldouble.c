@@ -270,6 +270,9 @@
 /*  Forward declaration for the function, also found in tmpl_math.h.          */
 extern long double tmpl_LDouble_Arccos(const long double x);
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
@@ -291,6 +294,15 @@ extern long double tmpl_LDouble_Arccos(const long double x);
 
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
 #include "auxiliary/tmpl_arccos_tail_end_ldouble.h"
+
+/*  The portable version needs to use the absolute value function.            */
+#if TMPL_HAS_IEEE754_LDOUBLE != 1
+
+/*  Forward declaration provided here.                                        */
+#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE != 1.                                 */
 
 /******************************************************************************
  *                              Constant Values                               *
@@ -351,13 +363,9 @@ extern long double tmpl_LDouble_Arccos(const long double x);
  *  long double rather than checking the entire input. This gives the         *
  *  IEEE-754 method a slight performance boost over the portable one below.   */
 
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Long double precision inverse cosine (acosl equivalent).                  */
-long double tmpl_LDouble_Arccos(const long double x)
+TMPL_CONST_FUNC
+long double tmpl_LDouble_Arccos(const long double x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_LDouble w;
@@ -418,29 +426,9 @@ long double tmpl_LDouble_Arccos(const long double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
- *  on the size of the input. We compute this via the absolute value function.*/
-#if TMPL_USE_INLINE == 1
-
-/*  The absolute value function is small and should be inlined.               */
-#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern long double tmpl_LDouble_Abs(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Long double precision inverse cosine (acosl equivalent).                  */
-long double tmpl_LDouble_Arccos(const long double x)
+TMPL_CONST_FUNC
+long double tmpl_LDouble_Arccos(const long double x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const long double abs_x = tmpl_LDouble_Abs(x);
