@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                 tmpl_calloc                                *
+ *                               tmpl_attributes                              *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides macros for C23 attributes, while maintaining portability     *
