@@ -98,8 +98,12 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The compiler needs to know about the sqrt function.                       */
-extern double tmpl_Double_Sqrt(double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Sqrt(const double x) TMPL_UNSEQUENCED;
 
 /*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
@@ -119,14 +123,10 @@ extern double tmpl_Double_Sqrt(double x);
 #define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
 #define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Tail_End(const double x)
+double tmpl_Double_Arccos_Tail_End(const double x) TMPL_UNSEQUENCED
 {
     /*  The rational function is computed in terms of (1 - x) / 2.            */
     const double z = 0.5 * (1.0 - x);

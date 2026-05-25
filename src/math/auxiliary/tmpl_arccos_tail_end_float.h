@@ -68,8 +68,12 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The compiler needs to know about the sqrt function.                       */
-extern float tmpl_Float_Sqrt(float x);
+TMPL_CONST_FUNC
+extern float tmpl_Float_Sqrt(const float x) TMPL_UNSEQUENCED;
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define A00 (+1.6666657332654782511630744878585859634321997276656E-01F)
@@ -81,24 +85,25 @@ extern float tmpl_Float_Sqrt(float x);
 #define B01 (-7.0227698493007347430817019567204548858969498944150E-01F)
 
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Arccos_Tail_End(float x)
+float tmpl_Float_Arccos_Tail_End(const float x) TMPL_UNSEQUENCED
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */
-    const float z = 0.5F*(1.0F - x);
+    const float z = 0.5F * (1.0F - x);
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = A00 + z*(A01 + z*A02);
-    const float q = B00 + z*B01;
+    const float p = A00 + z * (A01 + z * A02);
+    const float q = B00 + z * B01;
 
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
-    const float r = z*p/q;
+    const float r = z * p / q;
     const float sqrt_z = tmpl_Float_Sqrt(z);
     const float t = r * sqrt_z;
 
     /*  We now have t = asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).     */
-    return 2.0F*(sqrt_z + t);
+    return 2.0F * (sqrt_z + t);
 }
 /*  End of tmpl_Float_Arccos_Tail_End.                                        */
 

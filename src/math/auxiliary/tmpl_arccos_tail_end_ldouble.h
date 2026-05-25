@@ -79,8 +79,12 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The compiler needs to know about the sqrt function.                       */
-extern long double tmpl_LDouble_Sqrt(long double x);
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_Sqrt(const long double x) TMPL_UNSEQUENCED;
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -219,11 +223,12 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Arccos_Tail_End(long double x)
+long double tmpl_LDouble_Arccos_Tail_End(const long double x) TMPL_UNSEQUENCED
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */
-    const long double z = 0.5L*(1.0L - x);
+    const long double z = 0.5L * (1.0L - x);
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
     const long double p = TMPL_NUM_EVAL(z);
@@ -231,12 +236,12 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
 
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
-    const long double r = z*p/q;
+    const long double r = z * p / q;
     const long double sqrt_z = tmpl_LDouble_Sqrt(z);
     const long double t = r * sqrt_z;
 
     /*  We now have t = asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).     */
-    return 2.0L*(sqrt_z + t);
+    return 2.0L * (sqrt_z + t);
 }
 /*  End of tmpl_LDouble_Arccos_Tail_End.                                      */
 
