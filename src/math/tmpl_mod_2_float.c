@@ -73,6 +73,9 @@
 /*  TMPL_HAS_IEEE754_FLOAT macro and function prototype found here.           */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Check for IEEE-754 support. Significant speed boost if available.         */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
@@ -86,7 +89,8 @@
 #include <libtmpl/include/types/tmpl_floatint_float.h>
 
 /*  Function for computing the remainder after division by 2.                 */
-float tmpl_Float_Mod_2(float x)
+TMPL_CONST_FUNC
+float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
 {
     /*  32-bit integers available, we can get a speed boost using this. Use   *
      *  a union with an unsigned 32-bit integer and an IEEE-754 float.        */
@@ -139,7 +143,8 @@ float tmpl_Float_Mod_2(float x)
 #define TMPL_EXPO_SHIFT (0x07U + TMPL_FLOAT_UBIAS)
 
 /*  Function for computing the remainder after division by 2.                 */
-float tmpl_Float_Mod_2(float x)
+TMPL_CONST_FUNC
+float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
 {
     tmpl_IEEE754_Float w, tmp;
     w.r = x;
@@ -224,7 +229,8 @@ float tmpl_Float_Mod_2(float x)
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /*  Portable algorithm for mod 2 based on the floor function.                 */
-float tmpl_Float_Mod_2(float x)
+TMPL_CONST_FUNC
+float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
 {
     return x - 2.0F * tmpl_Float_Truncate(0.5F * x);
 }

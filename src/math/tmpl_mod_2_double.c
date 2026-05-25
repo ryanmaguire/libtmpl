@@ -77,6 +77,9 @@
 /*  TMPL_HAS_FLOATINT64 macro found here.                                     */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Function prototype provided here.                                         */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -96,10 +99,8 @@
  */
 
 /*  Function for computing the remainder after division by 2.                 */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-double tmpl_Double_Mod_2(const double x)
+TMPL_CONST_FUNC
+double tmpl_Double_Mod_2(const double x) TMPL_UNSEQUENCED
 {
     /*  64-bit integers available, we can get a speed boost using this. Use   *
      *  a union with an unsigned 64-bit integer and an IEEE-754 double.       */
@@ -155,10 +156,8 @@ double tmpl_Double_Mod_2(const double x)
 #define TMPL_EXPO_SHIFT2 (0x04U + TMPL_DOUBLE_UBIAS)
 
 /*  Function for computing the floor of a double (floor equivalent).          */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-double tmpl_Double_Mod_2(const double x)
+TMPL_CONST_FUNC
+double tmpl_Double_Mod_2(const double x) TMPL_UNSEQUENCED
 {
     tmpl_IEEE754_Double w, tmp;
     w.r = x;
@@ -262,10 +261,8 @@ TMPL_DOUBLE_MOD2_FINISH:
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
 /*  Portable algorithm for mod 2 based on the floor function.                 */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-double tmpl_Double_Mod_2(const double x)
+TMPL_CONST_FUNC
+double tmpl_Double_Mod_2(const double x) TMPL_UNSEQUENCED
 {
     /*  x mod 2 is odd. We can use this to reduce the argument to positive.   */
     return x - 2.0 * tmpl_Double_Truncate(0.5 * x);
