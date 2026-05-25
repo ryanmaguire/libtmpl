@@ -16,46 +16,59 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_abs_float                               *
+ *                                 tmpl_calloc                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides an inlined abs function, or a forward declaration if inline  *
- *      support is not available.                                             *
+ *      Provides macros for C23 attributes, while maintaining portability     *
+ *      for libtmpl with older compilers and for use with C++.                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Provides the TMPL_USE_INLINE macro.                               *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 24, 2026                                                  *
+ *  Date:       May 25, 2026                                                  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ABS_ABS_FLOAT_H
-#define TMPL_ABS_ABS_FLOAT_H
+#ifndef TMPL_ATTRIBUTES_H
+#define TMPL_ATTRIBUTES_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
-#include <libtmpl/include/tmpl_config.h>
+/*  C89 does not define the __STDC_VERSION__ macro at all. Check for this.    */
+#ifdef __STDC_VERSION__
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  C23 introduced attributes. Check for compiler support.                    */
+#if __STDC_VERSION__ >= 202311L
 
-/*  abs function is small enough that it can be inlined. Check for support.   */
-#if TMPL_USE_INLINE == 1
-
-/*  Implemented in the inline directory.                                      */
-#include <libtmpl/include/inline/math/tmpl_abs_float.h>
-
-/*  Lacking inline support, provide the forward declaration to the compiler.  */
-#else
-
-/*  Function for computing the absolute value at single precision.            */
-TMPL_CONST_FUNC
-extern float tmpl_Float_Abs(const float x) TMPL_UNSEQUENCED;
+/*  C23 support found, indicate this for libtmpl.                             */
+#define TMPL_ATTRIBUTES_SUPPORTED 1
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  End of #if __STDC_VERSION__ >= 202311L.                                   */
+
+#endif
+/*  End of #ifdef __STDC_VERSION__.                                           */
+
+/*  Provide some common attribute lists for libtmpl functions.                */
+#ifdef TMPL_ATTRIBUTES_SUPPORTED
+
+/*  Many math functions, like those of the type const double -> double, can   *
+ *  be declared with the reproducible and unsequenced attributes. The GNU     *
+ *  const attribute, which is stricter, may also be applied. GCC and Clang    *
+ *  support gnu::const, and conforming C23 compilers are required to ignore   *
+ *  vendor attributes if they are not supported, making this portable.        */
+#define TMPL_CONST_FUNC [[nodiscard, gnu::const]]
+#define TMPL_UNSEQUENCED [[reproducible, unsequenced]]
+
+#else
+
+/*  For compilers lacking C23 support, or when using C++ compilers, set these *
+ *  macros to empty.                                                          */
+#define TMPL_CONST_FUNC
+#define TMPL_UNSEQUENCED
+
+#endif
+/*  End of #ifdef TMPL_ATTRIBUTES_SUPPORTED.                                  */
 
 #endif
 /*  End of include guard.                                                     */

@@ -152,10 +152,8 @@
 /*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
-/*   Attributes to improve optimization on C23 compatible compilers.          */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
@@ -170,8 +168,9 @@
  ******************************************************************************/
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
+TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(long double x)
+long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_LDouble w;
@@ -195,8 +194,9 @@ long double tmpl_LDouble_Abs(long double x)
  ******************************************************************************/
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
+TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(long double x)
+long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_LDouble w;
@@ -233,8 +233,9 @@ long double tmpl_LDouble_Abs(long double x)
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
+TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(long double x)
+long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */
     if (x < 0.0L)

@@ -99,6 +99,9 @@
 /*  size_t typedef given here.                                                */
 #include <stddef.h>
 
+/*  Macros provided C23 attributes (for optimization) are provided here.      */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -569,20 +572,14 @@ extern const long double tmpl_ldouble_pow_2_table[65];
 /*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
 /*  Otherwise use the functions in src/math/.                                 */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern float tmpl_Float_Arccos(const float x);
+TMPL_CONST_FUNC
+extern float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED;
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_Arccos(const double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED;
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern long double tmpl_LDouble_Arccos(const long double x);
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_Arccos(const long double x) TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
@@ -1368,20 +1365,14 @@ extern long double tmpl_LDouble_Min(long double x, long double y);
  *      double x_mod_2:                                                       *
  *          The value x mod 2.                                                *
  ******************************************************************************/
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern float tmpl_Float_Mod_2(const float x);
+TMPL_CONST_FUNC
+extern float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED;
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_Mod_2(const double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Mod_2(const double x) TMPL_UNSEQUENCED;
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern long double tmpl_LDouble_Mod_2(const long double x);
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_Mod_2(const long double x) TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1700,20 +1691,14 @@ tmpl_LDouble_SinhCosh(long double t, long double *sinh_t, long double *cosh_t);
  *      double sin_pix:                                                       *
  *          The normalized sine of x, sin(pi x).                              *
  ******************************************************************************/
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern float tmpl_Float_SinPi(const float x);
+TMPL_CONST_FUNC
+extern float tmpl_Float_SinPi(const float x) TMPL_UNSEQUENCED;
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_SinPi(const double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED;
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern long double tmpl_LDouble_SinPi(const long double x);
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_SinPi(const long double x) TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

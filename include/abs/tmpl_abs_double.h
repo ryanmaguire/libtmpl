@@ -38,6 +38,9 @@
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  abs function is small enough that it can be inlined. Check for support.   */
 #if TMPL_USE_INLINE == 1
 
@@ -47,13 +50,9 @@
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
 
-/*   Attributes to improve optimization on C23-compatible compilers.          */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Function for computing the absolute value at double precision.            */
-extern double tmpl_Double_Abs(const double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Abs(const double x) TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

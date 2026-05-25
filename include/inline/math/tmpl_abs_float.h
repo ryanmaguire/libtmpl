@@ -124,10 +124,8 @@
 /*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
 #include <libtmpl/include/types/tmpl_ieee754_float.h>
 
-/*   Attributes to improve optimization on C23 compatible compilers.          */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -137,8 +135,9 @@
  ******************************************************************************/
 
 /*  Single precision absolute value function (fabsf equivalent).              */
+TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-float tmpl_Float_Abs(float x)
+float tmpl_Float_Abs(const float x) TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_Float w;
@@ -164,8 +163,9 @@ float tmpl_Float_Abs(float x)
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Single precision absolute value function (fabsf equivalent).              */
+TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-float tmpl_Float_Abs(float x)
+float tmpl_Float_Abs(const float x) TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */
     if (x < 0.0F)
