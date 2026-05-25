@@ -3,7 +3,10 @@
 #include "auxiliary/tmpl_cospi_maclaurin_float.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_float.h"
 
-float tmpl_Float_SinPi(float x)
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+float tmpl_Float_SinPi(const float x)
 {
     float arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;

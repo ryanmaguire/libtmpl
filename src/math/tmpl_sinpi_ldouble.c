@@ -3,7 +3,10 @@
 #include "auxiliary/tmpl_cospi_maclaurin_ldouble.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_ldouble.h"
 
-long double tmpl_LDouble_SinPi(long double x)
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+long double tmpl_LDouble_SinPi(const long double x)
 {
     long double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;

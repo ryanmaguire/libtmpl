@@ -1700,9 +1700,20 @@ tmpl_LDouble_SinhCosh(long double t, long double *sinh_t, long double *cosh_t);
  *      double sin_pix:                                                       *
  *          The normalized sine of x, sin(pi x).                              *
  ******************************************************************************/
-extern float tmpl_Float_SinPi(float x);
-extern double tmpl_Double_SinPi(double x);
-extern long double tmpl_LDouble_SinPi(long double x);
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+extern float tmpl_Float_SinPi(const float x);
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+extern double tmpl_Double_SinPi(const double x);
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+extern long double tmpl_LDouble_SinPi(const long double x);
 
 /******************************************************************************
  *  Function:                                                                 *

@@ -182,9 +182,15 @@
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Forward declaration for the function, also found in tmpl_math.h.          */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern double tmpl_Double_SinPi(const double x);
 
 /*  Tell the compiler about the mod 2 function, used for argument reduction.  */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 extern double tmpl_Double_Mod_2(const double x);
 
 /******************************************************************************
@@ -217,6 +223,9 @@ extern const double tmpl_double_sinpi_table[128];
  ******************************************************************************/
 
 /*  Computes sin(pi x) at double precision.                                   */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 double tmpl_Double_SinPi(const double x)
 {
     /*  We compute using the angle sum formula for sin(pi(r + dr)). Set aside *
@@ -389,6 +398,9 @@ double tmpl_Double_SinPi(const double x)
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Computes sin(pi x) at double precision.                                   */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
 double tmpl_Double_SinPi(const double x)
 {
     double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
