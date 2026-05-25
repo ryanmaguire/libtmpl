@@ -82,6 +82,9 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Helper macro for casting with C vs. C++ compatibility.                    */
 #include <libtmpl/include/compat/tmpl_cast.h>
 
@@ -89,16 +92,12 @@
 extern const float tmpl_float_pi;
 
 /*  Computes sin(pi t) at single precision.                                   */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern float tmpl_Float_SinPi(const float t);
+TMPL_CONST_FUNC
+extern float tmpl_Float_SinPi(const float t) TMPL_UNSEQUENCED;
 
 /*  Computes the remainder of a double after division by 2.                   */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_Mod_2(const double t);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Mod_2(const double t) TMPL_UNSEQUENCED;
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */
 TMPL_STATIC_INLINE

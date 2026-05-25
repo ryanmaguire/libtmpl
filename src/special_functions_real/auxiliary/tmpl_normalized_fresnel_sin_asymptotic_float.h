@@ -70,20 +70,19 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 #define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939E+00F)
 
 /*  Computes cos(pi t) at single precision.                                   */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern float tmpl_Float_CosPi(const float t);
+TMPL_CONST_FUNC
+extern float tmpl_Float_CosPi(const float t) TMPL_UNSEQUENCED;
 
 /*  Computes the remainder of a double after division by 2.                   */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_Mod_2(const double t);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Mod_2(const double t) TMPL_UNSEQUENCED;
 
 /*  Function for computing the normalized Fresnel sine of a large input.      */
 TMPL_STATIC_INLINE
