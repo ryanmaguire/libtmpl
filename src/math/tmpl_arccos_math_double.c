@@ -179,6 +179,8 @@
  *          Header file providing pi and pi / 2.                              *
  *  4.) tmpl_ieee754_double.h:                                                *
  *          Header file where the tmpl_IEEE754_Double type is defined.        *
+ *  5.) tmpl_abs_double.h:                                                    *
+ *          Provides the absolute value function (portable version only).     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 03, 2023                                              *
@@ -232,6 +234,20 @@ extern double tmpl_Double_Arccos(const double x);
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
 #include "auxiliary/tmpl_arccos_tail_end_double.h"
 
+/*  The portable version needs to use the absolute value function.            */
+#if TMPL_HAS_IEEE754_DOUBLE != 1
+
+/*  Forward declaration provided here.                                        */
+#include <libtmpl/include/abs/tmpl_abs_double.h>
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE != 1.                                  */
+
+/*  Attributes to improve optimization on C23 compatible compilers.           */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
+#endif
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -242,11 +258,6 @@ extern double tmpl_Double_Arccos(const double x);
 /*  On most computers it is faster to check the value of the exponent of a    *
  *  double rather than checking the entire double. This gives the IEEE-754    *
  *  method a slight performance boost over the portable one below.            */
-
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
 
 /*  Double precision inverse cosine (acos equivalent).                        */
 double tmpl_Double_Arccos(const double x)
@@ -305,27 +316,6 @@ double tmpl_Double_Arccos(const double x)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
-
-/*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
- *  on the size of the input. We compute this via the absolute value function.*/
-#if TMPL_USE_INLINE == 1
-
-/*  The absolute value function is small and should be inlined.               */
-#include <libtmpl/include/inline/math/tmpl_abs_double.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern double tmpl_Double_Abs(double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
 
 /*  Double precision inverse cosine (acos equivalent).                        */
 double tmpl_Double_Arccos(const double x)

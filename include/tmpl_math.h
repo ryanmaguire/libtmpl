@@ -1822,34 +1822,13 @@ extern long double tmpl_LDouble_Truncate(long double x);
 #define tmpl_Double_Abs fabs
 #define tmpl_LDouble_Abs fabsl
 
-/*  The absolute value function is small enough that a user may want to       *
- *  inline it. The result of inlining gives a surprising 2x speed boost. The  *
- *  absolute value function is not computationally expensive regardless.      */
-#elif TMPL_USE_INLINE == 1
-
-/*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/inline/math/tmpl_abs_float.h>
-#include <libtmpl/include/inline/math/tmpl_abs_double.h>
-#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
-
 #else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
-/*  Inline not requested, use the external functions in src/math.             */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern float tmpl_Float_Abs(float x);
-
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern double tmpl_Double_Abs(double x);
-
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-extern long double tmpl_LDouble_Abs(long double x);
+/*  Forward declarations and optional inline support provided here.           */
+#include <libtmpl/include/abs/tmpl_abs_double.h>
+#include <libtmpl/include/abs/tmpl_abs_float.h>
+#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
