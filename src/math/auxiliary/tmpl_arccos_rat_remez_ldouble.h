@@ -92,6 +92,9 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The constant Pi / 2.                                                      */
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
 
@@ -232,20 +235,21 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Computes a rational minimax approximation of acos(x).                     */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Arccos_Rat_Remez(long double x)
+long double tmpl_LDouble_Arccos_Rat_Remez(const long double x) TMPL_UNSEQUENCED
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const long double x2 = x*x;
+    const long double x2 = x * x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
     const long double p = TMPL_NUM_EVAL(x2);
     const long double q = TMPL_DEN_EVAL(x2);
-    const long double r = x2*p/q;
+    const long double r = x2 * p / q;
 
     /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. *
      *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
-    return TMPL_PI_BY_TWO - (x + x*r);
+    return TMPL_PI_BY_TWO - (x + x * r);
 }
 /*  End of tmpl_LDouble_Arccos_Rat_Remez.                                     */
 

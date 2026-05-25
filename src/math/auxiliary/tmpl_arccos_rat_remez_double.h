@@ -106,6 +106,9 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
 #define A01 (-2.9647442738212244852684254810912673101657174481766E-01)
@@ -127,14 +130,10 @@
 /*  The constant Pi / 2.                                                      */
 extern const double tmpl_double_pi_by_two;
 
-/*  Attributes to improve optimization on C23 compatible compilers.           */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
-[[nodiscard]] [[reproducible]] [[unsequenced]] [[gnu::const]]
-#endif
-
 /*  Function for computing the (8, 8) minimax approximation for acos(x).      */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Rat_Remez(const double x)
+double tmpl_Double_Arccos_Rat_Remez(const double x) TMPL_UNSEQUENCED
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
     const double x2 = x * x;

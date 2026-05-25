@@ -81,6 +81,9 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define A00 (+1.6666657332654782511630744878585859634321997276656E-01F)
 #define A01 (-4.2035660448040502977938914900697450640872894337286E-02F)
@@ -94,20 +97,21 @@
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
 
 /*  Function for computing the (4, 2) minimax approximation of acos(x).       */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Arccos_Rat_Remez(float x)
+float tmpl_Float_Arccos_Rat_Remez(const float x) TMPL_UNSEQUENCED
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const float x2 = x*x;
+    const float x2 = x * x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = A00 + x2*(A01 + x2*A02);
-    const float q = B00 + x2*B01;
-    const float r = x2*p/q;
+    const float p = A00 + x2 * (A01 + x2 * A02);
+    const float q = B00 + x2 * B01;
+    const float r = x2 * p / q;
 
     /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. *
      *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
-    return TMPL_PI_BY_TWO - (x + x*r);
+    return TMPL_PI_BY_TWO - (x + x * r);
 }
 /*  End of tmpl_Float_Arccos_Rat_Remez.                                       */
 
