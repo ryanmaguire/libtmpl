@@ -61,7 +61,7 @@ static void tmpl_write_use_simd_fast_math(FILE *fp)
 #ifdef TMPL_SET_USE_SIMD_FAST_MATH_TRUE
     fputs(
         "#define TMPL_USE_SIMD_FAST_MATH 1\n"
-        "#define TMPL_SIMD_DECL _Pragma(\"#pragma omp declare simd\")\n\n",
+        "#define TMPL_SIMD_DECL _Pragma(\"omp declare simd\")\n\n",
         fp
     );
 #else
