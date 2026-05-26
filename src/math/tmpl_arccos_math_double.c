@@ -126,10 +126,10 @@
  *          to the numbers 2^-57, 2^-3, 2^-1, and 1.0.                        *
  *      Error:                                                                *
  *          Based on 788,968,857 samples with -1 < x < 1.                     *
- *              max relative error: 2.2204459059627917e-16                    *
- *              rms relative error: 8.3796804351081161e-17                    *
- *              max absolute error: 4.4408920985006262e-16                    *
- *              rms absolute error: 1.4737238548161158e-16                    *
+ *              max relative error: 2.2204459059627917E-16                    *
+ *              rms relative error: 8.3796804351081161E-17                    *
+ *              max absolute error: 4.4408920985006262E-16                    *
+ *              rms absolute error: 1.4737238548161158E-16                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Notes:                                                                    *
@@ -173,13 +173,15 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_nan_double.h:                                                    *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_nan_double.h:                                                    *
  *          Header file providing double precision NaN (Not-a-Number).        *
- *  3.) tmpl_math_constants.h:                                                *
+ *  4.) tmpl_math_constants.h:                                                *
  *          Header file providing pi and pi / 2.                              *
- *  4.) tmpl_ieee754_double.h:                                                *
+ *  5.) tmpl_ieee754_double.h:                                                *
  *          Header file where the tmpl_IEEE754_Double type is defined.        *
- *  5.) tmpl_abs_double.h:                                                    *
+ *  6.) tmpl_abs_double.h:                                                    *
  *          Provides the absolute value function (portable version only).     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
