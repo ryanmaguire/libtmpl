@@ -71,6 +71,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -90,7 +92,6 @@
  *      In an effort to have reproducible results, the Remez coefficients are *
  *      now the exact same ones that are output from the Python script found  *
  *      in libtmpl_data. The previous coefficients were truncated.            *
- *  2024/10/29: Ryan Maguire                                                  *
  *      After some experimenting, I noticed that the (8, 8) rational Remez    *
  *      approximation is sufficient for double precision. Peak theoretical    *
  *      is 8.5 * 10^-17. Unit tests show the actual error is within 1 ULP of  *
@@ -143,7 +144,7 @@ double tmpl_Double_Arccos_Rat_Remez(const double x) TMPL_UNSEQUENCED
     const double q = TMPL_POLYB_EVAL(x2);
     const double r = x2 * p / q;
 
-    /*  p/q is the rational Remez approximation for (acos(x) - pi/2 + x)/x^3. *
+    /*  p/q is the rational Remez approximation for -(acos(x) - pi/2 + x)/x^3.*
      *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
     return tmpl_double_pi_by_two - (x + x * r);
 }

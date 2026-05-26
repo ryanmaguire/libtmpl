@@ -46,6 +46,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2023                                                  *
@@ -83,7 +85,8 @@ TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Arccos_Maclaurin(const double x) TMPL_UNSEQUENCED
 {
-    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
+    /*  The non-constant terms are odd, powers are x^{2n+1} = x * x^2n.       *
+     *  Compute the square of the input.                                      */
     const double x2 = x * x;
 
     /*  Compute the Maclaurin series of asin(x) / x.                          */
