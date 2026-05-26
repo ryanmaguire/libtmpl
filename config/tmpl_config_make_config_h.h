@@ -76,6 +76,7 @@
 #include "tmpl_config_write_use_memcpy.h"
 #include "tmpl_config_write_use_restrict.h"
 #include "tmpl_config_write_use_volatile.h"
+#include "tmpl_write_use_simd_fast_math.h"
 
 /*  Function for creating include/tmpl_config.h.                              */
 static int make_config_h(void)
@@ -125,6 +126,9 @@ static int make_config_h(void)
     tmpl_write_use_math(fp);
     tmpl_write_use_volatile(fp);
     tmpl_write_use_restrict(fp);
+
+    /*  Macro for enabling SIMD support (needs OpenMP support).               */
+    tmpl_write_use_simd_fast_math(fp);
 
     /*  Macro for whether to use memcpy or for-loops.                         */
     tmpl_write_use_memcpy(fp);
