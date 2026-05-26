@@ -575,6 +575,7 @@ extern const long double tmpl_ldouble_pow_2_table[65];
 TMPL_CONST_FUNC
 extern float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED;
 
+TMPL_SIMD_DECL
 TMPL_CONST_FUNC
 extern double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED;
 
