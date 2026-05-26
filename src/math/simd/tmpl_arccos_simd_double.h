@@ -68,7 +68,7 @@
  *          rms absolute error: 1.5047330146850383E-16                        *
  *      Values assume 100% accuracy of glibc and were computed using a CPU    *
  *      with AVX2 support and the flags -ffast-math and -march=native. Other  *
- *      SIMD intructions may produce errors of 3-4 ULP instead of 2 ULP.      *
+ *      SIMD instructions may produce errors of 3-4 ULP instead of 2 ULP.     *
  *  Notes:                                                                    *
  *      1.) There are no checks for NaN or infinity. Unit tests show that NaN *
  *          and inf behave as expected with GCC and Clang (output is NaN).    *
@@ -207,7 +207,9 @@ double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
     /*  Final check, for |x| > 1 return NaN. This usually does create a       *
      *  branch (GCC 16.1 and Clang 22.1 both do), but if the inputs are       *
      *  consistently within the domain of arccos (meaning |x| <= 1), then     *
-     *  the branching does not hurt the vectorization at all.                 */
+     *  the branching does not hurt the vectorization at all. With certain    *
+     *  compiler flags, this may be turned into a blend as well, removing the *
+     *  possibility of branching.                                             */
     return (abs_x > 1.0 ? TMPL_NAN : out);
 }
 /*  End of tmpl_Double_Arccos.                                                */
