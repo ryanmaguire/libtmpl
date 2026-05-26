@@ -257,6 +257,23 @@ extern double tmpl_Double_Arccos(const double x);
  *  double rather than checking the entire double. This gives the IEEE-754    *
  *  method a slight performance boost over the portable one below.            */
 
+/*  The acos function can be made branchless, which allows the routines to be *
+ *  vectorized when SIMD support is available. The cost is 1 ULP relative     *
+ *  error, and the speedup on systems supporting AVX2 or AVX-512 is about 2x  *
+ *  when used in a simple for-loop. Check if the user requested this.         */
+#if TMPL_USE_SIMD_FAST_MATH == 1
+
+/*  SIMD branchless implementation found here.                                */
+#include "simd/tmpl_arccos_simd_double.h"
+
+#else
+/*  Else for #if TMPL_USE_SIMD_FAST_MATH == 1.                                */
+
+/*  If SIMD_FAST_MATH mode was not requested, use the default scalar version. *
+ *  This safely handles NaN, Inf, and underflow. It is implemented in a way   *
+ *  that allows the -ffast-math flag to be enabled (GCC or Clang) without     *
+ *  sacrificing accuracy or mishandling NaN / Inf.                            */
+
 /*  Double precision inverse cosine (acos equivalent).                        */
 TMPL_CONST_FUNC
 double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
@@ -317,6 +334,9 @@ double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
     return TMPL_NAN;
 }
 /*  End of tmpl_Double_Arccos.                                                */
+
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH == 1.                                  */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
