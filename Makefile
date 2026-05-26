@@ -337,6 +337,13 @@ ifdef USE_VOLATILE
 CONFIG_FLAGS += -DTMPL_USE_VOLATILE
 endif
 
+# Some math routines can be vectorized. Required SIMD instructions and OpenMP.
+ifdef SIMD_FAST_MATH
+CFLAGS += -ffast-math -march=native -fopenmp-simd
+LFLAGS += -ffast-math -march=native -fopenmp-simd
+CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE
+endif
+
 FASM_SRCS =
 ASM_SRCS =
 
