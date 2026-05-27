@@ -317,6 +317,10 @@ CONFIG_FLAGS += -DTMPL_SET_INLINE_TRUE
 EXCLUDE += ! -name "*_no_inline_*.c"
 endif
 
+ifdef ALWAYS_INLINE
+CONFIG_FLAGS += -DTMPL_SET_ALWAYS_INLINE_TRUE
+endif
+
 # Whether or not to use the strictly portable code, or IEEE-754 compliant code.
 ifdef NO_IEEE
 CONFIG_FLAGS += -DTMPL_SET_TMPL_USE_IEEE_FALSE
