@@ -116,7 +116,7 @@ tmpl_LDouble_Two_Sum(const long double x,
                      long double * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    const long double sum = x + y;
+    TMPL_VOLATILE const long double sum = x + y;
 
     /*  Compensated values for x and y.                                       */
     TMPL_VOLATILE const long double xc = sum - y;
