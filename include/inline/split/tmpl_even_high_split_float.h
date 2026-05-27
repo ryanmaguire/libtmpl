@@ -75,18 +75,28 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  C23 attributes to improve performance and protect against aggressive      *
+ *  optimizations.                                                            */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+
 /*  Depending on compiler and architecture, we may need to be very careful    *
  *  about how we split numbers. This first method is the most cautious.       */
 #if defined(TMPL_FLOAT_CAUTIOUS_SPLIT)
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(const float x)
+float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
 {
     /*  Declaring everything as volatile almost guarantees the split works.   */
     volatile const float split = x * 4097.0F;
-    volatile const float tmp = split - x;
-    return split - tmp;
+    volatile const float diff = split - x;
+    volatile const float out = split - diff;
+    return out;
 }
 /*  End of tmpl_Float_Even_High_Split.                                        */
 
@@ -95,7 +105,7 @@ float tmpl_Float_Even_High_Split(const float x)
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(const float x)
+float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
 {
     /*  It is usually sufficient to declare the split product as volatile.    *
      *  With optimizations on this is only slightly slower (1-3%) than        *
@@ -110,7 +120,7 @@ float tmpl_Float_Even_High_Split(const float x)
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(const float x)
+float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
 {
     /*  This is the "standard" way to perform a split. No volatile used.      */
     const float split = x * 4097.0F;
