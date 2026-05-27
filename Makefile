@@ -339,9 +339,10 @@ endif
 
 # Some math routines can be vectorized. Required SIMD instructions and OpenMP.
 ifdef SIMD_FAST_MATH
-CFLAGS += -ffast-math -march=native -fopenmp-simd
-LFLAGS += -ffast-math -march=native -fopenmp-simd
+CFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
+LFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
 CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE
+CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
 endif
 
 FASM_SRCS =
