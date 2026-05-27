@@ -127,7 +127,11 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Standard Fast2Sum algorithm at long double precision.                     */
+TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 void
 tmpl_LDouble_Fast_Two_Sum(const long double x,
