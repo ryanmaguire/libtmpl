@@ -72,6 +72,15 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  C23 attributes to improve performance and protect against aggressive      *
+ *  optimizations.                                                            */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+
 /*  Depending on compiler and architecture, we may need to be very careful    *
  *  about how we split numbers. This first method is the most cautious.       */
 #if defined(TMPL_DOUBLE_CAUTIOUS_SPLIT)
@@ -79,13 +88,15 @@
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
 double tmpl_Double_High_Split(const double x, const double splitter)
+TMPL_UNSEQUENCED
 {
     /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work. Without these volatile     *
      *  statements a call to FMA is used instead, which ruins the split.      */
     volatile const double split = x * splitter;
-    volatile const double tmp = split - x;
-    return split - tmp;
+    volatile const double diff = split - x;
+    volatile const double out = split - diff;
+    return out;
 }
 /*  End of tmpl_Double_High_Split.                                            */
 
@@ -95,6 +106,7 @@ double tmpl_Double_High_Split(const double x, const double splitter)
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
 double tmpl_Double_High_Split(const double x, const double splitter)
+TMPL_UNSEQUENCED
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile. Failure to do so makes the compiler use FMA  *
@@ -111,6 +123,7 @@ double tmpl_Double_High_Split(const double x, const double splitter)
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_INLINE_DECL
 double tmpl_Double_High_Split(const double x, const double splitter)
+TMPL_UNSEQUENCED
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines and no volatile declaration is required.                     */
