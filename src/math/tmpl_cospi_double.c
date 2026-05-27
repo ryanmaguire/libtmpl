@@ -48,7 +48,11 @@ double tmpl_Double_CosPi(double x)
     unsigned int negate;
 
     /*  Unions of doubles and the bits representing them.                     */
-    tmpl_IEEE754_Double w, shifted;
+    tmpl_IEEE754_Double w;
+
+    /*  If -ffast-math is enabled, this variable needs to be declared as      *
+     *  volatile to prevent the compiler from optimizing away the split.      */
+    TMPL_VOLATILE tmpl_IEEE754_Double shifted;
 
     /*  The value 2^45 = 2^(53 - 8). We will use this to get the index of the *
      *  lookup table by shifting the input and extracting the lower 8 bits.   */
