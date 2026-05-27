@@ -342,7 +342,6 @@ ifdef SIMD_FAST_MATH
 CFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
 LFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
 CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE
-CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
 endif
 
 FASM_SRCS =
@@ -547,3 +546,4 @@ help:
 	@echo "\033[0;96m\tEXTRA_FLAGS:"
 	@echo "\033[0;96m\t\tAdd extra flags for the C compiler."
 	@echo "\033[0;96m\t\tExample: make EXTRA_FLAGS=\"-Wno-float-equal\""
+
