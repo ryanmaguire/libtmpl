@@ -75,6 +75,9 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Following Schewchuk's paper, the split is 2^{1 + floor(p / 2)} + 1, where *
  *  p is the number of bits in the mantissa. Thus xhi and xlo have floor(p/2) *
  *  bits each. It is possible that p = 1 + 2 * floor(p / 2), in which case    *
@@ -93,18 +96,27 @@
 #elif TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
 #define TMPL_LDOUBLE_SPLITTER (+4.294967297E+09L)
 
-#endif
-/*  End of double vs. quadruple vs. extended / portable.                      */
-
-/*  Double-double behaves differently than the rest.                          */
-#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+/*  The double-double version only needs to make a cast.                      */
+#else
 
 /*  Helper macros for casting with C vs. C++ compatibility.                   */
 #include <libtmpl/include/compat/tmpl_cast.h>
 
+#endif
+/*  End of double vs. quadruple vs. extended / portable.                      */
+
+/*  C23 attributes to improve performance and protect against aggressive      *
+ *  optimizations.                                                            */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+
+/*  Double-double behaves differently than the rest.                          */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
 {
     /*  We just need to cast to double since double-double is already split.  */
     const double x_double = TMPL_CAST(x, double);
@@ -118,15 +130,16 @@ long double tmpl_LDouble_Even_High_Split(const long double x)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
 {
     /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work with double. It doesn't     *
      *  seem to be necessary for long double. Nevertheless, the overly        *
      *  cautious method declares each step as volatile and then splits.       */
     volatile const long double split = x * TMPL_LDOUBLE_SPLITTER;
-    volatile const long double tmp = split - x;
-    return split - tmp;
+    volatile const long double diff = split - x;
+    volatile const long double out = split - diff;
+    return out;
 }
 /*  End of tmpl_LDouble_Even_High_Split.                                      */
 
@@ -135,7 +148,7 @@ long double tmpl_LDouble_Even_High_Split(const long double x)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile in the double implementation. Again, for long *
@@ -150,7 +163,7 @@ long double tmpl_LDouble_Even_High_Split(const long double x)
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x)
+long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines for double, and x86_64, arm64, and more for long double.     */
