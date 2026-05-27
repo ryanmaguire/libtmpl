@@ -78,6 +78,15 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  C23 attributes to improve performance and protect against aggressive      *
+ *  optimizations.                                                            */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+
 /*  Double-double behaves differently than the rest.                          */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
@@ -87,6 +96,7 @@
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_High_Split(const long double x, const double splitter)
+TMPL_UNSEQUENCED
 {
     /*  Splitting a double-double is somewhat useless, since a double-double  *
      *  is already "split" as two doubles. It is however useful to split the  *
@@ -110,14 +120,16 @@ long double tmpl_LDouble_High_Split(const long double x, const double splitter)
 TMPL_INLINE_DECL
 long double
 tmpl_LDouble_High_Split(const long double x, const long double splitter)
+TMPL_UNSEQUENCED
 {
     /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work with double. It doesn't     *
      *  seem to be necessary for long double. Nevertheless, the overly        *
      *  cautious method declares each step as volatile and then splits.       */
     volatile const long double split = x * splitter;
-    volatile const long double tmp = split - x;
-    return split - tmp;
+    volatile const long double diff = split - x;
+    volatile const long double out = split - diff;
+    return out;
 }
 /*  End of tmpl_LDouble_High_Split.                                           */
 
@@ -128,6 +140,7 @@ tmpl_LDouble_High_Split(const long double x, const long double splitter)
 TMPL_INLINE_DECL
 long double
 tmpl_LDouble_High_Split(const long double x, const long double splitter)
+TMPL_UNSEQUENCED
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile in the double implementation. Again, for long *
@@ -144,6 +157,7 @@ tmpl_LDouble_High_Split(const long double x, const long double splitter)
 TMPL_INLINE_DECL
 long double
 tmpl_LDouble_High_Split(const long double x, const long double splitter)
+TMPL_UNSEQUENCED
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines for double, and x86_64, arm64, and more for long double.     */
