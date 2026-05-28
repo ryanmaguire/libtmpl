@@ -50,15 +50,22 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_ieee754_ldouble.h:                                               *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_ieee754_ldouble.h:                                               *
  *          Header file with the tmpl_IEEE754_LDouble data type.              *
- *  3.) tmpl_floatint_ldouble.h:                                              *
+ *  4.) tmpl_floatint_ldouble.h:                                              *
  *          Header file with the tmpl_FloatIntLongDouble data type.           *
- *  4.) tmpl_cast.h:                                                          *
+ *  5.) tmpl_cast.h:                                                          *
  *          Header file with the TMPL_CAST macro.                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -67,6 +74,9 @@
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  TMPL_HAS_IEEE754_LDOUBLE macro found here.                                */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
@@ -115,8 +125,10 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
 #include <libtmpl/include/types/tmpl_floatint_ldouble.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+TMPL_UNSEQUENCED
 {
     /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
     tmpl_IEEE754_FloatIntLongDouble u;
@@ -155,8 +167,10 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
  ******************************************************************************/
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+TMPL_UNSEQUENCED
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -236,8 +250,10 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
 #include <libtmpl/include/types/tmpl_floatint_double.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+TMPL_UNSEQUENCED
 {
     /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
     tmpl_FloatInt64 u;
@@ -279,8 +295,10 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+TMPL_UNSEQUENCED
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -353,8 +371,10 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
 )
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+TMPL_UNSEQUENCED
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -420,8 +440,10 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
  ******************************************************************************/
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+TMPL_UNSEQUENCED
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -450,11 +472,15 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
  ******************************************************************************/
 
 /*  Tell the compiler about the floor function.                               */
-extern long double tmpl_LDouble_Floor(long double x);
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_Floor(const long double x)
+TMPL_UNSEQUENCED;
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  The index is given by the bits up to the 1/32 place. We can get this  *
      *  using the floor function. x-1 shifts the input to [0, 1). By          *

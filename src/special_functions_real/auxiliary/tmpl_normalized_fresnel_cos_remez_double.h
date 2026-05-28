@@ -59,15 +59,22 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_ieee754_double.h:                                                *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_ieee754_double.h:                                                *
  *          Header file with the tmpl_IEEE754_Double data type.               *
- *  3.) tmpl_floatint_double.h:                                               *
+ *  4.) tmpl_floatint_double.h:                                               *
  *          Header file with the tmpl_FloatInt64 data type.                   *
- *  4.) tmpl_cast.h:                                                          *
+ *  5.) tmpl_cast.h:                                                          *
  *          Header file with the TMPL_CAST macro.                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -76,6 +83,9 @@
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
@@ -113,8 +123,10 @@ tmpl_double_normalized_fresnel_cos_table[n]+z*(\
 #include <libtmpl/include/types/tmpl_floatint_double.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
+TMPL_UNSEQUENCED
 {
     /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
     tmpl_FloatInt64 u;
@@ -149,8 +161,10 @@ double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
 #elif TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
+TMPL_UNSEQUENCED
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -178,11 +192,15 @@ double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
 #else
 
 /*  Tell the compiler about the floor function.                               */
-extern double tmpl_Double_Floor(double x);
+TMPL_CONST_FUNC
+extern double tmpl_Double_Floor(const double x)
+TMPL_UNSEQUENCED;
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Cos_Remez(double x)
+double tmpl_Double_Normalized_Fresnel_Cos_Remez(const double x)
+TMPL_UNSEQUENCED
 {
     /*  The index is given by the bits up to the 1/32 place. We can get this  *
      *  using the floor function. x-1 shifts the input to [0, 1). By          *
