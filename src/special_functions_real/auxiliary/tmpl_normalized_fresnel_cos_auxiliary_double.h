@@ -80,9 +80,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_even_high_split_double.h:                                        *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -95,15 +104,14 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Splitting function for retrieving the high part of a double given here.   */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/split/tmpl_even_high_split_double.h>
-#else
-extern double tmpl_Double_Even_High_Split(double x);
-#endif
+/*  Splitting function for retrieving the high part of a double found here.   */
+#include <libtmpl/include/split/tmpl_even_high_split_double.h>
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
-extern void tmpl_Double_SinCosPi(double t, double *sin_t, double *cos_t);
+extern void
+tmpl_Double_SinCosPi(const double theta,
+                     double * TMPL_RESTRICT const sin_theta,
+                     double * TMPL_RESTRICT const cos_theta);
 
 /*  Coefficients for the numerator of the "f" auxiliary function.             */
 #define A00 (-2.1447177918579579753388433334911075409571981652522E-17)
@@ -147,17 +155,47 @@ extern void tmpl_Double_SinCosPi(double t, double *sin_t, double *cos_t);
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYA_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * A08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
-#define TMPL_POLYB_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*B06)))))
+#define TMPL_POLYB_EVAL(z) \
+B00 + z * (B01 + z * (B02 + z * (B03 + z * (B04 + z * (B05 + z * B06)))))
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYC_EVAL(z) \
-C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
+C00 + z * (\
+    C01 + z * (\
+        C02 + z * (\
+            C03 + z * (\
+                C04 + z * (\
+                    C05 + z * (\
+                        C06 + z * (\
+                            C07 + z * C08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
-#define TMPL_POLYD_EVAL(z) D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*D06)))))
+#define TMPL_POLYD_EVAL(z) \
+D00 + z * (D01 + z * (D02 + z * (D03 + z * (D04 + z * (D05 + z * D06)))))
 
 /*  First two terms for the Maclaurin series of cos(pi/2 x^2).                */
 #define C0 (+1.0000000000000000000000000000000000000000000E+00)

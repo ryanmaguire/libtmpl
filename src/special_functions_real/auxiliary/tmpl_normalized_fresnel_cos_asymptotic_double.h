@@ -113,9 +113,9 @@ extern const double tmpl_double_pi;
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
-tmpl_Double_SinCosPi(const double t,
-                     double * TMPL_RESTRICT const sin_t,
-                     double * TMPL_RESTRICT const cos_t);
+tmpl_Double_SinCosPi(const double theta,
+                     double * TMPL_RESTRICT const sin_theta,
+                     double * TMPL_RESTRICT const cos_theta);
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */
 TMPL_NO_CONTRACT_MATH

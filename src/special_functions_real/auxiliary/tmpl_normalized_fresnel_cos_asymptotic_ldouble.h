@@ -120,9 +120,9 @@ extern const long double tmpl_ldouble_pi;
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
-tmpl_LDouble_SinCosPi(const long double t,
-                      long double * TMPL_RESTRICT const sin_t,
-                      long double *cos_t);
+tmpl_LDouble_SinCosPi(const long double theta,
+                      long double * TMPL_RESTRICT const sin_theta,
+                      long double * TMPL_RESTRICT const cos_theta);
 
 /*  Different splitting values are needed, depending on the type. If the      *
  *  mantissa is N bits, the magic number is 2^(N - floor(N/3) + 1) + 1. This  *
