@@ -345,7 +345,7 @@ endif
 ifdef SIMD_FAST_MATH
 CFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
 LFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
-CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE
+CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE -std=c23
 endif
 
 FASM_SRCS =
