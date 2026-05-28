@@ -170,7 +170,8 @@
 /*  Long double precision absolute value function (fabsl equivalent).         */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Abs(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_LDouble w;
@@ -196,7 +197,8 @@ long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
 /*  Long double precision absolute value function (fabsl equivalent).         */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Abs(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_LDouble w;
@@ -235,7 +237,8 @@ long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
 /*  Long double precision absolute value function (fabsl equivalent).         */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Abs(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */
     if (x < 0.0L)

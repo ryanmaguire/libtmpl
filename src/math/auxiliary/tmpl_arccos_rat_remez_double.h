@@ -134,7 +134,8 @@ extern const double tmpl_double_pi_by_two;
 /*  Function for computing the (8, 8) minimax approximation for acos(x).      */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Rat_Remez(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Arccos_Rat_Remez(const double x)
+TMPL_UNSEQUENCED
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
     const double x2 = x * x;

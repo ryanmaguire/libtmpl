@@ -97,7 +97,7 @@ extern void tmpl_Double_SinCosPi(double t, double *sin_t, double *cos_t);
 
 /*  Function for computing the normalized Fresnel sine of a large input.      */
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Sin_Asymptotic(double x)
+double tmpl_Double_Normalized_Fresnel_Sin_Asymptotic(const double x)
 {
     /*  Split the input into two parts. This allows us to compute the square  *
      *  of x more precisely.                                                  */

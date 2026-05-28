@@ -90,7 +90,8 @@ TMPL_CONST_FUNC
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Even_High_Split(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Declaring everything as volatile almost guarantees the split works.   */
     volatile const float split = x * 4097.0F;
@@ -105,7 +106,8 @@ float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Even_High_Split(const float x)
+TMPL_UNSEQUENCED
 {
     /*  It is usually sufficient to declare the split product as volatile.    *
      *  With optimizations on this is only slightly slower (1-3%) than        *
@@ -120,7 +122,8 @@ float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
 
 /*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-float tmpl_Float_Even_High_Split(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Even_High_Split(const float x)
+TMPL_UNSEQUENCED
 {
     /*  This is the "standard" way to perform a split. No volatile used.      */
     const float split = x * 4097.0F;

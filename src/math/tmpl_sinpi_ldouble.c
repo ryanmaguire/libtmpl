@@ -7,7 +7,8 @@
 #include "auxiliary/tmpl_sinpi_maclaurin_ldouble.h"
 
 TMPL_CONST_FUNC
-long double tmpl_LDouble_SinPi(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_SinPi(const long double x)
+TMPL_UNSEQUENCED
 {
     long double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;

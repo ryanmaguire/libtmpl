@@ -116,7 +116,8 @@ TMPL_CONST_FUNC
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Even_High_Split(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  We just need to cast to double since double-double is already split.  */
     const double x_double = TMPL_CAST(x, double);
@@ -130,7 +131,8 @@ long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Even_High_Split(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
      *  needed to get the splitting trick to work with double. It doesn't     *
@@ -148,7 +150,8 @@ long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Even_High_Split(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
      *  be declared as volatile in the double implementation. Again, for long *
@@ -163,7 +166,8 @@ long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Even_High_Split(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
      *  machines for double, and x86_64, arm64, and more for long double.     */

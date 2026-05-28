@@ -7,7 +7,8 @@
 #include "auxiliary/tmpl_sinpi_maclaurin_float.h"
 
 TMPL_CONST_FUNC
-float tmpl_Float_SinPi(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_SinPi(const float x)
+TMPL_UNSEQUENCED
 {
     float arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;

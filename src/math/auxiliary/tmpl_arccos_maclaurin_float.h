@@ -77,7 +77,8 @@
 /*  Computes the degree 9 Maclaurin polynomial for acos(x).                   */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Arccos_Maclaurin(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Arccos_Maclaurin(const float x)
+TMPL_UNSEQUENCED
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
     const float x2 = x * x;

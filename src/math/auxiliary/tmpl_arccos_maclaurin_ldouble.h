@@ -246,7 +246,8 @@ A00 + z*(\
 /*  Computes the Maclaurin polynomial for acos(x).                            */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Arccos_Maclaurin(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Arccos_Maclaurin(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
     const long double x2 = x * x;

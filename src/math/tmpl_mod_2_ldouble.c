@@ -5,7 +5,8 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 TMPL_CONST_FUNC
-long double tmpl_LDouble_Mod_2(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Mod_2(const long double x)
+TMPL_UNSEQUENCED
 {
     return x - 2.0L * tmpl_LDouble_Truncate(0.5L * x);
 }

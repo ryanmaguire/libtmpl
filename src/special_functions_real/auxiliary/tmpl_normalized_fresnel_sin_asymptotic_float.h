@@ -78,15 +78,19 @@
 
 /*  Computes cos(pi t) at single precision.                                   */
 TMPL_CONST_FUNC
-extern float tmpl_Float_CosPi(const float t) TMPL_UNSEQUENCED;
+extern float tmpl_Float_CosPi(const float t)
+TMPL_UNSEQUENCED;
 
 /*  Computes the remainder of a double after division by 2.                   */
 TMPL_CONST_FUNC
-extern double tmpl_Double_Mod_2(const double t) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Mod_2(const double t)
+TMPL_UNSEQUENCED;
 
 /*  Function for computing the normalized Fresnel sine of a large input.      */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Normalized_Fresnel_Sin_Asymptotic(float x)
+float tmpl_Float_Normalized_Fresnel_Sin_Asymptotic(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Float has a 23-bit mantissa, double has 52 bits. This means for every *
      *  representable float x, x^2 is perfectly representable once converted  *

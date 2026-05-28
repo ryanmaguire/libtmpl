@@ -237,7 +237,8 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
 /*  Computes a rational minimax approximation of acos(x).                     */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Arccos_Rat_Remez(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Arccos_Rat_Remez(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
     const long double x2 = x * x;

@@ -52,7 +52,8 @@
 
 /*  Function for computing the absolute value at single precision.            */
 TMPL_CONST_FUNC
-extern float tmpl_Float_Abs(const float x) TMPL_UNSEQUENCED;
+extern float tmpl_Float_Abs(const float x)
+TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

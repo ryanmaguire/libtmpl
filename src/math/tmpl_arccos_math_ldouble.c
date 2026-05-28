@@ -365,7 +365,8 @@ extern long double tmpl_LDouble_Arccos(const long double x);
 
 /*  Long double precision inverse cosine (acosl equivalent).                  */
 TMPL_CONST_FUNC
-long double tmpl_LDouble_Arccos(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Arccos(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_LDouble w;
@@ -428,7 +429,8 @@ long double tmpl_LDouble_Arccos(const long double x) TMPL_UNSEQUENCED
 
 /*  Long double precision inverse cosine (acosl equivalent).                  */
 TMPL_CONST_FUNC
-long double tmpl_LDouble_Arccos(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Arccos(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const long double abs_x = tmpl_LDouble_Abs(x);

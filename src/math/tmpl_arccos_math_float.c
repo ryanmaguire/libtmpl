@@ -255,7 +255,8 @@ extern float tmpl_Float_Arccos(const float x);
 
 /*  Single precision inverse cosine (acosf equivalent).                       */
 TMPL_CONST_FUNC
-float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Arccos(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Float w;
@@ -314,7 +315,8 @@ float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED
 
 /*  Single precision inverse cosine (acosf equivalent).                       */
 TMPL_CONST_FUNC
-float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Arccos(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const float abs_x = tmpl_Float_Abs(x);

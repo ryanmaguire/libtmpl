@@ -89,7 +89,8 @@ extern void tmpl_Float_SinCosPi(float t, float *sin_t, float *cos_t);
 
 /*  Computes the remainder of a double after division by 2.                   */
 TMPL_CONST_FUNC
-extern double tmpl_Double_Mod_2(const double t) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Mod_2(const double t)
+TMPL_UNSEQUENCED;
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define A00 (+1.5246280421910551878368225585204082614852964232248E-04F)
@@ -126,8 +127,10 @@ extern double tmpl_Double_Mod_2(const double t) TMPL_UNSEQUENCED;
 #define TMPL_POLYD_EVAL(z) D00 + z*(D01 + z*D02)
 
 /*  Function for computing the normalized Fresnel sine for 2 <= x < 4.        */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Normalized_Fresnel_Sin_Auxiliary_Small(float x)
+float tmpl_Float_Normalized_Fresnel_Sin_Auxiliary_Small(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Float has a 23-bit mantissa, double has 52 bits. This means for every *
      *  representable float x, x^2 is perfectly representable once converted  *

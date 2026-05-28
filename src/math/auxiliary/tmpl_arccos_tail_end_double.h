@@ -105,7 +105,8 @@
 
 /*  The compiler needs to know about the sqrt function.                       */
 TMPL_CONST_FUNC
-extern double tmpl_Double_Sqrt(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Sqrt(const double x)
+TMPL_UNSEQUENCED;
 
 /*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
@@ -128,7 +129,8 @@ extern double tmpl_Double_Sqrt(const double x) TMPL_UNSEQUENCED;
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Tail_End(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Arccos_Tail_End(const double x)
+TMPL_UNSEQUENCED
 {
     /*  The rational function is computed in terms of (1 - x) / 2.            */
     const double z = 0.5 * (1.0 - x);

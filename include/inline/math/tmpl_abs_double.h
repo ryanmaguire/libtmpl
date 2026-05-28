@@ -142,7 +142,8 @@
 /*  Double precision absolute value function (fabs equivalent).               */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-double tmpl_Double_Abs(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Abs(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_Double w;
@@ -170,7 +171,8 @@ double tmpl_Double_Abs(const double x) TMPL_UNSEQUENCED
 /*  Double precision absolute value function (fabs equivalent).               */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-double tmpl_Double_Abs(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Abs(const double x)
+TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */
     if (x < 0.0)

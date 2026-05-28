@@ -137,7 +137,8 @@
 /*  Single precision absolute value function (fabsf equivalent).              */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-float tmpl_Float_Abs(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Abs(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_Float w;
@@ -165,7 +166,8 @@ float tmpl_Float_Abs(const float x) TMPL_UNSEQUENCED
 /*  Single precision absolute value function (fabsf equivalent).              */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-float tmpl_Float_Abs(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Abs(const float x)
+TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */
     if (x < 0.0F)

@@ -83,7 +83,8 @@ A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 /*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Maclaurin(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Arccos_Maclaurin(const double x)
+TMPL_UNSEQUENCED
 {
     /*  The non-constant terms are odd, powers are x^{2n+1} = x * x^2n.       *
      *  Compute the square of the input.                                      */

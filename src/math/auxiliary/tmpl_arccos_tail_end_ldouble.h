@@ -84,7 +84,8 @@
 
 /*  The compiler needs to know about the sqrt function.                       */
 TMPL_CONST_FUNC
-extern long double tmpl_LDouble_Sqrt(const long double x) TMPL_UNSEQUENCED;
+extern long double tmpl_LDouble_Sqrt(const long double x)
+TMPL_UNSEQUENCED;
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -225,7 +226,8 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Arccos_Tail_End(const long double x) TMPL_UNSEQUENCED
+long double tmpl_LDouble_Arccos_Tail_End(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */
     const long double z = 0.5L * (1.0L - x);

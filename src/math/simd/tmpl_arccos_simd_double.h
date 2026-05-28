@@ -149,7 +149,8 @@ extern const double tmpl_double_pi_by_two;
 /*  Near-branchless double-precision inverse cosine (acos equivalent).        */
 TMPL_SIMD_DECL
 TMPL_CONST_FUNC
-double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Arccos(const double x)
+TMPL_UNSEQUENCED
 {
     /*  The absolute value of the input. Modern compilers will produce a      *
      *  branchless instruction (for example by using a bit-mask or by using   *

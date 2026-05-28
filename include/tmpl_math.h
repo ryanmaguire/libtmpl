@@ -573,14 +573,17 @@ extern const long double tmpl_ldouble_pow_2_table[65];
 
 /*  Otherwise use the functions in src/math/.                                 */
 TMPL_CONST_FUNC
-extern float tmpl_Float_Arccos(const float x) TMPL_UNSEQUENCED;
+extern float tmpl_Float_Arccos(const float x)
+TMPL_UNSEQUENCED;
 
 TMPL_SIMD_DECL
 TMPL_CONST_FUNC
-extern double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Arccos(const double x)
+TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-extern long double tmpl_LDouble_Arccos(const long double x) TMPL_UNSEQUENCED;
+extern long double tmpl_LDouble_Arccos(const long double x)
+TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
@@ -1367,13 +1370,16 @@ extern long double tmpl_LDouble_Min(long double x, long double y);
  *          The value x mod 2.                                                *
  ******************************************************************************/
 TMPL_CONST_FUNC
-extern float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED;
+extern float tmpl_Float_Mod_2(const float x)
+TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-extern double tmpl_Double_Mod_2(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Mod_2(const double x)
+TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-extern long double tmpl_LDouble_Mod_2(const long double x) TMPL_UNSEQUENCED;
+extern long double tmpl_LDouble_Mod_2(const long double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1693,13 +1699,16 @@ tmpl_LDouble_SinhCosh(long double t, long double *sinh_t, long double *cosh_t);
  *          The normalized sine of x, sin(pi x).                              *
  ******************************************************************************/
 TMPL_CONST_FUNC
-extern float tmpl_Float_SinPi(const float x) TMPL_UNSEQUENCED;
+extern float tmpl_Float_SinPi(const float x)
+TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-extern double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_SinPi(const double x)
+TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-extern long double tmpl_LDouble_SinPi(const long double x) TMPL_UNSEQUENCED;
+extern long double tmpl_LDouble_SinPi(const long double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

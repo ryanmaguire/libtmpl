@@ -278,7 +278,8 @@ extern double tmpl_Double_Arccos(const double x);
 
 /*  Double precision inverse cosine (acos equivalent).                        */
 TMPL_CONST_FUNC
-double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Arccos(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Double w;
@@ -349,7 +350,8 @@ double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
 
 /*  Double precision inverse cosine (acos equivalent).                        */
 TMPL_CONST_FUNC
-double tmpl_Double_Arccos(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_Arccos(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const double abs_x = tmpl_Double_Abs(x);

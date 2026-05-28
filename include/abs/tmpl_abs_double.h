@@ -52,7 +52,8 @@
 
 /*  Function for computing the absolute value at double precision.            */
 TMPL_CONST_FUNC
-extern double tmpl_Double_Abs(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Abs(const double x)
+TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

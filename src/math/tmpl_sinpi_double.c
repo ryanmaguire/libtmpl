@@ -186,11 +186,13 @@
 
 /*  Forward declaration for the function, also found in tmpl_math.h.          */
 TMPL_CONST_FUNC
-extern double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_SinPi(const double x)
+TMPL_UNSEQUENCED;
 
 /*  Tell the compiler about the mod 2 function, used for argument reduction.  */
 TMPL_CONST_FUNC
-extern double tmpl_Double_Mod_2(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Mod_2(const double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *                                   Tables                                   *
@@ -223,7 +225,8 @@ extern const double tmpl_double_sinpi_table[128];
 
 /*  Computes sin(pi x) at double precision.                                   */
 TMPL_CONST_FUNC
-double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_SinPi(const double x)
+TMPL_UNSEQUENCED
 {
     /*  We compute using the angle sum formula for sin(pi(r + dr)). Set aside *
      *  four variables for the right-hand side of that equation.              */
@@ -400,7 +403,8 @@ double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED
 
 /*  Computes sin(pi x) at double precision.                                   */
 TMPL_CONST_FUNC
-double tmpl_Double_SinPi(const double x) TMPL_UNSEQUENCED
+double tmpl_Double_SinPi(const double x)
+TMPL_UNSEQUENCED
 {
     double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;

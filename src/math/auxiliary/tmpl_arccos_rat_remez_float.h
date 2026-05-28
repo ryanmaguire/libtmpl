@@ -99,7 +99,8 @@
 /*  Function for computing the (4, 2) minimax approximation of acos(x).       */
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Arccos_Rat_Remez(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Arccos_Rat_Remez(const float x)
+TMPL_UNSEQUENCED
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
     const float x2 = x * x;

@@ -90,7 +90,8 @@
 
 /*  Function for computing the remainder after division by 2.                 */
 TMPL_CONST_FUNC
-float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Mod_2(const float x)
+TMPL_UNSEQUENCED
 {
     /*  32-bit integers available, we can get a speed boost using this. Use   *
      *  a union with an unsigned 32-bit integer and an IEEE-754 float.        */
@@ -144,7 +145,8 @@ float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
 
 /*  Function for computing the remainder after division by 2.                 */
 TMPL_CONST_FUNC
-float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Mod_2(const float x)
+TMPL_UNSEQUENCED
 {
     tmpl_IEEE754_Float w, tmp;
     w.r = x;
@@ -230,7 +232,8 @@ float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
 
 /*  Portable algorithm for mod 2 based on the floor function.                 */
 TMPL_CONST_FUNC
-float tmpl_Float_Mod_2(const float x) TMPL_UNSEQUENCED
+float tmpl_Float_Mod_2(const float x)
+TMPL_UNSEQUENCED
 {
     return x - 2.0F * tmpl_Float_Truncate(0.5F * x);
 }
