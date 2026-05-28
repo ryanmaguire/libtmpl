@@ -30,9 +30,9 @@
  *  Purpose:                                                                  *
  *      Performs the 2Prod algorithm for floating-point multiplication.       *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          Another real number.                                              *
  *      out (double * const):                                                 *
  *          The floating-point product x * y is stored here.                  *
@@ -57,20 +57,20 @@
 
 /*  Lacking inline support, use the versions in src/two_prod/.                */
 extern void
-tmpl_Float_Two_Prod(float x,
-                    float y,
+tmpl_Float_Two_Prod(const float x,
+                    const float y,
                     float * const TMPL_RESTRICT out,
                     float * const TMPL_RESTRICT err);
 
 extern void
-tmpl_Double_Two_Prod(double x,
-                     double y,
+tmpl_Double_Two_Prod(const double x,
+                     const double y,
                      double * const TMPL_RESTRICT out,
                      double * const TMPL_RESTRICT err);
 
 extern void
-tmpl_LDouble_Two_Prod(long double x,
-                      long double y,
+tmpl_LDouble_Two_Prod(const long double x,
+                      const long double y,
                       long double * const TMPL_RESTRICT out,
                       long double * const TMPL_RESTRICT err);
 
