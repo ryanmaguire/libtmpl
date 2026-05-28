@@ -54,7 +54,8 @@
 
 /*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_CONST_FUNC
-extern double tmpl_Double_Even_High_Split(const double x) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Even_High_Split(const double x)
+TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

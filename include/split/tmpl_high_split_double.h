@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_even_high_split_float                         *
+ *                           tmpl_high_split_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides an inlined splitting function, or a forward declaration if   *
@@ -34,8 +34,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_SPLIT_EVEN_HIGH_SPLIT_FLOAT_H
-#define TMPL_SPLIT_EVEN_HIGH_SPLIT_FLOAT_H
+#ifndef TMPL_SPLIT_HIGH_SPLIT_DOUBLE_H
+#define TMPL_SPLIT_HIGH_SPLIT_DOUBLE_H
 
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
@@ -47,14 +47,15 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Implemented in the inline directory.                                      */
-#include <libtmpl/include/inline/split/tmpl_even_high_split_float.h>
+#include <libtmpl/include/inline/split/tmpl_high_split_double.h>
 
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
 
-/*  Function for splitting a float into two parts. The high part is returned. */
+/*  Function for splitting a double into two parts. The high part is returned.*/
 TMPL_CONST_FUNC
-extern float tmpl_Float_Even_High_Split(const float x)
+extern double
+tmpl_Double_High_Split(const double x, const double splitter)
 TMPL_UNSEQUENCED;
 
 #endif
