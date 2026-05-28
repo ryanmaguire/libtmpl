@@ -261,7 +261,7 @@ TMPL_UNSEQUENCED
     sin_x = cos_hi * sin_midlo + sin_hi * cos_midlo;
 
     /*  With the auxiliary functions computed, we can compute C(x).           */
-    return 0.5 + (f*sin_x - g*cos_x);
+    return 0.5 + (f * sin_x - g * cos_x);
 }
 /*  End of tmpl_Double_Normalized_Fresnel_Cos_Auxiliary.                      */
 
