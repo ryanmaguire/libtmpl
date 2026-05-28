@@ -88,9 +88,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_high_split_ldouble.h:                                            *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -103,37 +112,17 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  The splitting function is small enough that it can be inlined.            */
-#if TMPL_USE_INLINE == 1
-
 /*  Splitting function for getting the high part of a long double found here. */
-#include <libtmpl/include/inline/split/tmpl_high_split_ldouble.h>
-
-#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function. The         *
- *  double-double implementation is different than the other representations, *
- *  the splitter parameter is declared as a double.                           */
-extern long double
-tmpl_LDouble_High_Split(const long double x, const double splitter);
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  For all other representations, the splitter is a long double.             */
-extern long double
-tmpl_LDouble_High_Split(const long double x, const long double splitter);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/split/tmpl_high_split_ldouble.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 extern const long double tmpl_ldouble_pi;
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
-tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
+tmpl_LDouble_SinCosPi(const long double t,
+                      long double * TMPL_RESTRICT const sin_t,
+                      long double *cos_t);
 
 /*  Different splitting values are needed, depending on the type. If the      *
  *  mantissa is N bits, the magic number is 2^(N - floor(N/3) + 1) + 1. This  *
@@ -144,7 +133,7 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /*  52-bit mantissa, value is 2^36 + 1.                                       */
-#define TMPL_LDOUBLE_SPLITTER (6.8719476737E+10L)
+#define TMPL_LDOUBLE_SPLITTER (+6.8719476737E+10L)
 
 /*  Quadruple precision has a much larger mantissa, hence a larger value.     */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
