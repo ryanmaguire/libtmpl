@@ -129,11 +129,12 @@ tmpl_LDouble_Two_Sum(const long double x,
     /*  The error terms for x and y from the compensated values.              */
     TMPL_VOLATILE const long double xerr = x - xc;
     TMPL_VOLATILE const long double yerr = y - yc;
+    TMPL_VOLATILE const long double err_sum = xerr + yerr;
 
     /*  The output is the floating point sum, the error can be computed by    *
      *  summing together the error terms for x and y.                         */
     *out = sum;
-    *err = xerr + yerr;
+    *err = err_sum;
 }
 /*  End of tmpl_LDouble_Two_Sum.                                              */
 
