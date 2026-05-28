@@ -79,7 +79,7 @@
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
- *  3.) tmpl_high_split_double.h:                                             *
+ *  3.) tmpl_even_high_split_double.h:                                        *
  *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *

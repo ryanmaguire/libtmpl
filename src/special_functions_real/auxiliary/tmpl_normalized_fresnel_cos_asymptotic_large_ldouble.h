@@ -79,9 +79,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_even_high_split_ldouble.h:                                       *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 21, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -94,20 +103,8 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  The splitting function is small enough that it can be inlined.            */
-#if TMPL_USE_INLINE == 1
-
 /*  Splitting function for getting the high part of a long double found here. */
-#include <libtmpl/include/inline/split/tmpl_even_high_split_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern long double tmpl_LDouble_Even_High_Split(const long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 extern const long double tmpl_ldouble_pi;
