@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Evaluates the product of two doubles, with the rounding error.        *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          Another real number.                                              *
  *      out (double * TMPL_RESTRICT const):                                   *
  *          The rounded product x * y will be stored here.                    *
@@ -53,12 +53,12 @@
  *      The product is then:                                                  *
  *                                                                            *
  *          x * y = (xhi + xlo) * (yhi + ylo)                                 *
- *                = xhi*yhi + xhi*ylo + xlo*yhi + xlo*ylo                     *
+ *                = xhi * yhi + xhi * ylo + xlo * yhi + xlo * ylo             *
  *                                                                            *
- *      xhi*yhi has the highest order bits of the product. Let prod be the    *
+ *      xhi * yhi has the highest order bits of the product. Let prod be the  *
  *      product of x and y, with rounding. The error is then:                 *
  *                                                                            *
- *          err = ((xhi*yhi - prod) + xhi*ylo + yhi*xlo) + xlo*ylo            *
+ *          err = ((xhi * yhi - prod) + xhi * ylo + yhi * xlo) + xlo * ylo    *
  *                                                                            *
  *      We store prod in "out" and err in "err", and return.                  *
  *  Notes:                                                                    *
@@ -69,6 +69,7 @@
  *  References:                                                               *
  *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
  *          "Library for Double-Double and Quad-Double Arithmetic."           *
+ *                                                                            *
  *      2.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
@@ -85,6 +86,11 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -104,8 +110,8 @@
 TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 void
-tmpl_Double_Two_Prod(double x,
-                     double y,
+tmpl_Double_Two_Prod(const double x,
+                     const double y,
                      double * TMPL_RESTRICT const out,
                      double * TMPL_RESTRICT const err)
 {
