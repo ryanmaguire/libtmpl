@@ -129,15 +129,14 @@
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern long double tmpl_LDouble_Normalized_Fresnel_Sin(const long double x);
 
 /*  Absolute value function needed.                                           */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
-#else
-extern long double tmpl_LDouble_Abs(long double x);
-#endif
+#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -194,7 +193,11 @@ extern long double tmpl_LDouble_Abs(long double x);
  ******************************************************************************/
 
 /*  Computes the normalized Fresnel sine of a real number.                    */
-long double tmpl_LDouble_Normalized_Fresnel_Sin(long double x)
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+long double tmpl_LDouble_Normalized_Fresnel_Sin(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     long double out;
@@ -286,7 +289,11 @@ long double tmpl_LDouble_Normalized_Fresnel_Sin(long double x)
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Computes the normalized Fresnel sine of a real number.                    */
-long double tmpl_LDouble_Normalized_Fresnel_Sin(long double x)
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+long double tmpl_LDouble_Normalized_Fresnel_Sin(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     long double out;
