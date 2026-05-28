@@ -54,9 +54,16 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -65,6 +72,9 @@
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  64-bit long double, no more precision than ordinary double.               */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -81,7 +91,7 @@
 #define A04 (+5.4074133814083916484806836575244811935907384032297E-05L)
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
-#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
+#define TMPL_POLY_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
 
 /*  128-bit double-double, accurate to about 32 decimals.                     */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -103,7 +113,21 @@
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * A08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  128-bit quadruple precision achieves roughly 34 decimals.                 */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
@@ -126,7 +150,23 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * A09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Extended precision and portable. Peak theoretical error is 10^-19.        */
 #else
@@ -144,18 +184,21 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
 #define A05 (-1.2000972558600288324310962729212634699212444683848E-06L)
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
-#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define TMPL_POLY_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 #endif
 /*  End of double vs. double-double vs. quadruple vs extended / portable.     */
 
 /*  Computes the normalized Fresnel cosine for |x| < 1/4.                     */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Maclaurin(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Cos_Maclaurin(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  The series is in terms of x^4. Compute this.                          */
-    const long double xsq = x*x;
-    const long double xqt = xsq*xsq;
+    const long double xsq = x * x;
+    const long double xqt = xsq * xsq;
 
     /*  Evaluate using Horner's method and return.                            */
     const long double poly = TMPL_POLY_EVAL(xqt);

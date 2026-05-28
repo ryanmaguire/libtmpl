@@ -54,9 +54,16 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 24, 2024                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -66,21 +73,26 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00F)
 #define A01 (-2.4674011002723396547086227499690377838284248518102E-01F)
 #define A02 (+2.8185500877894223737395929597426247468092472706217E-02F)
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
-#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*A02)
+#define TMPL_POLY_EVAL(z) A00 + z * (A01 + z * A02)
 
 /*  Computes the normalized Fresnel cosine for |x| < 1/4.                     */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-float tmpl_Float_Normalized_Fresnel_Cos_Maclaurin(float x)
+float tmpl_Float_Normalized_Fresnel_Cos_Maclaurin(const float x)
+TMPL_UNSEQUENCED
 {
     /*  The series is in terms of x^4. Compute this.                          */
-    const float xsq = x*x;
-    const float xqt = xsq*xsq;
+    const float xsq = x * x;
+    const float xqt = xsq * xsq;
 
     /*  Evaluate using Horner's method and return.                            */
     const float poly = TMPL_POLY_EVAL(xqt);
