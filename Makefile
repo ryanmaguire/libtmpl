@@ -241,7 +241,7 @@ CWARN = -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
 
 # Config flags and exclude flags depends on the architecture.
 # We'll set these later when we examine the ARCH variable.
-CONFIG_FLAGS =
+CONFIG_FLAGS = $(EXTRA_FLAGS)
 EXCLUDE =
 
 # A common trick in numerical analysis with floating-point number is to
