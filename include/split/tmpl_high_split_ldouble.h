@@ -52,12 +52,30 @@
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
 
+/*  Double-Double is split differently than the other implementations. Since  *
+ *  double-double is literally two doubles together, the splitting factor is  *
+ *  of type "double" instead of "long double."                                */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+/*  Function for splitting a double-double into two parts using a             *
+ *  double-precision splitter. The high part is returned.                     */
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_High_Split(const long double x, const double splitter)
+TMPL_UNSEQUENCED;
+
+/*  All other versions are treated in a similar manner to float and double.   */
+#else
+
 /*  Function for splitting a long double into two parts. The high part        *
  *  is returned.                                                              */
 TMPL_CONST_FUNC
 extern long double
 tmpl_LDouble_High_Split(const long double x, const long double splitter)
 TMPL_UNSEQUENCED;
+
+#endif
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
