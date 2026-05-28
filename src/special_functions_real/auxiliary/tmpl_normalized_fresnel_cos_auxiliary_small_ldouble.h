@@ -82,9 +82,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_even_high_split_ldouble.h:                                       *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -98,15 +107,13 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Splitting function for retrieving the high part of a long double.         */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/split/tmpl_even_high_split_ldouble.h>
-#else
-extern long double tmpl_LDouble_Even_High_Split(long double x);
-#endif
+#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
-tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
+tmpl_LDouble_SinCosPi(const long double theta,
+                      long double * TMPL_RESTRICT const sin_theta,
+                      long double * TMPL_RESTRICT const cos_theta);
 
 /*  Remez / Pade coefficients for the various long double implementations.    */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -156,19 +163,55 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYA_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*A07))))))
+A00 + z * (\
+  A01 + z * (\
+    A02 + z * (\
+      A03 + z * (\
+        A04 + z * (\
+          A05 + z * (\
+            A06 + z * A07\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYB_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*B06)))))
+B00 + z * (B01 + z * (B02 + z * (B03 + z * (B04 + z * (B05 + z * B06)))))
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYC_EVAL(z) \
-C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*C07))))))
+C00 + z * (\
+  C01 + z * (\
+    C02 + z * (\
+      C03 + z * (\
+        C04 + z * (\
+          C05 + z * (\
+            C06 + z * C07\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYD_EVAL(z) \
-D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
+D00 + z * (\
+  D01 + z * (\
+    D02 + z * (\
+      D03 + z * (\
+        D04 + z * (\
+          D05 + z * (\
+            D06 + z * D07\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Quadruple precision. The Remez algorithm failed to converge, so instead   *
  *  we use two Pade approximants (for both "f" and "g"), and hence need eight *
@@ -339,22 +382,22 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYA_EVAL(z) \
-A00 + z*(\
-  A01 + z*(\
-    A02 + z*(\
-      A03 + z*(\
-        A04 + z*(\
-          A05 + z*(\
-            A06 + z*(\
-              A07 + z*(\
-                A08 + z*(\
-                  A09 + z*(\
-                    A10 + z*(\
-                      A11 + z*(\
-                        A12 + z*(\
-                          A13 + z*(\
-                            A14 + z*(\
-                              A15 + z*A16\
+A00 + z * (\
+  A01 + z * (\
+    A02 + z * (\
+      A03 + z * (\
+        A04 + z * (\
+          A05 + z * (\
+            A06 + z * (\
+              A07 + z * (\
+                A08 + z * (\
+                  A09 + z * (\
+                    A10 + z * (\
+                      A11 + z * (\
+                        A12 + z * (\
+                          A13 + z * (\
+                            A14 + z * (\
+                              A15 + z * A16\
                             )\
                           )\
                         )\
@@ -373,21 +416,21 @@ A00 + z*(\
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYB_EVAL(z) \
-B00 + z*(\
-  B01 + z*(\
-    B02 + z*(\
-      B03 + z*(\
-        B04 + z*(\
-          B05 + z*(\
-            B06 + z*(\
-              B07 + z*(\
-                B08 + z*(\
-                  B09 + z*(\
-                    B10 + z*(\
-                      B11 + z*(\
-                        B12 + z*(\
-                          B13 + z*(\
-                            B14 + z*B15\
+B00 + z * (\
+  B01 + z * (\
+    B02 + z * (\
+      B03 + z * (\
+        B04 + z * (\
+          B05 + z * (\
+            B06 + z * (\
+              B07 + z * (\
+                B08 + z * (\
+                  B09 + z * (\
+                    B10 + z * (\
+                      B11 + z * (\
+                        B12 + z * (\
+                          B13 + z * (\
+                            B14 + z * B15\
                           )\
                         )\
                       )\
@@ -405,22 +448,22 @@ B00 + z*(\
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYC_EVAL(z) \
-C00 + z*(\
-  C01 + z*(\
-    C02 + z*(\
-      C03 + z*(\
-        C04 + z*(\
-          C05 + z*(\
-            C06 + z*(\
-              C07 + z*(\
-                C08 + z*(\
-                  C09 + z*(\
-                    C10 + z*(\
-                      C11 + z*(\
-                        C12 + z*(\
-                          C13 + z*(\
-                            C14 + z*(\
-                              C15 + z*C16\
+C00 + z * (\
+  C01 + z * (\
+    C02 + z * (\
+      C03 + z * (\
+        C04 + z * (\
+          C05 + z * (\
+            C06 + z * (\
+              C07 + z * (\
+                C08 + z * (\
+                  C09 + z * (\
+                    C10 + z * (\
+                      C11 + z * (\
+                        C12 + z * (\
+                          C13 + z * (\
+                            C14 + z * (\
+                              C15 + z * C16\
                             )\
                           )\
                         )\
@@ -439,21 +482,21 @@ C00 + z*(\
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYD_EVAL(z) \
-D00 + z*(\
-  D01 + z*(\
-    D02 + z*(\
-      D03 + z*(\
-        D04 + z*(\
-          D05 + z*(\
-            D06 + z*(\
-              D07 + z*(\
-                D08 + z*(\
-                  D09 + z*(\
-                    D10 + z*(\
-                      D11 + z*(\
-                        D12 + z*(\
-                          D13 + z*(\
-                            D14 + z*D15\
+D00 + z * (\
+  D01 + z * (\
+    D02 + z * (\
+      D03 + z * (\
+        D04 + z * (\
+          D05 + z * (\
+            D06 + z * (\
+              D07 + z * (\
+                D08 + z * (\
+                  D09 + z * (\
+                    D10 + z * (\
+                      D11 + z * (\
+                        D12 + z * (\
+                          D13 + z * (\
+                            D14 + z * D15\
                           )\
                         )\
                       )\
@@ -471,24 +514,24 @@ D00 + z*(\
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYE_EVAL(z) \
-E00 + z*(\
-  E01 + z*(\
-    E02 + z*(\
-      E03 + z*(\
-        E04 + z*(\
-          E05 + z*(\
-            E06 + z*(\
-              E07 + z*(\
-                E08 + z*(\
-                  E09 + z*(\
-                    E10 + z*(\
-                      E11 + z*(\
-                        E12 + z*(\
-                          E13 + z*(\
-                            E14 + z*(\
-                              E15 + z*(\
-                                E16 + z*(\
-                                  E17 + z*E18\
+E00 + z * (\
+  E01 + z * (\
+    E02 + z * (\
+      E03 + z * (\
+        E04 + z * (\
+          E05 + z * (\
+            E06 + z * (\
+              E07 + z * (\
+                E08 + z * (\
+                  E09 + z * (\
+                    E10 + z * (\
+                      E11 + z * (\
+                        E12 + z * (\
+                          E13 + z * (\
+                            E14 + z * (\
+                              E15 + z * (\
+                                E16 + z * (\
+                                  E17 + z * E18\
                                 )\
                               )\
                             )\
@@ -509,24 +552,24 @@ E00 + z*(\
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYF_EVAL(z) \
-F00 + z*(\
-  F01 + z*(\
-    F02 + z*(\
-      F03 + z*(\
-        F04 + z*(\
-          F05 + z*(\
-            F06 + z*(\
-              F07 + z*(\
-                F08 + z*(\
-                  F09 + z*(\
-                    F10 + z*(\
-                      F11 + z*(\
-                        F12 + z*(\
-                          F13 + z*(\
-                            F14 + z*(\
-                              F15 + z*(\
-                                F16 + z*(\
-                                  F17 +z*F18\
+F00 + z * (\
+  F01 + z * (\
+    F02 + z * (\
+      F03 + z * (\
+        F04 + z * (\
+          F05 + z * (\
+            F06 + z * (\
+              F07 + z * (\
+                F08 + z * (\
+                  F09 + z * (\
+                    F10 + z * (\
+                      F11 + z * (\
+                        F12 + z * (\
+                          F13 + z * (\
+                            F14 + z * (\
+                              F15 + z * (\
+                                F16 + z * (\
+                                  F17 +z * F18\
                                 )\
                               )\
                             )\
@@ -547,24 +590,24 @@ F00 + z*(\
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYG_EVAL(z) \
-G00 + z*(\
-  G01 + z*(\
-    G02 + z*(\
-      G03 + z*(\
-        G04 + z*(\
-          G05 + z*(\
-            G06 + z*(\
-              G07 + z*(\
-                G08 + z*(\
-                  G09 + z*(\
-                    G10 + z*(\
-                      G11 + z*(\
-                        G12 + z*(\
-                          G13 + z*(\
-                            G14 + z*(\
-                              G15 + z*(\
-                                G16 + z*(\
-                                  G17 + z*G18\
+G00 + z * (\
+  G01 + z * (\
+    G02 + z * (\
+      G03 + z * (\
+        G04 + z * (\
+          G05 + z * (\
+            G06 + z * (\
+              G07 + z * (\
+                G08 + z * (\
+                  G09 + z * (\
+                    G10 + z * (\
+                      G11 + z * (\
+                        G12 + z * (\
+                          G13 + z * (\
+                            G14 + z * (\
+                              G15 + z * (\
+                                G16 + z * (\
+                                  G17 + z * G18\
                                 )\
                               )\
                             )\
@@ -585,24 +628,24 @@ G00 + z*(\
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYH_EVAL(z) \
-H00 + z*(\
-  H01 + z*(\
-    H02 + z*(\
-      H03 + z*(\
-        H04 + z*(\
-          H05 + z*(\
-            H06 + z*(\
-              H07 + z*(\
-                H08 + z*(\
-                  H09 + z*(\
-                    H10 + z*(\
-                      H11 + z*(\
-                        H12 + z*(\
-                          H13 + z*(\
-                            H14 + z*(\
-                              H15 + z*(\
-                                H16 + z*(\
-                                  H17 +z*H18\
+H00 + z * (\
+  H01 + z * (\
+    H02 + z * (\
+      H03 + z * (\
+        H04 + z * (\
+          H05 + z * (\
+            H06 + z * (\
+              H07 + z * (\
+                H08 + z * (\
+                  H09 + z * (\
+                    H10 + z * (\
+                      H11 + z * (\
+                        H12 + z * (\
+                          H13 + z * (\
+                            H14 + z * (\
+                              H15 + z * (\
+                                H16 + z * (\
+                                  H17 +z * H18\
                                 )\
                               )\
                             )\
@@ -775,20 +818,20 @@ H00 + z*(\
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYA_EVAL(z) \
-A00 + z*(\
-  A01 + z*(\
-    A02 + z*(\
-      A03 + z*(\
-        A04 + z*(\
-          A05 + z*(\
-            A06 + z*(\
-              A07 + z*(\
-                A08 + z*(\
-                  A09 + z*(\
-                    A10 + z*(\
-                      A11 + z*(\
-                        A12 + z*(\
-                          A13 + z*A14\
+A00 + z * (\
+  A01 + z * (\
+    A02 + z * (\
+      A03 + z * (\
+        A04 + z * (\
+          A05 + z * (\
+            A06 + z * (\
+              A07 + z * (\
+                A08 + z * (\
+                  A09 + z * (\
+                    A10 + z * (\
+                      A11 + z * (\
+                        A12 + z * (\
+                          A13 + z * A14\
                         )\
                       )\
                     )\
@@ -805,20 +848,20 @@ A00 + z*(\
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYB_EVAL(z) \
-B00 + z*(\
-  B01 + z*(\
-    B02 + z*(\
-      B03 + z*(\
-        B04 + z*(\
-          B05 + z*(\
-            B06 + z*(\
-              B07 + z*(\
-                B08 + z*(\
-                  B09 + z*(\
-                    B10 + z*(\
-                      B11 + z*(\
-                        B12 + z*(\
-                          B13 + z*B14\
+B00 + z * (\
+  B01 + z * (\
+    B02 + z * (\
+      B03 + z * (\
+        B04 + z * (\
+          B05 + z * (\
+            B06 + z * (\
+              B07 + z * (\
+                B08 + z * (\
+                  B09 + z * (\
+                    B10 + z * (\
+                      B11 + z * (\
+                        B12 + z * (\
+                          B13 + z * B14\
                         )\
                       )\
                     )\
@@ -835,20 +878,20 @@ B00 + z*(\
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYC_EVAL(z) \
-C00 + z*(\
-  C01 + z*(\
-    C02 + z*(\
-      C03 + z*(\
-        C04 + z*(\
-          C05 + z*(\
-            C06 + z*(\
-              C07 + z*(\
-                C08 + z*(\
-                  C09 + z*(\
-                    C10 + z*(\
-                      C11 + z*(\
-                        C12 + z*(\
-                          C13 + z*C14\
+C00 + z * (\
+  C01 + z * (\
+    C02 + z * (\
+      C03 + z * (\
+        C04 + z * (\
+          C05 + z * (\
+            C06 + z * (\
+              C07 + z * (\
+                C08 + z * (\
+                  C09 + z * (\
+                    C10 + z * (\
+                      C11 + z * (\
+                        C12 + z * (\
+                          C13 + z * C14\
                         )\
                       )\
                     )\
@@ -865,20 +908,20 @@ C00 + z*(\
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYD_EVAL(z) \
-D00 + z*(\
-  D01 + z*(\
-    D02 + z*(\
-      D03 + z*(\
-        D04 + z*(\
-          D05 + z*(\
-            D06 + z*(\
-              D07 + z*(\
-                D08 + z*(\
-                  D09 + z*(\
-                    D10 + z*(\
-                      D11 + z*(\
-                        D12 + z*(\
-                          D13 + z*D14\
+D00 + z * (\
+  D01 + z * (\
+    D02 + z * (\
+      D03 + z * (\
+        D04 + z * (\
+          D05 + z * (\
+            D06 + z * (\
+              D07 + z * (\
+                D08 + z * (\
+                  D09 + z * (\
+                    D10 + z * (\
+                      D11 + z * (\
+                        D12 + z * (\
+                          D13 + z * D14\
                         )\
                       )\
                     )\
@@ -895,22 +938,22 @@ D00 + z*(\
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYE_EVAL(z) \
-E00 + z*(\
-  E01 + z*(\
-    E02 + z*(\
-      E03 + z*(\
-        E04 + z*(\
-          E05 + z*(\
-            E06 + z*(\
-              E07 + z*(\
-                E08 + z*(\
-                  E09 + z*(\
-                    E10 + z*(\
-                      E11 + z*(\
-                        E12 + z*(\
-                          E13 + z*(\
-                            E14 + z*(\
-                              E15 + z*E16\
+E00 + z * (\
+  E01 + z * (\
+    E02 + z * (\
+      E03 + z * (\
+        E04 + z * (\
+          E05 + z * (\
+            E06 + z * (\
+              E07 + z * (\
+                E08 + z * (\
+                  E09 + z * (\
+                    E10 + z * (\
+                      E11 + z * (\
+                        E12 + z * (\
+                          E13 + z * (\
+                            E14 + z * (\
+                              E15 + z * E16\
                             )\
                           )\
                         )\
@@ -929,22 +972,22 @@ E00 + z*(\
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYF_EVAL(z) \
-F00 + z*(\
-  F01 + z*(\
-    F02 + z*(\
-      F03 + z*(\
-        F04 + z*(\
-          F05 + z*(\
-            F06 + z*(\
-              F07 + z*(\
-                F08 + z*(\
-                  F09 + z*(\
-                    F10 + z*(\
-                      F11 + z*(\
-                        F12 + z*(\
-                          F13 + z*(\
-                            F14 + z*(\
-                              F15 + z*F16\
+F00 + z * (\
+  F01 + z * (\
+    F02 + z * (\
+      F03 + z * (\
+        F04 + z * (\
+          F05 + z * (\
+            F06 + z * (\
+              F07 + z * (\
+                F08 + z * (\
+                  F09 + z * (\
+                    F10 + z * (\
+                      F11 + z * (\
+                        F12 + z * (\
+                          F13 + z * (\
+                            F14 + z * (\
+                              F15 + z * F16\
                             )\
                           )\
                         )\
@@ -963,22 +1006,22 @@ F00 + z*(\
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYG_EVAL(z) \
-G00 + z*(\
-  G01 + z*(\
-    G02 + z*(\
-      G03 + z*(\
-        G04 + z*(\
-          G05 + z*(\
-            G06 + z*(\
-              G07 + z*(\
-                G08 + z*(\
-                  G09 + z*(\
-                    G10 + z*(\
-                      G11 + z*(\
-                        G12 + z*(\
-                          G13 + z*(\
-                            G14 + z*(\
-                              G15 + z*G16\
+G00 + z * (\
+  G01 + z * (\
+    G02 + z * (\
+      G03 + z * (\
+        G04 + z * (\
+          G05 + z * (\
+            G06 + z * (\
+              G07 + z * (\
+                G08 + z * (\
+                  G09 + z * (\
+                    G10 + z * (\
+                      G11 + z * (\
+                        G12 + z * (\
+                          G13 + z * (\
+                            G14 + z * (\
+                              G15 + z * G16\
                             )\
                           )\
                         )\
@@ -997,22 +1040,22 @@ G00 + z*(\
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYH_EVAL(z) \
-H00 + z*(\
-  H01 + z*(\
-    H02 + z*(\
-      H03 + z*(\
-        H04 + z*(\
-          H05 + z*(\
-            H06 + z*(\
-              H07 + z*(\
-                H08 + z*(\
-                  H09 + z*(\
-                    H10 + z*(\
-                      H11 + z*(\
-                        H12 + z*(\
-                          H13 + z*(\
-                            H14 + z*(\
-                              H15 + z*H16\
+H00 + z * (\
+  H01 + z * (\
+    H02 + z * (\
+      H03 + z * (\
+        H04 + z * (\
+          H05 + z * (\
+            H06 + z * (\
+              H07 + z * (\
+                H08 + z * (\
+                  H09 + z * (\
+                    H10 + z * (\
+                      H11 + z * (\
+                        H12 + z * (\
+                          H13 + z * (\
+                            H14 + z * (\
+                              H15 + z * H16\
                             )\
                           )\
                         )\
@@ -1081,19 +1124,73 @@ H00 + z*(\
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYA_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
+A00 + z * (\
+  A01 + z * (\
+    A02 + z * (\
+      A03 + z * (\
+        A04 + z * (\
+          A05 + z * (\
+            A06 + z * (\
+              A07 + z * (\
+                A08 + z * A09\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYB_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*B07))))))
+B00 + z * (\
+  B01 + z * (\
+    B02 + z * (\
+      B03 + z * (\
+        B04 + z * (\
+          B05 + z * (\
+            B06 + z * B07\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYC_EVAL(z) \
-C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
+C00 + z * (\
+  C01 + z * (\
+    C02 + z * (\
+      C03 + z * (\
+        C04 + z * (\
+          C05 + z * (\
+            C06 + z * (\
+              C07 + z * C08\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYD_EVAL(z) \
-D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
+D00 + z * (\
+  D01 + z * (\
+    D02 + z * (\
+      D03 + z * (\
+        D04 + z * (\
+          D05 + z * (\
+            D06 + z * D07\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 #endif
 /*  End of double vs. extended / portable vs. double-double vs. quadruple.    */
@@ -1107,8 +1204,8 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define S1 (-6.4596409750624625365575656389794573337969351178927E-01L)
 
 /*  Helper macros for cos and sin.                                            */
-#define TMPL_COS_TAYLOR(z) (C0 + z*C1)
-#define TMPL_SIN_TAYLOR(z) (S0 + z*S1)
+#define TMPL_COS_TAYLOR(z) (C0 + z * C1)
+#define TMPL_SIN_TAYLOR(z) (S0 + z * S1)
 
 /*  Function for computing the normalized Fresnel cosine for 2 <= x < 4.      */
 TMPL_NO_CONTRACT_MATH
@@ -1133,7 +1230,7 @@ TMPL_UNSEQUENCED
     /*  Variables for storing the values of sine and cosine.                  */
     long double cos_hi, sin_hi, cos_x, sin_x;
 
-    /*  The auxiliary function "f" and "g" are computed in different ways,    *
+    /*  The auxiliary functions "f" and "g" are computed in different ways,   *
      *  depending on how long double is represented. For quadruple and        *
      *  double-double precisions, we use two Pade approximants.               */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
@@ -1204,7 +1301,7 @@ TMPL_UNSEQUENCED
     sin_x = cos_hi * sin_lo + sin_hi * cos_lo;
 
     /*  With the auxiliary functions computed, we can compute C(x).           */
-    return 0.5L + (f*sin_x - g*cos_x);
+    return 0.5L + (f * sin_x - g * cos_x);
 }
 /*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small.               */
 

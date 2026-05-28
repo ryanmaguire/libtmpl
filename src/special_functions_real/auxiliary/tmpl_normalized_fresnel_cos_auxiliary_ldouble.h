@@ -79,9 +79,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_even_high_split_ldouble.h:                                       *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -95,15 +104,13 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Splitting function for retrieving the high part of a long double.         */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/split/tmpl_even_high_split_ldouble.h>
-#else
-extern long double tmpl_LDouble_Even_High_Split(long double x);
-#endif
+#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
-tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
+tmpl_LDouble_SinCosPi(const long double theta,
+                      long double * TMPL_RESTRICT const sin_theta,
+                      long double * TMPL_RESTRICT const cos_theta);
 
 /*  64-bit long double, needs no more precision than ordinary double.         */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
