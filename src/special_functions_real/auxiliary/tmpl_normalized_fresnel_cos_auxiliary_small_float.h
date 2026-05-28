@@ -174,7 +174,7 @@ TMPL_UNSEQUENCED
     float sin_arg, cos_arg;
 
     /*  Compute sin and cos simultaneously.                                   */
-    tmpl_Float_SinCosPi((float)arg, &sin_arg, &cos_arg);
+    tmpl_Float_SinCosPi(TMPL_CAST(arg, float), &sin_arg, &cos_arg);
 
     /*  With the auxiliary functions computed, we can compute C(x).           */
     return 0.5F + (f * sin_arg - g * cos_arg);

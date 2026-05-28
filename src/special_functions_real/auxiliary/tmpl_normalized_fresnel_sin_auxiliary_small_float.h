@@ -69,9 +69,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_cast.h:                                                          *
+ *          Header file providing the TMPL_CAST macro.                        *
+ *  3.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 24, 2024                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/28: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -81,11 +90,17 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Helper macro for casting with C vs. C++ compatibility.                    */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Computes sin(pi t) and cos(pi t) at single precision.                     */
-extern void tmpl_Float_SinCosPi(float t, float *sin_t, float *cos_t);
+extern void
+tmpl_Float_SinCosPi(const float theta,
+                    float * TMPL_RESTRICT const sin_theta,
+                    float * TMPL_RESTRICT const cos_theta);
 
 /*  Computes the remainder of a double after division by 2.                   */
 TMPL_CONST_FUNC
@@ -115,16 +130,16 @@ TMPL_UNSEQUENCED;
 #define D02 (+1.0886493929373154383903053885964644577967820375110E+00F)
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
-#define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*A03))
+#define TMPL_POLYA_EVAL(z) A00 + z * (A01 + z * (A02 + z * A03))
 
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
-#define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*B02)
+#define TMPL_POLYB_EVAL(z) B00 + z * (B01 + z * B02)
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
-#define TMPL_POLYC_EVAL(z) C00 + z*(C01 + z*(C02 + z*C03))
+#define TMPL_POLYC_EVAL(z) C00 + z * (C01 + z * (C02 + z * C03))
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
-#define TMPL_POLYD_EVAL(z) D00 + z*(D01 + z*D02)
+#define TMPL_POLYD_EVAL(z) D00 + z * (D01 + z * D02)
 
 /*  Function for computing the normalized Fresnel sine for 2 <= x < 4.        */
 TMPL_CONST_FUNC
@@ -135,7 +150,7 @@ TMPL_UNSEQUENCED
     /*  Float has a 23-bit mantissa, double has 52 bits. This means for every *
      *  representable float x, x^2 is perfectly representable once converted  *
      *  to a double. Do this and compute sin(pi/2 x^2) this way.              */
-    const double x_double = (double)x;
+    const double x_double = TMPL_CAST(x, double);
 
     /*  Compute sin(pi/2 x^2) using the promoted double. Since sin(pi t) is   *
      *  periodic with period 2, we can reduce the argument first.             */
@@ -159,10 +174,10 @@ TMPL_UNSEQUENCED
     float sin_arg, cos_arg;
 
     /*  Compute sin and cos simultaneously.                                   */
-    tmpl_Float_SinCosPi((float)arg, &sin_arg, &cos_arg);
+    tmpl_Float_SinCosPi(TMPL_CAST(arg, float), &sin_arg, &cos_arg);
 
     /*  With the auxiliary functions computed, we can compute S(x).           */
-    return 0.5F - (f*cos_arg + g*sin_arg);
+    return 0.5F - (f * cos_arg + g * sin_arg);
 }
 /*  End of tmpl_Float_Normalized_Fresnel_Sin_Auxiliary_Small.                 */
 
