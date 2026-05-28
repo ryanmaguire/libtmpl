@@ -21,14 +21,11 @@
 #ifndef TMPL_SPLIT_H
 #define TMPL_SPLIT_H
 
-/*  TMPL_USE_INLINE macro provided here.                                      */
-#include <libtmpl/include/tmpl_config.h>
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Even_High_Split                                           *
  *  Purpose:                                                                  *
- *      Splits a double and retreives the higher order bits.                  *
+ *      Splits a double and retrieves the higher order bits.                  *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
  *          A real number.                                                    *
@@ -38,31 +35,15 @@
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-
-/*  These functions are very small and should be inlined, if possible.        */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/inline/split/tmpl_even_high_split_float.h>
-#include <libtmpl/include/inline/split/tmpl_even_high_split_double.h>
-#include <libtmpl/include/inline/split/tmpl_even_high_split_ldouble.h>
-
-#else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
-
-/*  Lacking inline support, use the versions in src/split/.                   */
-extern float tmpl_Float_Even_High_Split(const float x);
-extern double tmpl_Double_Even_High_Split(const double x);
-extern long double tmpl_LDouble_Even_High_Split(const long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/split/tmpl_even_high_split_float.h>
+#include <libtmpl/include/split/tmpl_even_high_split_double.h>
+#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_High_Split                                                *
  *  Purpose:                                                                  *
- *      Splits a double and retreives the higher order bits.                  *
+ *      Splits a double and retrieves the higher order bits.                  *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
  *          A real number.                                                    *
@@ -75,41 +56,9 @@ extern long double tmpl_LDouble_Even_High_Split(const long double x);
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-
-/*  These functions are very small and should be inlined, if possible.        */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/inline/split/tmpl_high_split_float.h>
-#include <libtmpl/include/inline/split/tmpl_high_split_double.h>
-#include <libtmpl/include/inline/split/tmpl_high_split_ldouble.h>
-
-#else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
-
-/*  Lacking inline support, use the versions in src/split/.                   */
-extern float tmpl_Float_High_Split(const float x, const float splitter);
-extern double tmpl_Double_High_Split(const double x, const double splitter);
-
-/*  Double-Double is split differently than the other implementations. Since  *
- *  double-double is literally two doubles together, the splitting factor is  *
- *  of type "double" instead of "long double."                                */
-#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-
-extern long double
-tmpl_LDouble_High_Split(const long double x, const double splitter);
-
-/*  All other versions are treated in a similar manner to float and double.   */
-#else
-
-extern long double
-tmpl_LDouble_High_Split(const long double x, const long double splitter);
-
-#endif
-/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/split/tmpl_high_split_float.h>
+#include <libtmpl/include/split/tmpl_high_split_double.h>
+#include <libtmpl/include/split/tmpl_high_split_ldouble.h>
 
 #endif
 /*  End of include guard.                                                     */
