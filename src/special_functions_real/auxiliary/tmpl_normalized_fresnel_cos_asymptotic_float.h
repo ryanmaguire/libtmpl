@@ -70,9 +70,16 @@
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_cast.h:                                                          *
  *          Header file providing the TMPL_CAST macro.                        *
+ *  3.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -82,26 +89,30 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
-
 /*  Helper macro for casting with C vs. C++ compatibility.                    */
 #include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 extern const float tmpl_float_pi;
 
 /*  Computes sin(pi t) at single precision.                                   */
 TMPL_CONST_FUNC
-extern float tmpl_Float_SinPi(const float t) TMPL_UNSEQUENCED;
+extern float tmpl_Float_SinPi(const float t)
+TMPL_UNSEQUENCED;
 
 /*  Computes the remainder of a double after division by 2.                   */
 TMPL_CONST_FUNC
-extern double tmpl_Double_Mod_2(const double t) TMPL_UNSEQUENCED;
+extern double tmpl_Double_Mod_2(const double t)
+TMPL_UNSEQUENCED;
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 float tmpl_Float_Normalized_Fresnel_Cos_Asymptotic(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Float has a 23-bit mantissa, double has 52 bits. This means for every *
      *  representable float x, x^2 is perfectly representable once converted  *

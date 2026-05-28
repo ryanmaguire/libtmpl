@@ -81,9 +81,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_high_split_double.h:                                             *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -96,20 +105,8 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  The splitting function is small enough that it can be inlined.            */
-#if TMPL_USE_INLINE == 1
-
 /*  Splitting function for retrieving the high part of a double found here.   */
-#include <libtmpl/include/inline/split/tmpl_high_split_double.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern double tmpl_Double_High_Split(const double x, const double splitter);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/split/tmpl_high_split_double.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 extern const double tmpl_double_pi;
@@ -131,7 +128,7 @@ TMPL_UNSEQUENCED
     /*  We use a double-double trick to split x into two parts, high and low. *
      *  The magic number 68719476737 is 2^(52 - 16) + 1. Hence xhi has the    *
      *  upper 16 bits of the mantissa and xlo has the lower 36 bits.          */
-    const double splitter = +6.8719476737E+10;
+    const double splitter = 6.8719476737E+10;
 
     /*  Split the input into two parts. This allows us to compute the square  *
      *  of x more precisely.                                                  */
