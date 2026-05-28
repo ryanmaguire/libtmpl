@@ -93,6 +93,9 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The splitting function is small enough that it can be inlined.            */
 #if TMPL_USE_INLINE == 1
 
@@ -118,8 +121,12 @@ tmpl_Double_SinCosPi(const double t,
                      double * TMPL_RESTRICT const cos_t);
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(const double x)
+TMPL_UNSEQUENCED
 {
     /*  We use a double-double trick to split x into two parts, high and low. *
      *  The magic number 68719476737 is 2^(52 - 16) + 1. Hence xhi has the    *

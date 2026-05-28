@@ -92,6 +92,9 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Splitting function for retrieving the high part of a double given here.   */
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/inline/split/tmpl_even_high_split_double.h>
@@ -165,8 +168,12 @@ C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
 #define S1 (-6.4596409750624625365575656389794573337969351E-01)
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(double x)
+double tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Split the input into two parts, high and low.                         */
     const double xhi = tmpl_Double_Even_High_Split(x);

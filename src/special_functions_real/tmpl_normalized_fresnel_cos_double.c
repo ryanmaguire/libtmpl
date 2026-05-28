@@ -210,6 +210,9 @@
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Function prototype / forward declaration.                                 */
 extern double tmpl_Double_Normalized_Fresnel_Cos(const double x);
 
@@ -246,7 +249,11 @@ extern double tmpl_Double_Normalized_Fresnel_Cos(const double x);
  ******************************************************************************/
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 double tmpl_Double_Normalized_Fresnel_Cos(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     double out;
@@ -357,7 +364,11 @@ double tmpl_Double_Normalized_Fresnel_Cos(const double x)
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 double tmpl_Double_Normalized_Fresnel_Cos(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     double out;
