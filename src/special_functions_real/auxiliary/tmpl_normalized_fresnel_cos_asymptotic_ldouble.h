@@ -100,6 +100,9 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  The splitting function is small enough that it can be inlined.            */
 #if TMPL_USE_INLINE == 1
 
@@ -165,8 +168,12 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 /*  End of double vs. extended vs. double-double vs. quadruple.               */
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
     const long double xhi = tmpl_LDouble_High_Split(x, TMPL_LDOUBLE_SPLITTER);
