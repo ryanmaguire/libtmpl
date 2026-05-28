@@ -46,9 +46,16 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -57,6 +64,9 @@
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00)
@@ -74,18 +84,22 @@
 #define B04 (+2.9455885172523367699202977882571957391522644286406E-08)
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
-#define TMPL_NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define TMPL_NUM_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
-#define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
+#define TMPL_DEN_EVAL(z) \
+B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  Computes the normalized Fresnel cosine function using a Pade approximant. */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Cos_Pade(double x)
+double tmpl_Double_Normalized_Fresnel_Cos_Pade(const double x)
+TMPL_UNSEQUENCED
 {
     /*  The Pade approximant is in terms of x^4.                              */
-    const double x2 = x*x;
-    const double x4 = x2*x2;
+    const double x2 = x * x;
+    const double x4 = x2 * x2;
 
     /*  Compute the Pade approximant.                                         */
     const double num = TMPL_NUM_EVAL(x4);

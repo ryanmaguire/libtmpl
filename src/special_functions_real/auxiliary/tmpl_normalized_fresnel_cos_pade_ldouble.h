@@ -55,9 +55,16 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/27: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimizations.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -66,6 +73,9 @@
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  64-bit long double, no more precision than ordinary double.               */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -90,10 +100,12 @@
 #define B04 (+2.9455885172523367699202977882571957391522644286406E-08L)
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
-#define TMPL_NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define TMPL_NUM_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 /*  Helper macro for evaluating the denominator via Horner's method.          */
-#define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
+#define TMPL_DEN_EVAL(z) \
+B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  Double-double needs a lot more terms.                                     */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -125,11 +137,37 @@
 
 /*  Helper macro for evaluating the numerator using Horner's method.          */
 #define TMPL_NUM_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * A08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Helper macro for evaluating the denominator using Horner's method.        */
 #define TMPL_DEN_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*B07))))))
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * B07\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Quadruple needs only 1 more coefficients than double-double.              */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
@@ -162,11 +200,39 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*B07))))))
 
 /*  Helper macro for evaluating the numerator using Horner's method.          */
 #define TMPL_NUM_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * A08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Helper macro for evaluating the denominator using Horner's method.        */
 #define TMPL_DEN_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * (\
+                            B07 + z * B08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Extended / portable, only slightly more coefficients than 64-bit double.  */
 #else
@@ -193,21 +259,25 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
 #define B05 (+7.7559028457313867649205421286943025194624400668790E-11L)
 
 /*  Helper macro for evaluating the numerator using Horner's method.          */
-#define TMPL_NUM_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*A06)))))
+#define TMPL_NUM_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * (A05 + z * A06)))))
 
 /*  Helper macro for evaluating the denominator using Horner's method.        */
-#define TMPL_DEN_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*B05))))
+#define TMPL_DEN_EVAL(z) \
+B00 + z * (B01 + z * (B02 + z * (B03 + z * (B04 + z * B05))))
 
 #endif
 /*  End of double vs. double-double vs. quadruple vs extended / portable.     */
 
 /*  Computes the normalized Fresnel cosine function using a Pade approximant. */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Pade(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Cos_Pade(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  The Pade approximant is in terms of x^4.                              */
-    const long double x2 = x*x;
-    const long double x4 = x2*x2;
+    const long double x2 = x * x;
+    const long double x4 = x2 * x2;
 
     /*  Compute the Pade approximant.                                         */
     const long double num = TMPL_NUM_EVAL(x4);
