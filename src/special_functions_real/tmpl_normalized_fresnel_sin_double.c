@@ -129,8 +129,11 @@
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern double tmpl_Double_Normalized_Fresnel_Sin(const double x);
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -165,7 +168,11 @@
  ******************************************************************************/
 
 /*  Computes the normalized Fresnel sine of a real number.                    */
-double tmpl_Double_Normalized_Fresnel_Sin(double x)
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+double tmpl_Double_Normalized_Fresnel_Sin(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     double out;

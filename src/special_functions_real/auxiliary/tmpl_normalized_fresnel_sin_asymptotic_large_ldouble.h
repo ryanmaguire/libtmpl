@@ -78,9 +78,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_even_high_split_ldouble.h:                                       *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 21, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/28: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -90,34 +99,29 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  The splitting function is small enough that it can be inlined.            */
-#if TMPL_USE_INLINE == 1
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Splitting function for getting the high part of a long double found here. */
-#include <libtmpl/include/inline/split/tmpl_even_high_split_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern long double tmpl_LDouble_Even_High_Split(const long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 extern const long double tmpl_ldouble_pi;
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
-tmpl_LDouble_SinCosPi(const long double t,
-                      long double * TMPL_RESTRICT const sin_t,
-                      long double * TMPL_RESTRICT const cos_t);
+tmpl_LDouble_SinCosPi(const long double theta,
+                      long double * TMPL_RESTRICT const sin_theta,
+                      long double * TMPL_RESTRICT const cos_theta);
 
 /*  Function for computing the normalized Fresnel sine of a large input.      */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double
 tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic_Large(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Split the input into two parts. This allows us to compute the square  *
      *  of x more precisely.                                                  */

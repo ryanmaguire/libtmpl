@@ -73,9 +73,18 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_high_split_ldouble.h:                                            *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/28: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -85,21 +94,20 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retrieving the high part of a long double.         */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/split/tmpl_high_split_ldouble.h>
-#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-extern long double tmpl_LDouble_High_Split(long double x, double splitter);
-#else
-extern long double tmpl_LDouble_High_Split(long double x, long double splitter);
-#endif
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Splitting function for getting the high part of a long double found here. */
+#include <libtmpl/include/split/tmpl_high_split_ldouble.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
-#define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939E+00L)
+extern const long double tmpl_ldouble_pi;
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
-tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
+tmpl_LDouble_SinCosPi(const long double theta,
+                      long double * TMPL_RESTRICT const sin_theta,
+                      long double * TMPL_RESTRICT const cos_theta);
 
 /*  Different splitting values are needed, depending on the type. If the      *
  *  mantissa is N bits, the magic number is 2^(N - floor(N/3) + 1) + 1. This  *
@@ -134,8 +142,12 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 /*  End of double vs. extended vs. double-double vs. quadruple.               */
 
 /*  Function for computing the normalized Fresnel sine of a large input.      */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
     const long double xhi = tmpl_LDouble_High_Split(x, TMPL_LDOUBLE_SPLITTER);
@@ -143,7 +155,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic(long double x)
 
     /*  The scale factor for the asymptotic expansion. For large x we only    *
      *  need the first term of the approximation.                             */
-    const long double t = 1.0L / (TMPL_ONE_PI * x);
+    const long double t = 1.0L / (tmpl_ldouble_pi * x);
 
     /*  For large x we have xhi^2 / 2 is an even integer. Since sin(pi t)     *
      *  is periodic with period 2, the xhi^2 term can be disregarded. The     *
@@ -161,8 +173,8 @@ long double tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic(long double x)
 /*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic.                    */
 
 /*  Undefine everything in case someone wants to include this file.           */
-#undef TMPL_ONE_PI
 #undef TMPL_LDOUBLE_SPLITTER
 
 #endif
 /*  End of include guard.                                                     */
+

@@ -136,11 +136,7 @@
 extern long double tmpl_LDouble_Normalized_Fresnel_Cos(const long double x);
 
 /*  Absolute value function needed.                                           */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
-#else
-extern long double tmpl_LDouble_Abs(long double x);
-#endif
+#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
