@@ -39,7 +39,7 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_split.h:                                                         *
+ *      split/                                                                *
  *          tmpl_LDouble_Even_High_Split:                                     *
  *              Splits an input into two parts, xhi and xlo, so that xhi and  *
  *              xlo have half the number of bits of x. This function returns  *
@@ -78,6 +78,10 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_even_high_split_double.h:                                        *
+ *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 24, 2024                                             *
@@ -93,8 +97,8 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Splitting functions for breaking a number into two parts.                 */
-#include <libtmpl/include/tmpl_split.h>
+/*  Splitting function for breaking a long double into two parts.             */
+#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 
 /*  Standard 2Prod algorithm at double precision.                             */
 TMPL_NO_ASSOCIATIVE_MATH
