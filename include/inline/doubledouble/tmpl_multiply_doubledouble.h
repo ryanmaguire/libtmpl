@@ -24,6 +24,9 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  2Prod and Fast2Sum are short enough that they can be inlined.             */
 #if TMPL_USE_INLINE == 1
 
@@ -49,6 +52,8 @@ tmpl_Double_Fast_Two_Sum(const double x,
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 tmpl_DoubleDouble
 tmpl_DoubleDouble_Multiply(const tmpl_DoubleDouble * const x,

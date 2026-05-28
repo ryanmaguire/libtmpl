@@ -95,6 +95,9 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 #if TMPL_USE_INLINE == 1
 
 #include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
@@ -117,6 +120,8 @@ tmpl_Double_Fast_Two_Sum(const double x,
 #endif
 
 /*  Standard 2Sum algorithm at double precision.                              */
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 tmpl_DoubleDouble
 tmpl_DoubleDouble_Quick_Add(const tmpl_DoubleDouble * const x,
