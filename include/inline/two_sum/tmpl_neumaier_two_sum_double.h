@@ -16,128 +16,143 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_two_sum_double                            *
+ *                        tmpl_neumaier_two_sum_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Uses the (non-fast) 2Sum algorithm for summing with error.            *
+ *      Evaluates the Neumaier sum from the Neumaier summation algorithm.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Two_Sum                                                   *
+ *      tmpl_Double_Neumaier_Two_Sum                                          *
  *  Purpose:                                                                  *
- *      Evaluates the sum of two doubles, returning the sum and the error.    *
+ *      Evaluates sum += summand using Neumaier summation.                    *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      summand (const double):                                               *
  *          A real number.                                                    *
- *      y (double):                                                           *
- *          Another real number.                                              *
- *      out (double * TMPL_RESTRICT const):                                   *
- *          The rounded sum x + y will be stored here.                        *
+ *      sum (double * TMPL_RESTRICT const):                                   *
+ *          The current sum. The higher-order component of the sum will be    *
+ *          stored here.                                                      *
  *      err (double * TMPL_RESTRICT const):                                   *
- *          The error term, sum(x, y) - (x + y), is stored here.              *
+ *          The error term in the summation. The updated error in the sum     *
+ *          will be stored here.                                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      We use the standard 2Sum algorithm. In most cases it is far more      *
- *      beneficial to use the Fast2Sum algorithm, tmpl_Double_Fast_Two_Sum,   *
- *      since this uses only three floating point operations, but this has    *
- *      the caveat of requiring before-hand knowledge that |x| >= |y| is true.*
- *      The standard 2Sum goes as follows. Let "+" denote floating-point      *
- *      addition, and "sum" denote real addition. Let "xerr" and "yerr"       *
- *      denote the error from the x and y terms, respectively, and "xcomp"    *
- *      and "ycomp" denote the compensation factor from x and y, respectively.*
- *      Using this, we have:                                                  *
+ *      The Neumaier sum is similar to the Kahan sum, but does not assume     *
+ *      |sum| > |summand|. If |sum| > |summand|, then the usual Kahan sum is  *
+ *      performed, otherwise the roles of sum and summand are swapped. That   *
+ *      is, we compute:                                                       *
  *                                                                            *
- *          sum(x, y) = (x + y) + err                                         *
- *                    = (x + y) + (xerr + yerr)                               *
- *                    = (x + y) + ((x - xcomp) + (y - ycomp))                 *
- *                    = (x + y) + ((x - ((x + y) - y)) + (y - ((x + y) - x))) *
+ *          hi_part = sum + summand                                           *
  *                                                                            *
- *      If floating-point addition were associative, this error term would    *
- *      simplify to zero, and we would have sum(x, y) = x + y. Since          *
- *      floating-point addition rounds the result, it is not associative, and *
- *      the error term is often non-zero. We compute err by reversing this    *
- *      set of equations. That is:                                            *
+ *          if |sum| > |summand|                                              *
+ *              lo_part = (sum - add) + summand                               *
+ *          else                                                              *
+ *              lo_part = (summand - add) + sum                               *
  *                                                                            *
- *          sum   = x + y                                                     *
- *          xcomp = sum - y                                                   *
- *          ycomp = sum - x                                                   *
- *          xerr  = x - xcomp                                                 *
- *          yerr  = y - ycomp                                                 *
- *          err   = xerr + yerr                                               *
- *                                                                            *
- *      The values "sum" and "err" are returned.                              *
+ *      This is computed, and we then set *sum = hi_part and *err = lo_part.  *
  *  Notes:                                                                    *
  *      1.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
- *          poor Fast2Sum.                                                    *
- *      2.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          poor Neumaier sum.                                                *
+ *                                                                            *
+ *      2.) Compilers supporting the C23 standard and providing support for   *
+ *          the gnu::optimize attribute may not need to use the volatile      *
+ *          keyword. The gnu::optimize("no-associative-math") attribute is    *
+ *          applied to ensure correct behavior.                               *
+ *                                                                            *
+ *      3.) On compilers supporting the "restrict" keyword, out and err are   *
  *          declared as "restrict" pointers. This requires that out and err   *
  *          point to different locations. To properly use this function, the  *
  *          caller should do this regardless.                                 *
+ *                                                                            *
+ *      4.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      5.) There are no checks for NaN or Infinity.                          *
  *  References:                                                               *
- *      1.) https://en.wikipedia.org/wiki/2Sum                                *
- *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
- *      3.) Moller, Ole (March 1965).                                         *
- *          "Quasi double-precision in floating point addition."              *
- *          BIT Numerical Mathematics. Volume 5: Pages 37-50.                 *
- *      4.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
- *          "Library for Double-Double and Quad-Double Arithmetic."           *
- *      5.) Schewchuk, J. (October 1997).                                     *
- *          "Adaptive Precision Floating-Point Arithmetic                     *
- *              and Fast Robust Geometric Predicates."                        *
- *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
+ *      1.) Kahan, W. (January 1965)                                          *
+ *          Further Remarks on Reducing Truncation Errors                     *
+ *          Communications of the ACM, Vol 8, Number 1: Page 40.              *
+ *                                                                            *
+ *          The original summation algorithm is described here.               *
+ *                                                                            *
+ *      2.) Neumaier, A. (1974)                                               *
+ *          Rundungsfehleranalyse einiger Verfahren zur Summation             *
+ *          endlicher Summen                                                  *
+ *          Zeitschrift fur Angewandte Mathematik und Mechanik, Vol 54,       *
+ *          Number 1: Pages 39-51.                                            *
+ *                                                                            *
+ *          Original paper describing the algorithm (in German).              *
+ *                                                                            *
+ *      3.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
+ *                                                                            *
+ *          Wikipedia article for Kahan summation. The standard Kahan         *
+ *          algorithm uses Fast2Sum to improve the accuracy when summing      *
+ *          multiple floating-point numbers.                                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_abs_double.h:                                                    *
+ *          Header file providing double-precision absolute value.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/29: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NEUMAIER_ADDTO_DOUBLE_H
-#define TMPL_NEUMAIER_ADDTO_DOUBLE_H
+#ifndef TMPL_NEUMAIER_TWO_SUM_DOUBLE_H
+#define TMPL_NEUMAIER_TWO_SUM_DOUBLE_H
 
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
 #include <libtmpl/include/tmpl_config.h>
 
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/math/tmpl_abs_double.h>
-#else
-extern double tmpl_Double_Abs(double x);
-#endif
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Standard 2Sum algorithm at double precision.                              */
+/*  Absolute value function found here.                                       */
+#include <libtmpl/include/abs/tmpl_abs_double.h>
+
+/*  Neumaier summation algorithm for accurately evaluating sum += summand.    */
+TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 void
-tmpl_Double_Neumaier_Two_Sum(double input,
+tmpl_Double_Neumaier_Two_Sum(const double summand,
                              double * TMPL_RESTRICT const sum,
                              double * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    const double add = input + *sum;
+    TMPL_VOLATILE const double add = summand + *sum;
 
-    if (tmpl_Double_Abs(*sum) > tmpl_Double_Abs(input))
+    /*  If |sum| > |summand|, then this becomes the usual Kahan sum.          */
+    if (tmpl_Double_Abs(*sum) > tmpl_Double_Abs(summand))
     {
-        const TMPL_VOLATILE double correction = *sum - add;
-        *err += correction + input;
+        TMPL_VOLATILE const double correction = *sum - add;
+        *err += correction + summand;
     }
 
+    /*  Otherwise we swap the roles of sum and summand and apply Fast2Sum.    */
     else
     {
-        const TMPL_VOLATILE double correction = input - add;
+        TMPL_VOLATILE const double correction = summand - add;
         *err += correction + *sum;
     }
 
+    /*  The higher order bits are independent of |sum| and |summand|.         */
     *sum = add;
 }
-/*  End of tmpl_Double_Neumaier_AddTo.                                        */
+/*  End of tmpl_Double_Neumaier_Two_Sum.                                      */
 
 #endif
 /*  End of include guard.                                                     */
