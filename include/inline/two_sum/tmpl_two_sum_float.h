@@ -54,7 +54,6 @@
  *          sum(x, y) = (x + y) + err                                         *
  *                    = (x + y) + (xerr + yerr)                               *
  *                    = (x + y) + ((x - xcomp) + (y - ycomp))                 *
- *                    = (x + y) + ((x - ((x + y) - y)) + (y - ((x + y) - x))) *
  *                                                                            *
  *      If floating-point addition were associative, this error term would    *
  *      simplify to zero, and we would have sum(x, y) = x + y. Since          *
@@ -64,7 +63,7 @@
  *                                                                            *
  *          sum   = x + y                                                     *
  *          xcomp = sum - y                                                   *
- *          ycomp = sum - x                                                   *
+ *          ycomp = sum - xcomp                                               *
  *          xerr  = x - xcomp                                                 *
  *          yerr  = y - ycomp                                                 *
  *          err   = xerr + yerr                                               *
@@ -142,6 +141,11 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/29: Ryan Maguire                                                  *
+ *      Added C23 attributes and fixed algorithm.                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
