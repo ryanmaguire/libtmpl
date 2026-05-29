@@ -73,23 +73,65 @@
  *  Notes:                                                                    *
  *      1.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
- *          poor Fast2Sum.                                                    *
- *      2.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          poor 2Sum.                                                        *
+ *                                                                            *
+ *      2.) Compilers supporting the C23 standard and providing support for   *
+ *          the gnu::optimize attribute may not need to use the volatile      *
+ *          keyword. The gnu::optimize("no-associative-math") attribute is    *
+ *          applied to ensure correct behavior.                               *
+ *                                                                            *
+ *      3.) On compilers supporting the "restrict" keyword, out and err are   *
  *          declared as "restrict" pointers. This requires that out and err   *
  *          point to different locations. To properly use this function, the  *
  *          caller should do this regardless.                                 *
+ *                                                                            *
+ *      4.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      5.) There are no checks for NaN or Infinity.                          *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
+ *                                                                            *
+ *          Wikipedia article on the 2Sum algorithm, which is the more        *
+ *          accurate version of Fast2Sum. Unlike Fast2Sum, 2Sum does not      *
+ *          assume |x| >= |y|, but 2Sum requires 5 additions, and Fast2Sum    *
+ *          only needs 3.                                                     *
+ *                                                                            *
  *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
- *      3.) Moller, Ole (March 1965).                                         *
- *          "Quasi double-precision in floating point addition."              *
- *          BIT Numerical Mathematics. Volume 5: Pages 37-50.                 *
+ *                                                                            *
+ *          Wikipedia article for Kahan summation. The standard Kahan         *
+ *          algorithm uses Fast2Sum to improve the accuracy when summing      *
+ *          multiple floating-point numbers.                                  *
+ *                                                                            *
+ *      3.) Dekker, T.J. (June 1971).                                         *
+ *          A floating-point technique for extending the available precision. *
+ *          Numerische Mathematik. Volume 18, Number 3: Pages 224-242.        *
+ *                                                                            *
+ *          Classic paper on double-double arithmetic. The original Fast2Sum  *
+ *          algorithm is described here.                                      *
+ *                                                                            *
  *      4.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
- *          "Library for Double-Double and Quad-Double Arithmetic."           *
+ *          Library for Double-Double and Quad-Double Arithmetic.             *
+ *                                                                            *
+ *          Paper detailing the implementation of double-double and           *
+ *          quad-double arithmetic. The 2Sum and Fast2Sum algorithms are      *
+ *          described here, as is the 2Prod algorithm.                        *
+ *                                                                            *
  *      5.) Schewchuk, J. (October 1997).                                     *
- *          "Adaptive Precision Floating-Point Arithmetic                     *
- *              and Fast Robust Geometric Predicates."                        *
+ *          Adaptive Precision Floating-Point Arithmetic and                  *
+ *          Fast Robust Geometric Predicates.                                 *
  *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
+ *                                                                            *
+ *          Detailed analysis of 2Sum, Fast2Sum, and 2Prod, allowing for      *
+ *          arbitrarily sized floating-point types. This paper is useful for  *
+ *          extending 2Prod to the various long double types such as 80-bit   *
+ *          extended and 128-bit quadruple. Proofs are included along with    *
+ *          the algorithms.                                                   *
+ *                                                                            *
+ *      6.) Moller, Ole (March 1965).                                         *
+ *          Quasi double-precision in floating point addition.                *
+ *          BIT Numerical Mathematics. Volume 5: Pages 37-50.                 *
+ *                                                                            *
+ *          The original paper describing 2Sum and Fast2Sum.                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

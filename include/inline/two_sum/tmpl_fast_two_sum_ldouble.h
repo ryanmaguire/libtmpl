@@ -60,18 +60,25 @@
  *                                                                            *
  *      The values "sum" and "err" are returned.                              *
  *  Notes:                                                                    *
- *      1.) Depending on compiler and architecture we may need to declare     *
+ *      1.) Fast2Sum assumes |x| >= |y|.                                      *
+ *                                                                            *
+ *      2.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
  *          poor Fast2Sum.                                                    *
  *                                                                            *
- *      2.) On compilers supporting the "restrict" keyword, out and err are   *
+ *      3.) Compilers supporting the C23 standard and providing support for   *
+ *          the gnu::optimize attribute may not need to use the volatile      *
+ *          keyword. The gnu::optimize("no-associative-math") attribute is    *
+ *          applied to ensure correct behavior.                               *
+ *                                                                            *
+ *      4.) On compilers supporting the "restrict" keyword, out and err are   *
  *          declared as "restrict" pointers. This requires that out and err   *
  *          point to different locations. To properly use this function, the  *
  *          caller should do this regardless.                                 *
  *                                                                            *
- *      3.) There are no checks for NULL pointers.                            *
+ *      5.) There are no checks for NULL pointers.                            *
  *                                                                            *
- *      4.) There are no checks for NaN or Infinity.                          *
+ *      6.) There are no checks for NaN or Infinity.                          *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
  *                                                                            *
