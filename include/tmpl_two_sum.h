@@ -21,7 +21,7 @@
 #ifndef TMPL_TWO_SUM_H
 #define TMPL_TWO_SUM_H
 
-/*  TMPL_USE_INLINE macro provided here, as is TMPL_RESTRICT.                 */
+/*  TMPL_RESTRICT macro provided here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
 /******************************************************************************
@@ -30,53 +30,40 @@
  *  Purpose:                                                                  *
  *      Performs the standard Fast2Sum algorithm for floating-point addition. *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          Another real number.                                              *
- *      out (double * const):                                                 *
+ *      out (double * TMPL_RESTRICT const):                                   *
  *          The floating-point sum x + y is stored here.                      *
- *      err (double * const):                                                 *
+ *      err (double * TMPL_RESTRICT const):                                   *
  *          The error, sum(x, y) - (x + y), is stored here.                   *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
- *      Fast2Sum assumes |x| >= |y|.                                          *
- *      Float and long double equivalents are provided as well.               *
+ *      1.) Fast2Sum assumes |x| >= |y|.                                      *
+ *                                                                            *
+ *      2.) Depending on compiler and architecture we may need to declare     *
+ *          certain variables as volatile. Failure to do so results in a      *
+ *          poor Fast2Sum.                                                    *
+ *                                                                            *
+ *      3.) Compilers supporting the C23 standard and providing support for   *
+ *          the gnu::optimize attribute may not need to use the volatile      *
+ *          keyword. The gnu::optimize("no-associative-math") attribute is    *
+ *          applied to ensure correct behavior.                               *
+ *                                                                            *
+ *      4.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          declared as "restrict" pointers. This requires that out and err   *
+ *          point to different locations. To properly use this function, the  *
+ *          caller should do this regardless.                                 *
+ *                                                                            *
+ *      5.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      6.) There are no checks for NaN or Infinity.                          *
  ******************************************************************************/
-
-/*  These functions are very small and should be inlined, if possible.        */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_float.h>
-#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
-#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_ldouble.h>
-
-#else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
-
-/*  Lacking inline support, use the versions in src/two_sum/.                 */
-extern void
-tmpl_Float_Fast_Two_Sum(const float x,
-                        const float y,
-                        float * TMPL_RESTRICT const out,
-                        float * TMPL_RESTRICT const err);
-
-extern void
-tmpl_Double_Fast_Two_Sum(const double x,
-                         const double y,
-                         double * TMPL_RESTRICT const out,
-                         double * TMPL_RESTRICT const err);
-
-extern void
-tmpl_LDouble_Fast_Two_Sum(const long double x,
-                          const long double y,
-                          long double * TMPL_RESTRICT const out,
-                          long double * TMPL_RESTRICT const err);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/two_sum/tmpl_fast_two_sum_float.h>
+#include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
+#include <libtmpl/include/two_sum/tmpl_fast_two_sum_ldouble.h>
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -84,52 +71,22 @@ tmpl_LDouble_Fast_Two_Sum(const long double x,
  *  Purpose:                                                                  *
  *      Performs the standard 2Sum algorithm for floating-point addition.     *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          Another real number.                                              *
- *      out (double * const):                                                 *
+ *      out (double * TMPL_RESTRICT const):                                   *
  *          The floating-point sum x + y is stored here.                      *
- *      err (double * const):                                                 *
+ *      err (double * TMPL_RESTRICT const):                                   *
  *          The error, sum(x, y) - (x + y), is stored here.                   *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-
-/*  These functions are very small and should be inlined, if possible.        */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/inline/two_sum/tmpl_two_sum_float.h>
-#include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
-#include <libtmpl/include/inline/two_sum/tmpl_two_sum_ldouble.h>
-
-#else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
-
-/*  Lacking inline support, use the versions in src/two_sum/.                 */
-extern void
-tmpl_Float_Two_Sum(const float x,
-                   const float y,
-                   float * TMPL_RESTRICT const out,
-                   float * TMPL_RESTRICT const err);
-
-extern void
-tmpl_Double_Two_Sum(const double x,
-                    const double y,
-                    double * TMPL_RESTRICT const out,
-                    double * TMPL_RESTRICT const err);
-
-extern void
-tmpl_LDouble_Two_Sum(const long double x,
-                     const long double y,
-                     long double * TMPL_RESTRICT const out,
-                     long double * TMPL_RESTRICT const err);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#include <libtmpl/include/two_sum/tmpl_two_sum_float.h>
+#include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
+#include <libtmpl/include/two_sum/tmpl_two_sum_ldouble.h>
 
 #endif
 /*  End of include guard.                                                     */
