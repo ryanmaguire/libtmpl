@@ -162,7 +162,7 @@ tmpl_Float_Two_Sum(const float x,
                    float * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    const float sum = x + y;
+    TMPL_VOLATILE const float sum = x + y;
 
     /*  Compensated values for x and y.                                       */
     TMPL_VOLATILE const float xc = sum - y;
