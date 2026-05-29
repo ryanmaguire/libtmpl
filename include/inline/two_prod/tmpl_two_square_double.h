@@ -27,10 +27,14 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_RESTRICT.                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting functions for breaking a number into two parts.                 */
-#include <libtmpl/include/tmpl_split.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Splitting function for breaking a double into two parts.                  */
+#include <libtmpl/include/split/tmpl_even_high_split_double.h>
 
 /*  Standard 2Prod algorithm for squaring at double precision.                */
+TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 void
 tmpl_Double_Two_Square(double x,
@@ -45,16 +49,17 @@ tmpl_Double_Two_Square(double x,
 
     /*  Perform the two-product. We have:                                     *
      *      x * x = (xhi + xlo) * (xhi + xlo)                                 *
-     *            = xhi*xhi + 2*xhi*xlo + xlo*xlo                             *
+     *            = xhi * xhi + 2 * xhi * xlo + xlo * xlo                     *
      *  We perform this sum, and keep track of the error term from rounding.  */
-    const double prod = x * x;
-    const double err_hi = xhi * xhi - prod;
+    TMPL_VOLATILE const double prod = x * x;
+    TMPL_VOLATILE const double err_hi = xhi * xhi - prod;
     const double prod_mid = 2.0 * xlo * xhi;
     const double prod_lo = xlo * xlo;
+    TMPL_VOLATILE const double err_hi_sum = err_hi + prod_mid;
 
     /*  "prod" has the rounded product. The error is computed from the sum.   */
     *out = prod;
-    *err = (err_hi + prod_mid) + prod_lo;
+    *err = err_hi_sum + prod_lo;
 }
 /*  End of tmpl_Double_Two_Square.                                            */
 
