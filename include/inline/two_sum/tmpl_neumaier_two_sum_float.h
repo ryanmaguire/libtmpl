@@ -55,7 +55,7 @@
  *          else                                                              *
  *              lo_part = (summand - add) + sum                               *
  *                                                                            *
- *      This is computed, and we then set *sum = hi_part and *err = lo_part.  *
+ *      This is computed, and we then set *sum = hi_part and *err += lo_part. *
  *  Notes:                                                                    *
  *      1.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
