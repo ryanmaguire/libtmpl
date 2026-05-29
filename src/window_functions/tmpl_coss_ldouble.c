@@ -229,20 +229,8 @@ tmpl_LDouble_Coss(const long double x, const long double width);
 /*  TMPL_HAS_IEEE754_LDOUBLE macro and tmpl_IEEE754_LDouble type given here.  */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
-/*  Check for inline support.                                                 */
-#if TMPL_USE_INLINE == 1
-
-/*  The absolute value function is small and should be inlined.               */
-#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern long double tmpl_LDouble_Abs(const long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  The absolute value function is found here.                                */
+#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
