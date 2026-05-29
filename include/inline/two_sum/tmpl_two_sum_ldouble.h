@@ -128,7 +128,7 @@
  *          the algorithms.                                                   *
  *                                                                            *
  *      6.) Moller, Ole (March 1965).                                         *
- *          "Quasi double-precision in floating point addition."              *
+ *          Quasi double-precision in floating point addition.                *
  *          BIT Numerical Mathematics. Volume 5: Pages 37-50.                 *
  *                                                                            *
  *          The original paper describing 2Sum and Fast2Sum.                  *
