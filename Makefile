@@ -57,11 +57,34 @@
 #           code by passing NO_ASM=1 to the Makefile, this keyword has no
 #           effect. Enable with:
 #               make ARCH=name_of_architecture [other-options]
+#       DEBUG_BUILD:
+#           Compile with debug symbols. Enable with:
+#               make DEBUG_BUILD=1 [other-options]
+#       SIMD_FAST_MATH:
+#           Enable very aggressive optimizations and use OpenMP to create SIMD
+#           versions of several of libtmpl's functions. This option is only
+#           supported by a few compilers (GCC 15+, for example). It enables
+#           the -ffast-math, -march=native, and -fopenmp-simd flags, and
+#           requires C23 attributes to protect certain functions like 2Sum and
+#           2Prod from these aggressive compiler options. With appropriate
+#           hardware, this option can double the speed of some functions.
+#           Enable with:
+#               make SIMD_FAST_MATH=1 [other-options]
+#           NOTE:
+#               Library functions usually have 1-2 ULP error.
+#               The vectorized versions have roughly twice the amount
+#               of error, about 1-4 ULP.
 #       OMP:
 #           Set OpenMP flags. Useful if you want to build libtmpyl, the Python
 #           wrapper for libtmpl, and use with numpy arrays for parallel
 #           computing. Enable with:
 #               make OMP=1 [other-options]
+#       NO_LTO:
+#           Disable the -flto flag (link-time optimization). Some compilers
+#           do not support -flto and hence this needs to be enabled. For
+#           NVIDIA's C compiler (nvc) this option is automatically set for you.
+#           Enable with:
+#               make NO_LTO=1 [other-options]
 #       NO_MATH:
 #           Do not use libtmpl's implementation of libm, the C standard
 #           mathematical library. You must have C99 or higher support if you
@@ -83,6 +106,12 @@
 #           the __STDC_VERSION__ macro to see if inline support is available.
 #           If you do not wish to use inlined code, set this option. Enable via:
 #               make NO_INLINE=1 [other-options]
+#       ALWAYS_INLINE:
+#           Enable the C23 attributes [[gnu::always_inline]] or
+#           [[clang::always_inline]] for inlined functions. Your compiler
+#           must support C23 attributes if you want to use this.
+#           Enable with:
+#               make ALWAYS_INLINE=1 [other-options]
 #       NO_IEEE:
 #           Many functions use unions to take advantage of the IEEE-754
 #           format for floating-point numbers. This behavior is implementation
@@ -126,6 +155,15 @@
 #           memcpy call in many speed tests. If you would to like to force
 #           use of the memcpy function, enable this option. Enable with:
 #               make USE_MEMCPY=1 [other-options]
+#       USE_VOLATILE:
+#           Set the TMPL_VOLATILE macro to "volatile" instead of being empty.
+#           This may be necessary for libtmpl's double-double arithmetic
+#           routines to work properly. If your compiler supports C23 attributes
+#           and implements the [[gnu::optimize(...)]] attribute, then you do
+#           not need to enable this option. The necessary functions will set
+#           the "no-associative-math" and "fp-contract=off" options to prevent
+#           aggressive optimizations from ruining them. Enable with:
+#               make USE_VOLATILE=1 [other-options]
 #       VOLATILE_SPLIT:
 #           Force the double splitting method to use the volatile keyword.
 #           Several architectures (aarch64, ppc64) require the volatile keyword
@@ -317,6 +355,8 @@ CONFIG_FLAGS += -DTMPL_SET_INLINE_TRUE
 EXCLUDE += ! -name "*_no_inline_*.c"
 endif
 
+# Users may wish to force inlining functions. The config.c file will only do
+# this if the appropriate macro is set.
 ifdef ALWAYS_INLINE
 CONFIG_FLAGS += -DTMPL_SET_ALWAYS_INLINE_TRUE
 endif
