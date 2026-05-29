@@ -89,9 +89,9 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
-TMPL_INLINE_FILE(tmpl_affine_intercept_form_double.h)
-TMPL_INLINE_FILE(tmpl_affine_intercept_form_float.h)
-TMPL_INLINE_FILE(tmpl_affine_intercept_form_ldouble.h)
+#include TMPL_INLINE_FILE(tmpl_affine_intercept_form_double.h)
+#include TMPL_INLINE_FILE(tmpl_affine_intercept_form_float.h)
+#include TMPL_INLINE_FILE(tmpl_affine_intercept_form_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -136,9 +136,9 @@ tmpl_AffLDouble_Intercept_Form(const long double x0, const long double y0);
 #if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
-TMPL_INLINE_FILE(tmpl_affine_point_intercept_double.h)
-TMPL_INLINE_FILE(tmpl_affine_point_intercept_float.h)
-TMPL_INLINE_FILE(tmpl_affine_point_intercept_ldouble.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_intercept_double.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_intercept_float.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_intercept_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -191,9 +191,9 @@ tmpl_AffLDouble_Point_Intercept(const long double x0,
 #if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
-TMPL_INLINE_FILE(tmpl_affine_point_point_double.h)
-TMPL_INLINE_FILE(tmpl_affine_point_point_float.h)
-TMPL_INLINE_FILE(tmpl_affine_point_point_ldouble.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_point_double.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_point_float.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_point_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -245,9 +245,9 @@ tmpl_AffLDouble_Point_Point(const long double x0,
 #if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
-TMPL_INLINE_FILE(tmpl_affine_point_slope_double.h)
-TMPL_INLINE_FILE(tmpl_affine_point_slope_float.h)
-TMPL_INLINE_FILE(tmpl_affine_point_slope_ldouble.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_slope_double.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_slope_float.h)
+#include TMPL_INLINE_FILE(tmpl_affine_point_slope_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -294,9 +294,9 @@ tmpl_AffLDouble_Point_Slope(const long double x0,
 #if TMPL_USE_INLINE == 1
 
 /*  Location of the inlined versions.                                         */
-TMPL_INLINE_FILE(tmpl_affine_slope_intercept_double.h)
-TMPL_INLINE_FILE(tmpl_affine_slope_intercept_float.h)
-TMPL_INLINE_FILE(tmpl_affine_slope_intercept_ldouble.h)
+#include TMPL_INLINE_FILE(tmpl_affine_slope_intercept_double.h)
+#include TMPL_INLINE_FILE(tmpl_affine_slope_intercept_float.h)
+#include TMPL_INLINE_FILE(tmpl_affine_slope_intercept_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
