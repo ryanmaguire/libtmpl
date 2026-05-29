@@ -98,26 +98,9 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-#if TMPL_USE_INLINE == 1
-
-#include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
-#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
-
-#else
-
-extern void
-tmpl_Double_Two_Sum(const double x,
-                    const double y,
-                    double * TMPL_RESTRICT const out,
-                    double * TMPL_RESTRICT const err);
-
-extern void
-tmpl_Double_Fast_Two_Sum(const double x,
-                         const double y,
-                         double * TMPL_RESTRICT const out,
-                         double * TMPL_RESTRICT const err);
-
-#endif
+/*  2Sum and Fast2Sum are needed for double-double addition.                  */
+#include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
+#include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
 
 /*  Standard 2Sum algorithm at double precision.                              */
 TMPL_NO_CONTRACT_MATH

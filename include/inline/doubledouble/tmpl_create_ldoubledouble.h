@@ -5,15 +5,8 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>
 
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/two_sum/tmpl_two_sum_ldouble.h>
-#else
-extern void
-tmpl_LDouble_Two_Sum(const long double x,
-                     const long double y,
-                     long double * TMPL_RESTRICT const out,
-                     long double * TMPL_RESTRICT const err);
-#endif
+/*  2Sum is needed to create a long-double-double.                            */
+#include <libtmpl/include/two_sum/tmpl_two_sum_ldouble.h>
 
 TMPL_INLINE_DECL
 tmpl_LongDoubleDouble

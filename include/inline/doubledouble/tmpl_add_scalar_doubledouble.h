@@ -93,31 +93,9 @@
 /*  tmpl_DoubleDouble typedef provided here.                                  */
 #include <libtmpl/include/types/tmpl_doubledouble_double.h>
 
-/*  2Sum and Fast2Sum are small enough that they can be inlined.              */
-#if TMPL_USE_INLINE == 1
-
-/*  Both functions are provided in the include/inline/two_sum/ directory.     */
-#include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
-#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about these functions.          */
-extern void
-tmpl_Double_Two_Sum(const double x,
-                    const double y,
-                    double * TMPL_RESTRICT const out,
-                    double * TMPL_RESTRICT const err);
-
-extern void
-tmpl_Double_Fast_Two_Sum(const double x,
-                         const double y,
-                         double * TMPL_RESTRICT const out,
-                         double * TMPL_RESTRICT const err);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  2Sum and Fast2Sum are needed for double-double addition.                  */
+#include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
+#include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
 
 /*  Performs addition for a double-double with a double.                      */
 TMPL_INLINE_DECL
