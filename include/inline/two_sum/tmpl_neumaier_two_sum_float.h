@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_neumaier_two_sum_double                        *
+ *                        tmpl_neumaier_two_sum_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Evaluates the Neumaier sum from the Neumaier summation algorithm.     *
@@ -24,23 +24,23 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Neumaier_Two_Sum                                          *
+ *      tmpl_Float_Neumaier_Two_Sum                                           *
  *  Purpose:                                                                  *
  *      Evaluates sum += summand using Neumaier summation.                    *
  *  Arguments:                                                                *
- *      summand (const double):                                               *
+ *      summand (const float):                                                *
  *          A real number.                                                    *
- *      sum (double * TMPL_RESTRICT const):                                   *
+ *      sum (float * TMPL_RESTRICT const):                                    *
  *          The current sum. The higher-order component of the sum will be    *
  *          stored here.                                                      *
- *      err (double * TMPL_RESTRICT const):                                   *
+ *      err (float * TMPL_RESTRICT const):                                    *
  *          The error term in the summation. The updated error in the sum     *
  *          will be stored here.                                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
- *          tmpl_Double_Abs:                                                  *
+ *          tmpl_Float_Abs:                                                   *
  *              Computes the absolute value of a real number.                 *
  *  Method:                                                                   *
  *      The Neumaier sum is similar to the Kahan sum, but does not assume     *
@@ -101,8 +101,8 @@
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
- *  3.) tmpl_abs_double.h:                                                    *
- *          Header file providing double-precision absolute value.            *
+ *  3.) tmpl_abs_float.h:                                                     *
+ *          Header file providing single-precision absolute value.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
@@ -114,8 +114,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NEUMAIER_TWO_SUM_DOUBLE_H
-#define TMPL_NEUMAIER_TWO_SUM_DOUBLE_H
+#ifndef TMPL_NEUMAIER_TWO_SUM_FLOAT_H
+#define TMPL_NEUMAIER_TWO_SUM_FLOAT_H
 
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -124,37 +124,37 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Absolute value function found here.                                       */
-#include <libtmpl/include/abs/tmpl_abs_double.h>
+#include <libtmpl/include/abs/tmpl_abs_float.h>
 
 /*  Neumaier summation algorithm for accurately evaluating sum += summand.    */
 TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 void
-tmpl_Double_Neumaier_Two_Sum(const double summand,
-                             double * TMPL_RESTRICT const sum,
-                             double * TMPL_RESTRICT const err)
+tmpl_Float_Neumaier_Two_Sum(const float summand,
+                            float * TMPL_RESTRICT const sum,
+                            float * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    TMPL_VOLATILE const double add = summand + *sum;
+    TMPL_VOLATILE const float add = summand + *sum;
 
     /*  If |sum| > |summand|, then this becomes the usual Kahan sum.          */
-    if (tmpl_Double_Abs(*sum) > tmpl_Double_Abs(summand))
+    if (tmpl_Float_Abs(*sum) > tmpl_Float_Abs(summand))
     {
-        TMPL_VOLATILE const double correction = *sum - add;
+        TMPL_VOLATILE const float correction = *sum - add;
         *err += correction + summand;
     }
 
     /*  Otherwise we swap the roles of sum and summand and apply Fast2Sum.    */
     else
     {
-        TMPL_VOLATILE const double correction = summand - add;
+        TMPL_VOLATILE const float correction = summand - add;
         *err += correction + *sum;
     }
 
     /*  The higher order bits are independent of |sum| and |summand|.         */
     *sum = add;
 }
-/*  End of tmpl_Double_Neumaier_Two_Sum.                                      */
+/*  End of tmpl_Float_Neumaier_Two_Sum.                                       */
 
 #endif
 /*  End of include guard.                                                     */
