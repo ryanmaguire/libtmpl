@@ -276,7 +276,7 @@ extern long double tmpl_LDouble_Arccos(const long double x);
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/*  TMPL_NANL macro found here which provides long double precision NaN.      */
+/*  TMPL_NANL macro found here which provides long-double-precision NaN.      */
 #include <libtmpl/include/nan/tmpl_nan_ldouble.h>
 
 /*  TMPL_HAS_IEEE754_LDOUBLE macro and tmpl_IEEE754_LDouble type given here.  */
@@ -400,6 +400,18 @@ TMPL_UNSEQUENCED
         return tmpl_LDouble_Arccos_Tail_End(x);
     }
 
+    /*  Special case, handle NaN and infinity. The fast-math optimization     *
+     *  means the compiler can assume the input is finite. To properly handle *
+     *  NaN or infinity with this optimization, we check for NaN and infinity *
+     *  by examining the bits of the input. Note, if the fast-math            *
+     *  optimization is enabled, then failure to provide this check here      *
+     *  means an input of NaN may reach the if (x == -1.0) branch below and   *
+     *  produce "true," even though NaN is not equal to -1.0. For both NaN    *
+     *  and infinity, the input is outside of the domain of arccos, so the    *
+     *  output is NaN.                                                        */
+    if (TMPL_LDOUBLE_IS_NAN_OR_INF(w))
+        return TMPL_NANL;
+
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0L)
         return tmpl_ldouble_pi;
@@ -408,10 +420,7 @@ TMPL_UNSEQUENCED
     if (x == 1.0L)
         return 0.0L;
 
-    /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN. Note *
-     *  this catches NaN and infinity since we are checking the exponent of   *
-     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
-     *  than TMPL_LDOUBLE_UBIAS, so NaN will return.                          */
+    /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN.      */
     return TMPL_NANL;
 }
 /*  End of tmpl_LDouble_Arccos.                                               */

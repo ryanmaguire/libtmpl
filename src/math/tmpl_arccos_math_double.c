@@ -220,7 +220,7 @@ extern double tmpl_Double_Arccos(const double x);
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/*  TMPL_NAN macro found here which provides double precision NaN.            */
+/*  TMPL_NAN macro found here which provides double-precision NaN.            */
 #include <libtmpl/include/nan/tmpl_nan_double.h>
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
