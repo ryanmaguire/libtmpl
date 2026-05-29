@@ -67,6 +67,84 @@
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Kahan_Two_Sum                                             *
+ *  Purpose:                                                                  *
+ *      Evaluates the Kahan sum from the Kahan summation algorithm.           *
+ *  Arguments:                                                                *
+ *      summand (const double):                                               *
+ *          A real number.                                                    *
+ *      sum (double * TMPL_RESTRICT const):                                   *
+ *          The current sum. The higher-order component of the sum will be    *
+ *          stored here.                                                      *
+ *      err (double * TMPL_RESTRICT const):                                   *
+ *          The error term in the summation. The updated error in the sum     *
+ *          will be stored here.                                              *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      1.) Depending on compiler and architecture we may need to declare     *
+ *          certain variables as volatile. Failure to do so results in a      *
+ *          poor Kahan sum.                                                   *
+ *                                                                            *
+ *      2.) Compilers supporting the C23 standard and providing support for   *
+ *          the gnu::optimize attribute may not need to use the volatile      *
+ *          keyword. The gnu::optimize("no-associative-math") attribute is    *
+ *          applied to ensure correct behavior.                               *
+ *                                                                            *
+ *      3.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          declared as "restrict" pointers. This requires that out and err   *
+ *          point to different locations. To properly use this function, the  *
+ *          caller should do this regardless.                                 *
+ *                                                                            *
+ *      4.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      5.) There are no checks for NaN or Infinity.                          *
+ ******************************************************************************/
+#include <libtmpl/include/two_sum/tmpl_kahan_two_sum_float.h>
+#include <libtmpl/include/two_sum/tmpl_kahan_two_sum_double.h>
+#include <libtmpl/include/two_sum/tmpl_kahan_two_sum_ldouble.h>
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Neumaier_Two_Sum                                          *
+ *  Purpose:                                                                  *
+ *      Evaluates the Neumaier sum from the Neumaier summation algorithm.     *
+ *  Arguments:                                                                *
+ *      summand (const double):                                               *
+ *          A real number.                                                    *
+ *      sum (double * TMPL_RESTRICT const):                                   *
+ *          The current sum. The higher-order component of the sum will be    *
+ *          stored here.                                                      *
+ *      err (double * TMPL_RESTRICT const):                                   *
+ *          The error term in the summation. The updated error in the sum     *
+ *          will be stored here.                                              *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      1.) Depending on compiler and architecture we may need to declare     *
+ *          certain variables as volatile. Failure to do so results in a      *
+ *          poor Neumaier sum.                                                *
+ *                                                                            *
+ *      2.) Compilers supporting the C23 standard and providing support for   *
+ *          the gnu::optimize attribute may not need to use the volatile      *
+ *          keyword. The gnu::optimize("no-associative-math") attribute is    *
+ *          applied to ensure correct behavior.                               *
+ *                                                                            *
+ *      3.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          declared as "restrict" pointers. This requires that out and err   *
+ *          point to different locations. To properly use this function, the  *
+ *          caller should do this regardless.                                 *
+ *                                                                            *
+ *      4.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      5.) There are no checks for NaN or Infinity.                          *
+ ******************************************************************************/
+#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_float.h>
+#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_double.h>
+#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_ldouble.h>
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Two_Sum                                                   *
  *  Purpose:                                                                  *
  *      Performs the standard 2Sum algorithm for floating-point addition.     *
