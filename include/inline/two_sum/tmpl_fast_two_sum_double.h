@@ -64,14 +64,19 @@
  *          certain variables as volatile. Failure to do so results in a      *
  *          poor Fast2Sum.                                                    *
  *                                                                            *
- *      2.) On compilers supporting the "restrict" keyword, out and err are   *
+ *      2.) Compilers supporting the C23 standard and providing support for   *
+ *          the gnu::optimize attribute may not need to use the volatile      *
+ *          keyword. The gnu::optimize("no-associative-math") attribute is    *
+ *          applied to ensure correct behavior.                               *
+ *                                                                            *
+ *      3.) On compilers supporting the "restrict" keyword, out and err are   *
  *          declared as "restrict" pointers. This requires that out and err   *
  *          point to different locations. To properly use this function, the  *
  *          caller should do this regardless.                                 *
  *                                                                            *
- *      3.) There are no checks for NULL pointers.                            *
+ *      4.) There are no checks for NULL pointers.                            *
  *                                                                            *
- *      4.) There are no checks for NaN or Infinity.                          *
+ *      5.) There are no checks for NaN or Infinity.                          *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
  *                                                                            *
@@ -115,9 +120,16 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/29: Ryan Maguire                                                  *
+ *      Added C23 attributes and fixed algorithm.                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
