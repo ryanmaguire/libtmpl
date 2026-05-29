@@ -115,9 +115,16 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/29: Ryan Maguire                                                  *
+ *      Added C23 attributes and fixed algorithm.                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -127,7 +134,11 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Standard Fast2Sum algorithm at single precision.                          */
+TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 void
 tmpl_Float_Fast_Two_Sum(const float x,
