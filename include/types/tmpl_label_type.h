@@ -44,10 +44,10 @@
 typedef struct tmpl_Label_Def {
 
     /*  The anchor is where the object being labeled is located.              */
-    const tmpl_TwoVector *anchor;
+    const tmpl_TwoVectorDouble *anchor;
 
     /*  Shift is where the label will be placed relative to the anchor.       */
-    const tmpl_TwoVector *shift;
+    const tmpl_TwoVectorDouble *shift;
 
     /*  The actual size of the text being displayed.                          */
     double font_size;

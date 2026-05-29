@@ -58,10 +58,10 @@ typedef struct tmpl_Arrow_Def {
     tmpl_ArrowType arrow_type;
 
     /*  The center of the arrow.                                              */
-    const tmpl_TwoVector *anchor;
+    const tmpl_TwoVectorDouble *anchor;
 
     /*  The direction the arrow is pointing.                                  */
-    const tmpl_TwoVector *direction;
+    const tmpl_TwoVectorDouble *direction;
 
     /*  The color of the interior of the arrow drawn.                         */
     const tmpl_Pen *fill_pen;
