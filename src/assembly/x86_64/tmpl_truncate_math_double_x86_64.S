@@ -47,6 +47,6 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_Double_Truncate)
-    roundsd $3, %xmm0, %xmm0    /*  xmm0 = trunc(xmm0)  */
+    roundsd $0x0B, %xmm0, %xmm0 /*  xmm0 = trunc(xmm0)  */
     ret                         /*  return xmm0.        */
 ASM_END(tmpl_Double_Truncate)
