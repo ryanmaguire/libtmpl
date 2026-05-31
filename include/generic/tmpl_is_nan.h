@@ -83,13 +83,38 @@ static inline tmpl_Bool TMPL_IS_NAN(const T x)
 /*  C11 introduced the _Generic keyword instead of function overloading.      */
 #else
 
+/*  Older versions of GCC have difficulty using _Generic. This fallback       *
+ *  macro is intended for use with GCC versions <= 8.5.0.                     */
+#if defined(__GNUC__) && __GNUC__ < 9
+
+#define TMPL_IS_NAN(x)                                                         \
+    __builtin_choose_expr(                                                     \
+        __builtin_types_compatible_p(__typeof__(x), long double),              \
+        tmpl_LDouble_Is_NaN((long double)(x)),                                 \
+        __builtin_choose_expr(                                                 \
+            __builtin_types_compatible_p(__typeof__(x), double),               \
+            tmpl_Double_Is_NaN((double)(x)),                                   \
+            __builtin_choose_expr(                                             \
+                __builtin_types_compatible_p(__typeof__(x), float),            \
+                tmpl_Float_Is_NaN((float)(x)),                                 \
+                tmpl_False                                                     \
+            )                                                                  \
+        )                                                                      \
+    )
+
+#else
+/*  Else for #if defined(__GNUC__) && __GNUC__ < 9.                           */
+
 /*  C11 generic macro for checking if a floating-point number is NaN.         */
 #define TMPL_IS_NAN(x) _Generic((x),                                           \
-    long double: tmpl_LDouble_Is_NaN((x)),                                     \
-    double:      tmpl_Double_Is_NaN((x)),                                      \
-    float:       tmpl_Float_Is_NaN((x)),                                       \
+    long double: tmpl_LDouble_Is_NaN(x),                                       \
+    double:      tmpl_Double_Is_NaN(x),                                        \
+    float:       tmpl_Float_Is_NaN(x),                                         \
     default:     tmpl_False                                                    \
 )
+
+#endif
+/*  End of #if defined(__GNUC__) && __GNUC__ < 9.                             */
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
