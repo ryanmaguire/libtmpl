@@ -38,6 +38,8 @@
  *          Header file providing Booleans (True and False).                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with support for infinity.                            *
+ *  3.) tmpl_cast.h:                                                          *
+ *          Header with the TMPL_CAST macro for C vs. C++ compatibility.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2024                                            *
@@ -83,38 +85,16 @@ static inline tmpl_Bool TMPL_IS_INF(const T x)
 /*  C11 introduced the _Generic keyword instead of function overloading.      */
 #else
 
-/*  Older versions of GCC have difficulty using _Generic. This fallback       *
- *  macro is intended for use with GCC versions <= 8.5.0.                     */
-#if defined(__GNUC__) && __GNUC__ < 9
-
-#define TMPL_IS_INF(x)                                                         \
-    __builtin_choose_expr(                                                     \
-        __builtin_types_compatible_p(__typeof__(x), long double),              \
-        tmpl_LDouble_Is_Inf((long double)(x)),                                 \
-        __builtin_choose_expr(                                                 \
-            __builtin_types_compatible_p(__typeof__(x), double),               \
-            tmpl_Double_Is_Inf((double)(x)),                                   \
-            __builtin_choose_expr(                                             \
-                __builtin_types_compatible_p(__typeof__(x), float),            \
-                tmpl_Float_Is_Inf((float)(x)),                                 \
-                tmpl_False                                                     \
-            )                                                                  \
-        )                                                                      \
-    )
-
-#else
-/*  Else for #if defined(__GNUC__) && __GNUC__ < 9.                           */
+/*  TMPL_CAST provided here.                                                  */
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  C11 generic macro for checking if a floating-point number is infinite.    */
 #define TMPL_IS_INF(x) _Generic((x),                                           \
-    long double: tmpl_LDouble_Is_Inf(x),                                       \
-    double:      tmpl_Double_Is_Inf(x),                                        \
-    float:       tmpl_Float_Is_Inf(x),                                         \
+    long double: tmpl_LDouble_Is_Inf(TMPL_CAST(x, long double)),               \
+    double:      tmpl_Double_Is_Inf(TMPL_CAST(x, double)),                     \
+    float:       tmpl_Float_Is_Inf(TMPL_CAST(x, float)),                       \
     default:     tmpl_False                                                    \
 )
-
-#endif
-/*  End of #if defined(__GNUC__) && __GNUC__ < 9.                             */
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
