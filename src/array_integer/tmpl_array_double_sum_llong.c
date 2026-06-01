@@ -138,6 +138,11 @@
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
+/*  Helper macro for splitting a long long into two parts.                    */
+#define TMPL_NEG_CAST(n) (-TMPL_CAST(n, unsigned long long int)) & 0xFFFFFFFFULL
+#define TMPL_NEG_BITS(n) -(TMPL_CAST(TMPL_NEG_CAST(n), signed long long int))
+#define TMPL_LOW_BITS(n) ((n) < 0 ? TMPL_NEG_BITS(n) : ((n) & 0xFFFFFFFFLL))
+
 /*  Forward declaration / function prototype, found in tmpl_array_integer.h.  */
 extern double
 tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len);
@@ -167,32 +172,54 @@ tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len)
          *  bits, meaning long long has 11 bits too many to perform the sum   *
          *  using double. We mitigate using double-double splitting the input *
          *  input into a low and a high part, and then using Neumaier 2Sum on *
-         *  the running sum with the high part, and then again with the low   *
+         *  the running sum with the low part, and then again with the high   *
          *  part. That is, we have:                                           *
          *                                                                    *
-         *      high = truncate_to_double(arr[n])                             *
-         *      low = arr[n] - high                                           *
-         *      (sum, error) = neumaier_two_sum(high, sum, error)             *
+         *      low = lower_32_bits(arr[n])                                   *
+         *      high = arr[n] - low                                           *
          *      (sum, error) = neumaier_two_sum(low, sum, error)              *
+         *      (sum, error) = neumaier_two_sum(high, sum, error)             *
          *                                                                    *
          *  This avoids the full double-double addition (which requires twice *
          *  as many arithmetic operations) but still handles the sum to       *
-         *  double precision. Extract the high and low parts of the input.    */
-        const double high = TMPL_CAST(arr[n], double);
-        const signed long long high_ll = TMPL_CAST(high, signed long long int);
-        const signed long long low_ll = arr[n] - high_ll;
+         *  double precision.                                                 *
+         *                                                                    *
+         *  Note:                                                             *
+         *      An alternative method of retrieving the high and low parts    *
+         *      involves casting. We could write:                             *
+         *                                                                    *
+         *          high = cast_to_double(arr[n])                             *
+         *          low = arr[n] - high                                       *
+         *          (sum, error) = neumaier_two_sum(low, sum, error)          *
+         *          (sum, error) = neumaier_two_sum(high, sum, error)         *
+         *                                                                    *
+         *      This works when arr[n] is not very large. In the case where   *
+         *      arr[n] is roughly LLONG_MAX, the cast to double may round up  *
+         *      to LLONG_MAX + 1, which is not representable as a long long.  *
+         *      The computation arr[n] - high is thus undefined. To avoid     *
+         *      this, use the bit-by-bit splitting method instead.            *
+         *                                                                    *
+         *  Retrieve the lower 32 bits of the input.                          */
+        const signed long long int low_ll = TMPL_LOW_BITS(arr[n]);
+        const signed long long int high_ll = arr[n] - low_ll;
+        const double low = TMPL_CAST(low_ll, double);
 
         /*  Run the Neumaier 2Sum with both the high and low parts.           */
-        tmpl_Double_Neumaier_Two_Sum(high, &sum, &err);
+        tmpl_Double_Neumaier_Two_Sum(low, &sum, &err);
 
-        /*  The lower part is only non-zero if arr[n] is very large, greater  *
-         *  than the largest integer that double can represent perfectly.     *
-         *  This is around 2^52, meaning it is quite likely that low is zero. *
-         *  We can skip the second Neumaier 2Sum in this case.                */
-        if (low_ll != 0LL)
+        /*  The higher bits are only non-zero if arr[n] is very large,        *
+         *  greater than 2^32. Because of this it is likely that these bits   *
+         *  are zero. We can skip the second Neumaier 2Sum in this case.      */
+        if (high_ll != 0LL)
         {
-            const double low = TMPL_CAST(low_ll, double);
-            tmpl_Double_Neumaier_Two_Sum(low, &sum, &err);
+            /*  The input is a large number and contains higher-order bits.   *
+             *  Cast to double. Note, if long long is more than 32 + 53 bits  *
+             *  wide (85 bits total), then this cast will lose precision and  *
+             *  the sum will be inaccurate. It is universal across compilers  *
+             *  and architectures to set long long to be 64 bits, so this is  *
+             *  likely not an issue.                                          */
+            const double high = TMPL_CAST(high_ll, double);
+            tmpl_Double_Neumaier_Two_Sum(high, &sum, &err);
         }
     }
 
@@ -201,6 +228,10 @@ tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len)
     return sum + err;
 }
 /*  End of tmpl_LLong_Array_Double_Sum.                                       */
+
+#undef TMPL_NEG_CAST
+#undef TMPL_NEG_BITS
+#undef TMPL_LOW_BITS
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
