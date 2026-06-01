@@ -98,11 +98,13 @@
  *          TMPL_HAS_LONGLONG found here. This file is compiled if this is 1. *
  *  2.) tmpl_config.h:                                                        *
  *          Provides the TMPL_USE_INLINE macro.                               *
- *  3.) tmpl_cast.h:                                                          *
+ *  3.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  4.) tmpl_cast.h:                                                          *
  *          Header providing TMPL_CAST with C vs. C++ compatibility.          *
- *  4.) tmpl_neumaier_two_sum_double.h:                                       *
+ *  5.) tmpl_neumaier_two_sum_double.h:                                       *
  *          Provides an inlined Neumaier 2Sum if inline support is available. *
- *  5.) stddef.h:                                                             *
+ *  6.) stddef.h:                                                             *
  *          Standard header file containing the size_t typedef.               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -124,8 +126,14 @@
 /*  TMPL_USE_INLINE macro found here, indicating inline support.              */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
 #include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  Neumaier 2Sum found here.                                                 */
+#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_double.h>
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
@@ -134,25 +142,8 @@
 extern double
 tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len);
 
-/*  Check for inline support for Neumaier 2Sum. This is a short routine.      */
-#if TMPL_USE_INLINE == 1
-
-/*  Neumaier 2Sum found here.                                                 */
-#include <libtmpl/include/inline/two_sum/tmpl_neumaier_two_sum_double.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern void
-tmpl_Double_Neumaier_Two_Sum(double input,
-                             double * TMPL_RESTRICT const sum,
-                             double * TMPL_RESTRICT const err);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
 /*  Function for summing the elements of a signed int array.                  */
+TMPL_NO_ASSOCIATIVE_MATH
 double
 tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len)
 {
@@ -190,7 +181,6 @@ tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len)
         const double high = TMPL_CAST(arr[n], double);
         const signed long long high_ll = TMPL_CAST(high, signed long long int);
         const signed long long low_ll = arr[n] - high_ll;
-        const double low = TMPL_CAST(low_ll, double);
 
         /*  Run the Neumaier 2Sum with both the high and low parts.           */
         tmpl_Double_Neumaier_Two_Sum(high, &sum, &err);
@@ -199,8 +189,11 @@ tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len)
          *  than the largest integer that double can represent perfectly.     *
          *  This is around 2^52, meaning it is quite likely that low is zero. *
          *  We can skip the second Neumaier 2Sum in this case.                */
-        if (low != 0.0)
+        if (low_ll != 0LL)
+        {
+            const double low = TMPL_CAST(low_ll, double);
             tmpl_Double_Neumaier_Two_Sum(low, &sum, &err);
+        }
     }
 
     /*  With Neumaier 2Sum it is possible for |err| > |sum|, but the correct  *
