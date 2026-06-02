@@ -21,10 +21,10 @@
 #include "tmpl_ppc64le_asm.h"
 
 ASM_BEGIN(tmpl_Long_Trailing_Zeros)
-    addi    4,3,-1
-    cmpldi  3,0
-    andc    4,4,3
-    popcntd 4,4
-    iseleq  3,0,4
+    addi    4, 3, -1
+    cmpldi  3, 0
+    andc    4, 4, 3
+    popcntd 4, 4
+    iseleq  3, 0, 4
     blr
 ASM_END(tmpl_Long_Trailing_Zeros)
