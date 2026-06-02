@@ -437,6 +437,12 @@ else ifeq ($(ARCH), $(filter $(ARCH), armv7l))
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/armv7l/*.S)
 EXCLUDE += $(patsubst %_armv7l.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
+# PowerPC 64-bit big endian.
+else ifeq ($(ARCH), $(filter $(ARCH), ppc64))
+
+ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.S)
+EXCLUDE += $(patsubst %_ppc64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
+
 # Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
 else ifeq ($(ARCH), $(filter $(ARCH), ppc64le))
 
