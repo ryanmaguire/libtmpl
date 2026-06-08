@@ -134,6 +134,7 @@ TMPL_INLINE_DECL
 tmpl_DoubleDouble
 tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
                       const tmpl_DoubleDouble * const y)
+TMPL_UNSEQUENCED
 {
     /*  Naive sums and their error terms from the two-sum algorithm.          */
     double sum_hi, err_hi, sum_lo, err_lo;
