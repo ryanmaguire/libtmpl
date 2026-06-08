@@ -47,8 +47,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file providing the TMPL_RESTRICT macro.                    *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
@@ -57,9 +56,6 @@
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_TWO_SUM_H
 #define TMPL_TWO_SUM_H
-
-/*  TMPL_RESTRICT macro provided here.                                        */
-#include <libtmpl/include/tmpl_config.h>
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -89,7 +85,7 @@
  *  Function:                                                                 *
  *      tmpl_Double_Kahan_Two_Sum                                             *
  *  Purpose:                                                                  *
- *      Evaluates the Kahan sum from the Kahan summation algorithm.           *
+ *      Evaluates the Kahan sum from a summand and a running sum.             *
  *  Arguments:                                                                *
  *      summand (const double):                                               *
  *          A real number.                                                    *
@@ -113,7 +109,7 @@
  *  Function:                                                                 *
  *      tmpl_Double_Neumaier_Two_Sum                                          *
  *  Purpose:                                                                  *
- *      Evaluates the Neumaier sum from the Neumaier summation algorithm.     *
+ *      Evaluates the Neumaier sum from a summand and a running sum.          *
  *  Arguments:                                                                *
  *      summand (const double):                                               *
  *          A real number.                                                    *
