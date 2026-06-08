@@ -83,7 +83,7 @@
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
  *                                                                            *
  *          Wikipedia article on the 2Sum algorithm, which is the more        *
- *          accurate version of Fast2Sum. Unlike Fast2Sum, 2Sum does not      *
+ *          general version of Fast2Sum. Unlike Fast2Sum, 2Sum does not       *
  *          assume |x| >= |y|, but 2Sum requires 6 operations, and Fast2Sum   *
  *          only needs 3.                                                     *
  *                                                                            *
