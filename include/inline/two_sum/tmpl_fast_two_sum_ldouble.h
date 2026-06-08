@@ -152,6 +152,7 @@ tmpl_LDouble_Fast_Two_Sum(const long double x,
                           const long double y,
                           long double * TMPL_RESTRICT const out,
                           long double * TMPL_RESTRICT const err)
+TMPL_REPRODUCIBLE
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     TMPL_VOLATILE const long double sum = x + y;

@@ -166,6 +166,7 @@ tmpl_Double_Two_Sum(const double x,
                     const double y,
                     double * TMPL_RESTRICT const out,
                     double * TMPL_RESTRICT const err)
+TMPL_REPRODUCIBLE
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     TMPL_VOLATILE const double sum = x + y;

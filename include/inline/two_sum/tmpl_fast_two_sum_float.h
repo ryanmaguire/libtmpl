@@ -152,6 +152,7 @@ tmpl_Float_Fast_Two_Sum(const float x,
                         const float y,
                         float * TMPL_RESTRICT const out,
                         float * TMPL_RESTRICT const err)
+TMPL_REPRODUCIBLE
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     TMPL_VOLATILE const float sum = x + y;
