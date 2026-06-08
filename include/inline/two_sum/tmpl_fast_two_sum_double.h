@@ -146,6 +146,7 @@
 
 /*  Standard Fast2Sum algorithm at double precision.                          */
 TMPL_NO_ASSOCIATIVE_MATH
+TMPL_LEAF_FUNC
 TMPL_INLINE_DECL
 void
 tmpl_Double_Fast_Two_Sum(const double x,

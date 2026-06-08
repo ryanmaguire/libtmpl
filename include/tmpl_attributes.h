@@ -76,6 +76,7 @@
  *  support gnu::const, and conforming C23 compilers are required to ignore   *
  *  vendor attributes if they are not supported, making this portable.        */
 #define TMPL_CONST_FUNC [[nodiscard, gnu::const]]
+#define TMPL_LEAF_FUNC [[gnu::leaf]]
 #define TMPL_REPRODUCIBLE [[reproducible]]
 #define TMPL_UNSEQUENCED [[reproducible, unsequenced]]
 #define TMPL_NO_ASSOCIATIVE_MATH [[gnu::optimize("no-associative-math")]]
@@ -85,9 +86,10 @@
 
 #else
 
-/*  For compilers lacking C23 support, or when using C++ compilers, set these *
- *  macros to empty.                                                          */
+/*  For compilers lacking C23 support, or when using older C++ compilers, set *
+ *  these macros to be empty.                                                 */
 #define TMPL_CONST_FUNC
+#define TMPL_LEAF_FUNC
 #define TMPL_REPRODUCIBLE
 #define TMPL_UNSEQUENCED
 #define TMPL_NO_ASSOCIATIVE_MATH
