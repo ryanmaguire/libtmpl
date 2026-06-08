@@ -84,7 +84,7 @@
  *                                                                            *
  *          Wikipedia article on the 2Sum algorithm, which is the more        *
  *          accurate version of Fast2Sum. Unlike Fast2Sum, 2Sum does not      *
- *          assume |x| >= |y|, but 2Sum requires 6 additions, and Fast2Sum    *
+ *          assume |x| >= |y|, but 2Sum requires 6 operations, and Fast2Sum   *
  *          only needs 3.                                                     *
  *                                                                            *
  *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
@@ -114,14 +114,14 @@
  *                                                                            *
  *          Detailed analysis of 2Sum, Fast2Sum, and 2Prod, allowing for      *
  *          arbitrarily sized floating-point types. This paper is useful for  *
- *          extending 2Prod to the various long double types such as 80-bit   *
- *          extended and 128-bit quadruple. Proofs are included along with    *
- *          the algorithms.                                                   *
+ *          extending these algorithms to the various long double types such  *
+ *          as 80-bit extended and 128-bit quadruple. Proofs are included     *
+ *          along with the algorithms.                                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
