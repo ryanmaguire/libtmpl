@@ -21,11 +21,19 @@
  *  Purpose:                                                                  *
  *      Provides an inlined Fast2Sum function, or a forward declaration if    *
  *      inline support is not available.                                      *
+ *  Notes:                                                                    *
+ *      1.) Fast2Sum assumes |x| >= |y|.                                      *
+ *                                                                            *
+ *      2.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      3.) There are no checks for NaN or infinity.                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Provides the TMPL_USE_INLINE and TMPL_RESTRICT macros.            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 29, 2026                                                  *
@@ -47,12 +55,17 @@
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Function for performing the Fast2Sum algorithm.                           */
+TMPL_LEAF_FUNC
 extern void
 tmpl_Float_Fast_Two_Sum(const float x,
                         const float y,
                         float * TMPL_RESTRICT const out,
-                        float * TMPL_RESTRICT const err);
+                        float * TMPL_RESTRICT const err)
+TMPL_REPRODUCIBLE;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
