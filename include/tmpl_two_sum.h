@@ -15,6 +15,43 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                                tmpl_two_sum                                *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Provides 2Sum, Fast2Sum, and other 2Sum-like algorithms.              *
+ *  Notes:                                                                    *
+ *      1.) Depending on compiler and architecture, local variables may       *
+ *          require the volatile keyword to prevent aggressive optimizations. *
+ *          To enable this requires the USE_VOLATILE option to be set to true *
+ *          when compiling libtmpl. Each function uses the TMPL_VOLATILE      *
+ *          macro for the necessary variables, which expands to "volatile"    *
+ *          if USE_VOLATILE was set at build time, and nothing otherwise.     *
+ *                                                                            *
+ *      2.) Compilers that support the C23 standard and implement the         *
+ *          gnu::optimize attribute may not need to use the volatile keyword. *
+ *          The gnu::optimize("no-associative-math") attribute is applied to  *
+ *          each function to ensure correct behavior.                         *
+ *                                                                            *
+ *      3.) On compilers supporting the restrict keyword, the output          *
+ *          variables (sum, out, err) are declared as restrict pointers.      *
+ *          This requires that these variables point to different locations.  *
+ *          To properly use the various 2Sum functions, this should be true   *
+ *          regardless of whether or not restrict is supported.               *
+ *                                                                            *
+ *      4.) None of the 2Sum functions check for NULL pointers.               *
+ *                                                                            *
+ *      5.) None of the 2Sum functions check for NaN or infinity.             *
+ *                                                                            *
+ *      6.) Float, double, and long double versions are provided.             *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file providing the TMPL_RESTRICT macro.                    *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 22, 2024                                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -37,29 +74,12 @@
  *      out (double * TMPL_RESTRICT const):                                   *
  *          The floating-point sum x + y is stored here.                      *
  *      err (double * TMPL_RESTRICT const):                                   *
- *          The error, sum(x, y) - (x + y), is stored here.                   *
+ *          The error, sum(x, y) - (x + y), is stored here, where "sum"       *
+ *          denotes exact addition, and "+" denotes floating-point addition.  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      1.) Fast2Sum assumes |x| >= |y|.                                      *
- *                                                                            *
- *      2.) Depending on compiler and architecture we may need to declare     *
- *          certain variables as volatile. Failure to do so results in a      *
- *          poor Fast2Sum.                                                    *
- *                                                                            *
- *      3.) Compilers supporting the C23 standard and providing support for   *
- *          the gnu::optimize attribute may not need to use the volatile      *
- *          keyword. The gnu::optimize("no-associative-math") attribute is    *
- *          applied to ensure correct behavior.                               *
- *                                                                            *
- *      4.) On compilers supporting the "restrict" keyword, out and err are   *
- *          declared as "restrict" pointers. This requires that out and err   *
- *          point to different locations. To properly use this function, the  *
- *          caller should do this regardless.                                 *
- *                                                                            *
- *      5.) There are no checks for NULL pointers.                            *
- *                                                                            *
- *      6.) There are no checks for NaN or Infinity.                          *
  ******************************************************************************/
 #include <libtmpl/include/two_sum/tmpl_fast_two_sum_float.h>
 #include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
@@ -82,23 +102,8 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
- *      1.) Depending on compiler and architecture we may need to declare     *
- *          certain variables as volatile. Failure to do so results in a      *
- *          poor Kahan sum.                                                   *
- *                                                                            *
- *      2.) Compilers supporting the C23 standard and providing support for   *
- *          the gnu::optimize attribute may not need to use the volatile      *
- *          keyword. The gnu::optimize("no-associative-math") attribute is    *
- *          applied to ensure correct behavior.                               *
- *                                                                            *
- *      3.) On compilers supporting the "restrict" keyword, out and err are   *
- *          declared as "restrict" pointers. This requires that out and err   *
- *          point to different locations. To properly use this function, the  *
- *          caller should do this regardless.                                 *
- *                                                                            *
- *      4.) There are no checks for NULL pointers.                            *
- *                                                                            *
- *      5.) There are no checks for NaN or Infinity.                          *
+ *      1.) The Kahan summation algorithm assumes the running sum is greater  *
+ *          in magnitude than the summand.                                    *
  ******************************************************************************/
 #include <libtmpl/include/two_sum/tmpl_kahan_two_sum_float.h>
 #include <libtmpl/include/two_sum/tmpl_kahan_two_sum_double.h>
@@ -121,23 +126,8 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
- *      1.) Depending on compiler and architecture we may need to declare     *
- *          certain variables as volatile. Failure to do so results in a      *
- *          poor Neumaier sum.                                                *
- *                                                                            *
- *      2.) Compilers supporting the C23 standard and providing support for   *
- *          the gnu::optimize attribute may not need to use the volatile      *
- *          keyword. The gnu::optimize("no-associative-math") attribute is    *
- *          applied to ensure correct behavior.                               *
- *                                                                            *
- *      3.) On compilers supporting the "restrict" keyword, out and err are   *
- *          declared as "restrict" pointers. This requires that out and err   *
- *          point to different locations. To properly use this function, the  *
- *          caller should do this regardless.                                 *
- *                                                                            *
- *      4.) There are no checks for NULL pointers.                            *
- *                                                                            *
- *      5.) There are no checks for NaN or Infinity.                          *
+ *      1.) The Neumaier summation algorithm does not assume the sum is       *
+ *          greater than the summand, but this comes at the cost of a branch. *
  ******************************************************************************/
 #include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_float.h>
 #include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_double.h>
@@ -156,11 +146,13 @@
  *      out (double * TMPL_RESTRICT const):                                   *
  *          The floating-point sum x + y is stored here.                      *
  *      err (double * TMPL_RESTRICT const):                                   *
- *          The error, sum(x, y) - (x + y), is stored here.                   *
+ *          The error, sum(x, y) - (x + y), is stored here, where "sum"       *
+ *          denotes exact addition, and "+" denotes floating-point addition.  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
+ *      1.) 2Sum does not require |x| >= |y|, but it requires twice as many   *
+ *          artithmetic operations as Fast2Sum.                               *
  ******************************************************************************/
 #include <libtmpl/include/two_sum/tmpl_two_sum_float.h>
 #include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
