@@ -48,6 +48,7 @@
 #else
 
 /*  Function for performing the 2Sum algorithm.                               */
+TMPL_LEAF_FUNC
 extern void
 tmpl_Float_Two_Sum(const float x,
                    const float y,

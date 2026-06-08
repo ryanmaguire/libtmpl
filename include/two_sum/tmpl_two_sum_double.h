@@ -60,6 +60,7 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Function for performing the 2Sum algorithm.                               */
+TMPL_LEAF_FUNC
 extern void
 tmpl_Double_Two_Sum(const double x,
                     const double y,
