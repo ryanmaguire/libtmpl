@@ -50,10 +50,11 @@
  *                = fl(x + y) + fl(y - fl(fl(x + y) - x))                     *
  *                                                                            *
  *      This assumes |x| >= |y|. Note that if floating-point addition were    *
- *      associative, the error term would be zero and we'd have               *
- *      x + y = fl(x + y). Since floating-point arithmetic is not associative *
- *      it is often the case that the error is non-zero. We compute the sum   *
- *      and the error by reversing the above equations. We have:              *
+ *      associative (that is, if fl(x) = x), then the error term would be     *
+ *      zero and we'd have x + y = fl(x + y). Since floating-point arithmetic *
+ *      is not associative it is often the case that the error is non-zero.   *
+ *      We compute the sum and the error by reversing the above equations.    *
+ *      We have:                                                              *
  *                                                                            *
  *          sum   = fl(x + y)                                                 *
  *          ycomp = fl(sum - x)                                               *
@@ -122,7 +123,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
+ *          Header file providing TMPL_INLINE_DECL and other macros.          *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
@@ -139,7 +140,7 @@
 #ifndef TMPL_FAST_TWO_SUM_DOUBLE_H
 #define TMPL_FAST_TWO_SUM_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
+/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE and TMPL_RESTRICT. */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
