@@ -50,7 +50,7 @@
 /*  Function for performing the Fast2Sum algorithm.                           */
 extern void
 tmpl_LDouble_Fast_Two_Sum(const long double x,
-                          long const double y,
+                          const long double y,
                           long double * TMPL_RESTRICT const out,
                           long double * TMPL_RESTRICT const err);
 
