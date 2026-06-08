@@ -21,6 +21,12 @@
  *  Purpose:                                                                  *
  *      Provides an inlined Fast2Sum function, or a forward declaration if    *
  *      inline support is not available.                                      *
+ *  Notes:                                                                    *
+ *      1.) Fast2Sum assumes |x| >= |y|.                                      *
+ *                                                                            *
+ *      2.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      3.) There are no checks for NaN or infinity.                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
