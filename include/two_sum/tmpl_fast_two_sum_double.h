@@ -32,6 +32,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Provides the TMPL_USE_INLINE and TMPL_RESTRICT macros.            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 29, 2026                                                  *
@@ -53,12 +55,16 @@
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Function for performing the Fast2Sum algorithm.                           */
 extern void
 tmpl_Double_Fast_Two_Sum(const double x,
                          const double y,
                          double * TMPL_RESTRICT const out,
-                         double * TMPL_RESTRICT const err);
+                         double * TMPL_RESTRICT const err)
+TMPL_REPRODUCIBLE;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
