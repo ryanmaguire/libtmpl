@@ -23,10 +23,11 @@
  *  Notes:                                                                    *
  *      1.) Depending on compiler and architecture, local variables may       *
  *          require the volatile keyword to prevent aggressive optimizations. *
- *          To enable this requires the USE_VOLATILE option to be set to true *
+ *          Enabling this requires the USE_VOLATILE option to be set to true  *
  *          when compiling libtmpl. Each function uses the TMPL_VOLATILE      *
  *          macro for the necessary variables, which expands to "volatile"    *
- *          if USE_VOLATILE was set at build time, and nothing otherwise.     *
+ *          if USE_VOLATILE was passed to the build system, and nothing       *
+ *          otherwise.                                                        *
  *                                                                            *
  *      2.) Compilers that support the C23 standard and implement the         *
  *          gnu::optimize attribute may not need to use the volatile keyword. *
@@ -34,10 +35,10 @@
  *          each function to ensure correct behavior.                         *
  *                                                                            *
  *      3.) On compilers supporting the restrict keyword, the output          *
- *          variables (sum, out, err) are declared as restrict pointers.      *
- *          This requires that these variables point to different locations.  *
- *          To properly use the various 2Sum functions, this should be true   *
- *          regardless of whether or not restrict is supported.               *
+ *          variables are declared as restrict pointers. This requires that   *
+ *          these variables point to different locations. To properly use the *
+ *          various 2Sum functions, this should be true regardless of whether *
+ *          or not restrict is supported.                                     *
  *                                                                            *
  *      4.) None of the 2Sum functions check for NULL pointers.               *
  *                                                                            *
@@ -123,7 +124,8 @@
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      1.) The Neumaier summation algorithm does not assume the sum is       *
- *          greater than the summand, but this comes at the cost of a branch. *
+ *          greater in magnitude than the summand, but this comes at the cost *
+ *          of a branch.                                                      *
  ******************************************************************************/
 #include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_float.h>
 #include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_double.h>
@@ -148,7 +150,7 @@
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      1.) 2Sum does not require |x| >= |y|, but it requires twice as many   *
- *          artithmetic operations as Fast2Sum.                               *
+ *          arithmetic operations as Fast2Sum.                                *
  ******************************************************************************/
 #include <libtmpl/include/two_sum/tmpl_two_sum_float.h>
 #include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
