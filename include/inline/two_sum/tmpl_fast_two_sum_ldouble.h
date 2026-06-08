@@ -26,39 +26,40 @@
  *  Function Name:                                                            *
  *      tmpl_LDouble_Fast_Two_Sum                                             *
  *  Purpose:                                                                  *
- *      Evaluates the sum of two long doubles returning the sum and error.    *
+ *      Evaluates the sum of two long doubles, computing the sum and error.   *
  *  Arguments:                                                                *
  *      x (const long double):                                                *
  *          A real number.                                                    *
  *      y (const long double):                                                *
  *          Another real number.                                              *
  *      out (long double * TMPL_RESTRICT const):                              *
- *          The rounded sum x + y will be stored here.                        *
+ *          The rounded sum fl(x + y) will be stored here.                    *
  *      err (long double * TMPL_RESTRICT const):                              *
- *          The error term, sum(x, y) - (x + y), is stored here.              *
+ *          The error term, fl((x + y) - fl(x + y)), is stored here.          *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the standard Fast2Sum algorithm. Letting "sum" denote the real    *
- *      sum of x and y, and "+" denote floating-point addition, we have:      *
+ *      Use the standard Fast2Sum algorithm. Let "+" denote real addition     *
+ *      with infinite precision, and let fl(x) denote floating-point round.   *
+ *      We have:                                                              *
  *                                                                            *
- *          sum(x, y) = (x + y) + err                                         *
- *                    = (x + y) + (y - ycomp)                                 *
- *                    = (x + y) + (y - ((x + y) - x))                         *
+ *          x + y = fl(x + y) + err                                           *
+ *                = fl(x + y) + fl(y - ycomp)                                 *
+ *                = fl(x + y) + fl(y - fl(fl(x + y) - x))                     *
  *                                                                            *
  *      This assumes |x| >= |y|. Note that if floating-point addition were    *
  *      associative, the error term would be zero and we'd have               *
- *      sum(x, y) = x + y. Since floating-point arithmetic is not associative *
+ *      x + y = fl(x + y). Since floating-point arithmetic is not associative *
  *      it is often the case that the error is non-zero. We compute the sum   *
  *      and the error by reversing the above equations. We have:              *
  *                                                                            *
- *          sum   = x + y                                                     *
- *          ycomp = sum - x                                                   *
- *          err   = y - ycomp                                                 *
+ *          sum   = fl(x + y)                                                 *
+ *          ycomp = fl(sum - x)                                               *
+ *          err   = fl(y - ycomp)                                             *
  *                                                                            *
- *      The values "sum" and "err" are returned.                              *
+ *      The values "sum" and "err" are stored using the input pointers.       *
  *  Notes:                                                                    *
  *      1.) Fast2Sum assumes |x| >= |y|.                                      *
  *                                                                            *
@@ -78,7 +79,7 @@
  *                                                                            *
  *      5.) There are no checks for NULL pointers.                            *
  *                                                                            *
- *      6.) There are no checks for NaN or Infinity.                          *
+ *      6.) There are no checks for NaN or infinity.                          *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
  *                                                                            *
@@ -146,7 +147,6 @@
 
 /*  Standard Fast2Sum algorithm at long double precision.                     */
 TMPL_NO_ASSOCIATIVE_MATH
-TMPL_LEAF_FUNC
 TMPL_INLINE_DECL
 void
 tmpl_LDouble_Fast_Two_Sum(const long double x,
@@ -158,7 +158,7 @@ TMPL_REPRODUCIBLE
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     TMPL_VOLATILE const long double sum = x + y;
 
-    /*  The compensated y term, i.e. the bits lost from summing with x.       */
+    /*  The compensated y term, the bits that remain after summing with x.    */
     TMPL_VOLATILE const long double ycomp = sum - x;
 
     /*  The output is the floating-point sum, the error can be computed by    *
