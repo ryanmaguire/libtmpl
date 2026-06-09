@@ -35,26 +35,25 @@
  *      out (double * TMPL_RESTRICT const):                                   *
  *          The rounded sum fl(x + y) will be stored here.                    *
  *      err (double * TMPL_RESTRICT const):                                   *
- *          The error term, fl((x + y) - fl(x + y)), is stored here.          *
+ *          The error term (exact sum minus rounded sum) is stored here.      *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use the standard Fast2Sum algorithm. Let "+" denote real addition     *
- *      with infinite precision, and let fl(x) denote floating-point round.   *
- *      We have:                                                              *
+ *      with infinite precision, and let fl denote the floating-point round   *
+ *      function. We have:                                                    *
  *                                                                            *
  *          x + y = fl(x + y) + err                                           *
  *                = fl(x + y) + fl(y - ycomp)                                 *
  *                = fl(x + y) + fl(y - fl(fl(x + y) - x))                     *
  *                                                                            *
- *      This assumes |x| >= |y|. Note that if floating-point addition were    *
- *      associative (that is, if fl(x) = x), then the error term would be     *
- *      zero and we'd have x + y = fl(x + y). Since floating-point arithmetic *
- *      is not associative it is often the case that the error is non-zero.   *
- *      We compute the sum and the error by reversing the above equations.    *
- *      We have:                                                              *
+ *      This assumes |x| >= |y|. Note that if floating-point arithmetic were  *
+ *      exact (that is, if fl(x) = x), then the error term would be zero and  *
+ *      we'd have x + y = fl(x + y). Since floating-point arithmetic is not   *
+ *      exact, it is often the case that the error is non-zero. We compute    *
+ *      the sum and the error by reversing the above equations. We have:      *
  *                                                                            *
  *          sum   = fl(x + y)                                                 *
  *          ycomp = fl(sum - x)                                               *
@@ -156,7 +155,7 @@ tmpl_Double_Fast_Two_Sum(const double x,
                          double * TMPL_RESTRICT const err)
 TMPL_REPRODUCIBLE
 {
-    /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
+    /*  The rounded floating-point sum.                                       */
     TMPL_VOLATILE const double sum = x + y;
 
     /*  The compensated y term, the bits that remain after summing with x.    */
