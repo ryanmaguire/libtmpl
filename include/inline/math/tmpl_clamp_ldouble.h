@@ -31,11 +31,11 @@
  *          clamp(x, min, max) = Min(Max(x, min), max)                        *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
- *      min (long double):                                                    *
+ *      min (const long double):                                              *
  *          The smallest allowed value for x.                                 *
- *      max (long double):                                                    *
+ *      max (const long double):                                              *
  *          The largest allowed value for x.                                  *
  *  Output:                                                                   *
  *      clamp_x (long double):                                                *
@@ -45,34 +45,53 @@
  *  Method:                                                                   *
  *      Check if min <= x <= max. If so, return x. Otherwise "clamp" the      *
  *      input and return min if too small and max if too big.                 *
+ *  Notes:                                                                    *
+ *      1.) There are no checks for NaN or infinity.                          *
+ *                                                                            *
+ *      2.) There are no checks for min < max.                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/10: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimization on modern compilers.     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_CLAMP_LDOUBLE_H
-#define TMPL_CLAMP_LDOUBLE_H
+#ifndef TMPL_INLINE_MATH_CLAMP_LDOUBLE_H
+#define TMPL_INLINE_MATH_CLAMP_LDOUBLE_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Long double precision clamp function.                                     */
+TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-long double tmpl_LDouble_Clamp(long double x, long double min, long double max)
+long double
+tmpl_LDouble_Clamp(const long double x,
+                   const long double min,
+                   const long double max)
+TMPL_UNSEQUENCED
 {
-    /*  If the input falls to the left of the allowed interval (is too small),*
+    /*  If the input falls to the left of the allowed interval (too small),   *
      *  clip it and return the minimum allowed value.                         */
     if (x < min)
         return min;
 
     /*  Similarly for large values. Clamp to the maximum allowed value.       */
-    else if (x > max)
+    if (x > max)
         return max;
 
     /*  Otherwise the input falls between min and max. Return the input.      */
