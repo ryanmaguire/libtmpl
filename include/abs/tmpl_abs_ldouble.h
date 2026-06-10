@@ -26,6 +26,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Provides the TMPL_USE_INLINE macro.                               *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 24, 2026                                                  *
