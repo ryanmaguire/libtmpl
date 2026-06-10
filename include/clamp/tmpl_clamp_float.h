@@ -43,7 +43,8 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  clamp function is small enough that it can be inlined. Check for support. */
+/*  The clamp function is small enough that it can be inlined. Check for      *
+ *  support.                                                                  */
 #if TMPL_USE_INLINE == 1
 
 /*  Implemented in the inline directory.                                      */
