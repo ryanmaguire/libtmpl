@@ -19,20 +19,20 @@
  *                              tmpl_abs_ldouble                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes |x|. Source: libtmpl/include/inline/math/tmpl_abs_ldouble.h. *
+ *      Computes |x|.                                                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_MATH_ALGORITHMS macro.                           */
+/*  Location of the TMPL_USE_MATH_ALGORITHMS and TMPL_USE_INLINE macros.      */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Only used if libtmpl algorithms are requested and inline support is not.  */
 #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Function prototype / forward declaration.                                 */
-extern long double tmpl_LDouble_Abs(long double x);
+extern long double tmpl_LDouble_Abs(const long double x);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/math/tmpl_abs_ldouble.h"

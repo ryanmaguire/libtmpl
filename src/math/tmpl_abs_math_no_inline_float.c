@@ -19,20 +19,20 @@
  *                               tmpl_abs_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes |x|. Source: libtmpl/include/inline/math/tmpl_abs_float.h.   *
+ *      Computes |x|.                                                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_MATH_ALGORITHMS macro.                           */
+/*  Location of the TMPL_USE_MATH_ALGORITHMS and TMPL_USE_INLINE macros.      */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Only used if libtmpl algorithms are requested and inline support is not.  */
 #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Function prototype / forward declaration.                                 */
-extern float tmpl_Float_Abs(float x);
+extern float tmpl_Float_Abs(const float x);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/math/tmpl_abs_float.h"
