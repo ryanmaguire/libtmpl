@@ -52,7 +52,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
  *  2.) tmpl_attributes.h:                                                    *
  *          Provides optional C23 attributes for optimization.                *
  *  3.) tmpl_max.h:                                                           *
