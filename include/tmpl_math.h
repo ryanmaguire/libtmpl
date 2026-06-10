@@ -1834,35 +1834,26 @@ extern long double tmpl_LDouble_Truncate(long double x);
  *  Purpose:                                                                  *
  *      Clamps a real number to fall with a given range [min, max].           *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      min (double):                                                         *
+ *      min (const double):                                                   *
  *          The minimum allowed value for x.                                  *
- *      max (double):                                                         *
+ *      max (const double):                                                   *
  *          The maximum allowed value for x.                                  *
  *  Output:                                                                   *
  *      clamped_x (double):                                                   *
  *          The clamped value of x. If x is less than min, min is returned.   *
  *          If x is greater than max, max is returned. Otherwise, return x.   *
  *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
+ *      1.) Float and long double equivalents are provided as well.           *
+ *                                                                            *
+ *      2.) There are no checks for NaN or infinity.                          *
+ *                                                                            *
+ *      3.) There are no checks for min < max.                                *
  ******************************************************************************/
-
-#if TMPL_USE_INLINE == 1
-
-#include <libtmpl/include/inline/math/tmpl_clamp_float.h>
-#include <libtmpl/include/inline/math/tmpl_clamp_double.h>
-#include <libtmpl/include/inline/math/tmpl_clamp_ldouble.h>
-
-#else
-
-extern double tmpl_Double_Clamp(double x, double min, double max);
-extern float tmpl_Float_Clamp(float x, float min, float max);
-
-extern long double
-tmpl_LDouble_Clamp(long double x, long double min, long double max);
-
-#endif
+#include <libtmpl/include/clamp/tmpl_clamp_float.h>
+#include <libtmpl/include/clamp/tmpl_clamp_double.h>
+#include <libtmpl/include/clamp/tmpl_clamp_ldouble.h>
 
 /******************************************************************************
  *  Function:                                                                 *
