@@ -74,20 +74,8 @@
 /*  TMPL_MAX3 helper macro found here.                                        */
 #include <libtmpl/include/helper/tmpl_max.h>
 
-/*  The absolute value function is small enough to inline. Check for this.    */
-#if TMPL_USE_INLINE == 1
-
-/*  The function is found in the math inline directory.                       */
-#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, just tell the compiler about the function.                     */
-extern long double tmpl_LDouble_Abs(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Absolute value function found here.                                       */
+#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
 
 /*  Function for computing the L-Infinity norm of a 3D vector.                */
 TMPL_INLINE_DECL
