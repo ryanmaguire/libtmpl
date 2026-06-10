@@ -45,7 +45,7 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Implemented in the inline directory.                                      */
-#include <libtmpl/include/inline/math/tmpl_abs_double.h>
+#include <libtmpl/include/inline/math/tmpl_abs_impl_double.h>
 
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else

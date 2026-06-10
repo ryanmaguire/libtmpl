@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_abs_float                               *
+ *                            tmpl_abs_impl_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x) = |x| at single precision.                              *
@@ -79,6 +79,8 @@
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_ieee754_float.h:                                                 *
  *          Header file containing the IEEE data type.                        *
+ *  3.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -109,11 +111,13 @@
  *      zeros. That is, negative zero will output negative zero.              *
  *  2026/05/23: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
+ *  2026/06/10: Ryan Maguire                                                  *
+ *      Changed filename to include _impl_ to be consistent with other files. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ABS_FLOAT_H
-#define TMPL_ABS_FLOAT_H
+#ifndef TMPL_INLINE_MATH_ABS_IMPL_FLOAT_H
+#define TMPL_INLINE_MATH_ABS_IMPL_FLOAT_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
