@@ -31,7 +31,7 @@
  *          clamp(x) = Min(Max(x, 0), 1)                                      *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      clamp_x (double):                                                     *
@@ -39,36 +39,50 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Check if 0 <= x <= 1. If so, return x. Otherwise "clamp" the input to *
- *      lie between zero and one.                                             *
+ *      Check if 0 <= x <= 1. If so, return x. Otherwise "clamp" the input    *
+ *      and return 0 if too small and 1 if too big.                           *
+ *  Notes:                                                                    *
+ *      1.) There are no checks for NaN or infinity.                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/10: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimization on modern compilers.     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_UNIT_CLAMP_DOUBLE_H
-#define TMPL_UNIT_CLAMP_DOUBLE_H
+#ifndef TMPL_INLINE_MATH_UNIT_CLAMP_DOUBLE_H
+#define TMPL_INLINE_MATH_UNIT_CLAMP_DOUBLE_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Double precision unit clamp function.                                     */
+TMPL_CONST_FUNC
 TMPL_INLINE_DECL
-double tmpl_Double_Unit_Clamp(double x)
+double tmpl_Double_Unit_Clamp(const double x)
+TMPL_UNSEQUENCED
 {
-    /*  If the input falls to the left of the allowed interval (is too small),*
+    /*  If the input falls to the left of the allowed interval (too small),   *
      *  clip it and return the minimum allowed value (which is zero).         */
     if (x < 0.0)
         return 0.0;
 
     /*  Similarly for large values. Clamp to the maximum allowed value.       */
-    else if (x > 1.0)
+    if (x > 1.0)
         return 1.0;
 
     /*  Otherwise the input falls between zero and one. Return the input.     */
