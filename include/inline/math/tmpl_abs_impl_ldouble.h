@@ -32,7 +32,7 @@
  *          |x|  =  |  -x,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number, the argument for |x|.                              *
  *  Output:                                                                   *
  *      abs_x (long double):                                                  *
@@ -95,9 +95,9 @@
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
  *  Notes:                                                                    *
- *      If IEEE-754 is not supported and if the input is NaN one may get      *
- *      +/- NaN (which is still NaN). This is because NaN always              *
- *      evaluates to false when a comparison is made (==, <, >, etc.).        *
+ *      1.) If IEEE-754 is not supported and if the input is NaN one may get  *
+ *          +/- NaN (which is still NaN). This is because NaN always          *
+ *          produces false when used in a comparison (==, <, >, etc.).        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
