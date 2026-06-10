@@ -145,20 +145,8 @@
 /*  Complex numbers provided here.                                            */
 #include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  We need the absolute value function. This is small enough to inline.      */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline version found here.                                                */
-#include <libtmpl/include/inline/math/tmpl_abs_double.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, provide the forward declaration for the compiler. */
-extern double tmpl_Double_Abs(double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Absolute value function found here.                                       */
+#include <libtmpl/include/abs/tmpl_abs_double.h>
 
 /*  In C99, since _Complex is a built-in data type, given double _Complex z   *
  *  and double _Complex w, you can just do z / w. Structs cannot be           *

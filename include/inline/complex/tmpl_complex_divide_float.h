@@ -145,20 +145,8 @@
 /*  Complex numbers provided here.                                            */
 #include <libtmpl/include/types/tmpl_complex_float.h>
 
-/*  We need the absolute value function. This is small enough to inline.      */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline version found here.                                                */
-#include <libtmpl/include/inline/math/tmpl_abs_float.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, provide the forward declaration for the compiler. */
-extern float tmpl_Float_Abs(float x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Absolute value function found here.                                       */
+#include <libtmpl/include/abs/tmpl_abs_float.h>
 
 /*  In C99, since _Complex is a built-in data type, given float _Complex z    *
  *  and float _Complex w, you can just do z / w. Structs cannot be            *
