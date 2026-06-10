@@ -35,7 +35,7 @@
 extern double tmpl_Double_Abs(const double x);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/math/tmpl_abs_double.h"
+#include "../../include/inline/math/tmpl_abs_impl_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1.         */
