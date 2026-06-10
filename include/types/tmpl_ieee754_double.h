@@ -122,10 +122,11 @@ typedef union tmpl_IEEE754_Double_Def {
          *  It is crucial that the bits in this struct are not padded. If     *
          *  padding occurs, we get a gibberish result and cannot perform type *
          *  punning. To prevent padding, the order of the bits matters. We    *
-         *  split the 52-bit mantissa into 3 48-bit components and 1 4-bit    *
-         *  piece. The 4-bit part follows immediately after the 1-bit sign    *
-         *  and 11-bit exponent, meaning sign-expo-man0 form a 16-bit block.  *
-         *  On all compilers tested, such an ordering prevents padding.       */
+         *  split the 52-bit mantissa into three 16-bit components and one    *
+         *  4-bit piece. The 4-bit part follows immediately after the 1-bit   *
+         *  sign and 11-bit exponent, meaning sign-expo-man0 form a 16-bit    *
+         *  block. On all compilers tested, such an ordering prevents         *
+         *  padding.                                                          */
         unsigned int sign : 1;
         unsigned int expo : 11;
         unsigned int man0 : 4;
