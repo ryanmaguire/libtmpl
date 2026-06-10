@@ -69,10 +69,10 @@
  *      y (const double):                                                     *
  *          Another real number.                                              *
  *      out (double * TMPL_RESTRICT const):                                   *
- *          The floating-point sum x + y is stored here.                      *
+ *          The floating-point sum of x and y is stored here.                 *
  *      err (double * TMPL_RESTRICT const):                                   *
- *          The error, sum(x, y) - (x + y), is stored here, where "sum"       *
- *          denotes exact addition, and "+" denotes floating-point addition.  *
+ *          The error, (x + y) - fl(x + y), is stored here, where "+" denotes *
+ *          exact addition, and "fl" is the floating-point round operation.   *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
@@ -123,9 +123,9 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
- *      1.) The Neumaier summation algorithm does not assume the sum is       *
- *          greater in magnitude than the summand, but this comes at the cost *
- *          of a branch.                                                      *
+ *      1.) The Neumaier summation algorithm does not assume the running sum  *
+ *          is greater in magnitude than the summand, but this comes at the   *
+ *          cost of a branch.                                                 *
  ******************************************************************************/
 #include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_float.h>
 #include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_double.h>
@@ -142,10 +142,10 @@
  *      y (const double):                                                     *
  *          Another real number.                                              *
  *      out (double * TMPL_RESTRICT const):                                   *
- *          The floating-point sum x + y is stored here.                      *
+ *          The floating-point sum of x and y is stored here.                 *
  *      err (double * TMPL_RESTRICT const):                                   *
- *          The error, sum(x, y) - (x + y), is stored here, where "sum"       *
- *          denotes exact addition, and "+" denotes floating-point addition.  *
+ *          The error, (x + y) - fl(x + y), is stored here, where "+" denotes *
+ *          exact addition, and "fl" is the floating-point round operation.   *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
