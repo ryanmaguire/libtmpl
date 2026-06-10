@@ -217,7 +217,7 @@ TMPL_UNSEQUENCED
      *  abs_xhi = |xhi| and abs_xlo = -|xlo|. In both cases abs_xhi = |xhi|.  *
      *  The sign of abs_xlo depends on the signs of xhi and xlo. That is,     *
      *  whether or not they are the same. Indeed, the sign of abs_xlo is the  *
-     *  exlusive or, also called XOR, of the signs of xhi and xlo. Use this.  */
+     *  exclusive or, also called XOR, of the signs of xhi and xlo. Use this. */
     w.bits.signl = w.bits.sign ^ w.bits.signl;
     w.bits.sign = 0x0U;
 
