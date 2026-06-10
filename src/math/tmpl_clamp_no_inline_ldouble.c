@@ -34,8 +34,8 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Implemented in include/math/tmpl_clamp_ldouble.h.                         */
-#include "../../include/inline/math/tmpl_clamp_ldouble.h"
+/*  Implemented here.                                                         */
+#include "../../include/inline/math/tmpl_clamp_impl_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
