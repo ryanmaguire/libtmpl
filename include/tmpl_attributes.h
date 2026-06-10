@@ -42,7 +42,14 @@
 
 /*  C++11 support found, indicate this.                                       */
 #define TMPL_ATTRIBUTES_SUPPORTED 1
+
+/*  The __has_cpp_attribute macro was introduced in C++20, but older          *
+ *  compilers may support attribute checking.                                 */
+#ifdef __has_cpp_attribute
 #define TMPL_HAS_ATTRIBUTE(attr) __has_cpp_attribute(attr)
+#else
+#define TMPL_HAS_ATTRIBUTE(attr) 0
+#endif
 
 #endif
 /*  End of #if __cplusplus >= 201103L.                                        */
@@ -96,7 +103,7 @@
  *  unsequenced but does support reproducible, then have the macro fall back  *
  *  to reproducible.                                                          */
 #if TMPL_HAS_ATTRIBUTE(unsequenced)
-#define TMPL_UNSEQUENCED [[reproducible, unsequenced]]
+#define TMPL_UNSEQUENCED [[unsequenced]]
 #else
 #define TMPL_UNSEQUENCED TMPL_REPRODUCIBLE
 #endif
@@ -110,7 +117,7 @@
 #endif
 
 /*  Some functions, like 2Sum, Fast2Sum, and 2Prod, make use of the fact that *
- *  floating-point arithmetic is not associative. The gnu:optimize attribute  *
+ *  floating-point arithmetic is not associative. The gnu::optimize attribute *
  *  can help prevent compilers from aggressively optimizing and breaking such *
  *  functions.                                                                */
 #if TMPL_HAS_ATTRIBUTE(gnu::optimize)
