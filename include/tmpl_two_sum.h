@@ -48,7 +48,10 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  None.                                                                     *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file providing TMPL_INLINE_DECL and other macros.          *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
