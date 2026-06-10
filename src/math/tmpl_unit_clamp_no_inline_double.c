@@ -19,7 +19,7 @@
  *                           tmpl_unit_clamp_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Clamps a real number. See include/math/tmpl_unit_clamp_double.h.      *
+ *      Clamps a real number.                                                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -31,8 +31,8 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Function prototype / forward declaration.                                 */
+extern double tmpl_Double_Unit_Clamp(const double x);
 
 /*  Implemented here.                                                         */
 #include "../../include/inline/math/tmpl_unit_clamp_impl_double.h"
