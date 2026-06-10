@@ -26,11 +26,11 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Two_Sum                                                   *
  *  Purpose:                                                                  *
- *      Evaluates the sum of two doubles, returning the sum and the error.    *
+ *      Evaluates the sum of two doubles, computing the sum and error.        *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          Another real number.                                              *
  *      out (double * TMPL_RESTRICT const):                                   *
  *          The rounded sum x + y will be stored here.                        *
@@ -44,7 +44,7 @@
  *      We use the standard 2Sum algorithm. In most cases it is far more      *
  *      beneficial to use the Fast2Sum algorithm, tmpl_Double_Fast_Two_Sum,   *
  *      since this uses only three floating point operations, but this has    *
- *      the caveat of requiring before-hand knowledge that |x| >= |y| is true.*
+ *      the caveat of requiring beforehand knowledge that |x| >= |y| is true. *
  *      The standard 2Sum goes as follows. Let "+" denote floating-point      *
  *      addition, and "sum" denote real addition. Let "xerr" and "yerr"       *
  *      denote the error from the x and y terms, respectively, and "xcomp"    *
@@ -68,14 +68,14 @@
  *          yerr  = y - ycomp                                                 *
  *          err   = xerr + yerr                                               *
  *                                                                            *
- *      The values "sum" and "err" are returned.                              *
+ *      The values "sum" and "err" are stored using the input pointers.       *
  *  Notes:                                                                    *
  *      1.) 2Sum does not require |x| >= |y|, but it requires twice as many   *
  *          arithmetic operations as Fast2Sum.                                *
  *                                                                            *
  *      2.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
- *          poor Fast2Sum.                                                    *
+ *          poor 2Sum.                                                        *
  *                                                                            *
  *      3.) Compilers supporting the C23 standard and implementing the        *
  *          gnu::optimize attribute may not need to use the volatile keyword. *

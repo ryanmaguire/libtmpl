@@ -26,11 +26,11 @@
  *  Function Name:                                                            *
  *      tmpl_LDouble_Two_Sum                                                  *
  *  Purpose:                                                                  *
- *      Evaluates the sum of two long doubles, returning the sum and error.   *
+ *      Evaluates the sum of two long doubles, computing the sum and error.   *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
- *      y (long double):                                                      *
+ *      y (const long double):                                                *
  *          Another real number.                                              *
  *      out (long double * TMPL_RESTRICT const):                              *
  *          The rounded sum x + y will be stored here.                        *
@@ -44,7 +44,7 @@
  *      We use the standard 2Sum algorithm. In most cases it is far more      *
  *      beneficial to use the Fast2Sum algorithm, tmpl_LDouble_Fast_Two_Sum,  *
  *      since this uses only three floating point operations, but this has    *
- *      the caveat of requiring before-hand knowledge that |x| >= |y| is true.*
+ *      the caveat of requiring beforehand knowledge that |x| >= |y| is true. *
  *      The standard 2Sum goes as follows. Let "+" denote floating-point      *
  *      addition, and "sum" denote real addition. Let "xerr" and "yerr"       *
  *      denote the error from the x and y terms, respectively, and "xcomp"    *
@@ -68,7 +68,7 @@
  *          yerr  = y - ycomp                                                 *
  *          err   = xerr + yerr                                               *
  *                                                                            *
- *      The values "sum" and "err" are returned.                              *
+ *      The values "sum" and "err" are stored using the input pointers.       *
  *  Notes:                                                                    *
  *      1.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
@@ -91,8 +91,8 @@
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
  *                                                                            *
  *          Wikipedia article on the 2Sum algorithm, which is the more        *
- *          accurate version of Fast2Sum. Unlike Fast2Sum, 2Sum does not      *
- *          assume |x| >= |y|, but 2Sum requires 5 additions, and Fast2Sum    *
+ *          general version of Fast2Sum. Unlike Fast2Sum, 2Sum does not       *
+ *          assume |x| >= |y|, but 2Sum requires 6 additions, and Fast2Sum    *
  *          only needs 3.                                                     *
  *                                                                            *
  *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
@@ -115,7 +115,7 @@
  *          quad-double arithmetic. The 2Sum and Fast2Sum algorithms are      *
  *          described here, as is the 2Prod algorithm.                        *
  *                                                                            *
- *      5.) Schewchuk, J. (October 1997).                                     *
+ *      5.) Shewchuk, J. (October 1997).                                      *
  *          Adaptive Precision Floating-Point Arithmetic and                  *
  *          Fast Robust Geometric Predicates.                                 *
  *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
