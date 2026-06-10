@@ -34,8 +34,8 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Implemented in include/math/tmpl_unit_clamp_float.h.                      */
-#include "../../include/inline/math/tmpl_unit_clamp_float.h"
+/*  Implemented here.                                                         */
+#include "../../include/inline/math/tmpl_unit_clamp_impl_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
