@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_unit_clamp_ldouble                          *
+ *                        tmpl_unit_clamp_impl_ldouble                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x) = Min(Max(x, 0), 1). That is, "clamps" the input.       *
@@ -39,8 +39,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Check if 0 <= x <= 1. If so, return x. Otherwise "clamp" the input    *
- *      and return 0 if too small and 1 if too big.                           *
+ *      Use the formula directly, return Min(Max(x, 0), 1).                   *
  *  Notes:                                                                    *
  *      1.) There are no checks for NaN or infinity.                          *
  ******************************************************************************
@@ -50,6 +49,10 @@
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_attributes.h:                                                    *
  *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_max.h:                                                           *
+ *          Header where the TMPL_MAX macro is defined.                       *
+ *  4.) tmpl_min.h:                                                           *
+ *          Header where the TMPL_MIN macro is defined.                       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -58,11 +61,12 @@
  ******************************************************************************
  *  2026/06/10: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
+ *      Changed implementation to use the TMPL_MIN and TMPL_MAX macros.       *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_MATH_UNIT_CLAMP_LDOUBLE_H
-#define TMPL_INLINE_MATH_UNIT_CLAMP_LDOUBLE_H
+#ifndef TMPL_INLINE_MATH_UNIT_CLAMP_IMPL_LDOUBLE_H
+#define TMPL_INLINE_MATH_UNIT_CLAMP_IMPL_LDOUBLE_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -70,23 +74,19 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  TMPL_MAX and TMPL_MIN macros provided here.                               */
+#include <libtmpl/include/helper/tmpl_max.h>
+#include <libtmpl/include/helper/tmpl_min.h>
+
 /*  Long double precision unit clamp function.                                */
 TMPL_CONST_FUNC
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Unit_Clamp(const long double x)
 TMPL_UNSEQUENCED
 {
-    /*  If the input falls to the left of the allowed interval (too small),   *
-     *  clip it and return the minimum allowed value (which is zero).         */
-    if (x < 0.0L)
-        return 0.0L;
-
-    /*  Similarly for large values. Clamp to the maximum allowed value.       */
-    if (x > 1.0L)
-        return 1.0L;
-
-    /*  Otherwise the input falls between zero and one. Return the input.     */
-    return x;
+    /*  Use the clamp formula directly, compute Min(Max(x, 0), 1).            */
+    const long double lower_clamp = TMPL_MAX(x, 0.0L);
+    return TMPL_MIN(lower_clamp, 1.0L);
 }
 /*  End of tmpl_LDouble_Unit_Clamp.                                           */
 
