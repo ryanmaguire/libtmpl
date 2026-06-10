@@ -92,7 +92,7 @@ TMPL_UNSEQUENCED
 {
     /*  Use the clamp formula directly, compute Min(Max(x, min), max).        */
     const double lower_clamp = TMPL_MAX(x, min);
-    return TMPL_MAX(lower_clamp, max);
+    return TMPL_MIN(lower_clamp, max);
 }
 /*  End of tmpl_Double_Clamp.                                                 */
 
