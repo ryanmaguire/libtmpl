@@ -67,6 +67,7 @@
  ******************************************************************************
  *  2026/06/10: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
+ *      Changed implementation to use the TMPL_MIN and TMPL_MAX macros.       *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -79,7 +80,7 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  TMPL_MIN and TMPL_MAX macros provided here.                               */
+/*  TMPL_MAX and TMPL_MIN macros provided here.                               */
 #include <libtmpl/include/helper/tmpl_max.h>
 #include <libtmpl/include/helper/tmpl_min.h>
 
