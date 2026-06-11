@@ -154,26 +154,18 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_inttype.h:                                                       *
+ *  1.) tmpl_inttype.h:                                                       *
  *          Provides fixed-width integer data types.                          *
- *  3.) tmpl_ieee754_float.h:                                                 *
+ *  2.) tmpl_ieee754_float.h:                                                 *
  *          Contains the tmpl_IEEE754_Float union used for type punning.      *
- *  4.) tmpl_floatint_float.h:                                                *
+ *  3.) tmpl_floatint_float.h:                                                *
  *          Contains the tmpl_FloatInt32 union for type punning.              *
- *  5.) tmpl_math.h:                                                          *
+ *  4.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 26, 2022                                            *
  ******************************************************************************/
-
-/*  TMPL_USE_MATH_ALGORITHMS is found here.                                   */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  This function is only implemented if tmpl's libm was requested.           */
-#if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -421,6 +413,3 @@ float tmpl_Float_Fractional_Part(float x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
-
-#endif
-/*  End of TMPL_USE_MATH_ALGORITHMS.                                          */

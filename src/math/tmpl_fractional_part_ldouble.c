@@ -190,26 +190,18 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_inttype.h:                                                       *
+ *  1.) tmpl_inttype.h:                                                       *
  *          Provides fixed-width integer data types.                          *
- *  3.) tmpl_ieee754_ldouble.h:                                               *
+ *  2.) tmpl_ieee754_ldouble.h:                                               *
  *          Contains the tmpl_IEEE754_LDouble union used for type punning.    *
- *  4.) tmpl_floatint_ldouble.h:                                              *
+ *  3.) tmpl_floatint_ldouble.h:                                              *
  *          Contains tmpl_IEEE754_FloatIntLongDouble for type punning.        *
- *  5.) tmpl_math.h:                                                          *
+ *  4.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
  ******************************************************************************/
-
-/*  TMPL_USE_MATH_ALGORITHMS is found here.                                   */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  This function is only implemented if tmpl's libm was requested.           */
-#if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -1010,6 +1002,3 @@ long double tmpl_LDouble_Fractional_Part(long double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
