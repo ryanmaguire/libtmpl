@@ -144,6 +144,9 @@
  *          detects NaN and Inf since the exponents of NaN and Inf are large, *
  *          and the portable method detects NaN since NaN should always       *
  *          produce false when a comparison is made (==, <, >, etc.).         *
+ *                                                                            *
+ *      3.) The SIMD method is 2-4x faster when used with the appropriate     *
+ *          hardware, but this comes at the cost of 2-4 ULP error.            *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -217,18 +220,23 @@ extern double tmpl_Double_Arccos(const double x);
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Mathematical constants like pi and pi / 2 are found here.                 */
-#include <libtmpl/include/constants/tmpl_math_constants.h>
-
 /*  TMPL_NAN macro found here which provides double-precision NaN.            */
 #include <libtmpl/include/nan/tmpl_nan_double.h>
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
+/*  Both pi and pi / 2 are needed for the implementation.                     */
+extern const double tmpl_double_pi;
+extern const double tmpl_double_pi_by_two;
+
 /******************************************************************************
  *                         Static / Inlined Functions                         *
  ******************************************************************************/
+
+/*  The helper functions are only needed for the normal scalar version. The   *
+ *  SIMD branchless implementation does not need these included.              */
+#if TMPL_USE_SIMD_FAST_MATH != 1
 
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_arccos_maclaurin_double.h"
@@ -248,6 +256,9 @@ extern double tmpl_Double_Arccos(const double x);
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE != 1.                                  */
 
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -260,8 +271,8 @@ extern double tmpl_Double_Arccos(const double x);
  *  method a slight performance boost over the portable one below.            */
 
 /*  The acos function can be made branchless, which allows the routines to be *
- *  vectorized when SIMD support is available. The cost is 1 ULP relative     *
- *  error, and the speedup on systems supporting AVX2 or AVX-512 is about 2x  *
+ *  vectorized when SIMD support is available. The cost is 2-4 ULP relative   *
+ *  error, and the speedup on systems supporting AVX2 or AVX-512 is 2-4x      *
  *  when used in a simple for-loop. Check if the user requested this.         */
 #if TMPL_USE_SIMD_FAST_MATH == 1
 
