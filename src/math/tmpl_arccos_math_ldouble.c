@@ -186,7 +186,7 @@
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
- *          to the numbers 0.5 and 1.0.                                       *
+ *          to the numbers 2^-65, 2^-3, 2^-1, and 1.0.                        *
  *      Error:                                                                *
  *          Based on 394,484,428 samples with -1 < x < 1.                     *
  *              max relative error: 2.1646973539415815e-19                    *
