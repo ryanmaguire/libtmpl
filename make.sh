@@ -244,7 +244,7 @@ fi
 if [ $USEMATH == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_USE_MATH_TRUE"
 else
-    Exclude="$Exclude $(find . -name '*_math_*.c')"
+    Exclude="$Exclude $(find . -name '*_math_*.c' -not -name '*constants.c')"
 fi
 
 if [ $USEASCII == 0 ]; then
