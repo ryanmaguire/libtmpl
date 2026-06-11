@@ -71,7 +71,7 @@
  *  Notes:                                                                    *
  *      1.) If IEEE-754 is not supported and if the input is NaN one may get  *
  *          +/- NaN (which is still NaN). This is because NaN always          *
- *          produces false when used in a comparison (==, <, >, etc.).        *
+ *          produces false when used in a comparison (other than !=).         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
