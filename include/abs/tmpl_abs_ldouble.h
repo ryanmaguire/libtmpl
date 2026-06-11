@@ -25,7 +25,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Provides the TMPL_USE_INLINE macro.                               *
+ *          Provides the TMPL_USE_MATH_ALGORITHMS and TMPL_USE_INLINE macros. *
  *  2.) tmpl_attributes.h:                                                    *
  *          Provides optional C23 attributes for optimization.                *
  ******************************************************************************
@@ -37,11 +37,11 @@
 #ifndef TMPL_ABS_ABS_LDOUBLE_H
 #define TMPL_ABS_ABS_LDOUBLE_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  The TMPL_USE_MATH_ALGORITHMS and TMPL_USE_INLINE macros are found here.   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Only provided if the user requested libtmpl's libm implementation.        */
+#if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  abs function is small enough that it can be inlined. Check for support.   */
 #if TMPL_USE_INLINE == 1
@@ -52,6 +52,9 @@
 /*  Lacking inline support, provide the forward declaration to the compiler.  */
 #else
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Function for computing the absolute value at long double precision.       */
 TMPL_CONST_FUNC
 extern long double tmpl_LDouble_Abs(const long double x)
@@ -59,6 +62,17 @@ TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#else
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS == 1.                               */
+
+/*  If the user wants to use their system's libm, simply create a macro.      */
+#include <math.h>
+
+#define tmpl_LDouble_Abs(x) (fabsl(x))
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 #endif
 /*  End of include guard.                                                     */
