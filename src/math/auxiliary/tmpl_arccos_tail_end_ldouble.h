@@ -28,27 +28,41 @@
  *  Purpose:                                                                  *
  *      Computes the inverse cosine for 0.5 <= x < 1.                         *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (long double):                                                 *
  *          The inverse cosine of x.                                          *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_LDouble_Sqrt:                                                *
  *              Computes the square root of a number.                         *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
- *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
- *      Compute this using a Remez rational minimax approximation.            *
- *      64-bit double:                                                        *
- *          Order (8, 8) approximation.                                       *
- *      80-bit extended / portable:                                           *
- *          Order (10, 10) approximation.                                     *
- *      128-bit double-double:                                                *
- *          Order (18, 16) approximation.                                     *
- *      128-bit quadruple:                                                    *
- *          Order (18, 18) approximation.                                     *
+ *                                                                            *
+ *          acos(x) = 2 * asin(sqrt((1 - x) / 2))                             *
+ *                                                                            *
+ *      The function f(z) = (asin(z) - z) / z^3 is even, meaning the degree   *
+ *      (M, N) rational Remez approximation R(z) requires M / 2 + 1 non-zero  *
+ *      terms in the numerator and N / 2 + 1 non-zero terms in the            *
+ *      denominator. asin(z) is computed via:                                 *
+ *                                                                            *
+ *          asin(z) = z + z^3 * P(z) / Q(z)                                   *
+ *                                                                            *
+ *      where P(z) is the numerator and Q(z) is the denominator of R(z),      *
+ *      respectively. acos(x) is then computed by:                            *
+ *                                                                            *
+ *          acos(x) = 2 * asin(z)                                             *
+ *                                                                            *
+ *      with z = sqrt((1 - x) / 2). The values for M and N are:               *
+ *                                                                            *
+ *          long double type           | M  | N                               *
+ *          ------------------------------------                              *
+ *          64-bit double              |  8 |  8                              *
+ *          80-bit extended / portable | 10 | 10                              *
+ *          128-bit double-double      | 18 | 16                              *
+ *          128-bit quadruple          | 18 | 18                              *
+ *                                                                            *
  *  Notes:                                                                    *
  *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
@@ -56,6 +70,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -109,10 +125,10 @@ TMPL_UNSEQUENCED;
 #define B04 (+4.5088915315077310386265964807853660211534733521946E-02L)
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
-#define TMPL_NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
+#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
-#define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
+#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  128-bit double-double, a few more terms.                                  */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -146,11 +162,41 @@ TMPL_UNSEQUENCED;
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
 #define TMPL_NUM_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * A09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
 #define TMPL_DEN_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * (\
+                            B07 + z * B08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  128-bit quadruple, one more term than double-double.                      */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
@@ -185,11 +231,43 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
 #define TMPL_NUM_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * A09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
 #define TMPL_DEN_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * (\
+                            B07 + z * (\
+                                B08 + z * B09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Lastly, extended precision and portable versions.                         */
 #else
@@ -215,10 +293,12 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
 #define B05 (-1.6150977641153863432089856687117703962621376999198E-02L)
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
-#define TMPL_NUM_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*A05))))
+#define TMPL_NUM_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
-#define TMPL_DEN_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*B05))))
+#define TMPL_DEN_EVAL(z) \
+B00 + z * (B01 + z * (B02 + z * (B03 + z * (B04 + z * B05))))
 
 #endif
 /*  End of 80-bit extended / portable version.                                */
@@ -247,7 +327,7 @@ TMPL_UNSEQUENCED
 }
 /*  End of tmpl_LDouble_Arccos_Tail_End.                                      */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif

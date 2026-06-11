@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes arccos for 0.5 <= x < 1.0.                                   *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (double):                                                      *
@@ -123,8 +123,8 @@ TMPL_UNSEQUENCED;
 #define B04 (+4.5088915315077310386265964807853660211534733521946E-02)
 
 /*  Helper macros for evaluating polynomials using Horner's method.           */
-#define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
-#define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
+#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
+#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_CONST_FUNC
@@ -136,8 +136,8 @@ TMPL_UNSEQUENCED
     const double z = 0.5 * (1.0 - x);
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = TMPL_POLYA_EVAL(z);
-    const double q = TMPL_POLYB_EVAL(z);
+    const double p = TMPL_NUM_EVAL(z);
+    const double q = TMPL_DEN_EVAL(z);
 
     /*  p(z) / q(z) is the rational minimax approximation for                 *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
@@ -149,7 +149,7 @@ TMPL_UNSEQUENCED
 }
 /*  End of tmpl_Double_Arccos_Tail_End.                                       */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif
