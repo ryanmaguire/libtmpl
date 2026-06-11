@@ -143,7 +143,7 @@
  *      2.) Both methods detect if the input is NaN or infinity. The IEEE-754 *
  *          detects NaN and Inf since the exponents of NaN and Inf are large, *
  *          and the portable method detects NaN since NaN should always       *
- *          produce false when a comparison is made (==, <, >, etc.).         *
+ *          produce false when a comparison is made (==, <, >, etc., not !=). *
  *                                                                            *
  *      3.) The SIMD method is 2-4x faster when used with the appropriate     *
  *          hardware, but this comes at the cost of 2-4 ULP error.            *
@@ -179,12 +179,10 @@
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
  *  3.) tmpl_nan_double.h:                                                    *
- *          Header file providing double precision NaN (Not-a-Number).        *
- *  4.) tmpl_math_constants.h:                                                *
- *          Header file providing pi and pi / 2.                              *
- *  5.) tmpl_ieee754_double.h:                                                *
+ *          Header file providing double-precision NaN (Not-a-Number).        *
+ *  4.) tmpl_ieee754_double.h:                                                *
  *          Header file where the tmpl_IEEE754_Double type is defined.        *
- *  6.) tmpl_abs_double.h:                                                    *
+ *  5.) tmpl_abs_double.h:                                                    *
  *          Provides the absolute value function (portable version only).     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -206,6 +204,8 @@
  *      provided for the function in this file and NAN is included directly.  *
  *  2026/05/23: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
+ *  2026/06/11: Ryan Maguire                                                  *
+ *      Finalized SIMD version, works with GCC 15+.                           *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -287,7 +287,7 @@ extern const double tmpl_double_pi_by_two;
  *  that allows the -ffast-math flag to be enabled (GCC or Clang) without     *
  *  sacrificing accuracy or mishandling NaN / Inf.                            */
 
-/*  Double precision inverse cosine (acos equivalent).                        */
+/*  Double-precision inverse cosine (acos equivalent).                        */
 TMPL_CONST_FUNC
 double tmpl_Double_Arccos(const double x)
 TMPL_UNSEQUENCED
@@ -359,7 +359,7 @@ TMPL_UNSEQUENCED
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Double precision inverse cosine (acos equivalent).                        */
+/*  Double-precision inverse cosine (acos equivalent).                        */
 TMPL_CONST_FUNC
 double tmpl_Double_Arccos(const double x)
 TMPL_UNSEQUENCED

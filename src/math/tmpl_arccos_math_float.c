@@ -141,7 +141,10 @@
  *      2.) Both methods detect if the input is NaN or infinity. The IEEE-754 *
  *          detects NaN and Inf since the exponents of NaN and Inf are large, *
  *          and the portable method detects NaN since NaN should always       *
- *          produce false when a comparison is made (==, <, >, etc.).         *
+ *          produce false when a comparison is made (==, <, >, etc., not !=). *
+ *                                                                            *
+ *      3.) The SIMD method is 2-4x faster when used with the appropriate     *
+ *          hardware, but this comes at the cost of 2-4 ULP error.            *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -171,12 +174,14 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_nan_float.h:                                                     *
- *          Header file providing single precision NaN (Not-a-Number).        *
- *  3.) tmpl_math_constants.h:                                                *
- *          Header file providing pi and pi / 2.                              *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_nan_float.h:                                                     *
+ *          Header file providing single-precision NaN (Not-a-Number).        *
  *  4.) tmpl_ieee754_float.h:                                                 *
  *          Header file where the tmpl_IEEE754_Float type is defined.         *
+ *  5.) tmpl_abs_float.h:                                                     *
+ *          Provides the absolute value function (portable version only).     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 03, 2023                                              *
@@ -197,6 +202,8 @@
  *      provided for the function in this file and NAN is included directly.  *
  *  2026/05/23: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
+ *  2026/06/11: Ryan Maguire                                                  *
+ *      Finalized SIMD version, works with GCC 15+.                           *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -211,18 +218,23 @@ extern float tmpl_Float_Arccos(const float x);
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Mathematical constants like pi and pi / 2 are found here.                 */
-#include <libtmpl/include/constants/tmpl_math_constants.h>
-
 /*  TMPL_NANF macro found here which provides single-precision NaN.           */
 #include <libtmpl/include/nan/tmpl_nan_float.h>
 
 /*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
 #include <libtmpl/include/types/tmpl_ieee754_float.h>
 
+/*  Both pi and pi / 2 are needed for the implementation.                     */
+extern const float tmpl_float_pi;
+extern const float tmpl_float_pi_by_two;
+
 /******************************************************************************
  *                         Static / Inlined Functions                         *
  ******************************************************************************/
+
+/*  The helper functions are only needed for the normal scalar version. The   *
+ *  SIMD branchless implementation does not need these included.              */
+#if TMPL_USE_SIMD_FAST_MATH != 1
 
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_arccos_maclaurin_float.h"
@@ -242,6 +254,9 @@ extern float tmpl_Float_Arccos(const float x);
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT != 1.                                   */
 
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
@@ -253,7 +268,19 @@ extern float tmpl_Float_Arccos(const float x);
  *  float rather than checking the entire float. This gives the IEEE-754      *
  *  method a slight performance boost over the portable one below.            */
 
-/*  Single precision inverse cosine (acosf equivalent).                       */
+/*  The acos function can be made branchless, which allows the routines to be *
+ *  vectorized when SIMD support is available. The cost is 2-4 ULP relative   *
+ *  error, and the speedup on systems supporting AVX2 or AVX-512 is 2-4x      *
+ *  when used in a simple for-loop. Check if the user requested this.         */
+#if TMPL_USE_SIMD_FAST_MATH == 1
+
+/*  SIMD branchless implementation found here.                                */
+#include "simd/tmpl_arccos_simd_float.h"
+
+#else
+/*  Else for #if TMPL_USE_SIMD_FAST_MATH == 1.                                */
+
+/*  Single-precision inverse cosine (acosf equivalent).                       */
 TMPL_CONST_FUNC
 float tmpl_Float_Arccos(const float x)
 TMPL_UNSEQUENCED
@@ -315,6 +342,9 @@ TMPL_UNSEQUENCED
 }
 /*  End of tmpl_Float_Arccos.                                                 */
 
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH == 1.                                  */
+
 #else
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
@@ -322,7 +352,7 @@ TMPL_UNSEQUENCED
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Single precision inverse cosine (acosf equivalent).                       */
+/*  Single-precision inverse cosine (acosf equivalent).                       */
 TMPL_CONST_FUNC
 float tmpl_Float_Arccos(const float x)
 TMPL_UNSEQUENCED
