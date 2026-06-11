@@ -75,7 +75,7 @@
  *                                                                            *
  *      2.) There are no checks for subnormal / denormal numbers. Very small  *
  *          numbers will use the same rational Remez expansion as normal      *
- *          numbers. Since acos(x) = pi / 2 to double-precision for such      *
+ *          numbers. Since acos(x) = pi / 2 to single-precision for such      *
  *          small numbers, the near-branchless method is considerably slower  *
  *          for subnormal / denormal inputs. This function is best used with  *
  *          ordinary values between -1 and 1. The scalar version of this      *
@@ -95,7 +95,7 @@
  *          tested compilers can fully support the SIMD version. Compilers    *
  *          that do include GCC 15+, Clang 22+, and MSVC 19+. All of these    *
  *          need the appropriate flags set at build time, which are handled   *
- *          by both the Makefile and the CMakeList. Use of the SIMD version   *
+ *          by both the Makefile and the CMakeLists. Use of the SIMD version  *
  *          requires an explicit option enabled at build time.                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
