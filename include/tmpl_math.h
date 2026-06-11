@@ -1809,24 +1809,9 @@ extern long double tmpl_LDouble_Truncate(long double x);
  *          tmpl_abs_float.h                                                  *
  *          tmpl_abs_ldouble.h                                                *
  ******************************************************************************/
-
-/*  Alias functions to fabs from math.h if libtmpl algorithms not requested.  */
-#if TMPL_USE_MATH_ALGORITHMS != 1
-
-#define tmpl_Float_Abs fabsf
-#define tmpl_Double_Abs fabs
-#define tmpl_LDouble_Abs fabsl
-
-#else
-/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
-
-/*  Forward declarations and optional inline support provided here.           */
 #include <libtmpl/include/abs/tmpl_abs_double.h>
 #include <libtmpl/include/abs/tmpl_abs_float.h>
 #include <libtmpl/include/abs/tmpl_abs_ldouble.h>
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1916,22 +1901,6 @@ extern long double tmpl_LDouble_Copysign(long double x, long double y);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_CosPi_Pade                                                *
- *  Purpose:                                                                  *
- *      Computes the Pade approximant of the normalized cosine, cos(pi x).    *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cos_pix:                                                       *
- *          The normalized cosine of x, cos(pi x).                            *
- ******************************************************************************/
-extern float tmpl_Float_CosPi_Pade(float x);
-extern double tmpl_Double_CosPi_Pade(double x);
-extern long double tmpl_LDouble_CosPi_Pade(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_Double_Dist                                                      *
  *  Purpose:                                                                  *
  *      Compute the distance between two numbers on the real line.            *
@@ -1987,9 +1956,9 @@ extern long double tmpl_LDouble_Dist(long double x, long double y);
 /*  Alias functions to isinf from math.h if libtmpl algorithms not requested. */
 #if TMPL_USE_MATH_ALGORITHMS != 1
 
-#define tmpl_Float_Is_Inf isinff
+#define tmpl_Float_Is_Inf isinf
 #define tmpl_Double_Is_Inf isinf
-#define tmpl_LDouble_Is_Inf isinfl
+#define tmpl_LDouble_Is_Inf isinf
 
 /*  These functions are small enough that they should be inlined.             */
 #elif TMPL_USE_INLINE == 1
