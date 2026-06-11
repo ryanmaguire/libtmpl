@@ -119,28 +119,49 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration for the function, also found in tmpl_math.h.          */
+extern double tmpl_Double_Arcsin(const double x);
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  TMPL_NAN macro found here which provides double-precision NaN.            */
+#include <libtmpl/include/nan/tmpl_nan_double.h>
+
+/*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  Pi / 2 is used for the endpoints of the domain. asin(+/- 1) = +/- pi / 2. */
+extern const double tmpl_double_pi_by_two;
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
  ******************************************************************************/
 
+/*  The helper functions are only needed for the normal scalar version. The   *
+ *  SIMD branchless implementation does not need these included.              */
+#if TMPL_USE_SIMD_FAST_MATH != 1
+
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_arcsin_maclaurin_double.h"
 
-/*  Rational remez minimax approximation for arcsin.                          */
+/*  Rational Remez minimax approximation for arcsin.                          */
 #include "auxiliary/tmpl_arcsin_rat_remez_double.h"
 
 /*  Tail-end arcsin function that uses the reflection formula with arccos.    */
 #include "auxiliary/tmpl_arcsin_tail_end_double.h"
 
-/******************************************************************************
- *                              Constant Values                               *
- ******************************************************************************/
+/*  The portable version needs to use the absolute value function.            */
+#if TMPL_HAS_IEEE754_DOUBLE != 1
 
-/*  The endpoints evaluate to +/- pi/2, depending on the sign of the input.   */
-#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00)
+/*  Forward declaration provided here.                                        */
+#include <libtmpl/include/abs/tmpl_abs_double.h>
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE != 1.                                  */
+
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -153,8 +174,27 @@
  *  double rather than checking the entire double. This gives the IEEE-754    *
  *  method a slight performance boost over the portable one below.            */
 
-/*  Double precision inverse sine (asin equivalent).                          */
-double tmpl_Double_Arcsin(double x)
+/*  The asin function can be made branchless, which allows the routines to be *
+ *  vectorized when SIMD support is available. The cost is 2-4 ULP relative   *
+ *  error, and the speedup on systems supporting AVX2 or AVX-512 is 2-4x      *
+ *  when used in a simple for-loop. Check if the user requested this.         */
+#if TMPL_USE_SIMD_FAST_MATH == 1
+
+/*  SIMD branchless implementation found here.                                */
+#include "simd/tmpl_arcsin_simd_double.h"
+
+#else
+/*  Else for #if TMPL_USE_SIMD_FAST_MATH == 1.                                */
+
+/*  If SIMD_FAST_MATH mode was not requested, use the default scalar version. *
+ *  This safely handles NaN, Inf, and underflow. It is implemented in a way   *
+ *  that allows the -ffast-math flag to be enabled (GCC or Clang) without     *
+ *  sacrificing accuracy or mishandling NaN / Inf.                            */
+
+/*  Double-precision inverse sine (asin equivalent).                          */
+TMPL_CONST_FUNC
+double tmpl_Double_Arcsin(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Double w;
@@ -188,16 +228,27 @@ double tmpl_Double_Arcsin(double x)
         return tmpl_Double_Arcsin_Tail_End(x);
     }
 
-    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
-    if (x == -1.0)
-        return -TMPL_PI_BY_TWO;
-    else if (x == 1.0)
-        return TMPL_PI_BY_TWO;
+    /*  Special case, handle NaN and infinity. The fast-math optimization     *
+     *  means the compiler can assume the input is finite. To properly handle *
+     *  NaN or infinity with this optimization, we check for NaN and infinity *
+     *  by examining the bits of the input. Note, if the fast-math            *
+     *  optimization is enabled, then failure to provide this check here      *
+     *  means an input of NaN may reach the if (x == -1.0) branch below and   *
+     *  produce "true," even though NaN is not equal to -1.0. For both NaN    *
+     *  and infinity, the input is outside of the domain of arcsin, so the    *
+     *  output is NaN.                                                        */
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
+        return TMPL_NAN;
 
-    /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN. Note *
-     *  this catches NaN and infinity since we are checking the exponent of   *
-     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
-     *  than TMPL_DOUBLE_UBIAS, hence NaN will return.                        */
+    /*  Since sin(-pi / 2) = -1, we have asin(-1) = -pi / 2.                  */
+    if (x == -1.0)
+        return -tmpl_double_pi_by_two;
+
+    /*  Similarly, since sin(pi / 2) = 1 we have asin(1) = pi / 2.            */
+    if (x == 1.0)
+        return tmpl_double_pi_by_two;
+
+    /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.      */
     return TMPL_NAN;
 }
 /*  End of tmpl_Double_Arcsin.                                                */
@@ -210,7 +261,9 @@ double tmpl_Double_Arcsin(double x)
  ******************************************************************************/
 
 /*  Double precision inverse sine (asin equivalent).                          */
-double tmpl_Double_Arcsin(double x)
+TMPL_CONST_FUNC
+double tmpl_Double_Arcsin(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const double abs_x = tmpl_Double_Abs(x);
