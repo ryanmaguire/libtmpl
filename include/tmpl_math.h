@@ -560,8 +560,6 @@ extern const long double tmpl_ldouble_pow_2_table[65];
  *          tmpl_arccos_math_float.c                                          *
  *          tmpl_arccos_math_ldouble.c                                        *
  ******************************************************************************/
-
-/*  Alias functions to acos from math.h if libtmpl algorithms not requested.  */
 #if TMPL_USE_MATH_ALGORITHMS != 1
 
 #define tmpl_Float_Arccos acosf
@@ -569,9 +567,7 @@ extern const long double tmpl_ldouble_pow_2_table[65];
 #define tmpl_LDouble_Arccos acosl
 
 #else
-/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
-/*  Otherwise use the functions in src/math/.                                 */
 TMPL_CONST_FUNC
 extern float tmpl_Float_Arccos(const float x)
 TMPL_UNSEQUENCED;
@@ -586,7 +582,6 @@ extern long double tmpl_LDouble_Arccos(const long double x)
 TMPL_UNSEQUENCED;
 
 #endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -607,8 +602,6 @@ TMPL_UNSEQUENCED;
  *          tmpl_arcsin_float.c                                               *
  *          tmpl_arcsin_ldouble.c                                             *
  ******************************************************************************/
-
-/*  Alias functions to asin from math.h if libtmpl algorithms not requested.  */
 #if TMPL_USE_MATH_ALGORITHMS != 1
 
 #define tmpl_Float_Arcsin asinf
@@ -616,15 +609,21 @@ TMPL_UNSEQUENCED;
 #define tmpl_LDouble_Arcsin asinl
 
 #else
-/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
-/*  Otherwise use the functions in src/math/.                                 */
-extern float tmpl_Float_Arcsin(float x);
-extern double tmpl_Double_Arcsin(double x);
-extern long double tmpl_LDouble_Arcsin(long double x);
+TMPL_CONST_FUNC
+extern float tmpl_Float_Arcsin(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_SIMD_DECL
+TMPL_CONST_FUNC
+extern double tmpl_Double_Arcsin(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_Arcsin(const long double x)
+TMPL_UNSEQUENCED;
 
 #endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
