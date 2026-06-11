@@ -111,10 +111,10 @@ typedef union tmpl_IEEE754_Double_Def {
 
         /*  A 64-bit double has 1 bit for the sign, 11 bits for the exponent, *
          *  and 52 bits for the mantissa. We use a bit field to represent     *
-         *  this. The C standard requires bit fields to support at least 16   *
-         *  bit words (which is the minimum possible size for unsigned int).  *
+         *  this. The C standard requires bit fields to support 16-bit words  *
+         *  (which is the minimum possible size for unsigned int).            *
          *  While most platforms use 32-bit unsigned int, for the sake of     *
-         *  portability, we use a maximum of 16 bits per bit-field. Functions *
+         *  portability, we use a maximum of 16 bits per bit field. Functions *
          *  that could benefit from the availability of 32-bit and 64-bit     *
          *  unsigned integers use the tmpl_FloatInt64 data type, which is a   *
          *  generalized version of the tmpl_IEEE754_Double struct.            *

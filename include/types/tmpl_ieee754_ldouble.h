@@ -89,7 +89,7 @@
     TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
- *                64-bit Double / 128-bit Double-Double Macros                *
+ *                64-Bit Double / 128-Bit Double-Double Macros                *
  ******************************************************************************/
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
@@ -117,7 +117,7 @@
 #else
 
 /******************************************************************************
- *                 80-bit Extended / 128-bit Quadruple Macros                 *
+ *                 80-Bit Extended / 128-Bit Quadruple Macros                 *
  ******************************************************************************/
 
 /*  80-bit extended precision and 128-bit quadruple have a bias of 16,383.    */
@@ -131,7 +131,7 @@
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
- *                          128-bit Quadruple Macros                          *
+ *                          128-Bit Quadruple Macros                          *
  ******************************************************************************/
 
 /*  The number of bits in the mantissa.                                       */
@@ -153,7 +153,7 @@
 #else
 
 /******************************************************************************
- *                           80-bit Extended Macros                           *
+ *                           80-Bit Extended Macros                           *
  ******************************************************************************/
 
 /*  The number of bits in the mantissa.                                       */
@@ -211,7 +211,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-/*  Big-endian 64-bit long double. Uses the same struct as big-endian double. */
+/*  Big-endian 64-bit long double. Uses the same union as big-endian double.  */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
 
 /*  Same union for 64-bit double, big-endian.                                 */
@@ -250,7 +250,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  Big-endian, 80-bit extended precision with 16 bits of padding.            */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
 
-/*  80-bit extended precision struct with 16 bits of padding, 96 bits total.  */
+/*  80-bit extended precision union with 16 bits of padding, 96 bits total.   */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -272,7 +272,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  The most common type of long double for personal computers is the         *
  *  little endian amd64 format (also the x86_64 format). This uses            *
- *  the IEEE-754 extended precision 80-bit format with 48-bits of padding     *
+ *  the IEEE-754 extended precision 80-bit format with 48 bits of padding     *
  *  to create a single 128-bit object. The padding components are junk        *
  *  and can almost always be ignored.                                         */
 typedef union tmpl_IEEE754_LDouble_Def {

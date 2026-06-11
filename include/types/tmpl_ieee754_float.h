@@ -115,7 +115,7 @@
  *  notion. In C++ it is still technically undefined, but well supported.     */
 typedef union tmpl_IEEE754_Float_Def {
 
-    /*  Use a bit-field for the binary representation of a float. A bit-field *
+    /*  Use a bit field for the binary representation of a float. A bit field *
      *  allows us to define variables with an exact number of bits (up to 16).*
      *  We'll use this to have a 1-bit variable for the sign, 8-bit variable  *
      *  for the exponent, and 2 variables adding up to 23 bits for the        *
@@ -138,7 +138,7 @@ typedef union tmpl_IEEE754_Float_Def {
         unsigned int man1 : 16;
     } bits;
 
-    /*  The above struct holds 32-bits, which the IEEE-754 format specifies   *
+    /*  The above struct holds 32 bits, which the IEEE-754 format specifies   *
      *  as the size of a single-precision float. This is "float" in C.        */
     float r;
 } tmpl_IEEE754_Float;
@@ -148,7 +148,7 @@ typedef union tmpl_IEEE754_Float_Def {
 
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
- *  to swap the order of the bit-field in the union.                          */
+ *  to swap the order of the bit fields in the union.                         */
 typedef union tmpl_IEEE754_Float_Def {
     struct {
         unsigned int man1 : 16;
