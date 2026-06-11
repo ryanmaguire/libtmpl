@@ -112,46 +112,44 @@ float tmpl_Float_Sinh(float x)
     if (TMPL_FLOAT_IS_NAN_OR_INF(w))
         return w.r;
 
-    /*  For |x| > log(DBL_MAX) ~= 709, exp will overflow. Return infinity.    */
+    /*  Compute the absolute value by setting the sign bit to zero. sinh is   *
+     *  an odd function, sinh(-x) = -sinh(x). Compute for positive x.         */
+    w.bits.sign = 0x00U;
+
+    /*  For |x| > log(FLT_MAX) ~= 88, exp will overflow. Return infinity.     */
     if (w.r > 88.02969193111305F)
     {
-        const float infinity = TMPL_INFINITYF;
-
         if (TMPL_FLOAT_IS_NEGATIVE(w))
-            return -infinity;
+            return -TMPL_INFINITYF;
 
-        return infinity;
+        return TMPL_INFINITYF;
     }
 
     /*  For small x, |x| < 1/32, the Maclaurin series is sufficient.          */
-    if (w.bits.expo < TMPL_FLOAT_UBIAS - 4U)
+    if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 4U)
     {
         /*  Avoid underflow. For |x| < 2^-57, sinh(x) = x to single precision.*/
         if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 28U)
             return x;
 
         /*  Otherwise, use the Maclaurin series.                              */
-        return tmpl_Float_Sinh_Maclaurin(w.r);
+        return tmpl_Float_Sinh_Maclaurin(x);
     }
 
     /*  For slightly larger x, |x| < 1, use the Pade approximant.             */
-    if (w.bits.expo < TMPL_FLOAT_UBIAS)
-        return tmpl_Float_Sinh_Rat_Remez(w.r);
-
-    /*  Compute the absolute value by setting the sign bit to zero. sinh is   *
-     *  an odd function, sinh(-x) = -sinh(x). Compute for positive x.         */
-    w.bits.sign = 0x00U;
+    if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS)
+        return tmpl_Float_Sinh_Rat_Remez(x);
 
     /*  Normal value, not too small, not too big. Compute exp(x).             */
     exp_x = tmpl_Float_Exp_Pos_Kernel(w.r);
 
     /*  For large x only the e^x term is significant. e^-x is negligible.     */
-    if (w.bits.expo > TMPL_FLOAT_UBIAS + 4U)
+    if (TMPL_FLOAT_EXPO_BITS(w) > TMPL_FLOAT_UBIAS + 4U)
         sinh_x = 0.5F * exp_x;
 
     /*  Otherwise, compute sinh(x) via (exp(x) + exp(-x))/2.                  */
     else
-        sinh_x = 0.5F * (exp_x - 1.0F/exp_x);
+        sinh_x = 0.5F * (exp_x - 1.0F / exp_x);
 
     if (x < 0.0F)
         return -sinh_x;

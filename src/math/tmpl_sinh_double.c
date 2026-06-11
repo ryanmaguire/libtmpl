@@ -113,6 +113,10 @@ double tmpl_Double_Sinh(double x)
     if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
         return w.r;
 
+    /*  Compute the absolute value by setting the sign bit to zero. sinh is   *
+     *  an odd function, sinh(-x) = -sinh(x). Compute for positive x.         */
+    w.bits.sign = 0x00U;
+
     /*  For |x| > log(DBL_MAX) ~= 709, exp will overflow. Return infinity.    */
     if (w.r > 709.0895657128241)
     {
@@ -123,34 +127,30 @@ double tmpl_Double_Sinh(double x)
     }
 
     /*  For small x, |x| < 1/32, the Maclaurin series is sufficient.          */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
+    if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 4U)
     {
         /*  Avoid underflow. For |x| < 2^-57, sinh(x) = x to double precision.*/
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 57U)
             return x;
 
         /*  Otherwise, use the Maclaurin series.                              */
-        return tmpl_Double_Sinh_Maclaurin(w.r);
+        return tmpl_Double_Sinh_Maclaurin(x);
     }
 
     /*  For slightly larger x, |x| < 1, use the Pade approximant.             */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-        return tmpl_Double_Sinh_Rat_Remez(w.r);
-
-    /*  Compute the absolute value by setting the sign bit to zero. sinh is   *
-     *  an odd function, sinh(-x) = -sinh(x). Compute for positive x.         */
-    w.bits.sign = 0x00U;
+    if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
+        return tmpl_Double_Sinh_Rat_Remez(x);
 
     /*  Normal value, not too small, not too big. Compute exp(x).             */
     exp_x = tmpl_Double_Exp_Pos_Kernel(w.r);
 
     /*  For large x only the e^x term is significant. e^-x is negligible.     */
-    if (w.bits.expo > TMPL_DOUBLE_UBIAS + 5U)
+    if (TMPL_DOUBLE_EXPO_BITS(w) > TMPL_DOUBLE_UBIAS + 5U)
         sinh_x = 0.5 * exp_x;
 
     /*  Otherwise, compute sinh(x) via (exp(x) + exp(-x))/2.                  */
     else
-        sinh_x = 0.5 * (exp_x - 1.0/exp_x);
+        sinh_x = 0.5 * (exp_x - 1.0 / exp_x);
 
     if (x < 0.0)
         return -sinh_x;
