@@ -74,20 +74,20 @@
  *                                                                            *
  *                  R(x) = -(acos(x) - pi/2 + x) / x^3                        *
  *                                                                            *
- *              This function is even, so the degree (N, M) rational Remez    *
- *              approximation requires N/2+1 non-zero terms in the numerator  *
- *              and M/2+1 non-zero terms in the denominator. acos(x) is       *
- *              computed via:                                                 *
+ *              This function is even, so the degree (M, N) rational Remez    *
+ *              approximation requires M / 2 + 1 non-zero terms in the        *
+ *              numerator and N / 2 + 1 non-zero terms in the denominator.    *
+ *              acos(x) is computed via:                                      *
  *                                                                            *
  *                  acos(x) = pi/2 - (x + x^3 * P(x) / Q(x))                  *
  *                                                                            *
  *              where P(x) is the numerator and Q(x) is the denominator for   *
  *              the rational Remez approximation of R(x), respectively.       *
- *              The values for N and M are given in the table below.          *
+ *              The values for M and N are given in the table below.          *
  *                                                                            *
- *                  long double type           | N  | M                       *
+ *                  long double type           | M  | N                       *
  *                  ------------------------------------                      *
- *                  64-bit double              | 8  | 8                       *
+ *                  64-bit double              |  8 |  8                      *
  *                  80-bit extended / portable | 10 | 10                      *
  *                  128-bit double-double      | 18 | 16                      *
  *                  128-bit quadruple          | 18 | 18                      *
@@ -101,12 +101,13 @@
  *              Since acos(1) = 0, using this trick allows us to maintain     *
  *              excellent relative error as the argument approaches 1.        *
  *                                                                            *
- *              asin(z) is computed using a rational Remez approximation for: *
+ *              asin(z) is computed using a degree (M, N) rational Remez      *
+ *              approximation for:                                            *
  *                                                                            *
  *                  R(z) = (asin(z) - z) / z^3                                *
  *                                                                            *
- *              This function is even, meaning N/2 + 1 non-zero terms are     *
- *              required for the numerator, and M/2 + 1 for the denominator.  *
+ *              This function is even, meaning M / 2 + 1 non-zero terms are   *
+ *              required in the numerator, and N / 2 + 1 in the denominator.  *
  *              asin(z) is computed via:                                      *
  *                                                                            *
  *                  asin(z) = z + z^3 * P(z) / Q(z)                           *
@@ -117,11 +118,11 @@
  *                                                                            *
  *                  acos(x) = 2 * asin(z)                                     *
  *                                                                            *
- *              with z = sqrt((1 - x) / 2). The values for N and M are:       *
+ *              with z = sqrt((1 - x) / 2). The values for M and N are:       *
  *                                                                            *
- *                  long double type           | N  | M                       *
+ *                  long double type           | M  | N                       *
  *                  ------------------------------------                      *
- *                  64-bit double              | 8  | 8                       *
+ *                  64-bit double              |  8 |  8                      *
  *                  80-bit extended / portable | 10 | 10                      *
  *                  128-bit double-double      | 18 | 16                      *
  *                  128-bit quadruple          | 18 | 18                      *
@@ -155,14 +156,6 @@
  *              rms absolute error: 6.9155008767105195e-20                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
- *      Error (128-bit Quadruple):                                            *
- *          Based on 10,000,000 samples with -1 < x < 1.                      *
- *              max relative error: 2.1493423806776799e-34                    *
- *              rms relative error: 7.1883692991558038e-35                    *
- *              max absolute error: 1.9259299443872359e-34                    *
- *              rms absolute error: 5.3481009953614647e-35                    *
- *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
- *          less than 1 ULP (~2 x 10^-34).                                    *
  *      Error (128-bit Double-Double):                                        *
  *          Based on 10,000,000 samples with -1 < x < 1.                      *
  *              max relative error: 4.8287083179936863e-32                    *
@@ -171,6 +164,14 @@
  *              rms absolute error: 9.0797583993958255e-33                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~5 x 10^-32).                                    *
+ *      Error (128-bit Quadruple):                                            *
+ *          Based on 10,000,000 samples with -1 < x < 1.                      *
+ *              max relative error: 2.1493423806776799e-34                    *
+ *              rms relative error: 7.1883692991558038e-35                    *
+ *              max absolute error: 1.9259299443872359e-34                    *
+ *              rms absolute error: 5.3481009953614647e-35                    *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
+ *          less than 1 ULP (~2 x 10^-34).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          src/math/                                                         *
