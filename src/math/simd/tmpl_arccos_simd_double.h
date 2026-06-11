@@ -53,7 +53,7 @@
  *          acos_small_x = pi / 2 - x * (1 + u * P(u) / Q(u))                 *
  *          acos_tail_x  = 2 * sqrt(u) * (1 + u * P(u) / Q(u))                *
  *                                                                            *
- *      Return acos_small_x if |x| < 0.5, acos_tail_x if 0.5 <= x <= 1,       *
+ *      Return acos_small_x if |x| < 0.5, acos_tail_x if 0.5 <= x <= 1, and   *
  *      pi - acos_tail_x if -1 <= x <= -0.5. This selection can also be made  *
  *      branchless. NaN is returned if |x| > 1. Depending on compiler flags   *
  *      used, the check for |x| > 1 may be the only branch produced. This     *
