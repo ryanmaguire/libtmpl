@@ -121,12 +121,12 @@
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied file from rss_ringoccs.                                        *
  *  2021/02/24: Ryan Maguire                                                  *
- *      Added IEEE 754 code for computing the absolute value function.        *
+ *      Added IEEE-754 code for computing the absolute value function.        *
  *  2021/09/10: Ryan Maguire                                                  *
  *      Moved float and long double to their own files.                       *
  *  2022/03/01: Ryan Maguire                                                  *
  *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
- *      use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.            *
+ *      use fabsl from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.           *
  *  2022/09/12: Ryan Maguire                                                  *
  *      Added inline support.                                                 *
  *  2022/09/13: Ryan Maguire                                                  *
