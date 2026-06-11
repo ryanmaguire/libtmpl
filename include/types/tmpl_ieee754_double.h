@@ -99,11 +99,11 @@
 #endif
 /*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
 
-/*  Big-Endian 64-bit double.                                                 */
+/*  Big-endian 64-bit double.                                                 */
 #if TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
 
 /*  64-bit union for an IEEE-754 double precision floating point number with  *
- *  big endianness. Found in MIPS, s390x, powerPC, and sparc architectures.   */
+ *  big endianness. Found in MIPS, s390x, PowerPC, and SPARC architectures.   */
 typedef union tmpl_IEEE754_Double_Def {
 
     /*  Struct for type-punning the components of a double.                   */
@@ -139,7 +139,7 @@ typedef union tmpl_IEEE754_Double_Def {
     double r;
 } tmpl_IEEE754_Double;
 
-/*  Little-Endian 64-bit double.                                              */
+/*  Little-endian 64-bit double.                                              */
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_LITTLE_ENDIAN
 
 /*  64-bit union for an IEEE-754 double precision floating point number with  *
