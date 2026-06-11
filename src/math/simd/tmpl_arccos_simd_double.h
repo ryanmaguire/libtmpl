@@ -197,7 +197,7 @@ TMPL_UNSEQUENCED
     const double acos_tail_x_neg = tmpl_double_pi - acos_tail_x_pos;
 
     /*  Make the selection for which tail-end formula to use. Since checking  *
-     *  if x is negative can be performing by examining the sign bit of x,    *
+     *  if x is negative can be performed by examining the sign bit of x,     *
      *  compilers may be able to make this a branchless operation.            */
     const double acos_tail_x = (x < 0.0 ? acos_tail_x_neg : acos_tail_x_pos);
 
