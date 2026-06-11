@@ -106,11 +106,13 @@
  *  of memory. If we have a union of a floating point and an integer and then *
  *  set the floating point part to some number, then when we access the       *
  *  integer part it will already have its bits set (they'll be set by the     *
- *  floating point value). This is known as "type-punning." Note, the C       *
+ *  floating point value). This is known as "type-punning." Note, the C89     *
  *  standard says type-punning is undefined behavior. Indeed, it says you can *
  *  only access the member of a union that was most recently written to. In   *
  *  practice, most compilers support type punning and this practice is very   *
- *  common in implementations of libm, the C mathematical library.            */
+ *  common in implementations of libm, the C mathematical library. The C99,   *
+ *  C11, and C23 standards made type-punning using unions a well-defined      *
+ *  notion. In C++ it is still technically undefined, but well supported.     */
 typedef union tmpl_IEEE754_Float_Def {
 
     /*  Use a bit-field for the binary representation of a float. A bit-field *

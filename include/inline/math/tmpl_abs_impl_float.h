@@ -71,7 +71,7 @@
  *  Notes:                                                                    *
  *      1.) If IEEE-754 is not supported and if the input is NaN one may get  *
  *          +/- NaN (which is still NaN). This is because NaN always          *
- *          produces false when used in a comparison (==, <, >, etc.).        *
+ *          produces false when used in a comparison (other than !=).         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -95,6 +95,8 @@
  *      Copied file from rss_ringoccs.                                        *
  *  2021/02/24: Ryan Maguire                                                  *
  *      Added IEEE 754 code for computing the absolute value function.        *
+ *  2021/09/10: Ryan Maguire                                                  *
+ *      Moved float and long double to their own files.                       *
  *  2022/03/01: Ryan Maguire                                                  *
  *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
  *      simply use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.     *

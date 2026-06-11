@@ -99,11 +99,11 @@
 #endif
 /*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
 
-/*  Big-Endian 64-bit double.                                                 */
+/*  Big-endian 64-bit double.                                                 */
 #if TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
 
 /*  64-bit union for an IEEE-754 double precision floating point number with  *
- *  big endianness. Found in MIPS, s390x, powerPC, and sparc architectures.   */
+ *  big endianness. Found in MIPS, s390x, PowerPC, and SPARC architectures.   */
 typedef union tmpl_IEEE754_Double_Def {
 
     /*  Struct for type-punning the components of a double.                   */
@@ -122,10 +122,11 @@ typedef union tmpl_IEEE754_Double_Def {
          *  It is crucial that the bits in this struct are not padded. If     *
          *  padding occurs, we get a gibberish result and cannot perform type *
          *  punning. To prevent padding, the order of the bits matters. We    *
-         *  split the 52-bit mantissa into 3 48-bit components and 1 4-bit    *
-         *  piece. The 4-bit part follows immediately after the 1-bit sign    *
-         *  and 11-bit exponent, meaning sign-expo-man0 form a 16-bit block.  *
-         *  On all compilers tested, such an ordering prevents padding.       */
+         *  split the 52-bit mantissa into three 16-bit components and one    *
+         *  4-bit piece. The 4-bit part follows immediately after the 1-bit   *
+         *  sign and 11-bit exponent, meaning sign-expo-man0 form a 16-bit    *
+         *  block. On all compilers tested, such an ordering prevents         *
+         *  padding.                                                          */
         unsigned int sign : 1;
         unsigned int expo : 11;
         unsigned int man0 : 4;
@@ -138,7 +139,7 @@ typedef union tmpl_IEEE754_Double_Def {
     double r;
 } tmpl_IEEE754_Double;
 
-/*  Little-Endian 64-bit double.                                              */
+/*  Little-endian 64-bit double.                                              */
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_LITTLE_ENDIAN
 
 /*  64-bit union for an IEEE-754 double precision floating point number with  *

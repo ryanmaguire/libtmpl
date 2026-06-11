@@ -193,7 +193,7 @@
 #define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
 
 #endif
-/*  End of #if !defined(TMPL_LDOUBLE_ENDIANNESS).                             */
+/*  End of #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN.               */
 
 /*  Little-endian 64-bit long double. Same idea as 64-bit double.             */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN

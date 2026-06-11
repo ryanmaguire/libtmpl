@@ -127,7 +127,7 @@
 #endif
 
 /*  Similarly, some functions make use of the fact that x * y + z is done in  *
- *  two steps, producing two rounds: fl(fl(x * y) + z), where fl(a) denotes   *
+ *  two steps, producing two roundings: fl(fl(x * y) + z), where fl(a) is     *
  *  the real number a rounded to the nearest floating-point value. Compilers  *
  *  may replace x * y + z with a Fused-Multiply-Add call (FMA), which may     *
  *  ruin certain functions. The following attribute prevents this.            */
