@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes the degree 9 Maclaurin series for acos(x).                   *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (const float):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (float):                                                       *
@@ -46,6 +46,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2023                                                  *
@@ -61,6 +63,9 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  The constant Pi / 2.                                                      */
+extern const float tmpl_float_pi_by_two;
+
 /*  Only the odd non-constant terms have non-zero coefficients.               */
 #define A00 (1.0000000000000000000000000000000000000000000000000E+00F)
 #define A01 (1.6666666666666666666666666666666666666666666666667E-01F)
@@ -68,11 +73,8 @@
 #define A03 (4.4642857142857142857142857142857142857142857142857E-02F)
 #define A04 (3.0381944444444444444444444444444444444444444444444E-02F)
 
-/*  The constant Pi / 2.                                                      */
-#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
-
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
+#define TMPL_POLY_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
 
 /*  Computes the degree 9 Maclaurin polynomial for acos(x).                   */
 TMPL_CONST_FUNC
@@ -87,11 +89,11 @@ TMPL_UNSEQUENCED
     const float poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x * poly;
+    return tmpl_float_pi_by_two - x * poly;
 }
 /*  End of tmpl_Float_Arccos_Maclaurin.                                       */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif

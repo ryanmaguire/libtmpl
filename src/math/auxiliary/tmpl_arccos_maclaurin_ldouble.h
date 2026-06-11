@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes a Maclaurin series for acos(x).                              *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (long double):                                                 *
@@ -63,6 +63,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2023                                                  *
@@ -79,7 +81,7 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  The constant Pi / 2.                                                      */
-#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
+extern const long double tmpl_ldouble_pi_by_two;
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -100,7 +102,19 @@
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
-A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * A07\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  128-bit double-double, a few more terms.                                  */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -126,18 +140,18 @@ A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*(\
-                                A08 + z*(\
-                                    A09 + z*(\
-                                        A10 + z*(\
-                                            A11 + z*A12\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * (\
+                                    A09 + z * (\
+                                        A10 + z * (\
+                                            A11 + z * A12\
                                         )\
                                     )\
                                 )\
@@ -175,19 +189,19 @@ A00 + z*(\
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*(\
-                                A08 + z*(\
-                                    A09 + z*(\
-                                        A10 + z*(\
-                                            A11 + z*(\
-                                                A12 + z*A13\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * (\
+                                    A09 + z * (\
+                                        A10 + z * (\
+                                            A11 + z * (\
+                                                A12 + z * A13\
                                             )\
                                         )\
                                     )\
@@ -222,15 +236,15 @@ A00 + z*(\
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
-A00 + z*(\
-    A01 + z*(\
-        A02 + z*(\
-            A03 + z*(\
-                A04 + z*(\
-                    A05 + z*(\
-                        A06 + z*(\
-                            A07 + z*(\
-                                A08 + z*A09\
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * A09\
                             )\
                         )\
                     )\
@@ -256,11 +270,11 @@ TMPL_UNSEQUENCED
     const long double poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x * poly;
+    return tmpl_ldouble_pi_by_two - x * poly;
 }
 /*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif

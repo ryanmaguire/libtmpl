@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes the degree 15 Maclaurin series for acos(x).                  *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (double):                                                      *
@@ -63,6 +63,9 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  The constant Pi / 2.                                                      */
+extern const double tmpl_double_pi_by_two;
+
 /*  Only the odd non-constant terms have non-zero coefficients.               */
 #define A00 (1.0000000000000000000000000000000000000000000000000E+00)
 #define A01 (1.6666666666666666666666666666666666666666666666667E-01)
@@ -73,12 +76,21 @@
 #define A06 (1.7352764423076923076923076923076923076923076923077E-02)
 #define A07 (1.3964843750000000000000000000000000000000000000000E-02)
 
-/*  The constant Pi / 2.                                                      */
-extern const double tmpl_double_pi_by_two;
-
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
-A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * A07\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
 TMPL_CONST_FUNC
@@ -98,7 +110,7 @@ TMPL_UNSEQUENCED
 }
 /*  End of tmpl_Double_Arccos_Maclaurin.                                      */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif
