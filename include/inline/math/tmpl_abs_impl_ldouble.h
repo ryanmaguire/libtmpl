@@ -60,22 +60,23 @@
  *                                                                            *
  *          we compute:                                                       *
  *                                                                            *
- *              abs_x = abs_hi + abs_lo                                       *
+ *              abs_x = abs_xhi + abs_xlo                                     *
  *                                                                            *
  *          as follows. If x_hi and x_lo have the same sign, then:            *
  *                                                                            *
  *              |x_hi + x_lo| = |x_hi| + |x_lo|                               *
  *                                                                            *
- *          so abs_hi = |x_hi| and abs_lo = |x_lo|. If x_hi and x_lo have     *
+ *          so abs_xhi = |x_hi| and abs_xlo = |x_lo|. If x_hi and x_lo have   *
  *          different signs, then:                                            *
  *                                                                            *
  *              |x_hi + x_lo| = |x_hi| - |x_lo|                               *
  *                                                                            *
- *          So abs_hi = |x_hi| and abs_lo = -|x_lo|. In both cases,           *
- *          abs_hi = |x_hi|. To compute this we just set the sign bit of x_hi *
- *          to zero. abs_lo depends on whether x_hi and x_lo have the same    *
- *          sign. This can be computed via the exclusive or, or XOR. The sign *
- *          of abs_lo is the exclusive or of the signs of x_hi and x_lo.      *
+ *          So abs_xhi = |x_hi| and abs_xlo = -|x_lo|. In both cases,         *
+ *          abs_xhi = |x_hi|. To compute this we just set the sign bit of     *
+ *          x_hi to zero. abs_xlo depends on whether x_hi and x_lo have the   *
+ *          same sign. This can be computed via the exclusive or, or XOR.     *
+ *          The sign of abs_xlo is the exclusive or of the signs of x_hi      *
+ *          and x_lo.                                                         *
  *      Error:                                                                *
  *          Based on 10,000,000 samples with -10^6 < x < 10^6.                *
  *              max relative error: 0.0                                       *
