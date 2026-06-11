@@ -107,7 +107,7 @@
  *  set the floating point part to some number, then when we access the       *
  *  integer part it will already have its bits set (they'll be set by the     *
  *  floating point value). This is known as "type-punning." Note, the C89     *
- *  standard says type-punning is undefined behavior. Indeed, it says you can *
+ *  standard says type-punning is unspecified. Indeed, it says you can        *
  *  only access the member of a union that was most recently written to. In   *
  *  practice, most compilers support type punning and this practice is very   *
  *  common in implementations of libm, the C mathematical library. The C99,   *
