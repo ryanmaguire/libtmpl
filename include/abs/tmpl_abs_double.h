@@ -69,7 +69,7 @@ TMPL_UNSEQUENCED;
 /*  If the user wants to use their system's libm, simply create a macro.      */
 #include <math.h>
 
-#define tmpl_Double_Abs(x) (fabs(x))
+#define tmpl_Double_Abs fabs
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
