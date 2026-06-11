@@ -29,7 +29,7 @@
  *  Purpose:                                                                  *
  *      Computes the rational minimax approximation for arccos.               *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (long double):                                                 *
@@ -37,7 +37,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
+ *      The function f(x) = -(acos(x) + x - pi/2) / x^3 is even. Pre-compute  *
  *      the coefficients for the rational minimax function R(x). The odd      *
  *      terms have zero coefficients. We may thus compute the minimax         *
  *      approximation via:                                                    *
@@ -64,6 +64,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -96,7 +98,7 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  The constant Pi / 2.                                                      */
-#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
+extern const long double tmpl_ldouble_pi_by_two;
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -120,10 +122,10 @@
 #define B04 (+4.5088915315077310386265964807853660211534733521946E-02L)
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
-#define TMPL_NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
+#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
-#define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
+#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  128-bit double-double, a few more terms.                                  */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -157,11 +159,41 @@
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
 #define TMPL_NUM_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * A09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
 #define TMPL_DEN_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * (\
+                            B07 + z * B08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  128-bit quadruple, one more term than double-double.                      */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
@@ -196,11 +228,43 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
 #define TMPL_NUM_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
+A00 + z * (\
+    A01 + z * (\
+        A02 + z * (\
+            A03 + z * (\
+                A04 + z * (\
+                    A05 + z * (\
+                        A06 + z * (\
+                            A07 + z * (\
+                                A08 + z * A09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
 #define TMPL_DEN_EVAL(z) \
-B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
+B00 + z * (\
+    B01 + z * (\
+        B02 + z * (\
+            B03 + z * (\
+                B04 + z * (\
+                    B05 + z * (\
+                        B06 + z * (\
+                            B07 + z * (\
+                                B08 + z * B09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 /*  Lastly, extended precision and portable versions.                         */
 #else
@@ -226,10 +290,12 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
 #define B05 (-1.6150977641153863432089856687117703962621376999198E-02L)
 
 /*  Helper macro for evaluating the numerator of the minimax approximation.   */
-#define TMPL_NUM_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*A05))))
+#define TMPL_NUM_EVAL(z) \
+A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
 /*  Helper macro for evaluating the denominator of the minimax approximation. */
-#define TMPL_DEN_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*B05))))
+#define TMPL_DEN_EVAL(z) \
+B00 + z * (B01 + z * (B02 + z * (B03 + z * (B04 + z * B05))))
 
 #endif
 /*  End of 80-bit extended / portable version.                                */
@@ -248,13 +314,13 @@ TMPL_UNSEQUENCED
     const long double q = TMPL_DEN_EVAL(x2);
     const long double r = x2 * p / q;
 
-    /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. *
+    /*  p/q is the rational minimax approximant for -(acos(x) - pi/2 + x)/x^3.*
      *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
-    return TMPL_PI_BY_TWO - (x + x * r);
+    return tmpl_ldouble_pi_by_two - (x + x * r);
 }
 /*  End of tmpl_LDouble_Arccos_Rat_Remez.                                     */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif

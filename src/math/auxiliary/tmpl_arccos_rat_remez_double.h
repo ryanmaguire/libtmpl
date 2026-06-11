@@ -29,7 +29,7 @@
  *  Purpose:                                                                  *
  *      Computes the (8, 8) rational minimax approximation for arccos.        *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (double):                                                      *
@@ -110,6 +110,9 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  The constant Pi / 2.                                                      */
+extern const double tmpl_double_pi_by_two;
+
 /*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
 #define A01 (-2.9647442738212244852684254810912673101657174481766E-01)
@@ -125,11 +128,8 @@
 #define B04 (+4.5088915315077310386265964807853660211534733521946E-02)
 
 /*  Helper macros for evaluating polynomials using Horner's method.           */
-#define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
-#define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
-
-/*  The constant Pi / 2.                                                      */
-extern const double tmpl_double_pi_by_two;
+#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
+#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  Function for computing the (8, 8) minimax approximation for acos(x).      */
 TMPL_CONST_FUNC
@@ -141,8 +141,8 @@ TMPL_UNSEQUENCED
     const double x2 = x * x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = TMPL_POLYA_EVAL(x2);
-    const double q = TMPL_POLYB_EVAL(x2);
+    const double p = TMPL_NUM_EVAL(x2);
+    const double q = TMPL_DEN_EVAL(x2);
     const double r = x2 * p / q;
 
     /*  p/q is the rational Remez approximation for -(acos(x) - pi/2 + x)/x^3.*
@@ -151,7 +151,7 @@ TMPL_UNSEQUENCED
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif

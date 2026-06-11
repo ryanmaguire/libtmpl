@@ -29,7 +29,7 @@
  *  Purpose:                                                                  *
  *      Computes the degree (4, 2) minimax approximation for arccos.          *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (const float):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (float):                                                       *
@@ -37,7 +37,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
+ *      The function f(x) = -(acos(x) + x - pi/2) / x^3 is even. Pre-compute  *
  *      the coefficients for the rational minimax function R(x) of degree     *
  *      (4, 2) for f(x). The odd terms have zero coefficients. We may thus    *
  *      compute the minimax approximation via:                                *
@@ -56,6 +56,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -84,6 +86,9 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  The constant Pi / 2.                                                      */
+extern const float tmpl_float_pi_by_two;
+
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define A00 (+1.6666657332654782511630744878585859634321997276656E-01F)
 #define A01 (-4.2035660448040502977938914900697450640872894337286E-02F)
@@ -93,8 +98,9 @@
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00F)
 #define B01 (-7.0227698493007347430817019567204548858969498944150E-01F)
 
-/*  The constant Pi / 2.                                                      */
-#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
+/*  Helper macros for evaluating polynomials using Horner's method.           */
+#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * A02)
+#define TMPL_DEN_EVAL(z) B00 + z * B01
 
 /*  Function for computing the (4, 2) minimax approximation of acos(x).       */
 TMPL_CONST_FUNC
@@ -106,17 +112,17 @@ TMPL_UNSEQUENCED
     const float x2 = x * x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = A00 + x2 * (A01 + x2 * A02);
-    const float q = B00 + x2 * B01;
+    const float p = TMPL_NUM_EVAL(x2);
+    const float q = TMPL_DEN_EVAL(x2);
     const float r = x2 * p / q;
 
-    /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. *
+    /*  p/q is the rational minimax approximant for -(acos(x) - pi/2 + x)/x^3.*
      *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
-    return TMPL_PI_BY_TWO - (x + x * r);
+    return tmpl_float_pi_by_two - (x + x * r);
 }
 /*  End of tmpl_Float_Arccos_Rat_Remez.                                       */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other macros.                */
 #include "tmpl_math_undef.h"
 
 #endif
