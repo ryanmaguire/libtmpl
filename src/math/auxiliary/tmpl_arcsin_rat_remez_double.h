@@ -79,39 +79,43 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Coefficients for the numerator.                                           */
-#define A00 (+1.66666666666666657415E-01)
-#define A01 (-3.25565818622400915405E-01)
-#define A02 (+2.01212532134862925881E-01)
-#define A03 (-4.00555345006794114027E-02)
-#define A04 (+7.91534994289814532176E-04)
-#define A05 (+3.47933107596021167570E-05)
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Coefficients for the denominator.                                         */
-#define B00 (+1.00000000000000000000E+00)
-#define B01 (-2.40339491173441421878E+00)
-#define B02 (+2.02094576023350569471E+00)
-#define B03 (-6.88283971605453293030E-01)
-#define B04 (+7.70381505559019352791e-02)
+/*  Coefficients for the numerator of the rational Remez approximation.       */
+#define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
+#define A01 (-2.9647442738212244852684254810912673101657174481766E-01)
+#define A02 (+1.6001969221867813049084016184632874497094695883901E-01)
+#define A03 (-2.5510481570872249173776491491771394448907125511346E-02)
+#define A04 (+2.6066097969323856113412749790103952111930280796716E-04)
+
+/*  Coefficients for the denominator of the rational Remez approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define B01 (-2.2288465642924490579275829949790393075345284377974E+00)
+#define B02 (+1.6952419643599424152439428142515867324057155650851E+00)
+#define B03 (-5.0120096652328631713045487959099718175996563925832E-01)
+#define B04 (+4.5088915315077310386265964807853660211534733521946E-02)
 
 /*  Helper macros for evaluating polynomials using Horner's method.           */
-#define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
-#define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
+#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
+#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
 /*  Function for computing the (10, 8) minimax approximation for asin(x).     */
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Arcsin_Rat_Remez(double x)
+double tmpl_Double_Arcsin_Rat_Remez(const double x)
+TMPL_UNSEQUENCED
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const double x2 = x*x;
+    const double x2 = x * x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = TMPL_POLYA_EVAL(x2);
-    const double q = TMPL_POLYB_EVAL(x2);
-    const double r = x2*p/q;
+    const double p = TMPL_NUM_EVAL(x2);
+    const double q = TMPL_DEN_EVAL(x2);
+    const double r = x2 * p / q;
 
     /*  p/q is the minimax approximant for (asin(x) - x) / x^3.               */
-    return x*r + x;
+    return x * r + x;
 }
 /*  End of tmpl_Double_Arcsin_Rat_Remez.                                      */
 
