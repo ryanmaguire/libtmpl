@@ -255,6 +255,9 @@ TMPL_UNSEQUENCED
 }
 /*  End of tmpl_Float_Arcsin.                                                 */
 
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH == 1.                                  */
+
 #else
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
