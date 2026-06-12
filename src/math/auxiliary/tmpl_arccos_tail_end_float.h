@@ -57,6 +57,21 @@
  *      with z = sqrt((1 - x) / 2).                                           *
  *  Notes:                                                                    *
  *      Accurate for 0.5 <= x < 1.0.                                          *
+ *  References:                                                               *
+ *      1.) Maguire, Ryan (2024)                                              *
+ *          tmpld                                                             *
+ *          https://github.com/ryanmaguire/libtmpl_data                       *
+ *                                                                            *
+ *          Python library providing an implementation of the rational        *
+ *          Remez exchange algorithm. The coefficients for the                *
+ *          approximation used by this function were computed using this.     *
+ *                                                                            *
+ *      2.) Tasissa, Abiy (2019)                                              *
+ *          Function Approximation and the Remez Exchange Algorithm.          *
+ *          https://sites.tufts.edu/atasissa/files/2019/09/remez.pdf          *
+ *                                                                            *
+ *          Survey of the Remez polynomial and Remez exchange algorithm.      *
+ *          The implementation in tmpld is based on these notes.              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -75,6 +90,8 @@
  *  2024/11/08: Ryan Maguire                                                  *
  *      Changed coefficients to be the exact output of the Python scripts in  *
  *      libtmpl_data. This is to improve reproducibility of the results.      *
+ *  2026/06/12: Ryan Maguire                                                  *
+ *      Added references.                                                     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
