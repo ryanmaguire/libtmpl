@@ -93,7 +93,7 @@
  *      5.) This file only compiles if the TMPL_USE_SIMD_FAST_MATH macro is   *
  *          set to 1 at build time. At the time of this writing, very few     *
  *          tested compilers can fully support the SIMD version. Compilers    *
- *          that do include GCC 15+, Clang 22+, and MSVC 19+. All of these    *
+ *          that do so include GCC 15+, Clang 22+, and MSVC 19+. All of these *
  *          need the appropriate flags set at build time, which are handled   *
  *          by both the Makefile and the CMakeLists. Use of the SIMD version  *
  *          requires an explicit option enabled at build time.                *
