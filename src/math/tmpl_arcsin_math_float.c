@@ -43,7 +43,7 @@
  *              tmpl_Float_Arcsin_Tail_End:                                   *
  *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For very small x, |x| < 2^-26, return x. For slightly larger x,   *
+ *          For very small x, |x| < 2^-12, return x. For slightly larger x,   *
  *          |x| < 0.125, use a Maclaurin series. For 0.125 <= |x| < 0.5 use a *
  *          minimax approximation. For 0.5 <= x < 1 use the reflection        *
  *          formula:                                                          *
@@ -216,14 +216,14 @@ TMPL_UNSEQUENCED
     w.r = x;
 
     /*  Small inputs, |x| < 0.5.                                              */
-    if (w.bits.expo < TMPL_FLOAT_UBIAS - 1U)
+    if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 1U)
     {
-        /*  For |x| < 2^-26, asin(x) = x to single precision.                 */
-        if (w.bits.expo < TMPL_FLOAT_UBIAS - 26U)
+        /*  For |x| < 2^-12, asin(x) = x to single precision.                 */
+        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 12U)
             return x;
 
         /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
-        else if (w.bits.expo < TMPL_FLOAT_UBIAS - 3U)
+        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 3U)
             return tmpl_Float_Arcsin_Maclaurin(x);
 
         /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
@@ -231,7 +231,7 @@ TMPL_UNSEQUENCED
     }
 
     /*  For |x| < 1 use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2). */
-    else if (w.bits.expo < TMPL_FLOAT_UBIAS)
+    if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
         if (w.bits.sign)
@@ -241,16 +241,27 @@ TMPL_UNSEQUENCED
         return tmpl_Float_Arcsin_Tail_End(x);
     }
 
-    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
-    if (x == -1.0F)
-        return -TMPL_PI_BY_TWO;
-    else if (x == 1.0F)
-        return TMPL_PI_BY_TWO;
+    /*  Special case, handle NaN and infinity. The fast-math optimization     *
+     *  means the compiler can assume the input is finite. To properly handle *
+     *  NaN or infinity with this optimization, we check for NaN and infinity *
+     *  by examining the bits of the input. Note, if the fast-math            *
+     *  optimization is enabled, then failure to provide this check here      *
+     *  means an input of NaN may reach the if (x == -1.0) branch below and   *
+     *  produce "true," even though NaN is not equal to -1.0. For both NaN    *
+     *  and infinity, the input is outside of the domain of arcsin, so the    *
+     *  output is NaN.                                                        */
+    if (TMPL_FLOAT_IS_NAN_OR_INF(w))
+        return TMPL_NANF;
 
-    /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN. Note *
-     *  this catches NaN and infinity since we are checking the exponent of   *
-     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
-     *  than TMPL_FLOAT_UBIAS, hence NaN will return.                         */
+    /*  Since sin(-pi / 2) = -1, we have asin(-1) = -pi / 2.                  */
+    if (x == -1.0F)
+        return -tmpl_float_pi_by_two;
+
+    /*  Similarly, since sin(pi / 2) = 1 we have asin(1) = pi / 2.            */
+    if (x == 1.0F)
+        return tmpl_float_pi_by_two;
+
+    /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.      */
     return TMPL_NANF;
 }
 /*  End of tmpl_Float_Arcsin.                                                 */
