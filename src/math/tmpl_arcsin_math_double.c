@@ -43,21 +43,62 @@
  *              tmpl_Double_Arcsin_Tail_End:                                  *
  *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For very small x, |x| < 2^-57, return x. For slightly larger x,   *
- *          |x| < 0.125, use a Maclaurin series. For 0.125 <= |x| < 0.5 use a *
- *          minimax approximation. For 0.5 <= x < 1 use the reflection        *
- *          formula:                                                          *
+ *          0 <= |x| < 2^-27:                                                 *
+ *              Return x. The error is O(x^3). This avoids unnecessary        *
+ *              underflow in the computation.                                 *
+ *          2^-27 <= |x| < 2^-3:                                              *
+ *              Use a degree 15 Maclaurin series. Only 8 non-zero terms are   *
+ *              needed for the expansion. This is faster than the rational    *
+ *              Remez approximation since it requires fewer terms and avoids  *
+ *              using floating-point division.                                *
+ *          2^-3 <= |x| < 2^-1:                                               *
+ *              Use the degree (8, 8) rational Remez approximation for the    *
+ *              function R(x) = (asin(x) - x) / x^3 . This function even, so  *
+ *              the degree (8, 8) rational Remez approximation requires 5     *
+ *              non-zero terms in the numerator and 5 non-zero terms in the   *
+ *              denominator, 10 non-zero terms total. asin(x) is computed by: *
  *                                                                            *
- *              asin(x) = pi/2 - 2*asin(sqrt((1-x)/2))                        *
+ *                  asin(x) = x + x^3 P(x) / Q(x)                             *
  *                                                                            *
- *          Compute this using a minimax approximation. For values            *
- *          -1 < x <= -0.5 use the negation formula:                          *
+ *              where P(x) is the numerator and Q(x) is the denominator for   *
+ *              the rational Remez approximation of R(x), respectively.       *
+ *          2^-1 <= x < 1:                                                    *
+ *              Compute using the reflection formula:                         *
  *                                                                            *
- *              asin(x) = -asin(-x)                                           *
+ *                  asin(x) = pi/2 - 2 * asin(sqrt((1 - x) / 2))              *
  *                                                                            *
- *          Use this and compute asin(-x) via the tail-end function.          *
- *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
- *          return asin(-1) = -pi/2 and asin(1) = pi/2.                       *
+ *              Note that as x tends to 1, sqrt((1 - x) / 2) tends to zero.   *
+ *              This allows us to maintain excellent relative error as x      *
+ *              approaches 1.                                                 *
+ *                                                                            *
+ *              asin(z) is computed using a degree (8, 8) rational Remez      *
+ *              approximation for R(z) = (asin(z) - z) / z^3. This function   *
+ *              is even, meaning 5 non-zero terms are required for the        *
+ *              numerator, and 5 for the denominator, 10 non-zero terms are   *
+ *              needed in total. asin(z) is computed via:                     *
+ *                                                                            *
+ *                  asin(z) = z + z^3 * P(z) / Q(z)                           *
+ *                                                                            *
+ *              where P(z) is the numerator and Q(z) is the denominator of    *
+ *              the rational Remez approximation of R(z), respectively. The   *
+ *              value asin(x) is then computed by:                            *
+ *                                                                            *
+ *                  asin(x) = pi / 2 - 2 * asin(z)                            *
+ *                                                                            *
+ *              with z = sqrt((1 - x) / 2).                                   *
+ *          -1 < x <= -2^-1:                                                  *
+ *              Compute using the negation formula:                           *
+ *                                                                            *
+ *                  asin(x) = -asin(-x)                                       *
+ *                                                                            *
+ *              We then have 2^-1 <= -x < 1, and hence can use the reflection *
+ *              formula found in the previous case.                           *
+ *          x = -1:                                                           *
+ *              return pi / 2.                                                *
+ *          x = 1:                                                            *
+ *              return -pi / 2.                                               *
+ *          |x| > 1 (including x = +/- infinity) or x is Not-a-Number:        *
+ *              return NaN.                                                   *
  *      Error:                                                                *
  *          Based on 2,247,723,417 samples with -1 < x < 1.                   *
  *              max relative error: 4.2407377049860399e-16                    *
@@ -90,17 +131,20 @@
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Notes:                                                                    *
- *      The only distinction between the IEEE-754 method and the portable one *
- *      is how the size of the input x is determined. The IEEE-754 method     *
- *      examines the exponent of the input, the portable method computes the  *
- *      absolute value and compares the size of x directly with the numbers   *
- *      0.5 and 1.0. The IEEE-754 method is hence slightly faster on most     *
- *      computers.                                                            *
+ *      1.) The only distinction between the IEEE-754 method and the portable *
+ *          one is how the size of the input x is determined. The IEEE-754    *
+ *          method examines the exponent of the input, the portable method    *
+ *          computes the absolute value and compares the size of x directly   *
+ *          with the numbers 2^-27, 2^-3, 2^-1, and 1. The IEEE-754 method is *
+ *          hence slightly faster on most computers.                          *
  *                                                                            *
- *      Both methods detect if the input is NaN or infinity. The IEEE-754     *
- *      detects NaN and Inf since the exponents of NaN and Inf are large, and *
- *      the portable method detects NaN since NaN should always evaluate      *
- *      false when a comparison is made (==, <, >, etc.).                     *
+ *      2.) Both methods detect if the input is NaN or infinity. The IEEE-754 *
+ *          detects NaN and Inf since the exponents of NaN and Inf are large, *
+ *          and the portable method detects NaN since NaN should always       *
+ *          produce false when a comparison is made (==, <, >, etc., not !=). *
+ *                                                                            *
+ *      3.) The SIMD method is 2-4x faster when used with the appropriate     *
+ *          hardware, but this comes at the cost of 2-4 ULP error.            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -216,14 +260,14 @@ TMPL_UNSEQUENCED
     w.r = x;
 
     /*  Small inputs, |x| < 0.5.                                              */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 1U)
+    if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 1U)
     {
-        /*  For |x| < 2^-57, asin(x) = x to double precision.                 */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 57U)
+        /*  For |x| < 2^-27, asin(x) = x to double precision.                 */
+        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 27U)
             return x;
 
         /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
-        else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 3U)
             return tmpl_Double_Arcsin_Maclaurin(x);
 
         /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
@@ -231,7 +275,7 @@ TMPL_UNSEQUENCED
     }
 
     /*  For |x| < 1 use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2). */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
+    if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
         if (w.bits.sign)
