@@ -237,12 +237,14 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_nan_ldouble.h:                                                   *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_nan_ldouble.h:                                                   *
  *          Header file providing long double precision NaN (Not-a-Number).   *
- *  3.) tmpl_math_constants.h:                                                *
- *          Header file providing pi and pi / 2.                              *
  *  4.) tmpl_ieee754_ldouble.h:                                               *
  *          Header file where the tmpl_IEEE754_LDouble type is defined.       *
+ *  5.) tmpl_abs_double.h:                                                    *
+ *          Provides the absolute value function (portable version only).     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 03, 2023                                              *
@@ -274,14 +276,15 @@ extern long double tmpl_LDouble_Arccos(const long double x);
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Mathematical constants like pi and pi / 2 are found here.                 */
-#include <libtmpl/include/constants/tmpl_math_constants.h>
-
 /*  TMPL_NANL macro found here which provides long-double-precision NaN.      */
 #include <libtmpl/include/nan/tmpl_nan_ldouble.h>
 
 /*  TMPL_HAS_IEEE754_LDOUBLE macro and tmpl_IEEE754_LDouble type given here.  */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+
+/*  Both pi and pi / 2 are needed for the implementation.                     */
+extern const long double tmpl_ldouble_pi;
+extern const long double tmpl_ldouble_pi_by_two;
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *

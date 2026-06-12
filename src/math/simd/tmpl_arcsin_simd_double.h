@@ -16,31 +16,31 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_arccos_simd_double                           *
+ *                          tmpl_arcsin_simd_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the arc-cosine function at double precision.                 *
+ *      Computes the arc-sine function at double precision.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Arccos                                                    *
+ *      tmpl_Double_Arcsin                                                    *
  *  Purpose:                                                                  *
- *      Computes acos(x), the inverse cosine function.                        *
+ *      Computes asin(x), the inverse sine function.                          *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      acos_x (double):                                                      *
- *          The arc-cosine of x.                                              *
+ *      asin_x (double):                                                      *
+ *          The arc-sine of x.                                                *
  *  Called Functions:                                                         *
  *      __builtin_sqrt / sqrt:                                                *
  *          Compiler intrinsic provided by GCC and Clang. Computes the        *
  *          square root of a double-precision floating-point number.          *
  *          The MSVC compiler intrinsic "sqrt" is used on Windows.            *
  *  Method:                                                                   *
- *      The rational Remez approximation for acos(x) on [-0.5, 0.5],          *
- *      and 2 * asin(sqrt((1 - x) / 2)) on [0.5, 1.0] have the same           *
+ *      The rational Remez approximation for asin(x) on [-0.5, 0.5],          *
+ *      and 2 * acos(sqrt((1 - x) / 2)) on [0.5, 1.0] have the same           *
  *      coefficients. We can use this to create a near-branchless             *
  *      implementation as follows.                                            *
  *                                                                            *
@@ -50,11 +50,11 @@
  *      Compute P(u) and Q(u), the numerator and denominator for the          *
  *      rational Remez approximation. From this, compute both:                *
  *                                                                            *
- *          acos_small_x = pi / 2 - x * (1 + u * P(u) / Q(u))                 *
- *          acos_tail_x  = 2 * sqrt(u) * (1 + u * P(u) / Q(u))                *
+ *          asin_small_x = x * (1 + u * P(u) / Q(u))                          *
+ *          asin_tail_x  = pi / 2 - 2 * sqrt(u) * (1 + u * P(u) / Q(u))       *
  *                                                                            *
- *      Return acos_small_x if |x| < 0.5, acos_tail_x if 0.5 <= x <= 1, and   *
- *      pi - acos_tail_x if -1 <= x <= -0.5. This selection can also be made  *
+ *      Return asin_small_x if |x| < 0.5, asin_tail_x if 0.5 <= x <= 1, and   *
+ *      -asin_tail_x if -1 <= x <= -0.5. This selection can also be made      *
  *      branchless. NaN is returned if |x| > 1. Depending on compiler flags   *
  *      used, the check for |x| > 1 may be the only branch produced. This     *
  *      check is done at the very end, within the return statement. SIMD      *
@@ -75,14 +75,14 @@
  *                                                                            *
  *      2.) There are no checks for subnormal / denormal numbers. Very small  *
  *          numbers will use the same rational Remez expansion as normal      *
- *          numbers. Since acos(x) = pi / 2 to double-precision for such      *
- *          small numbers, the near-branchless method is considerably slower  *
- *          for subnormal / denormal inputs. This function is best used with  *
+ *          numbers. Since asin(x) = x to double-precision for such small     *
+ *          numbers, the near-branchless method is considerably slower for    *
+ *          subnormal / denormal inputs. This function is best used with      *
  *          ordinary values between -1 and 1. The scalar version of this      *
  *          function is optimized to handle subnormal numbers, but this comes *
  *          with the cost of branching.                                       *
  *                                                                            *
- *      3.) The relative error for the near-branchless version is about 1 ULP *
+ *      3.) The relative error for the near-branchless version is about 2 ULP *
  *          worse than the scalar version (see above).                        *
  *                                                                            *
  *      4.) With proper SIMD support (AVX2 or similar), the near-branchless   *
@@ -108,12 +108,12 @@
  *          Header providing double precision NaN (Not-a-Number).             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 26, 2026                                                  *
+ *  Date:       June 11, 2026                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ARCCOS_SIMD_DOUBLE_H
-#define TMPL_ARCCOS_SIMD_DOUBLE_H
+#ifndef TMPL_ARCSIN_SIMD_DOUBLE_H
+#define TMPL_ARCSIN_SIMD_DOUBLE_H
 
 /*  TMPL_SIMD_DECL found here.                                                */
 #include <libtmpl/include/tmpl_config.h>
@@ -124,8 +124,7 @@
 /*  TMPL_NAN macro found here which provides double-precision NaN.            */
 #include <libtmpl/include/nan/tmpl_nan_double.h>
 
-/*  Both pi and pi / 2 are needed for the implementation.                     */
-extern const double tmpl_double_pi;
+/*  Pi / 2 is used for the endpoints of the domain. asin(+/- 1) = +/- pi / 2. */
 extern const double tmpl_double_pi_by_two;
 
 /*  Coefficients for the numerator of the rational Remez approximation.       */
@@ -146,10 +145,10 @@ extern const double tmpl_double_pi_by_two;
 #define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
 #define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
 
-/*  Near-branchless double-precision inverse cosine (acos equivalent).        */
+/*  Near-branchless double-precision inverse sine (asin equivalent).          */
 TMPL_SIMD_DECL
 TMPL_CONST_FUNC
-double tmpl_Double_Arccos(const double x)
+double tmpl_Double_Arcsin(const double x)
 TMPL_UNSEQUENCED
 {
     /*  The absolute value of the input. Modern compilers will produce a      *
@@ -176,9 +175,9 @@ TMPL_UNSEQUENCED
     const double s = 1.0 + u * (p / q);
 
     /*  For |x| < 0.5, the rational Remez approximation is for the function   *
-     *  f(x) = -(arccos(x) + x - pi / 2) / x^3. Since f(x) ~= P(x^2) / Q(x^2) *
-     *  we can compute arccos(x) from this.                                   */
-    const double acos_small_x = tmpl_double_pi_by_two - x * s;
+     *  f(x) = (arcsin(x) - x) / x^3. Since f(x) ~= P(x^2) / Q(x^2) we can    *
+     *  compute arcsin(x) from this.                                          */
+    const double asin_small_x = x * s;
 
     /*  Avoid creating a branch, compute both the small value approximation   *
      *  and the tail-end one. The tail-end formula uses the expression        *
@@ -192,28 +191,28 @@ TMPL_UNSEQUENCED
 
     /*  The rest of the tail-end formula can be computed from the variables   *
      *  we have already created. If the input is negative, we need to use the *
-     *  reflection formula acos(-x) = pi - acos(x).                           */
-    const double acos_tail_x_pos = 2.0 * sqrt_u * s;
-    const double acos_tail_x_neg = tmpl_double_pi - acos_tail_x_pos;
+     *  reflection formula asin(-x) = -asin(x).                               */
+    const double asin_tail_x_pos = tmpl_double_pi_by_two - 2.0 * sqrt_u * s;
+    const double asin_tail_x_neg = -asin_tail_x_pos;
 
     /*  Make the selection for which tail-end formula to use. Since checking  *
      *  if x is negative can be performed by examining the sign bit of x,     *
      *  compilers may be able to make this a branchless operation.            */
-    const double acos_tail_x = (x < 0.0 ? acos_tail_x_neg : acos_tail_x_pos);
+    const double asin_tail_x = (x < 0.0 ? asin_tail_x_neg : asin_tail_x_pos);
 
     /*  The tail-end formula and the small-value expression have both been    *
      *  calculated. Make the final selection based on the size of |x|.        */
-    const double out = (abs_x >= 0.5 ? acos_tail_x : acos_small_x);
+    const double out = (abs_x >= 0.5 ? asin_tail_x : asin_small_x);
 
     /*  Final check, for |x| > 1 return NaN. This usually does create a       *
      *  branch (GCC 16.1 and Clang 22.1 both do), but if the inputs are       *
-     *  consistently within the domain of arccos (meaning |x| <= 1), then     *
+     *  consistently within the domain of arcsin (meaning |x| <= 1), then     *
      *  the branching does not hurt the vectorization at all. With certain    *
      *  compiler flags, this may be turned into a blend as well, removing the *
      *  possibility of branching.                                             */
     return (abs_x > 1.0 ? TMPL_NAN : out);
 }
-/*  End of tmpl_Double_Arccos.                                                */
+/*  End of tmpl_Double_Arcsin.                                                */
 
 /*  Undefine everything to avoid collisions with other macros.                */
 #include "../auxiliary/tmpl_math_undef.h"

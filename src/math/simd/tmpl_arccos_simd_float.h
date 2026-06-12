@@ -108,7 +108,7 @@
  *          Header providing single-precision NaN (Not-a-Number).             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 26, 2026                                                  *
+ *  Date:       June 11, 2026                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
