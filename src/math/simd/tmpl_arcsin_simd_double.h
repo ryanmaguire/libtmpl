@@ -62,13 +62,13 @@
  *      is branchless.                                                        *
  *  Error:                                                                    *
  *      Based on 100,000,000 samples with -1 < x < 1.                         *
- *          max relative error: 4.3932830841569839E-16                        *
- *          rms relative error: 9.0168796252044438E-17                        *
+ *          max relative error: 6.3609497335955333E-16                        *
+ *          rms relative error: 1.1487387664002157E-16                        *
  *          max absolute error: 4.4408920985006262E-16                        *
- *          rms absolute error: 1.5047330146850383E-16                        *
+ *          rms absolute error: 7.7925875785463603E-17                        *
  *      Values assume 100% accuracy of glibc and were computed using a CPU    *
  *      with AVX2 support and the flags -ffast-math and -march=native. Other  *
- *      SIMD instructions may produce errors of 3-4 ULP instead of 2 ULP.     *
+ *      SIMD instructions may produce errors of 3-4 ULP instead of 2-3 ULP.   *
  *  Notes:                                                                    *
  *      1.) There are no checks for NaN or infinity. Unit tests show that NaN *
  *          and inf behave as expected with GCC and Clang (output is NaN).    *
