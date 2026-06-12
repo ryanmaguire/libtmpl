@@ -197,17 +197,17 @@
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  *  Notes:                                                                    *
- *      The only distinction between the IEEE-754 method and the portable one *
- *      is how the size of the input x is determined. The IEEE-754 method     *
- *      examines the exponent of the input, the portable method computes the  *
- *      absolute value and compares the size of x directly with the numbers   *
- *      0.5 and 1.0. The IEEE-754 method is hence slightly faster on most     *
- *      computers.                                                            *
+ *      1.) The only distinction between the IEEE-754 method and the portable *
+ *          one is how the size of the input x is determined. The IEEE-754    *
+ *          method examines the exponent of the input, the portable method    *
+ *          computes the absolute value and compares the size of x directly   *
+ *          with the numbers 2^-65, 2^-3, 2^-1, and 1. The IEEE-754 method is *
+ *          hence slightly faster on most computers.                          *
  *                                                                            *
- *      Both methods detect if the input is NaN or infinity. The IEEE-754     *
- *      detects NaN and Inf since the exponents of NaN and Inf are large, and *
- *      the portable method detects NaN since NaN should always evaluate      *
- *      false when a comparison is made (==, <, >, etc.).                     *
+ *      2.) Both methods detect if the input is NaN or infinity. The IEEE-754 *
+ *          detects NaN and Inf since the exponents of NaN and Inf are large, *
+ *          and the portable method detects NaN since NaN should always       *
+ *          produce false when a comparison is made (==, <, >, etc., not !=). *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
