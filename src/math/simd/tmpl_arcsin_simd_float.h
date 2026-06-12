@@ -62,13 +62,12 @@
  *      is branchless.                                                        *
  *  Error:                                                                    *
  *      Based on 100,000,000 samples with -1 < x < 1.                         *
- *          max relative error: 6.3609497335955333E-16                        *
- *          rms relative error: 1.1487387664002157E-16                        *
- *          max absolute error: 4.4408920985006262E-16                        *
- *          rms absolute error: 7.7925875785463603E-17                        *
+ *          max relative error: 5.5056960945876199E-07                        *
+ *          rms relative error: 7.5180066837050279E-08                        *
+ *          max absolute error: 2.9802322387695312E-07                        *
+ *          rms absolute error: 5.3267651804959240E-08                        *
  *      Values assume 100% accuracy of glibc and were computed using a CPU    *
- *      with AVX2 support and the flags -ffast-math and -march=native. Other  *
- *      SIMD instructions may produce errors of 3-4 ULP instead of 2-3 ULP.   *
+ *      with AVX2 support and the flags -ffast-math and -march=native.        *
  *  Notes:                                                                    *
  *      1.) There are no checks for NaN or infinity. Unit tests show that NaN *
  *          and inf behave as expected with GCC and Clang (output is NaN).    *
@@ -82,7 +81,7 @@
  *          function is optimized to handle subnormal numbers, but this comes *
  *          with the cost of branching.                                       *
  *                                                                            *
- *      3.) The relative error for the near-branchless version is about 2 ULP *
+ *      3.) The relative error for the near-branchless version is about 4 ULP *
  *          worse than the scalar version (see above).                        *
  *                                                                            *
  *      4.) With proper SIMD support (AVX2 or similar), the near-branchless   *
@@ -179,9 +178,9 @@ TMPL_UNSEQUENCED
      *  2 * asin(sqrt((1 - x) / 2)), which needs the square root function.    *
      *  GCC, Clang, and MSVC provide this as a compiler intrinsic.            */
 #ifdef _MSC_VER
-    const float sqrt_u = sqrt(u);
+    const float sqrt_u = sqrtf(u);
 #else
-    const float sqrt_u = __builtin_sqrt(u);
+    const float sqrt_u = __builtin_sqrtf(u);
 #endif
 
     /*  The rest of the tail-end formula can be computed from the variables   *
