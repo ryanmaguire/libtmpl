@@ -44,7 +44,7 @@
  *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          0 <= |x| < 2^-57:                                                 *
- *              return pi / 2. The error is O(x). This avoids unnecessary     *
+ *              Return pi / 2. The error is O(x). This avoids unnecessary     *
  *              underflow in the computation.                                 *
  *          2^-57 <= |x| < 2^-3:                                              *
  *              Use a degree 15 Maclaurin series. Only 8 non-zero terms are   *

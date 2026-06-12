@@ -208,6 +208,9 @@
  *          detects NaN and Inf since the exponents of NaN and Inf are large, *
  *          and the portable method detects NaN since NaN should always       *
  *          produce false when a comparison is made (==, <, >, etc., not !=). *
+ *                                                                            *
+ *      3.) Unlike the float and double implementations, there is no SIMD     *
+ *          version of the long double implementation.                        *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -452,7 +455,7 @@ TMPL_UNSEQUENCED
     if (abs_x < 0.5L)
     {
         /*  For very small inputs return pi / 2.                              */
-        if (abs_x < 2.710505431213760E-20L)
+        if (abs_x < 2.710505431213761085018632002174854278564453125E-20L)
             return tmpl_ldouble_pi_by_two;
 
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
