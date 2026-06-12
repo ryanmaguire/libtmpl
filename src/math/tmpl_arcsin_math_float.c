@@ -106,11 +106,24 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_nan_float.h:                                                     *
+ *          Header file providing single-precision NaN (Not-a-Number).        *
+ *  4.) tmpl_ieee754_float.h:                                                 *
+ *          Header file where the tmpl_IEEE754_Float type is defined.         *
+ *  5.) tmpl_abs_float.h:                                                     *
+ *          Provides the absolute value function (portable version only).     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 9, 2023                                                   *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/10: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimization on modern compilers.     *
+ *  2026/06/12: Ryan Maguire                                                  *
+ *      Finalized SIMD version, works with GCC 15+.                           *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -119,28 +132,49 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration for the function, also found in tmpl_math.h.          */
+extern float tmpl_Float_Arcsin(const float x);
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  TMPL_NANF macro found here which provides single-precision NaN.           */
+#include <libtmpl/include/nan/tmpl_nan_float.h>
+
+/*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
+
+/*  Pi / 2 is used for the endpoints of the domain. asin(+/- 1) = +/- pi / 2. */
+extern const float tmpl_float_pi_by_two;
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
  ******************************************************************************/
 
+/*  The helper functions are only needed for the normal scalar version. The   *
+ *  SIMD branchless implementation does not need these included.              */
+#if TMPL_USE_SIMD_FAST_MATH != 1
+
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_arcsin_maclaurin_float.h"
 
-/*  Rational remez minimax approximation for arcsin.                          */
+/*  Rational Remez minimax approximation for arcsin.                          */
 #include "auxiliary/tmpl_arcsin_rat_remez_float.h"
 
 /*  Tail-end arcsin function that uses the reflection formula with arccos.    */
 #include "auxiliary/tmpl_arcsin_tail_end_float.h"
 
-/******************************************************************************
- *                              Constant Values                               *
- ******************************************************************************/
+/*  The portable version needs to use the absolute value function.            */
+#if TMPL_HAS_IEEE754_FLOAT != 1
 
-/*  The endpoints evaluate to +/- pi/2, depending on the sign of the input.   */
-#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00F)
+/*  Forward declaration provided here.                                        */
+#include <libtmpl/include/abs/tmpl_abs_float.h>
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_FLOAT != 1.                                   */
+
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -153,8 +187,27 @@
  *  float rather than checking the entire float. This gives the IEEE-754      *
  *  method a slight performance boost over the portable one below.            */
 
-/*  Single precision inverse sine (asinf equivalent).                         */
-float tmpl_Float_Arcsin(float x)
+/*  The asin function can be made branchless, which allows the routines to be *
+ *  vectorized when SIMD support is available. The cost is 2-4 ULP relative   *
+ *  error, and the speedup on systems supporting AVX2 or AVX-512 is 2-4x      *
+ *  when used in a simple for-loop. Check if the user requested this.         */
+#if TMPL_USE_SIMD_FAST_MATH == 1
+
+/*  SIMD branchless implementation found here.                                */
+#include "simd/tmpl_arcsin_simd_float.h"
+
+#else
+/*  Else for #if TMPL_USE_SIMD_FAST_MATH == 1.                                */
+
+/*  If SIMD_FAST_MATH mode was not requested, use the default scalar version. *
+ *  This safely handles NaN, Inf, and underflow. It is implemented in a way   *
+ *  that allows the -ffast-math flag to be enabled (GCC or Clang) without     *
+ *  sacrificing accuracy or mishandling NaN / Inf.                            */
+
+/*  Single-precision inverse sine (asinf equivalent).                         */
+TMPL_CONST_FUNC
+float tmpl_Float_Arcsin(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Float w;

@@ -106,11 +106,24 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_nan_double.h:                                                    *
+ *          Header file providing double-precision NaN (Not-a-Number).        *
+ *  4.) tmpl_ieee754_double.h:                                                *
+ *          Header file where the tmpl_IEEE754_Double type is defined.        *
+ *  5.) tmpl_abs_double.h:                                                    *
+ *          Provides the absolute value function (portable version only).     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 9, 2023                                                   *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/10: Ryan Maguire                                                  *
+ *      Added C23 attributes to improve optimization on modern compilers.     *
+ *  2026/06/12: Ryan Maguire                                                  *
+ *      Finalized SIMD version, works with GCC 15+.                           *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
