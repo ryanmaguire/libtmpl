@@ -94,8 +94,8 @@
  *      in libtmpl_data. The previous coefficients were truncated.            *
  *      After some experimenting, I noticed that the (8, 8) rational Remez    *
  *      approximation is sufficient for double precision. Peak theoretical    *
- *      is 8.5 * 10^-17. Unit tests show the actual error is within 1 ULP of  *
- *      other libm implementations. Slight performance boost using this.      *
+ *      error is 8.5 * 10^-17. Unit tests show the actual error is within 1   *
+ *      ULP of other libm implementations. Slight performance boost.          *
  *  2025/02/13: Ryan Maguire                                                  *
  *      Added references.                                                     *
  ******************************************************************************/

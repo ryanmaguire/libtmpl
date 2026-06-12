@@ -19,7 +19,7 @@
  *                        tmpl_arccos_tail_end_ldouble                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the acos(x) for 0.5 <= x < 1.0.                              *
+ *      Computes acos(x) for 0.5 <= x < 1.0.                                  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -335,9 +335,8 @@ TMPL_UNSEQUENCED
 
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
-    const long double r = z * p / q;
     const long double sqrt_z = tmpl_LDouble_Sqrt(z);
-    const long double t = r * sqrt_z;
+    const long double t = sqrt_z * z * p / q;
 
     /*  We now have t = asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).     */
     return 2.0L * (sqrt_z + t);

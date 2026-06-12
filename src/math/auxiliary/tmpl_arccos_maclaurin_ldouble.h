@@ -263,7 +263,8 @@ TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arccos_Maclaurin(const long double x)
 TMPL_UNSEQUENCED
 {
-    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
+    /*  The non-constant terms are odd, powers are x^{2n+1} = x * x^2n.       *
+     *  Compute the square of the input.                                      */
     const long double x2 = x * x;
 
     /*  Compute the Maclaurin series of asin(x) / x.                          */

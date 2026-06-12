@@ -99,7 +99,7 @@
  *      for double-double, instead of using the same degree (18, 18)          *
  *      coefficients that quadruple uses. Using a (10, 10) approximation for  *
  *      80-bit extended instead of a (12, 10) approximation. Peak theoretical *
- *      error is 2 * 10^-20. Unit test show the actual error is still 1 ULP.  *
+ *      error is 2 * 10^-20. Unit tests show the actual error is still 1 ULP. *
  *  2026/06/12: Ryan Maguire                                                  *
  *      Added references.                                                     *
  ******************************************************************************/

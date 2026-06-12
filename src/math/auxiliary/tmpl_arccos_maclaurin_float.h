@@ -82,7 +82,8 @@ TMPL_STATIC_INLINE
 float tmpl_Float_Arccos_Maclaurin(const float x)
 TMPL_UNSEQUENCED
 {
-    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
+    /*  The non-constant terms are odd, powers are x^{2n+1} = x * x^2n.       *
+     *  Compute the square of the input.                                      */
     const float x2 = x * x;
 
     /*  Compute the Maclaurin series of asin(x) / x.                          */

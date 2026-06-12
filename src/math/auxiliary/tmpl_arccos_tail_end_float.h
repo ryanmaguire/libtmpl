@@ -137,9 +137,8 @@ TMPL_UNSEQUENCED
 
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
-    const float r = z * p / q;
     const float sqrt_z = tmpl_Float_Sqrt(z);
-    const float t = r * sqrt_z;
+    const float t = sqrt_z * z * p / q;
 
     /*  We now have t = asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).     */
     return 2.0F * (sqrt_z + t);

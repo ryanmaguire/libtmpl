@@ -76,14 +76,15 @@ A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 TMPL_STATIC_INLINE
 double tmpl_Double_Arcsin_Maclaurin(double x)
 {
-    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
-    const double x2 = x*x;
+    /*  The non-constant terms are odd, powers are x^{2n+1} = x * x^2n.       *
+     *  Compute the square of the input.                                      */
+    const double x2 = x * x;
 
     /*  Compute the Maclaurin series of asin(x) / x.                          */
     const double poly = TMPL_POLY_EVAL(x2);
 
     /*  Scale by the input to complete the computation.                       */
-    return x*poly;
+    return x * poly;
 }
 /*  End of tmpl_Double_Arcsin_Maclaurin.                                      */
 
