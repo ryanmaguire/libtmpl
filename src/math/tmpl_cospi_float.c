@@ -139,7 +139,9 @@ TMPL_UNSEQUENCED
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Computes cos(pi x) at single precision.                                   */
-float tmpl_Float_CosPi(float x)
+TMPL_CONST_FUNC
+float tmpl_Float_CosPi(const float x)
+TMPL_UNSEQUENCED
 {
     float arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
