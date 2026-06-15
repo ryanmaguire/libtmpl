@@ -1008,9 +1008,17 @@ extern long double tmpl_LDouble_Cosd(long double x);
  *      double cos_pix:                                                       *
  *          The normalized cosine of x, cos(pi x).                            *
  ******************************************************************************/
-extern float tmpl_Float_CosPi(float x);
-extern double tmpl_Double_CosPi(double x);
-extern long double tmpl_LDouble_CosPi(long double x);
+TMPL_CONST_FUNC
+extern float tmpl_Float_CosPi(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+double tmpl_Double_CosPi(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_CosPi(const long double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
