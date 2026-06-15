@@ -16,10 +16,40 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+
+/*  Forward declaration / function prototype.                                 */
+extern double tmpl_Double_CosPi(const double x);
+
+/*  C23 attributes for optimization found here.                               */
 #include <libtmpl/include/tmpl_attributes.h>
-#include <libtmpl/include/tmpl_math.h>
+
+/*  Double-precision NaN provided here.                                       */
+#include <libtmpl/include/nan/tmpl_nan_double.h>
+
+/*  Look-up tables for sinpi and cospi given here.                            */
+#include <libtmpl/include/tables/tmpl_cospi_tables.h>
+#include <libtmpl/include/tables/tmpl_sinpi_tables.h>
+
+/*  Remez minimax polynomials for very small inputs.                          */
 #include "auxiliary/tmpl_cospi_remez_small_double.h"
 #include "auxiliary/tmpl_sinpi_remez_small_double.h"
+
+/*  Mod 2 function, used to reduce the argument for cospi.                    */
+TMPL_CONST_FUNC
+extern double tmpl_Double_Mod_2(const double x)
+TMPL_UNSEQUENCED;
+
+/*  The portable version has a few more requirements.                         */
+#if TMPL_HAS_IEEE754_DOUBLE != 1
+
+/*  Helper macro for C vs. C++ compatibility with casting.                    */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  Absolute value function provided here.                                    */
+#include <libtmpl/include/abs/tmpl_abs_double.h>
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE != 1.                                  */
 
 /*  Significantly faster, and more accurate near integers, using IEEE-754.    */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -135,9 +165,6 @@ TMPL_UNSEQUENCED
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
-/*  Helper macro for C vs. C++ compatibility with casting.                    */
-#include <libtmpl/include/compat/tmpl_cast.h>
-
 /*  Computes cos(pi x) at double precision.                                   */
 TMPL_CONST_FUNC
 double tmpl_Double_CosPi(const double x)
@@ -156,13 +183,14 @@ TMPL_UNSEQUENCED
     else
         sgn_x = 1.0;
 
-    ind = (unsigned int)(128.0*arg);
-    dx = arg - 0.0078125*ind;
+    ind = TMPL_CAST(128.0 * arg, unsigned int);
+    dx = arg - 0.0078125 * TMPL_CAST(ind, double);
 
     sx = tmpl_double_sinpi_table[ind];
     cx = tmpl_double_cospi_table[ind];
     sdx = tmpl_Double_SinPi_Remez_Small(dx);
     cdx = tmpl_Double_CosPi_Remez_Small(dx);
+
     return sgn_x * (cdx * cx - sx * sdx);
 }
 /*  End of tmpl_Double_CosPi.                                                 */
