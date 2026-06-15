@@ -175,6 +175,15 @@ extern long double tmpl_LDouble_Arcsin(const long double x);
 /*  Tail-end arcsin function that uses the reflection formula with arccos.    */
 #include "auxiliary/tmpl_arcsin_tail_end_ldouble.h"
 
+/*  The portable version needs to use the absolute value function.            */
+#if TMPL_HAS_IEEE754_LDOUBLE != 1
+
+/*  Forward declaration provided here.                                        */
+#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE != 1.                                 */
+
 /******************************************************************************
  *                              Constant Values                               *
  ******************************************************************************/
@@ -308,21 +317,6 @@ long double tmpl_LDouble_Arcsin(const long double x)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
-
-/*  Check for inline support.                                                 */
-#if TMPL_USE_INLINE == 1
-
-/*  The absolute value function is small and should be inlined.               */
-#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern long double tmpl_LDouble_Abs(const long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Long double precision inverse sine (asinl equivalent).                    */
 long double tmpl_LDouble_Arcsin(const long double x)

@@ -308,11 +308,13 @@ float tmpl_Float_Arcsin(float x)
         return tmpl_Float_Arcsin_Tail_End(abs_x);
     }
 
-    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
+    /*  Since sin(-pi / 2) = -1, we have asin(-1) = -pi / 2.                  */
     if (x == -1.0F)
-        return -TMPL_PI_BY_TWO;
-    else if (x == 1.0F)
-        return TMPL_PI_BY_TWO;
+        return -tmpl_float_pi_by_two;
+
+    /*  Similarly, since sin(pi / 2) = 1 we have asin(1) = pi / 2.            */
+    if (x == 1.0F)
+        return tmpl_float_pi_by_two;
 
     /*  For |x| > 1 the function is undefined. Return NaN.                    */
     return TMPL_NANF;
