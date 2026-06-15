@@ -16,15 +16,19 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+#include <libtmpl/include/tmpl_attributes.h>
 #include <libtmpl/include/tmpl_math.h>
-#include "auxiliary/tmpl_cospi_maclaurin_double.h"
-#include "auxiliary/tmpl_sinpi_maclaurin_double.h"
+#include "auxiliary/tmpl_cospi_remez_small_double.h"
+#include "auxiliary/tmpl_sinpi_remez_small_double.h"
 
 /*  Significantly faster, and more accurate near integers, using IEEE-754.    */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  Computes cos(pi x) at double precision.                                   */
-double tmpl_Double_CosPi(double x)
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+double tmpl_Double_CosPi(const double x)
+TMPL_UNSEQUENCED
 {
     /*  We compute using the angle sum formula for cos(pi(r + dr)). Set aside *
      *  four variables for the right hand side of that equation.              */
@@ -115,8 +119,8 @@ double tmpl_Double_CosPi(double x)
     /*  Compute cos(pi y) using the angle sum formula.                        */
     sin_pi_r = tmpl_double_sinpi_table[index];
     cos_pi_r = tmpl_double_cospi_table[index];
-    sin_pi_dr = tmpl_Double_SinPi_Maclaurin(dr);
-    cos_pi_dr = tmpl_Double_CosPi_Maclaurin(dr);
+    sin_pi_dr = tmpl_Double_SinPi_Remez_Small(dr);
+    cos_pi_dr = tmpl_Double_CosPi_Remez_Small(dr);
     out = cos_pi_r*cos_pi_dr - sin_pi_r*sin_pi_dr;
 
     /*  Negate if necessary. The "negate" Boolean has the answer.             */
@@ -135,7 +139,9 @@ double tmpl_Double_CosPi(double x)
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Computes cos(pi x) at double precision.                                   */
-double tmpl_Double_CosPi(double x)
+TMPL_CONST_FUNC
+double tmpl_Double_CosPi(const double x)
+TMPL_UNSEQUENCED
 {
     double arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
@@ -155,9 +161,9 @@ double tmpl_Double_CosPi(double x)
 
     sx = tmpl_double_sinpi_table[ind];
     cx = tmpl_double_cospi_table[ind];
-    sdx = tmpl_Double_SinPi_Maclaurin(dx);
-    cdx = tmpl_Double_CosPi_Maclaurin(dx);
-    return sgn_x * (cdx*cx - sx*sdx);
+    sdx = tmpl_Double_SinPi_Remez_Small(dx);
+    cdx = tmpl_Double_CosPi_Remez_Small(dx);
+    return sgn_x * (cdx * cx - sx * sdx);
 }
 /*  End of tmpl_Double_CosPi.                                                 */
 
