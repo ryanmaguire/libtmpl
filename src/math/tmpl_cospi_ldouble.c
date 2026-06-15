@@ -95,6 +95,11 @@ TMPL_UNSEQUENCED
      *  least significant 8 bits of shifted.                                  */
     shifted.r = w.r + shifter;
 
+    /*  The double-double implementation needs to zero out the low part.      */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+    shifted.d[1] = 0.0;
+#endif
+
     /*  Extract the lowest 8 bits. The exact location of these bits depends   *
      *  on how long double is represented, use the macro.                     */
     lowest_eight_bits = TMPL_LDOUBLE_LOWER_EIGHT_BITS;
