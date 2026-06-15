@@ -267,29 +267,8 @@ tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P)
 /*  The value 2^-128, used for scaling vectors with large components.         */
 #define TMPL_SMALL_SCALE (+2.9387358770557187699218413430556141945467E-39)
 
-/*  Without IEEE-754 support we can still check for NaN and infinity using    *
- *  the following functions. These functions are small enough to inline,      *
- *  check for inline support.                                                 */
-#if TMPL_USE_INLINE == 1
-
-#include <libtmpl/include/inline/math/tmpl_is_inf.h>
-#include <libtmpl/include/inline/math/tmpl_is_nan.h>
-#include <libtmpl/include/inline/math/tmpl_is_nan_or_inf.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  C89 compatible Booleans provided here.                                    */
-#include <libtmpl/include/tmpl_bool.h>
-
-/*  Lacking inline support, provide the prototype / forward declaration for   *
- *  the functions. That is, tell the compiler they exist.                     */
-extern tmpl_Bool tmpl_Double_Is_Inf(double x);
-extern tmpl_Bool tmpl_Double_Is_NaN(double x);
-extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Is_NaN, Is_Inf, and Is_NaN_Or_Inf are all found here.                     */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Function for normalizing a non-zero vector to length 1.                   */
 tmpl_TwoVectorDouble
