@@ -34,8 +34,8 @@
 #define TMPL_LDOUBLE_SHIFTER (+4.0564819207303340847894502572032E+31L)
 #define TMPL_LDOUBLE_LOWER_EIGHT_BITS (0x00FFU & shifted.bits.man6)
 #else
-#define TMPL_LDOUBLE_SHIFTER (+3.5184372088832E+13L)
-#define TMPL_LDOUBLE_LOWER_EIGHT_BITS (0x00FFU & shifted.bits.man3)
+#define TMPL_LDOUBLE_SHIFTER (+3.16912650057057350374175801344E+29L)
+#define TMPL_LDOUBLE_LOWER_EIGHT_BITS (0x00FFU & shifted.bits.man3l)
 #endif
 
 /*  Computes cos(pi x) at long double precision.                              */
