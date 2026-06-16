@@ -23,6 +23,7 @@
 
 /*  IEEE-754 data type provided here.                                         */
 #include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Argument reduction for very large inputs.                                 */
 #include "tmpl_sincos_reduction_very_large.h"
@@ -35,8 +36,12 @@
 #define hpinv (6.366197723675813824328884038550e-01)
 #define toint (6.755399441055744000000000000000e+15)
 
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 unsigned int tmpl_Double_SinCos_Reduction(double x, double *a, double *da)
+TMPL_UNSEQUENCED
 {
     if (x < 1.05414350E+08)
     {

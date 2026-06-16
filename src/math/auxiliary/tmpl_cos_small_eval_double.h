@@ -23,6 +23,7 @@
 
 /*  TMPL_STATIC_INLINE macro provided here.                                   */
 #include <libtmpl/include/tmpl_config.h>
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  The lookup table is defined here.                                         */
 #include <libtmpl/include/tmpl_math.h>
@@ -42,8 +43,11 @@
 #define TMPL_BIG_NUMBER (5.2776558133248E+13)
 
 /*  Computes cos(x) for small values of x.                                    */
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
-double tmpl_Double_Cos_Small_Eval(double x)
+double tmpl_Double_Cos_Small_Eval(const double x)
+TMPL_UNSEQUENCED
 {
     tmpl_IEEE754_Double w;
     double sn, ssn, cs, ccs, cor;

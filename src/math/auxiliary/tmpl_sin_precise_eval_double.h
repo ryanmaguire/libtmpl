@@ -23,6 +23,7 @@
 
 /*  TMPL_STATIC_INLINE macro provided here.                                   */
 #include <libtmpl/include/tmpl_config.h>
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  The lookup table is defined here.                                         */
 #include <libtmpl/include/tmpl_math.h>
@@ -49,8 +50,11 @@
 #define TMPL_BIG_NUMBER (5.2776558133248E13)
 
 /*  Computes sin(x + dx) for small dx.                                        */
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Sin_Precise_Eval(double x, double dx)
+TMPL_UNSEQUENCED
 {
     double x2, s, sn, ssn, c, cs, ccs, cor;
     tmpl_IEEE754_Double w, tmp;
