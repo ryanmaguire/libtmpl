@@ -21,6 +21,7 @@
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 #include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_attributes.h>
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -29,7 +30,11 @@
 #include "auxiliary/tmpl_sin_precise_eval_double.h"
 #include "auxiliary/tmpl_sincos_reduction.h"
 
-double tmpl_Double_Cos(double x)
+TMPL_NO_CONTRACT_MATH
+TMPL_NO_ASSOCIATIVE_MATH
+TMPL_CONST_FUNC
+double tmpl_Double_Cos(const double x)
+TMPL_UNSEQUENCED
 {
     double a, da, out;
     tmpl_IEEE754_Double w;
@@ -73,7 +78,9 @@ double tmpl_Double_Cos(double x)
 #include "auxiliary/tmpl_cospi_maclaurin_double.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_double.h"
 
-double tmpl_Double_Cos(double x)
+TMPL_CONST_FUNC
+double tmpl_Double_Cos(const double x)
+TMPL_UNSEQUENCED
 {
     double arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
