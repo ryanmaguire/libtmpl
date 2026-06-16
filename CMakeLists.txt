@@ -24,8 +24,17 @@ cmake_minimum_required(VERSION 3.14)
 # libtmpl is written entirely in C and some assembly.
 project(libtmpl C ASM)
 
+# Choose release mode by default if the user does not specify a build type.
+get_property(TMPL_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if (NOT TMPL_MULTI_CONFIG AND NOT CMAKE_BUILD_TYPE)
+    set(
+        CMAKE_BUILD_TYPE Release CACHE STRING
+        "Build type: Debug, Release, RelWithDebInfo, or MinSizeRel" FORCE
+    )
+endif()
+
 # Default build options for libtmpl.
-option(BUILD_SHARED_LIBS "Build shared library" ON)
+option(BUILD_SHARED_LIBS "Build shared library" OFF)
 
 # OpenMP support, useful for parallel processing. Disabled by default
 # since OpenMP is not a required dependency for libtmpl.
@@ -35,7 +44,7 @@ option(OMP "Enable OpenMP support" OFF)
 # comes with your C compiler. If you disable this, then your compiler must
 # support the C99 standard (or higher). The original C89 standard lacks many
 # useful math functions that libtmpl requires (and implements).
-option(NO_MATH "Do not use libtmpl implementation of libm" OFF)
+option(NO_MATH "Do not use libtmpl's implementation of libm" OFF)
 
 # Whether or not to compile long long functions. On some platforms, like
 # 64-bit GNU/Linux, long and long long are the same type, so compiling the
@@ -49,6 +58,10 @@ option(NO_LONGLONG "Do not build long long functions" OFF)
 # show that inlining small functions produces a significant speed boost
 # (2x in some cases).
 option(NO_INLINE "Disable inlining" OFF)
+
+# Enable the C23 attributes [[gnu::always_inline]] or [[clang::always_inline]]
+# for inlined functions. Your compiler must support C23 attributes for this.
+option(ALWAYS_INLINE "Force always_inline attributes (requires C23)" OFF)
 
 # Do not use type punning for any functions. Most compilers support
 # type punning, disabling this can produce a serious performance hit
@@ -72,13 +85,44 @@ option(FASM "Use FASM instead of GAS (Requires fasm installed)" OFF)
 # Use the standard library function memcpy instead of for-loops.
 option(USE_MEMCPY "Use memcpy instead of for-loops" OFF)
 
+# Set the TMPL_VOLATILE macro to "volatile" instead of being empty. This may
+# be necessary for libtmpl's double-double arithmetic routines if your compiler
+# does not implement the C23 [[gnu::optimize(...)]] attribute.
+option(USE_VOLATILE "Set the TMPL_VOLATILE macro to volatile" OFF)
+
 # Options for carefully and correctly performing the double-double split.
 option(VOLATILE_SPLIT "Force volatile keyword for double splitting" OFF)
 option(CAUTIOUS_SPLIT "Force cautious (multi-volatile) double splitting" OFF)
 option(NO_VOLATILE_SPLIT "Disable volatile splitting (Not Recommended)" OFF)
 
-# Detect the architecture.
-string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" TMPL_ARCH)
+# Enable very aggressive optimizations and use OpenMP to create SIMD versions of
+# several of libtmpl's functions. Only supported by a few compilers (GCC 15+).
+# It enables -ffast-math, -march=native, and -fopenmp-simd, and requires C23
+# attributes to protect functions like 2Sum and 2Prod from these optimizations.
+# With appropriate hardware this can double the speed of some functions, at the
+# cost of slightly larger error (roughly 1-4 ULP instead of 1-2 ULP).
+option(SIMD_FAST_MATH "Enable aggressive SIMD fast-math vectorization" OFF)
+
+# Disable the -flto flag (link-time optimization). Some compilers do not support
+# it. NVIDIA's nvc is detected automatically by check_ipo_supported() below.
+option(NO_LTO "Disable link-time optimization (-flto)" OFF)
+
+# Manually override the detected architecture. The Makefile uses uname -m, CMake
+# uses CMAKE_SYSTEM_PROCESSOR. When emulating (e.g. running i386 binaries on an
+# x86_64 host) the detected value may be wrong Set this to pick the correct
+# assembly code. This has no effect when NO_ASM is enabled.
+set(ARCH "" CACHE STRING "Override detected architecture (e.g. i386)")
+
+# Any extra flags to pass to the C compiler.
+set(EXTRA_FLAGS "" CACHE STRING "Extra flags passed to the C compiler")
+
+# Detect the architecture. Honor the manual ARCH override if given, otherwise
+# fall back to what CMake probed for the target processor.
+if (ARCH)
+    string(TOLOWER "${ARCH}" TMPL_ARCH)
+else()
+    string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" TMPL_ARCH)
+endif()
 
 if(TMPL_ARCH MATCHES "amd64|x86_64")
     set(TMPL_ARCH "x86_64")
@@ -110,7 +154,7 @@ endif()
 if (NOT NO_VOLATILE_SPLIT)
 
     # i386 needs several volatile flags (one for each arithmetic step).
-    if (CAUTIOUS_SPLIT OR (TMPL_ARCH MATCHES "i386|x86"))
+    if (CAUTIOUS_SPLIT OR (TMPL_ARCH STREQUAL "i386"))
         list(APPEND CONFIG_FLAGS TMPL_USE_CAUTIOUS_DOUBLE_SPLIT)
 
     # The other architectures only need one.
@@ -132,6 +176,12 @@ endif()
 if (NOT NO_INLINE)
     list(APPEND CONFIG_FLAGS TMPL_SET_INLINE_TRUE)
     list(FILTER SOURCES EXCLUDE REGEX ".*_no_inline_.*\\.c$")
+endif()
+
+# Users may wish to force inlining functions. config.c only does this if the
+# corresponding macro is set.
+if (ALWAYS_INLINE)
+    list(APPEND CONFIG_FLAGS TMPL_SET_ALWAYS_INLINE_TRUE)
 endif()
 
 # Remove long long files if long long support is not requested or available.
@@ -158,6 +208,13 @@ endif()
 # Option to set the volatile keyword for certain functions.
 if (USE_VOLATILE)
     list(APPEND CONFIG_FLAGS TMPL_USE_VOLATILE)
+endif()
+
+# Set the SIMD fast-math config macro. The matching compile and link flags
+# (-ffast-math, -march=native, -fopenmp-simd, -std=c23) are added later in the
+# compiler-flags section, since they belong to the targets, not to config.c.
+if (SIMD_FAST_MATH)
+    list(APPEND CONFIG_FLAGS TMPL_SET_USE_SIMD_FAST_MATH_TRUE)
 endif()
 
 # The files tmpl_config.h, tmpl_float.h, and more, are all created by the
@@ -241,6 +298,11 @@ if (NOT NO_ASM)
             list(FILTER SOURCES EXCLUDE REGEX ".*${pure_name}\\.c$")
         endforeach()
     endif()
+
+    # Remove the assembly libm files if libtmpl's algorithms are not requested.
+    if (NO_MATH)
+        list(FILTER ASM_SOURCES EXCLUDE REGEX "_math_")
+    endif()
 endif()
 
 # Needed to get libtmpl to compile when using MinGW or MSYS2 on Windows.
@@ -283,7 +345,7 @@ if (NOT MSVC)
     check_c_compiler_flag("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)
 
     # Default flags for building libtmpl.
-    target_compile_options(tmpl PRIVATE -Wall -Wextra -Wpedantic -O3 -fPIC)
+    target_compile_options(tmpl PRIVATE -Wall -Wextra -Wpedantic -fPIC)
 
     # Check if we can enable -march=native.
     if(COMPILER_SUPPORTS_MARCH_NATIVE)
@@ -313,7 +375,7 @@ else()
     # equivalent to computing 2^N - n where N is the number of bits in n.
     # Turn this warning off when using MSVC.
     target_compile_options(
-        tmpl PRIVATE $<$<COMPILE_LANGUAGE:C>:/W4 /O2 /wd4146>
+        tmpl PRIVATE $<$<COMPILE_LANGUAGE:C>:/W4 /wd4146>
     )
 
     if (OpenMP_C_FOUND)
@@ -322,13 +384,69 @@ else()
     endif()
 endif()
 
+# SIMD_FAST_MATH: aggressive fast-math vectorization (GCC 15+, clang 22+).
+if (SIMD_FAST_MATH)
+    include(CheckCCompilerFlag)
+
+    # Apply a compile (and link) flag only if the active compiler accepts it.
+    # check_c_compiler_flag compiles a probe, so it is both compiler and
+    # architecture aware.
+    function(tmpl_add_supported_flag tgt flag)
+        string(MAKE_C_IDENTIFIER "TMPL_CC_HAS_${flag}" probe)
+        check_c_compiler_flag("${flag}" ${probe})
+        if (${probe})
+            target_compile_options(${tgt} PRIVATE "${flag}")
+            target_link_options(${tgt} PRIVATE "${flag}")
+        endif()
+    endfunction()
+
+    # SIMD_FAST_MATH mode requires C23 attributes and modern compiler features.
+    set_target_properties(
+        tmpl tmpl_config_generate PROPERTIES
+        C_STANDARD 23
+        C_STANDARD_REQUIRED ON
+    )
+
+    if (MSVC)
+
+        # MSVC equivalent of -ffast-math and -fopenmp-simd.
+        target_compile_options(tmpl PRIVATE /fp:fast /openmp:experimental)
+    else()
+
+        # Fast math.
+        tmpl_add_supported_flag(tmpl -ffast-math)
+
+        # Tune for the build machine. GCC uses use -march=native for some
+        # architectures and -mcpu=native for others.
+        check_c_compiler_flag("-march=native" TMPL_CC_HAS_MARCH_NATIVE)
+
+        if (TMPL_CC_HAS_MARCH_NATIVE)
+            target_compile_options(tmpl PRIVATE -march=native)
+            target_link_options(tmpl PRIVATE -march=native)
+        else()
+            tmpl_add_supported_flag(tmpl -mcpu=native)
+        endif()
+
+        # OpenMP SIMD vectorizer only, the full OpemMP runtime is not needed.
+        tmpl_add_supported_flag(tmpl -fopenmp-simd)
+    endif()
+endif()
+
+# Extra user-supplied compiler flags.
+if (EXTRA_FLAGS)
+    separate_arguments(EXTRA_FLAGS_LIST NATIVE_COMMAND "${EXTRA_FLAGS}")
+    target_compile_options(tmpl PRIVATE ${EXTRA_FLAGS_LIST})
+    target_compile_options(tmpl_config_generate PRIVATE ${EXTRA_FLAGS_LIST})
+endif()
+
 # Check for support for link-time optimization.
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result)
 
 # Add LTO if possible.
-if (result)
+if (result AND NOT NO_LTO)
     set_property(TARGET tmpl PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+    set_property(TARGET tmpl PROPERTY INTERPROCEDURAL_OPTIMIZATION_DEBUG FALSE)
 endif()
 
 # Install binary files (.so, .lib, .dll, or .a).
