@@ -508,7 +508,11 @@ install:
 	mkdir -p $(prefix)/lib/
 	mkdir -p $(prefix)/include/libtmpl/
 	cp -r ./include $(prefix)/include/libtmpl/
-	cp $(TARGET_LIB) $(prefix)/lib/$(TARGET_LIB)
+ifneq ("$(wildcard $(TARGET_LIB_SHARED))", "")
+	cp $(TARGET_LIB_STATIC) $(prefix)/lib/$(TARGET_LIB_SHARED)
+else
+	cp $(TARGET_LIB_STATIC) $(prefix)/lib/$(TARGET_LIB_STATIC)
+endif
 
 uninstall: clean
 	rm -rf $(prefix)/include/libtmpl/
