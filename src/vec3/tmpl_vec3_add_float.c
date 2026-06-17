@@ -19,7 +19,7 @@
  *                            tmpl_vec3_add_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for performing vector addition at single precision.     *
+ *      Performs vector addition at single precision.                         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -28,37 +28,38 @@
  *  Purpose:                                                                  *
  *      Computes the vector sum of two vectors at single precision.           *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorFloat):                                          *
- *          The vector sum P + Q.                                             *
+ *          The vector sum p + q.                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of vector addition. If P = (Px, Py, Pz) and        *
- *      Q = (Qx, Qy, Qz), then the vector sum P+Q has coordinates:            *
- *          x = Px + Qx                                                       *
- *          y = Py + Qy                                                       *
- *          z = Pz + Qz                                                       *
+ *      Use the definition of vector addition. If p = (px, py, pz) and        *
+ *      q = (qx, qy, qz), then the vector sum p + q has coordinates:          *
+ *                                                                            *
+ *          x = px + qx                                                       *
+ *          y = py + qy                                                       *
+ *          z = pz + qz                                                       *
+ *                                                                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
+ *      1.) No checks for Infs or NaNs are performed.                         *
  *                                                                            *
- *      A 7% to 50% increase in performance was found (pending hardware and   *
- *      compiler used) by passing tmpl_ThreeVectorFloat's by reference        *
- *      instead of by value.                                                  *
+ *      2.) No checks for Null pointers are performed.                        *
  *                                                                            *
- *      An %42 to %50 increase in performance was found (pending hardware and *
- *      compiler used) by inlining this function.                             *
+ *      3.) Performance tests indicate that it is faster to pass by address   *
+ *          instead of passing by value.                                      *
  *                                                                            *
- *      No checks for Null pointers are performed.                            *
+ *      4.) Modern compilers with link-time optimization can inline this      *
+ *          function across translation units.                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
  *  2.) tmpl_vec3_float.h:                                                    *
  *          The tmpl_ThreeVectorFloat typedef is provided here.               *
  ******************************************************************************
@@ -73,34 +74,36 @@
  *      Changed function to pass by reference instead of by value.            *
  *  2024/06/06: Ryan Maguire                                                  *
  *      Inlined the function.                                                 *
+ *  2026/06/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_ADD_FLOAT_H
-#define TMPL_VEC3_ADD_FLOAT_H
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Three-vector typedef found here.                                          */
+/*  Three-vector typedef provided here.                                       */
 #include <libtmpl/include/types/tmpl_vec3_float.h>
 
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat * const p,
+                 const tmpl_ThreeVectorFloat * const q);
+
 /*  Function for adding 2 three-dimensional vectors.                          */
-TMPL_INLINE_DECL
+TMPL_PURE_FUNC
 tmpl_ThreeVectorFloat
-tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat * const P,
-                 const tmpl_ThreeVectorFloat * const Q)
+tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat * const p,
+                 const tmpl_ThreeVectorFloat * const q)
+TMPL_UNSEQUENCED
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
+    /*  Variable for the sum of the two inputs.                               */
     tmpl_ThreeVectorFloat sum;
 
     /*  The sum of two vectors simply adds their components together.         */
-    sum.dat[0] = P->dat[0] + Q->dat[0];
-    sum.dat[1] = P->dat[1] + Q->dat[1];
-    sum.dat[2] = P->dat[2] + Q->dat[2];
+    sum.dat[0] = p->dat[0] + q->dat[0];
+    sum.dat[1] = p->dat[1] + q->dat[1];
+    sum.dat[2] = p->dat[2] + q->dat[2];
+
     return sum;
 }
 /*  End of tmpl_3DFloat_Add.                                                  */
-
-#endif
-/*  End of include guard.                                                     */
