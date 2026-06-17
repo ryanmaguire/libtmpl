@@ -91,6 +91,16 @@
 #define TMPL_CONST_FUNC
 #endif
 
+/*  Some math functions take in pointers to constants. These can often be     *
+ *  declared with the GNU pure attribute.                                     */
+#if TMPL_HAS_ATTRIBUTE(nodiscard) && TMPL_HAS_ATTRIBUTE(gnu::pure)
+#define TMPL_PURE_FUNC [[nodiscard, gnu::pure]]
+#elif TMPL_HAS_ATTRIBUTE(gnu::pure)
+#define TMPL_PURE_FUNC [[gnu::pure]]
+#else
+#define TMPL_PURE_FUNC
+#endif
+
 /*  Reproducible is a C23 attribute that provides optimization hints.         */
 #if TMPL_HAS_ATTRIBUTE(reproducible)
 #define TMPL_REPRODUCIBLE [[reproducible]]
@@ -159,6 +169,7 @@
 /*  For compilers lacking C23 support, or when using older C++ compilers, set *
  *  these macros to be empty.                                                 */
 #define TMPL_CONST_FUNC
+#define TMPL_PURE_FUNC
 #define TMPL_LEAF_FUNC
 #define TMPL_REPRODUCIBLE
 #define TMPL_UNSEQUENCED
