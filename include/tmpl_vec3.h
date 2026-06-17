@@ -5,6 +5,9 @@
 /*  TMPL_USE_INLINE macro is found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Typedefs for 3D vectors at various precisions.                            */
 #include <libtmpl/include/types/tmpl_vec3_double.h>
 #include <libtmpl/include/types/tmpl_vec3_float.h>
@@ -39,55 +42,35 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Add                                                      *
+ *      tmpl_3DDouble_Add                                                     *
  *  Purpose:                                                                  *
- *      Computes the vector sum of two vectors in R^3 at single precision.    *
- *      Similar functions are provided for double and long double precisions. *
+ *      Computes the vector sum of two vectors in R^3 at double precision.    *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      sum (tmpl_ThreeVectorFloat):                                          *
- *          The sum of P and Q, P + Q.                                        *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_add_no_inline_float.c                                   *
- *          tmpl_vec3_add_no_inline_double.c                                  *
- *          tmpl_vec3_add_no_inline_ldouble.c                                 *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_add_float.h                                             *
- *          tmpl_vec3_add_double.h                                            *
- *          tmpl_vec3_add_ldouble.h                                           *
+ *      sum (tmpl_ThreeVectorDouble):                                         *
+ *          The sum of p and q, p + q.                                        *
  ******************************************************************************/
-
-/*  Arithmetic functions are very small and can be inlined.                   */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_add_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_add_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_add_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, use the versions found in src/vec3/.                           */
-extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat * const P,
-                 const tmpl_ThreeVectorFloat * const Q);
-
+TMPL_PURE_FUNC
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble * const P,
-                  const tmpl_ThreeVectorDouble * const Q);
+tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble * const p,
+                  const tmpl_ThreeVectorDouble * const q)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat * const p,
+                 const tmpl_ThreeVectorFloat * const q)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble * const P,
-                   const tmpl_ThreeVectorLongDouble * const Q);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble * const p,
+                   const tmpl_ThreeVectorLongDouble * const q)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
