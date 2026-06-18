@@ -29,39 +29,38 @@
  *  Purpose:                                                                  *
  *      Computes the cross product of two vectors at single precision.        *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      cross (tmpl_ThreeVectorFloat):                                        *
- *          The cross product PxQ.                                            *
+ *          The cross product p x q.                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the cross product. If P = (Px, Py, Pz) and      *
- *      Q = (Qx, Qy, Qz), then the cross product PxQ has coordinates:         *
- *          x = PyQz - PzQy                                                   *
- *          y = PzQx - PxQz                                                   *
- *          z = PxQy - PyQx                                                   *
+ *      Use the definition of the cross product. If p = (px, py, pz) and      *
+ *      q = (qx, qy, qz), then the cross product p x q has coordinates:       *
+ *                                                                            *
+ *          x = py * qz - pz * qy                                             *
+ *          y = pz * qx - px * qz                                             *
+ *          z = px * qy - py * qx                                             *
+ *                                                                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
+ *      1.) No checks for Infs or NaNs are performed.                         *
  *                                                                            *
- *      The cross product is not commutative, but anti-commutative. That is,  *
- *      PxQ = -QxP. The order of P and Q matters for this function.           *
+ *      2.) No checks for Null pointers are performed.                        *
  *                                                                            *
- *      A 73% to 100% increase in performance (pending hardware and compiler  *
- *      used) was found when passing by reference instead of by value.        *
+ *      3.) Performance tests indicate that it is faster to pass by address   *
+ *          instead of passing by value.                                      *
  *                                                                            *
- *      A 1% to 38% increase in performance (pending hardware and compiler    *
- *      used) was found when inlining this function.                          *
- *                                                                            *
- *      No checks for NULL pointers are performed.                            *
+ *      4.) Modern compilers with link-time optimization can inline this      *
+ *          function across translation units.                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
  *  2.) tmpl_vec3_float.h:                                                    *
  *          The tmpl_ThreeVectorFloat typedef is provided here.               *
  ******************************************************************************
@@ -76,34 +75,36 @@
  *      Changed function to pass by reference instead of by value.            *
  *  2024/06/07: Ryan Maguire                                                  *
  *      Inlined the function.                                                 *
+ *  2026/06/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_CROSS_PRODUCT_FLOAT_H
-#define TMPL_VEC3_CROSS_PRODUCT_FLOAT_H
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Three-vector typedef found here.                                          */
+/*  Three-vector typedef provided here.                                       */
 #include <libtmpl/include/types/tmpl_vec3_float.h>
 
-/*  Function for computing the cross product of vectors at single precision.  */
-TMPL_INLINE_DECL
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const p,
+                           const tmpl_ThreeVectorFloat * const q);
+
+/*  Function for computing the cross product at single precision.             */
+TMPL_PURE_FUNC
 tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const P,
-                           const tmpl_ThreeVectorFloat * const Q)
+tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const p,
+                           const tmpl_ThreeVectorFloat * const q)
+TMPL_UNSEQUENCED
 {
     /*  Declare a variable for the output.                                    */
     tmpl_ThreeVectorFloat cross;
 
-    /*  Compute the components of the cross product PxQ.                      */
-    cross.dat[0] = P->dat[1]*Q->dat[2] - P->dat[2]*Q->dat[1];
-    cross.dat[1] = P->dat[2]*Q->dat[0] - P->dat[0]*Q->dat[2];
-    cross.dat[2] = P->dat[0]*Q->dat[1] - P->dat[1]*Q->dat[0];
+    /*  Compute the components of the cross product p x q.                    */
+    cross.dat[0] = p->dat[1] * q->dat[2] - p->dat[2] * q->dat[1];
+    cross.dat[1] = p->dat[2] * q->dat[0] - p->dat[0] * q->dat[2];
+    cross.dat[2] = p->dat[0] * q->dat[1] - p->dat[1] * q->dat[0];
+
     return cross;
 }
 /*  End of tmpl_3DFloat_Cross_Product.                                        */
-
-#endif
-/*  End of include guard.                                                     */

@@ -187,57 +187,37 @@ tmpl_3DLDouble_Component(const tmpl_ThreeVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Cross_Product                                            *
+ *      tmpl_3DDouble_Cross_Product                                           *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors in R^3 at single precision. *
- *      Similar functions are provided for double and long double precisions. *
+ *      Computes the cross product of two vectors in R^3 at double precision. *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a  three dimensional vector.                   *
  *  Output:                                                                   *
- *      cross (tmpl_ThreeVectorFloat):                                        *
- *          The cross product of P and Q, PxQ, in that order.                 *
+ *      cross (tmpl_ThreeVectorDouble):                                       *
+ *          The cross product of p and q, p x q, in that order.               *
  *  Notes:                                                                    *
- *      The cross product is anti-commutative. That is, PxQ = -QxP.           *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_cross_product_no_inline_float.c                         *
- *          tmpl_vec3_cross_product_no_inline_double.c                        *
- *          tmpl_vec3_cross_product_no_inline_ldouble.c                       *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_cross_product_float.h                                   *
- *          tmpl_vec3_cross_product_double.h                                  *
- *          tmpl_vec3_cross_product_ldouble.h                                 *
+ *      The cross product is anti-commutative. That is, p x q = -q x p.       *
  ******************************************************************************/
-
-/*  The cross product consists of a few lines of arithmetic. We can inline.   */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_product_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_product_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_product_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, use the versions found in src/vec3/.                           */
+TMPL_PURE_FUNC
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const P,
-                           const tmpl_ThreeVectorFloat * const Q);
+tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const p,
+                           const tmpl_ThreeVectorFloat * const q)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble * const P,
-                            const tmpl_ThreeVectorDouble * const Q);
+tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble * const p,
+                            const tmpl_ThreeVectorDouble * const q)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble * const P,
-                             const tmpl_ThreeVectorLongDouble * const Q);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble * const p,
+                             const tmpl_ThreeVectorLongDouble * const q)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
