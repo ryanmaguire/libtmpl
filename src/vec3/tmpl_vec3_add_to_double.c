@@ -19,14 +19,15 @@
  *                           tmpl_vec3_add_to_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for performing vector addition at double precision.     *
+ *      Performs vector addition at double precision.                         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_3DDouble_AddTo                                                   *
  *  Purpose:                                                                  *
- *      Computes the vector sum of two vectors at double precision.           *
+ *      Adds the source vector to the target vector at double precision, the  *
+ *      result of which is stored in the target.                              *
  *  Arguments:                                                                *
  *      target (tmpl_ThreeVectorDouble * const):                              *
  *          A pointer to a vector in R^3. The sum will be stored here.        *
@@ -37,33 +38,32 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of vector addition. If P = (Px, Py, Pz) and        *
- *      Q = (Qx, Qy, Qz), then the vector sum P+Q has coordinates:            *
- *          x = Px + Qx                                                       *
- *          y = Py + Qy                                                       *
- *          z = Pz + Qz                                                       *
+ *      Use the definition of vector addition. If p = (px, py, pz) and        *
+ *      q = (qx, qy, qz), then the vector sum p + q has coordinates:          *
+ *                                                                            *
+ *          x = px + qx                                                       *
+ *          y = py + qy                                                       *
+ *          z = pz + qz                                                       *
+ *                                                                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
+ *      1.) No checks for Infs or NaNs are performed.                         *
  *                                                                            *
- *      If tmpl_3DDouble_Add is the equivalent of the "+" operator for the    *
- *      tmpl_ThreeVectorDouble struct, this is the equivalent of "+=". It is  *
- *      about 2-3x faster to do tmpl_3DDouble_AddTo(&P, &Q) instead of doing  *
- *      P = tmpl_3DDouble_Add(&P, &Q).                                        *
+ *      2.) No checks for Null pointers are performed.                        *
  *                                                                            *
- *      A %12 to %15 increase in performance was found (pending hardware and  *
- *      compiler used) by inlining this function.                             *
+ *      3.) This function acts as a += operator for vectors. It is much       *
+ *          faster to do tmpl_3DDouble_AddTo(&p, &q) instead of               *
+ *          p = tmpl_3DDouble_Add(&p, &q).                                    *
  *                                                                            *
- *      No checks for Null pointers are performed.                            *
+ *      4.) Modern compilers with link-time optimization can inline this      *
+ *          function across translation units.                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_double.h:                                                   *
+ *  1.) tmpl_vec3_double.h:                                                   *
  *          The tmpl_ThreeVectorDouble typedef is provided here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       March 15, 2022                                                *
+ *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
@@ -71,28 +71,27 @@
  *      Added doc-string and comments.                                        *
  *  2024/06/06: Ryan Maguire                                                  *
  *      Inlined the function.                                                 *
+ *  2026/06/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions.                                *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_ADD_TO_DOUBLE_H
-#define TMPL_VEC3_ADD_TO_DOUBLE_H
-
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Three-vector typedef found here.                                          */
+/*  Three-vector typedef provided here.                                       */
 #include <libtmpl/include/types/tmpl_vec3_double.h>
 
+/*  Function prototype / forward declaration.                                 */
+extern void
+tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
+                    const tmpl_ThreeVectorDouble * const source);
+
 /*  Function for performing vector addition in R^3.                           */
-TMPL_INLINE_DECL
-void tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
-                         const tmpl_ThreeVectorDouble * const source)
+void
+tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
+                    const tmpl_ThreeVectorDouble * const source)
 {
+    /*  The sum of two vectors simply adds their components together.         */
     target->dat[0] += source->dat[0];
     target->dat[1] += source->dat[1];
     target->dat[2] += source->dat[2];
 }
 /*  End of tmpl_3DDouble_AddTo.                                               */
 
-#endif
-/*  End of include guard.                                                     */
