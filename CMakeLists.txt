@@ -445,6 +445,7 @@ check_ipo_supported(RESULT result)
 
 # Add LTO if possible.
 if (result AND NOT NO_LTO)
+    message(STATUS "libtmpl compiling with LTO enabled.")
     set_property(TARGET tmpl PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
     set_property(TARGET tmpl PROPERTY INTERPROCEDURAL_OPTIMIZATION_DEBUG FALSE)
 endif()
