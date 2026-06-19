@@ -98,14 +98,17 @@ TMPL_UNSEQUENCED;
  *          faster to do tmpl_3DDouble_AddTo(&p, &q) instead of               *
  *          p = tmpl_3DDouble_Add(&p, &q).                                    *
  ******************************************************************************/
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
                     const tmpl_ThreeVectorDouble * const source);
 
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat * const target,
                    const tmpl_ThreeVectorFloat * const source);
 
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble * const target,
                      const tmpl_ThreeVectorLongDouble * const source);
