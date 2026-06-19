@@ -78,11 +78,13 @@
 /*  Function for computing the dot product of 2 three-vectors.                */
 TMPL_INLINE_DECL
 long double
-tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const P,
-                           const tmpl_ThreeVectorLongDouble * const Q)
+tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const p,
+                           const tmpl_ThreeVectorLongDouble * const q)
 {
     /*  Use the Euclidean dot product formula and return.                     */
-    return P->dat[0]*Q->dat[0] + P->dat[1]*Q->dat[1] + P->dat[2]*Q->dat[2];
+    return p->dat[0] * q->dat[0] +
+           p->dat[1] * q->dat[1] +
+           p->dat[2] * q->dat[2];
 }
 /*  End of tmpl_3DLDouble_Dot_Product.                                        */
 
