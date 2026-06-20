@@ -19,7 +19,7 @@
  *                          tmpl_vec3_angle_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing unit normal vectors.                      *
+ *      Contains code for computing angles at long double precision.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -28,50 +28,71 @@
  *  Purpose:                                                                  *
  *      Computes the angle two vectors in R^3 make.                           *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorLongDouble * const):                         *
+ *      p (const tmpl_ThreeVectorLongDouble * const):                         *
  *          A vector in R^3.                                                  *
- *      Q (const tmpl_ThreeVectorLongDouble * const):                         *
+ *      q (const tmpl_ThreeVectorLongDouble * const):                         *
  *          Another vector in R^3.                                            *
  *  Output:                                                                   *
  *      angle (long double):                                                  *
- *          The angle P and Q make.                                           *
+ *          The angle p and q make.                                           *
+ *  Called Functions:                                                         *
+ *      src/math/                                                             *
+ *          tmpl_LDouble_Arctan2:                                             *
+ *              Computes the angle the point (x, y) makes in the plane with   *
+ *              the positive x axis.                                          *
+ *      src/vec3/                                                             *
+ *          tmpl_3DLDouble_Cross_Product:                                     *
+ *              Computes the cross product of two vectors.                    *
+ *          tmpl_3DLDouble_Dot_Product:                                       *
+ *              Computes the Euclidean dot product of two vectors.            *
+ *          tmpl_3DLDouble_L2_Norm:                                           *
+ *              Computes the Euclidean length of a vector.                    *
+ *          tmpl_3DLDouble_Normalize:                                         *
+ *              Normalizes a vector to unit magnitude.                        *
  *  Method:                                                                   *
- *      The standard method of:                                               *
+ *      The standard method of                                                *
  *                                                                            *
- *                          P . Q                                             *
- *          angle = acos -----------                                          *
- *                       ||P|| ||Q||                                          *
+ *                        -           -                                       *
+ *                       |    p . q    |                                      *
+ *          angle = acos | ----------- |                                      *
+ *                       | ||p|| ||q|| |                                      *
+ *                        -           -                                       *
  *                                                                            *
- *      Is unstable and yields poor results when the angle is small. The      *
- *      altenative definition:                                                *
+ *      is unstable and yields poor results when the angle is small. The      *
+ *      alternative definition                                                *
  *                                                                            *
- *                        ||P x Q||                                           *
- *          angle = asin -----------                                          *
- *                       ||P|| ||Q||                                          *
+ *                        -           -                                       *
+ *                       |  ||p x q||  |                                      *
+ *          angle = asin | ----------- |                                      *
+ *                       | ||p|| ||q|| |                                      *
+ *                        -           -                                       *
  *                                                                            *
- *      Is similarly unstable, and results in poor error when the angle is    *
+ *      is similarly unstable, and results in poor error when the angle is    *
  *      close to perpendicular. A third definition is used that is stable:    *
  *                                                                            *
- *          angle = atan2(||PxQ||, P.Q)                                       *
+ *          angle = atan2(||p x q||, p . q)                                   *
  *                                                                            *
  *      This is stable, but also has the added bonus of being slightly faster *
  *      than either of the two previous methods. Performance tests showed     *
  *      this to be 20-50% faster, depending on compiler and hardware.         *
  *  Notes:                                                                    *
  *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
  *      2.) No checks for NULL pointers are performed.                        *
+ *                                                                            *
  *      3.) If either vector is zero, the behavior of the output is identical *
  *          to how the atan2 function works for zero-valued inputs.           *
+ *                                                                            *
  *      4.) To avoid possible overflows with the intermediate steps, we first *
- *          normalize P and Q to unit length. This is likely an unnecessary   *
+ *          normalize p and q to unit length. This is likely an unnecessary   *
  *          step that simply slows down the computation. If speed if          *
  *          critical, and if you are not working with vectors that have       *
  *          massive components, use tmpl_3DLDouble_Quick_Angle.               *
  *  References:                                                               *
- *      Kahan, William                                                        *
- *      How Futile are Mindless Assessments of Roundoff                       *
- *      in Floating-Point Computation?                                        *
- *      https://people.eecs.berkeley.edu/~wkahan/Mindless.pdf                 *
+ *      1.) Kahan, William                                                    *
+ *          How Futile are Mindless Assessments of Roundoff                   *
+ *          in Floating-Point Computation?                                    *
+ *          https://people.eecs.berkeley.edu/~wkahan/Mindless.pdf             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -92,25 +113,25 @@
 
 /*  Function for computing the angle between two vectors.                     */
 long double
-tmpl_3DLDouble_Angle(const tmpl_ThreeVectorLongDouble * const P,
-                     const tmpl_ThreeVectorLongDouble * const Q)
+tmpl_3DLDouble_Angle(const tmpl_ThreeVectorLongDouble * const p,
+                     const tmpl_ThreeVectorLongDouble * const q)
 {
     /*  To avoid overflows, or undeflows, normalize the inputs.               */
-    const tmpl_ThreeVectorLongDouble Pn = tmpl_3DLDouble_Normalize(P);
-    const tmpl_ThreeVectorLongDouble Qn = tmpl_3DLDouble_Normalize(Q);
+    const tmpl_ThreeVectorLongDouble pn = tmpl_3DLDouble_Normalize(p);
+    const tmpl_ThreeVectorLongDouble qn = tmpl_3DLDouble_Normalize(q);
 
-    /*  From vector geometry, ||PxQ|| = ||P|| ||Q|| sin(theta). Computing     *
-     *  the norm of ||PxQ|| gives us a formula for the angle.                 */
-    const tmpl_ThreeVectorLongDouble
-        cross = tmpl_3DLDouble_Cross_Product(&Pn, &Qn);
+    /*  From vector geometry, ||p x q|| = ||p|| ||q|| sin(theta). Computing   *
+     *  the norm of ||p x q|| gives us a formula for the angle.               */
+    const tmpl_ThreeVectorLongDouble cross =
+        tmpl_3DLDouble_Cross_Product(&pn, &qn);
     const long double norm_cross = tmpl_3DLDouble_L2_Norm(&cross);
 
-    /*  Also from vector geometry, ||P.Q|| = ||P|| ||Q|| cos(theta). By       *
+    /*  Also from vector geometry, ||p . q|| = ||p|| ||q|| cos(theta). By     *
      *  keeping track of the sign, we can get "oriented" angles.              */
-    const long double dot = tmpl_3DLDouble_Dot_Product(&Pn, &Qn);
+    const long double dot = tmpl_3DLDouble_Dot_Product(&pn, &qn);
 
-    /*  tan(theta) is the ratio of ||PxQ|| and P.Q. The angle can be computed *
-     *  using the arctan2 function in the plane.                              */
+    /*  tan(theta) is the ratio of ||p x q|| and p . q. The angle can be      *
+     *  computed using the atan2 function in the plane.                       */
     return tmpl_LDouble_Arctan2(norm_cross, dot);
 }
 /*  End of tmpl_3DLDouble_Angle.                                              */

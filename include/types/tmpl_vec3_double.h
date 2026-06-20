@@ -29,10 +29,55 @@
 #ifndef TMPL_TYPES_VEC3_DOUBLE_H
 #define TMPL_TYPES_VEC3_DOUBLE_H
 
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+#if TMPL_HAS_IEEE754_DOUBLE == 1
+
+#include <libtmpl/include/helper/tmpl_max.h>
+#include <libtmpl/include/helper/tmpl_min.h>
+
+/*  3D Vectors with double precision components and their bit fields.         */
+typedef union tmpl_ThreeVectorDouble_Type {
+    double dat[3];
+    tmpl_IEEE754_Double word[3];
+} tmpl_ThreeVectorDouble;
+
+#define TMPL_VEC3_DOUBLE_MAX_EXP(p) \
+    TMPL_MAX3(                      \
+        (p).word[0].bits.expo,      \
+        (p).word[1].bits.expo,      \
+        (p).word[2].bits.expo       \
+    )
+
+#define TMPL_VEC3_DOUBLE_PTR_MAX_EXP(p) \
+    TMPL_MAX3(                          \
+        (p)->word[0].bits.expo,         \
+        (p)->word[1].bits.expo,         \
+        (p)->word[2].bits.expo          \
+    )
+
+#define TMPL_VEC3_DOUBLE_MIN_EXP(p) \
+    TMPL_MIN3(                      \
+        (p).word[0].bits.expo,      \
+        (p).word[1].bits.expo,      \
+        (p).word[2].bits.expo       \
+    )
+
+#define TMPL_VEC3_DOUBLE_PTR_MIN_EXP(p) \
+    TMPL_MIN3(                          \
+        (p)->word[0].bits.expo,         \
+        (p)->word[1].bits.expo,         \
+        (p)->word[2].bits.expo          \
+    )
+
+#else
+
 /*  3D Vectors with double precision components.                              */
 typedef struct tmpl_ThreeVectorDouble_Type {
     double dat[3];
 } tmpl_ThreeVectorDouble;
+
+#endif
 
 #endif
 /*  End of include guard.                                                     */

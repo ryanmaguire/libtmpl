@@ -111,6 +111,75 @@
 /*  Three-vector typedef and function prototype given here.                   */
 #include <libtmpl/include/tmpl_vec3.h>
 
+/*  The TMPL_HAS_IEEE754_DOUBLE macro is found here.                          */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  With IEEE-754 support we can determine if || p || or || q || are too      *
+ *  small or too big by examining the exponents of their components. This is  *
+ *  significantly faster than normalizing using square roots.                 */
+#if TMPL_HAS_IEEE754_DOUBLE == 1
+
+/*  Scale factor is 2^512 for small values and 2^-512 for large ones.         */
+#define TMPL_2_POW_512 (+1.34078079299425970995740249982058461274793658206E+154)
+
+/*  Function for computing the angle between two vectors.                     */
+double
+tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const p,
+                    const tmpl_ThreeVectorDouble * const q)
+{
+    /*  Variables for p x q, || p x q ||, and p . q, computed after scaling.  */
+    tmpl_ThreeVectorDouble cross;
+    double dot, norm_cross;
+
+    /*  To avoid overflows and undeflows we scale the inputs. Make a copy.    */
+    tmpl_ThreeVectorDouble pn = *p;
+    tmpl_ThreeVectorDouble qn = *q;
+
+    /*  We only scale if || p || or || q || is very small or very large. To   *
+     *  avoid a square root call, we check if either of these are large by    *
+     *  examining the exponents of the components.                            */
+    const unsigned int p_max_exp = TMPL_VEC3_DOUBLE_MAX_EXP(pn);
+    const unsigned int q_max_exp = TMPL_VEC3_DOUBLE_MAX_EXP(qn);
+
+    /*  If || p || > 2^504, scale the components by 2^-512. This guarantees   *
+     *  the the scaled result will not produce overflows in the intermediate  *
+     *  calculations (cross product, dot product).                            */
+    if (p_max_exp > TMPL_DOUBLE_UBIAS + 0x1F8U)
+        tmpl_3DDouble_ScaleBy(&pn, 1 / TMPL_2_POW_512);
+
+    /*  Similarly, if || p || < 2^-504, scale by 2^512. This prevent          *
+     *  underflow from occuring in the intermediate steps.                    */
+    else if (p_max_exp < TMPL_DOUBLE_UBIAS - 0x1F8U)
+        tmpl_3DDouble_ScaleBy(&pn, TMPL_2_POW_512);
+
+    /*  Same check for || q ||.                                               */
+    if (q_max_exp > TMPL_DOUBLE_UBIAS + 0x1F8U)
+        tmpl_3DDouble_ScaleBy(&qn, 1 / TMPL_2_POW_512);
+    else if (q_max_exp < TMPL_DOUBLE_UBIAS - 0x1F8U)
+        tmpl_3DDouble_ScaleBy(&qn, TMPL_2_POW_512);
+
+    /*  From vector geometry, ||p x q|| = ||p|| ||q|| sin(theta). Computing   *
+     *  the norm of ||p x q|| gives us a formula for the angle.               */
+    cross = tmpl_3DDouble_Cross_Product(&pn, &qn);
+
+    /*  p and q have been scaled to avoid underflow and overflow. The         *
+     *  L2 norm function performs checks and normalizations to carefully      *
+     *  handle large numbers. Since we are not working with such numbers,     *
+     *  we may use the Quick L2 norm function.                                */
+    norm_cross = tmpl_3DDouble_Quick_L2_Norm(&cross);
+
+    /*  Also from vector geometry, ||p . q|| = ||p|| ||q|| cos(theta). By     *
+     *  keeping track of the sign, we can get "oriented" angles.              */
+    dot = tmpl_3DDouble_Dot_Product(&pn, &qn);
+
+    /*  tan(theta) is the ratio of ||p x q|| and p . q. The angle can be      *
+     *  computed using the atan2 function in the plane.                       */
+    return tmpl_Double_Arctan2(norm_cross, dot);
+}
+/*  End of tmpl_3DDouble_Angle.                                               */
+
+#else
+
 /*  Function for computing the angle between two vectors.                     */
 double
 tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const p,
@@ -134,3 +203,5 @@ tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const p,
     return tmpl_Double_Arctan2(norm_cross, dot);
 }
 /*  End of tmpl_3DDouble_Angle.                                               */
+
+#endif
