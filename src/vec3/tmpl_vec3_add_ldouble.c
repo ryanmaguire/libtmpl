@@ -60,8 +60,8 @@
  ******************************************************************************
  *  1.) tmpl_attributes.h:                                                    *
  *          Provides C23 attributes for optimization.                         *
- *  2.) tmpl_vec3_ldouble.h:                                                  *
- *          The tmpl_ThreeVectorLongDouble typedef is provided here.          *
+ *  2.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorLongDouble and function prototype provided here.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -81,8 +81,8 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Three-vector typedef provided here.                                       */
-#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function prototype / forward declaration.                                 */
 extern tmpl_ThreeVectorLongDouble
