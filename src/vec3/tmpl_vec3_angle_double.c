@@ -178,6 +178,9 @@ tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const p,
 }
 /*  End of tmpl_3DDouble_Angle.                                               */
 
+/*  Undefine the power macro to avoid collisions with other files.            */
+#undef TMPL_2_POW_512
+
 #else
 
 /*  Function for computing the angle between two vectors.                     */
