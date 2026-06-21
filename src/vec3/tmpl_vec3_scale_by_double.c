@@ -30,53 +30,63 @@
  *  Arguments:                                                                *
  *      target (tmpl_ThreeVectorDouble * const):                              *
  *          A pointer to a vector in R^3. The product is stored here.         *
- *      a (double):                                                           *
+ *      a (const double):                                                     *
  *          A real number, the scalar multiplier.                             *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of scalar multiplication. If P = (Px, Py, Pz),     *
- *      then a*P has coordinates:                                             *
- *          x = a*Px                                                          *
- *          y = a*Py                                                          *
- *          z = a*Pz                                                          *
+ *      Use the definition of scalar multiplication. If p = (px, py, pz),     *
+ *      then a * p has coordinates:                                           *
+ *                                                                            *
+ *          x = a * px                                                        *
+ *          y = a * py                                                        *
+ *          z = a * pz                                                        *
+ *                                                                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
+ *                                                                            *
+ *      3.) This function acts as p *= operator for vectors. It is much       *
+ *          faster to do tmpl_3DDouble_ScaleBy(&p, a) instead of              *
+ *          p = tmpl_3DDouble_Scale(a, &p).                                   *
+ *                                                                            *
+ *      4.) Modern compilers with link-time optimization can inline this      *
+ *          function across translation units.                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_double.h:                                                   *
- *          The tmpl_ThreeVectorDouble typedef is provided here.              *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  2.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 11, 2024                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/21: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_SCALE_BY_DOUBLE_H
-#define TMPL_VEC3_SCALE_BY_DOUBLE_H
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_double.h>
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Multiply a three vector by a real number.                                 */
-TMPL_INLINE_DECL
-void tmpl_3DDouble_ScaleBy(tmpl_ThreeVectorDouble * const target, double a)
+TMPL_PURE_FUNC
+void
+tmpl_3DDouble_ScaleBy(tmpl_ThreeVectorDouble * const target, const double a)
 {
-    /*  Scalar multiplication is done component-wise, so compute this.        */
+    /*  Scalar multiplication is done component-wise, compute this.           */
     target->dat[0] *= a;
     target->dat[1] *= a;
     target->dat[2] *= a;
 }
 /*  End of tmpl_3DDouble_ScaleBy.                                             */
 
-#endif
-/*  End of include guard.                                                     */

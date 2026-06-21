@@ -1310,51 +1310,31 @@ tmpl_3DLDouble_Scale(long double a, const tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_ScaleBy                                                  *
+ *      tmpl_3DDouble_ScaleBy                                                 *
  *  Purpose:                                                                  *
  *      Multiply a 3D vector by a real number.                                *
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat * const):                               *
+ *      target (tmpl_ThreeVectorDouble * const):                              *
  *          A 3D vector. The product is stored here.                          *
- *      a (float):                                                            *
+ *      a (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_scale_by_no_inline_float.c                              *
- *          tmpl_vec3_scale_by_no_inline_double.c                             *
- *          tmpl_vec3_scale_by_no_inline_ldouble.c                            *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_scale_by_float.h                                        *
- *          tmpl_vec3_scale_by_double.h                                       *
- *          tmpl_vec3_scale_by_ldouble.h                                      *
  ******************************************************************************/
-
-/*  Arithmetic functions are small enough to inline.                          */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_by_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_by_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_by_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/vec3.                     */
+TMPL_PURE_FUNC
 extern void
-tmpl_3DFloat_ScaleBy(tmpl_ThreeVectorFloat * const target, float a);
+tmpl_3DDouble_ScaleBy(tmpl_ThreeVectorDouble * const target,
+                      const double a);
 
+TMPL_PURE_FUNC
 extern void
-tmpl_3DDouble_ScaleBy(tmpl_ThreeVectorDouble * const target, double a);
+tmpl_3DFloat_ScaleBy(tmpl_ThreeVectorFloat * const target,
+                     const float a);
 
+TMPL_PURE_FUNC
 extern void
 tmpl_3DLDouble_ScaleBy(tmpl_ThreeVectorLongDouble * const target,
-                       long double a);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+                       const long double a);
 
 /******************************************************************************
  *  Function:                                                                 *
