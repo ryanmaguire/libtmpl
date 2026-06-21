@@ -115,34 +115,35 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble * const target,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Angle                                                    *
+ *      tmpl_3DDouble_Angle                                                   *
  *  Purpose:                                                                  *
  *      Safely computes the angle between two vectors.                        *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      P (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to the first vector.                                    *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      Q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a vector.                                      *
  *  Output:                                                                   *
- *      angle (float):                                                        *
+ *      angle (double):                                                        *
  *          The angle made between P and Q.                                   *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_add_to_no_inline_float.c                                *
- *          tmpl_vec3_add_to_no_inline_double.c                               *
- *          tmpl_vec3_add_to_no_inline_ldouble.c                              *
  ******************************************************************************/
-extern float
-tmpl_3DFloat_Angle(const tmpl_ThreeVectorFloat * const P,
-                   const tmpl_ThreeVectorFloat * const Q);
-
+TMPL_PURE_FUNC
 extern double
 tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const P,
-                    const tmpl_ThreeVectorDouble * const Q);
+                    const tmpl_ThreeVectorDouble * const Q)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
+extern float
+tmpl_3DFloat_Angle(const tmpl_ThreeVectorFloat * const P,
+                   const tmpl_ThreeVectorFloat * const Q)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern long double
 tmpl_3DLDouble_Angle(const tmpl_ThreeVectorLongDouble * const P,
-                     const tmpl_ThreeVectorLongDouble * const Q);
+                     const tmpl_ThreeVectorLongDouble * const Q)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1321,17 +1322,17 @@ tmpl_3DLDouble_Scale(long double a, const tmpl_ThreeVectorLongDouble * const P);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-TMPL_PURE_FUNC
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DDouble_ScaleBy(tmpl_ThreeVectorDouble * const target,
                       const double a);
 
-TMPL_PURE_FUNC
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DFloat_ScaleBy(tmpl_ThreeVectorFloat * const target,
                      const float a);
 
-TMPL_PURE_FUNC
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DLDouble_ScaleBy(tmpl_ThreeVectorLongDouble * const target,
                        const long double a);

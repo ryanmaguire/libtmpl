@@ -58,9 +58,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_attributes.h:                                                    *
- *          Provides C23 attributes for optimization.                         *
- *  2.) tmpl_vec3.h:                                                          *
+ *  1.) tmpl_vec3.h:                                                          *
  *          tmpl_ThreeVectorFloat and function prototype provided here.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -69,17 +67,13 @@
  *                              Revision History                              *
  ******************************************************************************
  *  2026/06/21: Ryan Maguire                                                  *
- *      Merged inline and non-inline versions, added C23 attributes.          *
+ *      Merged inline and non-inline versions.                                *
  ******************************************************************************/
-
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Three-vector typedef and function prototype found here.                   */
 #include <libtmpl/include/tmpl_vec3.h>
 
 /*  Multiply a three vector by a real number.                                 */
-TMPL_PURE_FUNC
 void
 tmpl_3DFloat_ScaleBy(tmpl_ThreeVectorFloat * const target, const float a)
 {
