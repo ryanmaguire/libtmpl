@@ -84,11 +84,6 @@
 /*  Three-vector typedef and function prototype found here.                   */
 #include <libtmpl/include/tmpl_vec3.h>
 
-/*  Function prototype / forward declaration.                                 */
-extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble * const p,
-                   const tmpl_ThreeVectorLongDouble * const q);
-
 /*  Function for adding 2 three-dimensional vectors.                          */
 TMPL_PURE_FUNC
 tmpl_ThreeVectorLongDouble

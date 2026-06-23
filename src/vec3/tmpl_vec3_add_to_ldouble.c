@@ -58,8 +58,8 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3_ldouble.h:                                                  *
- *          The tmpl_ThreeVectorLongDouble typedef is provided here.          *
+ *  1.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorLongDouble and function prototype provided here.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -74,13 +74,8 @@
  *      Merged inline and non-inline versions.                                *
  ******************************************************************************/
 
-/*  Three-vector typedef provided here.                                       */
-#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
-
-/*  Function prototype / forward declaration.                                 */
-extern void
-tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble * const target,
-                     const tmpl_ThreeVectorLongDouble * const source);
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for performing vector addition in R^3.                           */
 void

@@ -59,8 +59,8 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3_double.h:                                                   *
- *          The tmpl_ThreeVectorDouble typedef is provided here.              *
+ *  1.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -75,13 +75,8 @@
  *      Merged inline and non-inline versions.                                *
  ******************************************************************************/
 
-/*  Three-vector typedef provided here.                                       */
-#include <libtmpl/include/types/tmpl_vec3_double.h>
-
-/*  Function prototype / forward declaration.                                 */
-extern void
-tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
-                    const tmpl_ThreeVectorDouble * const source);
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for performing vector addition in R^3.                           */
 void
