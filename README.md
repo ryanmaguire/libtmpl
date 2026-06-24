@@ -23,11 +23,12 @@
 # Table of Contents
 1. [libtmpl](#libtmpl)
     1. [The Mathematicians Programming Library](#intro)
-    2. [Installation: Makefile](#Installation-Makefile)
-    3. [Installation: Bash Script](#Installation-Bash-Script)
-    3. [Installation: Batch Script](#Installation-Batch-Script)
-    4. [Directory Structure](#Directory-Structure)
-2. [Language Bindings (C++, Python, IDL)](#bindings)
+    2. [Installation: CMake](#Installation-CMake)
+    3. [Installation: Makefile](#Installation-Makefile)
+    4. [Installation: Bash Script](#Installation-Bash-Script)
+    5. [Installation: Batch Script](#Installation-Batch-Script)
+2. [Helper Repositories](#Directory-Structure)
+3. [Language Bindings (C++, Python, IDL)](#bindings)
 4. [License](#license)
 
 # libtmpl
@@ -66,7 +67,7 @@ There are several options that control how libtmpl is compiled.
 To see descriptions of these, run
 ```
 cmake -S . -B build -LH
-``
+```
 You may then install libtmpl using (requires sudo / administrator privileges)
 ```
 cmake --install build
