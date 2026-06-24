@@ -26,7 +26,8 @@
  *  Function Name:                                                            *
  *      tmpl_3DLDouble_AddTo                                                  *
  *  Purpose:                                                                  *
- *      Computes the vector sum of two vectors at long double precision.      *
+ *      Adds the source vector to the target vector at long double precision, *
+ *      the result of which is stored in the target.                          *
  *  Arguments:                                                                *
  *      target (tmpl_ThreeVectorLongDouble * const):                          *
  *          A pointer to a vector in R^3. The sum will be stored here.        *
