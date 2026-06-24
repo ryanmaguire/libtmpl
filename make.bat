@@ -27,7 +27,7 @@
 :: command extensions are available.
 SETLOCAL EnableExtensions
 
-:: Clean up files produces by a previous build.
+:: Clean up files produced by a previous build.
 DEL /q *.exe *.obj *.o *.lib *.a *.dll 2>nul
 
 :: Select the compiler. No argument defaults to MSVC.
@@ -83,7 +83,7 @@ GOTO Usage
     SET "CWARN=-Weverything -Wno-padded -Wno-float-equal"
     SET "CFLAGS=-O3 -flto -I../ -c"
     SET "EXEOUT=-o "
-    SET "ARCHIVER=ar"
+    SET "ARCHIVER=llvm-ar"
     SET "LIBOUT=libtmpl.a"
     GOTO Build
 
@@ -93,7 +93,7 @@ GOTO Usage
     SET "CWARN=-Wall -Wextra -Wpedantic -Wno-padded -Wno-float-equal"
     SET "CFLAGS=-O3 -flto -I../ -c"
     SET "EXEOUT=-o "
-    SET "ARCHIVER=ar"
+    SET "ARCHIVER=gcc-ar"
     SET "LIBOUT=libtmpl.a"
     GOTO Build
 
@@ -153,7 +153,7 @@ GOTO Usage
 
     :: MSVC and ClangCL use Microsoft's lib.exe tool.
     IF "%ARCHIVER%"=="lib" (
-        lib /nologo /out:%LIBOUT% *.obj
+        lib /nologo /LTCG /out:%LIBOUT% *.obj
         exit /b
     )
 
@@ -162,7 +162,7 @@ GOTO Usage
     FOR %%o in (*.o) DO ECHO %%o>>obj_list.tmp
 
     :: Create the static library from this list.
-    ar rcs %LIBOUT% @obj_list.tmp
+    %ARCHIVER% rcs %LIBOUT% @obj_list.tmp
 
     :: Check for errors.
     IF errorlevel 1 (DEL /q obj_list.tmp 2>nul & EXIT /b 1)
