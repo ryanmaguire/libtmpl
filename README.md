@@ -48,7 +48,7 @@ compilers, so it is more fitting to say it is written in the intersection of
 these standards.
 
 ## Installation: Makefile
-Run the Makefile with (`FreeBSD` users should use `gmake`):
+Run the Makefile with (`FreeBSD` users should use `gmake`)
 ```
 make
 ```
@@ -57,18 +57,14 @@ emulated architectures:
 ```
 make -j
 ```
-
-Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run:
+Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run
 ```
 sudo make install
 ```
-
 The Makefile has many flags that determine how libtmpl is compiled. Use
-
 ```
 make help
 ```
-
 to see a description of each command-line option.
 
 **You may need to update the LD_LIBRARY_PATH environment variable.**
@@ -102,48 +98,16 @@ To use, run:
 ```
 sudo bash make.sh
 ```
-Options:
-
-`-cc=`
-> `C` compiler to be used. Tested with `gcc`, `clang`, `tcc`, and `pcc` on
-> Debian GNU/Linux.
-
-`-std=`
-> `C` standard to use. Default is `-std=c89`.
-
-`-omp`
-> Compile with OpenMP support.
-
-`-inplace`
-> Do not install `libtmpl` into `/usr/local/lib/` and `/usr/local/include/`.
-> Use this option if you do not have `sudo` privileges.
-
-`-inline`
-> Use inline code. You must have `-std` set to `c99` or higher.
-
-`-nomath`
-> Do not use `libtmpl`'s implementation of `libm`. Same as `NO_MATH=1` in the
-> Makefile.
-
-`-noieee`
-> Do not use any type-punning code or code that takes advantage of the
-> `IEEE-754` floating point format.
-
-`-noint`
-> Do not use any code that uses fixed-width integers.
-
-`-longlong`
-> Compile `long long` code. Must have `-std=c99` or higher.
-
-`-monster`
-> `libtmpl` was written in a way that allows all `.c` files to be `#include`d
-> into one file and then compiled. While this may seem silly, compilers lacking
-> link-time optimization can optimize the library at compile time, resulting in
-> a very performant build. Astronomical computations performed by `rss_ringoccs`
-> are about twice as fast this way. If your compiler has decent link-time
-> optimization it makes only a small difference.
-> This option creates a single `.c` file that `#include`s the entirety of
-> `libtmpl`, appropriately named `monster.c`, and then compiles this.
+There are various options that can be passed to this script.
+Use
+```
+bash make.sh -help
+```
+to see a description for each of them.
+Remove libtmpl by running
+```
+sudo bash make.sh -remove
+```
 
 ## Installation: Batch Script
 A very primitive batch script exists for Windows users.
