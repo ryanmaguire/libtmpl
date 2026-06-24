@@ -24,11 +24,10 @@
 # make on macOS and GNU/Linux.
 
 #   OPTIONS:
-#       BUILD_STATIC:
-#           Build a static library (libtmpl.a) instead of a dynamic one
-#           (libtmpl.so). rss_ringoccs uses this option to simplify builds.
-#           Enable with:
-#               make BUILD_STATIC=1 [other-options]
+#       BUILD_SHARED_LIBS:
+#           Build a shared object (libtmpl.so) instead of a static one
+#           (libtmpl.a). Enable with:
+#               make BUILD_SHARED_LIBS=1 [other-options]
 #       CC:
 #           C compiler to be used. Tested with:
 #               gcc:   GNU C compiler.
@@ -254,10 +253,10 @@ CFLAGS := $(filter-out -flto, $(CFLAGS))
 LFLAGS := $(filter-out -flto, $(LFLAGS))
 endif
 
-ifdef BUILD_STATIC
-TARGET_LIB = $(TARGET_LIB_STATIC)
-else
+ifdef BUILD_SHARED_LIBS
 TARGET_LIB = $(TARGET_LIB_SHARED)
+else
+TARGET_LIB = $(TARGET_LIB_STATIC)
 endif
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
@@ -539,10 +538,10 @@ help:
 	@echo "\033[0;96m\tmake help:"
 	@echo "\033[0;96m\t\tPrint this message.\n"
 	@echo "\033[0;96mBuild options (see Makefile for more details):"
-	@echo "\033[0;96m\tBUILD_STATIC:"
-	@echo "\033[0;96m\t\tCreate a static libary (libtmpl.a) instead of a"
-	@echo "\033[0;96m\t\tdynamic library (libtmpl.so)."
-	@echo "\033[0;96m\t\tExample: make BUILD_STATIC=1"
+	@echo "\033[0;96m\tBUILD_SHARED_LIBS:"
+	@echo "\033[0;96m\t\tCreate a shared object (libtmpl.so) instead of a"
+	@echo "\033[0;96m\t\tstatic library (libtmpl.a)."
+	@echo "\033[0;96m\t\tExample: make BUILD_SHARED_LIBS=1"
 	@echo "\033[0;96m\tCC:"
 	@echo "\033[0;96m\t\tSet the C compiler."
 	@echo "\033[0;96m\t\tExample: make CC=gcc"

@@ -92,16 +92,6 @@ Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run
 ```
 sudo make install
 ```
-
-**You may need to update the LD_LIBRARY_PATH environment variable.**
-Add the following to your `.bashrc`, `.shrc`, or whichever shell you're using.
-```
-export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
-```
-If you did not install libtmpl to `/usr/local/lib`, try:
-```
-export LD_LIBRARY_PATH="/path/to/libtmpl:$LD_LIBRARY_PATH"
-```
 To remove all build and `.so` files, run:
 ```
 make clean
