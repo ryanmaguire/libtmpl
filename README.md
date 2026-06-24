@@ -73,7 +73,7 @@ You may then install libtmpl using (requires sudo / administrator privileges)
 cmake --install build
 ```
 ## Installation: Makefile
-A Makefile is provided that works well on any platfrom that provides
+A Makefile is provided that works well on any platform that provides
 GNU Make. Run the Makefile with (`FreeBSD` users should use `gmake`)
 ```
 make
@@ -83,15 +83,15 @@ emulated architectures:
 ```
 make -j
 ```
-Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run
-```
-sudo make install
-```
 The Makefile has many flags that determine how libtmpl is compiled. Use
 ```
 make help
 ```
 to see a description of each command-line option.
+Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run
+```
+sudo make install
+```
 
 **You may need to update the LD_LIBRARY_PATH environment variable.**
 Add the following to your `.bashrc`, `.shrc`, or whichever shell you're using.
