@@ -191,6 +191,42 @@ for arg in "$@"; do
         echo "libtmpl removed."
         exit 1
 
+    elif [ "$arg" == "-help" ]; then
+        echo "-cc="
+        echo "    C compiler to be used. Tested with gcc, clang, tcc,"
+        echo "    and pcc on Debian GNU/Linux."
+        echo "-std="
+        echo "    C standard to use. Default is -std=c89."
+        echo "-omp"
+        echo "    Compile with OpenMP support."
+        echo "-inplace"
+        echo "    Do not install libtmpl into /usr/local/lib/ and"
+        echo "    /usr/local/include/. Use this option if you do not have"
+        echo "    sudo privileges."
+        echo "-inline"
+        echo "    Use inline code. You must have -std set to c99 or higher."
+        echo "-nomath"
+        echo "    Do not use libtmpl's implementation of libm."
+        echo "-noieee"
+        echo "    Do not use any type-punning code or code that takes advantage"
+        echo "    of the IEEE-754 floating point format."
+        echo "-noint"
+        echo "    Do not use any code that uses fixed-width integers."
+        echo "-longlong"
+        echo "    Compile long long code. Must have -std=c99 or higher."
+        echo "-monster"
+        echo "    libtmpl was written in a way that allows all .c files to"
+        echo "    be #included into one file and then compiled. While this"
+        echo "    may seem silly, compilers lacking link-time optimization can"
+        echo "    optimize the library at compile time, resulting in a very"
+        echo "    performant build. Astronomical computations performed by"
+        echo "    rss_ringoccs are about twice as fast this way. If your"
+        echo "    compiler has decent link-time optimization it makes no"
+        echo "    difference. This option creates a single .c file that"
+        echo "    #includes the entirety of libtmpl, appropriately named"
+        echo "    monster.c, and then compiles this."
+        exit 1
+
     # Check for any extra arguments.
     else
         ExtraArgs="$ExtraArgs ${arg#*}"
