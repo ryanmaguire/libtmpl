@@ -145,7 +145,7 @@ for arg in "$@"; do
     elif [ "$arg" == "-cautioussplit" ]; then
         USECAUTIOUSSPLIT=1
 
-    elif [ "$arg" == "-remove" ]; then
+    elif [ "$arg" == "--remove" ]; then
         SONAME="libtmpl.so"
         SODIR="/usr/local/lib"
         INCLUDE_TARGET=/usr/local/include/libtmpl/
@@ -191,7 +191,7 @@ for arg in "$@"; do
         echo "libtmpl removed."
         exit 1
 
-    elif [ "$arg" == "-help" ]; then
+    elif [ "$arg" == "--help" ]; then
         echo "-cc="
         echo "    C compiler to be used. Tested with gcc, clang, tcc,"
         echo "    and pcc on Debian GNU/Linux."

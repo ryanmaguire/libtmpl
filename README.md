@@ -47,8 +47,33 @@ and no C99/C11 or GCC extensions are used. It compiles with C99 and C11/C18
 compilers, so it is more fitting to say it is written in the intersection of
 these standards.
 
+## Installation: CMake
+
+A `CMakeLists.txt` file is provided which allows libtmpl to be built
+portably across various architectures
+(`x86-64`, `aarch64,` `sparc64`, `ppc64`, `mips`, and more) and
+operating systems (GNU / Linux, FreeBSD, macOS, Windows, etc.). To compile, use
+```
+cmake -S . -B build
+cmake --build build --config Release
+```
+The build process can be parallelized as well:
+```
+cmake -S . -B build
+cmake --build build --config Release -j
+```
+There are several options that control how libtmpl is compiled.
+To see descriptions of these, run
+```
+cmake -S . -B build -LH
+``
+You may then install libtmpl using (requires sudo / administrator privileges)
+```
+cmake --install build
+```
 ## Installation: Makefile
-Run the Makefile with (`FreeBSD` users should use `gmake`)
+A Makefile is provided that works well on any platfrom that provides
+GNU Make. Run the Makefile with (`FreeBSD` users should use `gmake`)
 ```
 make
 ```
@@ -101,12 +126,12 @@ sudo bash make.sh
 There are various options that can be passed to this script.
 Use
 ```
-bash make.sh -help
+bash make.sh --help
 ```
 to see a description for each of them.
 Remove libtmpl by running
 ```
-sudo bash make.sh -remove
+sudo bash make.sh --remove
 ```
 
 ## Installation: Batch Script
