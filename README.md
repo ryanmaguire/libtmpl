@@ -127,15 +127,21 @@ sudo bash make.sh --remove
 
 ## Installation: Batch Script
 A very primitive batch script exists for Windows users.
-Run the script with:
+This allows you to build libtmpl on Windows with minimal
+dependencies, you need only a C compiler. Run the script with
 ```
-C:\Users\ryan\source\repos\libtmpl>make.bat
+make.bat
 ```
-This creates libtmpl.lib in the `libtmpl/` directory.
-It does not copy the `include/` directory or the library to any system
-directories. This has been tested using a Windows 10 virtual machine and it
-worked as expected. It compiles with `MSVC`'s `cl` by default. Pass the option
-`clang` or `clang-cl` to use LLVM's `clang` compiler.
+This uses MSVC by default. To select a different compiler, `clang-cl`
+for example, use
+```
+make.bat clang-cl
+```
+`cl`, `clang-cl`, `clang`, and `gcc` are supported by the batch script.
+This creates libtmpl.lib or libtmpl.a in the top directory of libtmpl.
+The make.bat file skips assembly code, using only C source files.
+Because of this it is recommended that you install CMake and follow the
+build instructions provided above. This results in a far more performant build.
 
 ## Directory Structure
 ### data/
