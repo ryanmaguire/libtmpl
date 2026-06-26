@@ -76,21 +76,21 @@ const float tmpl_float_pi_by_four = TMPL_FLOAT_PI_BY_FOUR;
 const double tmpl_double_pi_by_four = TMPL_DOUBLE_PI_BY_FOUR;
 const long double tmpl_ldouble_pi_by_four = TMPL_LDOUBLE_PI_BY_FOUR;
 
-const float tmpl_Float_Pi_By_Five = TMPL_FLOAT_PI_BY_FIVE;
-const double tmpl_Double_Pi_By_Five = TMPL_DOUBLE_PI_BY_FIVE;
-const long double tmpl_LDouble_Pi_By_Five = TMPL_LDOUBLE_PI_BY_FIVE;
+const float tmpl_float_pi_by_five = TMPL_FLOAT_PI_BY_FIVE;
+const double tmpl_double_pi_by_five = TMPL_DOUBLE_PI_BY_FIVE;
+const long double tmpl_ldouble_pi_by_five = TMPL_LDOUBLE_PI_BY_FIVE;
 
-const float tmpl_Float_Pi_By_Six = TMPL_FLOAT_PI_BY_SIX;
-const double tmpl_Double_Pi_By_Six = TMPL_DOUBLE_PI_BY_SIX;
-const long double tmpl_LDouble_Pi_By_Six = TMPL_LDOUBLE_PI_BY_SIX;
+const float tmpl_float_pi_by_six = TMPL_FLOAT_PI_BY_SIX;
+const double tmpl_double_pi_by_six = TMPL_DOUBLE_PI_BY_SIX;
+const long double tmpl_ldouble_pi_by_six = TMPL_LDOUBLE_PI_BY_SIX;
 
-const float tmpl_Float_Pi_By_Eight = TMPL_FLOAT_PI_BY_EIGHT;
-const double tmpl_Double_Pi_By_Eight = TMPL_DOUBLE_PI_BY_EIGHT;
-const long double tmpl_LDouble_Pi_By_Eight = TMPL_LDOUBLE_PI_BY_EIGHT;
+const float tmpl_float_pi_by_eight = TMPL_FLOAT_PI_BY_EIGHT;
+const double tmpl_double_pi_by_eight = TMPL_DOUBLE_PI_BY_EIGHT;
+const long double tmpl_ldouble_pi_by_eight = TMPL_LDOUBLE_PI_BY_EIGHT;
 
-const float tmpl_Float_Pi_By_Twelve = TMPL_FLOAT_PI_BY_TWELVE;
-const double tmpl_Double_Pi_By_Twelve = TMPL_DOUBLE_PI_BY_TWELVE;
-const long double tmpl_LDouble_Pi_By_Twelve = TMPL_LDOUBLE_PI_BY_TWELVE;
+const float tmpl_float_pi_by_twelve = TMPL_FLOAT_PI_BY_TWELVE;
+const double tmpl_double_pi_by_twelve = TMPL_DOUBLE_PI_BY_TWELVE;
+const long double tmpl_ldouble_pi_by_twelve = TMPL_LDOUBLE_PI_BY_TWELVE;
 
 const float tmpl_Float_Three_Pi_By_Four = TMPL_FLOAT_THREE_PI_BY_FOUR;
 const double tmpl_Double_Three_Pi_By_Four = TMPL_DOUBLE_THREE_PI_BY_FOUR;

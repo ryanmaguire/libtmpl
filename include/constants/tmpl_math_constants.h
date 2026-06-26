@@ -240,21 +240,21 @@ extern const float tmpl_float_pi_by_four;
 extern const double tmpl_double_pi_by_four;
 extern const long double tmpl_ldouble_pi_by_four;
 
-extern const float tmpl_Float_Pi_By_Five;
-extern const double tmpl_Double_Pi_By_Five;
-extern const long double tmpl_LDouble_Pi_By_Five;
+extern const float tmpl_float_pi_by_five;
+extern const double tmpl_double_pi_by_five;
+extern const long double tmpl_ldouble_pi_by_five;
 
-extern const float tmpl_Float_Pi_By_Six;
-extern const double tmpl_Double_Pi_By_Six;
-extern const long double tmpl_LDouble_Pi_By_Six;
+extern const float tmpl_float_pi_by_six;
+extern const double tmpl_double_pi_by_six;
+extern const long double tmpl_ldouble_pi_by_six;
 
-extern const float tmpl_Float_Pi_By_Eight;
-extern const double tmpl_Double_Pi_By_Eight;
-extern const long double tmpl_LDouble_Pi_By_Eight;
+extern const float tmpl_float_pi_by_eight;
+extern const double tmpl_double_pi_by_eight;
+extern const long double tmpl_ldouble_pi_by_eight;
 
-extern const float tmpl_Float_Pi_By_Twelve;
-extern const double tmpl_Double_Pi_By_Twelve;
-extern const long double tmpl_LDouble_Pi_By_Twelve;
+extern const float tmpl_float_pi_by_twelve;
+extern const double tmpl_double_pi_by_twelve;
+extern const long double tmpl_ldouble_pi_by_twelve;
 
 extern const float tmpl_Float_Three_Pi_By_Four;
 extern const double tmpl_Double_Three_Pi_By_Four;
