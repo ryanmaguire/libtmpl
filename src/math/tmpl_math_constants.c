@@ -191,9 +191,9 @@ const float tmpl_float_rcpr_sqrt_two = TMPL_FLOAT_RCPR_SQRT_TWO;
 const double tmpl_double_rcpr_sqrt_two = TMPL_DOUBLE_RCPR_SQRT_TWO;
 const long double tmpl_ldouble_rcpr_sqrt_two = TMPL_LDOUBLE_RCPR_SQRT_TWO;
 
-const float tmpl_Float_Rcpr_Sqrt_Three = TMPL_FLOAT_RCPR_SQRT_THREE;
-const double tmpl_Double_Rcpr_Sqrt_Three = TMPL_DOUBLE_RCPR_SQRT_THREE;
-const long double tmpl_LDouble_Rcpr_Sqrt_Three = TMPL_LDOUBLE_RCPR_SQRT_THREE;
+const float tmpl_float_rcpr_sqrt_three = TMPL_FLOAT_RCPR_SQRT_THREE;
+const double tmpl_double_rcpr_sqrt_three = TMPL_DOUBLE_RCPR_SQRT_THREE;
+const long double tmpl_ldouble_rcpr_sqrt_three = TMPL_LDOUBLE_RCPR_SQRT_THREE;
 
 /******************************************************************************
  *                      Euler's Exponential Constant (e)                      *

@@ -355,9 +355,9 @@ extern const float tmpl_float_rcpr_sqrt_two;
 extern const double tmpl_double_rcpr_sqrt_two;
 extern const long double tmpl_ldouble_rcpr_sqrt_two;
 
-extern const float tmpl_Float_Rcpr_Sqrt_Three;
-extern const double tmpl_Double_Rcpr_Sqrt_Three;
-extern const long double tmpl_LDouble_Rcpr_Sqrt_Three;
+extern const float tmpl_float_rcpr_sqrt_three;
+extern const double tmpl_double_rcpr_sqrt_three;
+extern const long double tmpl_ldouble_rcpr_sqrt_three;
 
 /******************************************************************************
  *                      Euler's Exponential Constant (e)                      *
