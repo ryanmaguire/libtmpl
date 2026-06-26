@@ -126,32 +126,32 @@ const float tmpl_float_rcpr_two_pi = TMPL_FLOAT_RCPR_TWO_PI;
 const double tmpl_double_rcpr_two_pi = TMPL_DOUBLE_RCPR_TWO_PI;
 const long double tmpl_ldouble_rcpr_two_pi = TMPL_LDOUBLE_RCPR_TWO_PI;
 
-const float tmpl_Float_Rcpr_Four_Pi = TMPL_FLOAT_RCPR_FOUR_PI;
-const double tmpl_Double_Rcpr_Four_Pi = TMPL_DOUBLE_RCPR_FOUR_PI;
-const long double tmpl_LDouble_Rcpr_Four_Pi = TMPL_LDOUBLE_RCPR_FOUR_PI;
+const float tmpl_float_rcpr_four_pi = TMPL_FLOAT_RCPR_FOUR_PI;
+const double tmpl_double_rcpr_four_pi = TMPL_DOUBLE_RCPR_FOUR_PI;
+const long double tmpl_ldouble_rcpr_four_pi = TMPL_LDOUBLE_RCPR_FOUR_PI;
 
 /******************************************************************************
  *                           Multiples of Sqrt(Pi)                            *
  ******************************************************************************/
-const float tmpl_Float_Sqrt_Pi = TMPL_FLOAT_SQRT_PI;
-const double tmpl_Double_Sqrt_Pi = TMPL_DOUBLE_SQRT_PI;
-const long double tmpl_LDouble_Sqrt_Pi = TMPL_LDOUBLE_SQRT_PI;
+const float tmpl_float_sqrt_pi = TMPL_FLOAT_SQRT_PI;
+const double tmpl_double_sqrt_pi = TMPL_DOUBLE_SQRT_PI;
+const long double tmpl_ldouble_sqrt_pi = TMPL_LDOUBLE_SQRT_PI;
 
-const float tmpl_Float_Sqrt_Two_Pi = TMPL_FLOAT_SQRT_TWO_PI;
-const double tmpl_Double_Sqrt_Two_Pi = TMPL_DOUBLE_SQRT_TWO_PI;
-const long double tmpl_LDouble_Sqrt_Two_Pi = TMPL_LDOUBLE_SQRT_TWO_PI;
+const float tmpl_float_sqrt_two_pi = TMPL_FLOAT_SQRT_TWO_PI;
+const double tmpl_double_sqrt_two_pi = TMPL_DOUBLE_SQRT_TWO_PI;
+const long double tmpl_ldouble_sqrt_two_pi = TMPL_LDOUBLE_SQRT_TWO_PI;
 
-const float tmpl_Float_Sqrt_Pi_By_Two = TMPL_FLOAT_SQRT_PI_BY_TWO;
-const double tmpl_Double_Sqrt_Pi_By_Two = TMPL_DOUBLE_SQRT_PI_BY_TWO;
-const long double tmpl_LDouble_Sqrt_Pi_By_Two = TMPL_LDOUBLE_SQRT_PI_BY_TWO;
+const float tmpl_float_sqrt_pi_by_two = TMPL_FLOAT_SQRT_PI_BY_TWO;
+const double tmpl_double_sqrt_pi_by_two = TMPL_DOUBLE_SQRT_PI_BY_TWO;
+const long double tmpl_ldouble_sqrt_pi_by_two = TMPL_LDOUBLE_SQRT_PI_BY_TWO;
 
-const float tmpl_Float_Sqrt_Pi_By_Four = TMPL_FLOAT_SQRT_PI_BY_FOUR;
-const double tmpl_Double_Sqrt_Pi_By_Four = TMPL_DOUBLE_SQRT_PI_BY_FOUR;
-const long double tmpl_LDouble_Sqrt_Pi_By_Four = TMPL_LDOUBLE_SQRT_PI_BY_FOUR;
+const float tmpl_float_sqrt_pi_by_four = TMPL_FLOAT_SQRT_PI_BY_FOUR;
+const double tmpl_double_sqrt_pi_by_four = TMPL_DOUBLE_SQRT_PI_BY_FOUR;
+const long double tmpl_ldouble_sqrt_pi_by_four = TMPL_LDOUBLE_SQRT_PI_BY_FOUR;
 
-const float tmpl_Float_Sqrt_Pi_By_Eight = TMPL_FLOAT_SQRT_PI_BY_EIGHT;
-const double tmpl_Double_Sqrt_Pi_By_Eight = TMPL_DOUBLE_SQRT_PI_BY_EIGHT;
-const long double tmpl_LDouble_Sqrt_Pi_By_Eight = TMPL_LDOUBLE_SQRT_PI_BY_EIGHT;
+const float tmpl_float_sqrt_pi_by_eight = TMPL_FLOAT_SQRT_PI_BY_EIGHT;
+const double tmpl_double_sqrt_pi_by_eight = TMPL_DOUBLE_SQRT_PI_BY_EIGHT;
+const long double tmpl_ldouble_sqrt_pi_by_eight = TMPL_LDOUBLE_SQRT_PI_BY_EIGHT;
 
 /******************************************************************************
  *                         Multiples of Sqrt(1 / Pi)                          *

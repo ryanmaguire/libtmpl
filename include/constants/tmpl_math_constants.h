@@ -290,32 +290,32 @@ extern const float tmpl_float_rcpr_two_pi;
 extern const double tmpl_double_rcpr_two_pi;
 extern const long double tmpl_ldouble_rcpr_two_pi;
 
-extern const float tmpl_Float_Rcpr_Four_Pi;
-extern const double tmpl_Double_Rcpr_Four_Pi;
-extern const long double tmpl_LDouble_Rcpr_Four_Pi;
+extern const float tmpl_float_rcpr_four_pi;
+extern const double tmpl_double_rcpr_four_pi;
+extern const long double tmpl_ldouble_rcpr_four_pi;
 
 /******************************************************************************
  *                           Multiples of Sqrt(Pi)                            *
  ******************************************************************************/
-extern const float tmpl_Float_Sqrt_Pi;
-extern const double tmpl_Double_Sqrt_Pi;
-extern const long double tmpl_LDouble_Sqrt_Pi;
+extern const float tmpl_float_sqrt_pi;
+extern const double tmpl_double_sqrt_pi;
+extern const long double tmpl_ldouble_sqrt_pi;
 
-extern const float tmpl_Float_Sqrt_Two_Pi;
-extern const double tmpl_Double_Sqrt_Two_Pi;
-extern const long double tmpl_LDouble_Sqrt_Two_Pi;
+extern const float tmpl_float_sqrt_two_pi;
+extern const double tmpl_double_sqrt_two_pi;
+extern const long double tmpl_ldouble_sqrt_two_pi;
 
-extern const float tmpl_Float_Sqrt_Pi_By_Two;
-extern const double tmpl_Double_Sqrt_Pi_By_Two;
-extern const long double tmpl_LDouble_Sqrt_Pi_By_Two;
+extern const float tmpl_float_sqrt_pi_by_two;
+extern const double tmpl_double_sqrt_pi_by_two;
+extern const long double tmpl_ldouble_sqrt_pi_by_two;
 
-extern const double tmpl_Double_Sqrt_Pi_By_Four;
-extern const float tmpl_Float_Sqrt_Pi_By_Four;
-extern const long double tmpl_LDouble_Sqrt_Pi_By_Four;
+extern const double tmpl_double_sqrt_pi_by_four;
+extern const float tmpl_float_sqrt_pi_by_four;
+extern const long double tmpl_ldouble_sqrt_pi_by_four;
 
-extern const double tmpl_Double_Sqrt_Pi_By_Eight;
-extern const float tmpl_Float_Sqrt_Pi_By_Eight;
-extern const long double tmpl_LDouble_Sqrt_Pi_By_Eight;
+extern const double tmpl_double_sqrt_pi_by_eight;
+extern const float tmpl_float_sqrt_pi_by_eight;
+extern const long double tmpl_ldouble_sqrt_pi_by_eight;
 
 /******************************************************************************
  *                         Multiples of Sqrt(1 / Pi)                          *
