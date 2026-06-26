@@ -29,10 +29,55 @@
 #ifndef TMPL_TYPES_VEC3_FLOAT_H
 #define TMPL_TYPES_VEC3_FLOAT_H
 
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
+
+#if TMPL_HAS_IEEE754_FLOAT == 1
+
+#include <libtmpl/include/helper/tmpl_max.h>
+#include <libtmpl/include/helper/tmpl_min.h>
+
+/*  3D Vectors with single precision components and their bit fields.         */
+typedef union tmpl_ThreeVectorFloat_Type {
+    float dat[3];
+    tmpl_IEEE754_Float word[3];
+} tmpl_ThreeVectorFloat;
+
+#define TMPL_VEC3_FLOAT_MAX_EXP(p)  \
+    TMPL_MAX3(                      \
+        (p).word[0].bits.expo,      \
+        (p).word[1].bits.expo,      \
+        (p).word[2].bits.expo       \
+    )
+
+#define TMPL_VEC3_FLOAT_PTR_MAX_EXP(p)  \
+    TMPL_MAX3(                          \
+        (p)->word[0].bits.expo,         \
+        (p)->word[1].bits.expo,         \
+        (p)->word[2].bits.expo          \
+    )
+
+#define TMPL_VEC3_FLOAT_MIN_EXP(p)  \
+    TMPL_MIN3(                      \
+        (p).word[0].bits.expo,      \
+        (p).word[1].bits.expo,      \
+        (p).word[2].bits.expo       \
+    )
+
+#define TMPL_VEC3_FLOAT_PTR_MIN_EXP(p)  \
+    TMPL_MIN3(                          \
+        (p)->word[0].bits.expo,         \
+        (p)->word[1].bits.expo,         \
+        (p)->word[2].bits.expo          \
+    )
+
+#else
+
 /*  3D Vectors with single precision components.                              */
 typedef struct tmpl_ThreeVectorFloat_Type {
     float dat[3];
 } tmpl_ThreeVectorFloat;
+
+#endif
 
 #endif
 /*  End of include guard.                                                     */
