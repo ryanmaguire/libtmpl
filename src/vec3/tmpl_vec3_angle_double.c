@@ -258,3 +258,4 @@ tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const p,
 /*  End of tmpl_3DDouble_Angle.                                               */
 
 #endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
