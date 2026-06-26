@@ -339,21 +339,21 @@ extern const long double tmpl_ldouble_sqrt_two_by_pi;
 /******************************************************************************
  *                            Common Square Roots                             *
  ******************************************************************************/
-extern const float tmpl_Float_Sqrt_Two;
-extern const double tmpl_Double_Sqrt_Two;
-extern const long double tmpl_LDouble_Sqrt_Two;
+extern const float tmpl_float_sqrt_two;
+extern const double tmpl_double_sqrt_two;
+extern const long double tmpl_ldouble_sqrt_two;
 
-extern const float tmpl_Float_Sqrt_Three;
-extern const double tmpl_Double_Sqrt_Three;
-extern const long double tmpl_LDouble_Sqrt_Three;
+extern const float tmpl_float_sqrt_three;
+extern const double tmpl_double_sqrt_three;
+extern const long double tmpl_ldouble_sqrt_three;
 
-extern const float tmpl_Float_Sqrt_Five;
-extern const double tmpl_Double_Sqrt_Five;
-extern const long double tmpl_LDouble_Sqrt_Five;
+extern const float tmpl_float_sqrt_five;
+extern const double tmpl_double_sqrt_five;
+extern const long double tmpl_ldouble_sqrt_five;
 
-extern const float tmpl_Float_Rcpr_Sqrt_Two;
-extern const double tmpl_Double_Rcpr_Sqrt_Two;
-extern const long double tmpl_LDouble_Rcpr_Sqrt_Two;
+extern const float tmpl_float_rcpr_sqrt_two;
+extern const double tmpl_double_rcpr_sqrt_two;
+extern const long double tmpl_ldouble_rcpr_sqrt_two;
 
 extern const float tmpl_Float_Rcpr_Sqrt_Three;
 extern const double tmpl_Double_Rcpr_Sqrt_Three;
