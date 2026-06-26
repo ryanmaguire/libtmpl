@@ -147,19 +147,6 @@
 #define TMPL_NO_CONTRACT_MATH
 #endif
 
-/*  Many helper / auxiliary functions serve no purpose other than to improve  *
- *  the organization of some main function. These functions should always be  *
- *  inlined. Various compilers provide methods of doing this.                 */
-#if TMPL_HAS_ATTRIBUTE(gnu::always_inline)
-#define TMPL_ALWAYS_INLINE [[gnu::always_inline]]
-#elif TMPL_HAS_ATTRIBUTE(clang::always_inline)
-#define TMPL_ALWAYS_INLINE [[clang::always_inline]]
-#elif TMPL_HAS_ATTRIBUTE(msvc::forceinline)
-#define TMPL_ALWAYS_INLINE [[msvc::forceinline]]
-#else
-#define TMPL_ALWAYS_INLINE
-#endif
-
 /*  Undefine the attribute macro to prevent possible collisions.              */
 #undef TMPL_HAS_ATTRIBUTE
 
@@ -175,7 +162,6 @@
 #define TMPL_UNSEQUENCED
 #define TMPL_NO_ASSOCIATIVE_MATH
 #define TMPL_NO_CONTRACT_MATH
-#define TMPL_ALWAYS_INLINE
 
 #endif
 /*  End of #ifdef TMPL_ATTRIBUTES_SUPPORTED.                                  */
