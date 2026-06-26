@@ -256,13 +256,13 @@ extern const float tmpl_float_pi_by_twelve;
 extern const double tmpl_double_pi_by_twelve;
 extern const long double tmpl_ldouble_pi_by_twelve;
 
-extern const float tmpl_Float_Three_Pi_By_Four;
-extern const double tmpl_Double_Three_Pi_By_Four;
-extern const long double tmpl_LDouble_Three_Pi_By_Four;
+extern const float tmpl_float_three_pi_by_four;
+extern const double tmpl_double_three_pi_by_four;
+extern const long double tmpl_ldouble_three_pi_by_four;
 
-extern const float tmpl_Float_Pi_By_Sqrt_Two;
-extern const double tmpl_Double_Pi_By_Sqrt_Two;
-extern const long double tmpl_LDouble_Pi_By_Sqrt_Two;
+extern const float tmpl_float_pi_by_sqrt_two;
+extern const double tmpl_double_pi_by_sqrt_two;
+extern const long double tmpl_ldouble_pi_by_sqrt_two;
 
 /******************************************************************************
  *                      Conversions Radians and Degrees                       *

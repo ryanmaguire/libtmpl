@@ -92,13 +92,13 @@ const float tmpl_float_pi_by_twelve = TMPL_FLOAT_PI_BY_TWELVE;
 const double tmpl_double_pi_by_twelve = TMPL_DOUBLE_PI_BY_TWELVE;
 const long double tmpl_ldouble_pi_by_twelve = TMPL_LDOUBLE_PI_BY_TWELVE;
 
-const float tmpl_Float_Three_Pi_By_Four = TMPL_FLOAT_THREE_PI_BY_FOUR;
-const double tmpl_Double_Three_Pi_By_Four = TMPL_DOUBLE_THREE_PI_BY_FOUR;
-const long double tmpl_LDouble_Three_Pi_By_Four = TMPL_LDOUBLE_THREE_PI_BY_FOUR;
+const float tmpl_float_three_pi_by_four = TMPL_FLOAT_THREE_PI_BY_FOUR;
+const double tmpl_double_three_pi_by_four = TMPL_DOUBLE_THREE_PI_BY_FOUR;
+const long double tmpl_ldouble_three_pi_by_four = TMPL_LDOUBLE_THREE_PI_BY_FOUR;
 
-const float tmpl_Float_Pi_By_Sqrt_Two = TMPL_FLOAT_PI_BY_SQRT_TWO;
-const double tmpl_Double_Pi_By_Sqrt_Two = TMPL_DOUBLE_PI_BY_SQRT_TWO;
-const long double tmpl_LDouble_Pi_By_Sqrt_Two = TMPL_LDOUBLE_PI_BY_SQRT_TWO;
+const float tmpl_float_pi_by_sqrt_two = TMPL_FLOAT_PI_BY_SQRT_TWO;
+const double tmpl_double_pi_by_sqrt_two = TMPL_DOUBLE_PI_BY_SQRT_TWO;
+const long double tmpl_ldouble_pi_by_sqrt_two = TMPL_LDOUBLE_PI_BY_SQRT_TWO;
 
 /******************************************************************************
  *                      Conversions Radians and Degrees                       *
