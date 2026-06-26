@@ -41,7 +41,7 @@
 
 #define TMPL_POLYD_EVAL(z) D00 + z*(D01 + z*(D02 + z*(D03 + z*D04)))
 
-extern const double tmpl_Double_Rcpr_Sqrt_Pi;
+extern const double tmpl_double_rcpr_sqrt_pi;
 extern double tmpl_Double_Sqrt(double x);
 extern void tmpl_Double_SinCos(double x, double *sin_x, double *cos_x);
 
@@ -61,7 +61,7 @@ double tmpl_Double_Bessel_J1_Rational_Asymptotic(double x)
     const double pone = pone_num / pone_den;
     const double qone = qone_num / qone_den;
 
-    const double scale = tmpl_Double_Rcpr_Sqrt_Pi * tmpl_Double_Sqrt(rcpr_x);
+    const double scale = tmpl_double_rcpr_sqrt_pi * tmpl_Double_Sqrt(rcpr_x);
 
     tmpl_Double_SinCos(x, &sin_x, &cos_x);
 

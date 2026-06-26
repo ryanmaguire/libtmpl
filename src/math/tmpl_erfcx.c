@@ -1247,7 +1247,7 @@ double tmpl_Double_Erfcx(double x)
             /*  For very large values use only the first term to avoid        *
              *  overflow.                                                     */
             if (x > 5e7)
-                return tmpl_Double_Rcpr_Sqrt_Pi / x;
+                return tmpl_double_rcpr_sqrt_pi / x;
 
             /*  For smaller values use 5 terms of the continued fraction.     */
             else
@@ -1256,7 +1256,7 @@ double tmpl_Double_Erfcx(double x)
                 const double x4 = x2*x2;
                 const double numer = x4 + 4.5*x2 + 2.0;
                 const double denom = x*(x4 + 5.0*x2 + 3.75);
-                return tmpl_Double_Rcpr_Sqrt_Pi * numer / denom;
+                return tmpl_double_rcpr_sqrt_pi * numer / denom;
             }
         }
 

@@ -82,7 +82,7 @@ tmpl_Double_Fresnel_Diffraction_Well_Phase(double x,
     const double fc1 = tmpl_Double_Fresnel_Cos(arg1);
     const double fc2 = tmpl_Double_Fresnel_Cos(arg2);
 
-    const double im = tmpl_Double_Rcpr_Sqrt_Two_Pi * (fs2-fs1-fc2+fc1);
-    const double re = 1.0 - tmpl_Double_Rcpr_Sqrt_Two_Pi * (fc2-fc1+fs2-fs1);
+    const double im = tmpl_double_rcpr_sqrt_two_pi * (fs2-fs1-fc2+fc1);
+    const double re = 1.0 - tmpl_double_rcpr_sqrt_two_pi * (fc2-fc1+fs2-fs1);
     return tmpl_Double_Arctan2(im, re);
 }

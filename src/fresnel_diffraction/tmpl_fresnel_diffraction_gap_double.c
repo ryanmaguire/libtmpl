@@ -95,7 +95,7 @@ tmpl_CDouble_Fresnel_Diffraction_Gap(double x,
     out.dat[0] = (z2.dat[0] + z2.dat[1]) - (z1.dat[0] + z1.dat[1]);
     out.dat[1] = (z2.dat[1] - z2.dat[0]) - (z1.dat[1] - z1.dat[0]);
 
-    out.dat[0] *= tmpl_Double_Rcpr_Sqrt_Two_Pi;
-    out.dat[1] *= tmpl_Double_Rcpr_Sqrt_Two_Pi;
+    out.dat[0] *= tmpl_double_rcpr_sqrt_two_pi;
+    out.dat[1] *= tmpl_double_rcpr_sqrt_two_pi;
     return out;
 }
