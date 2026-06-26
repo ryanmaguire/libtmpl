@@ -209,13 +209,13 @@ const long double tmpl_ldouble_rcpr_euler_e = TMPL_LDOUBLE_RCPR_EULER_E;
 /******************************************************************************
  *                              Common Logarithms                             *
  ******************************************************************************/
-const float tmpl_Float_Log_E_Two = TMPL_FLOAT_LOG_E_TWO;
-const double tmpl_Double_Log_E_Two = TMPL_DOUBLE_LOG_E_TWO;
-const long double tmpl_LDouble_Log_E_Two = TMPL_LDOUBLE_LOG_E_TWO;
+const float tmpl_float_log_e_two = TMPL_FLOAT_LOG_E_TWO;
+const double tmpl_double_log_e_two = TMPL_DOUBLE_LOG_E_TWO;
+const long double tmpl_ldouble_log_e_two = TMPL_LDOUBLE_LOG_E_TWO;
 
-const float tmpl_Float_Log_E_Ten = TMPL_FLOAT_LOG_E_TEN;
-const double tmpl_Double_Log_E_Ten = TMPL_DOUBLE_LOG_E_TEN;
-const long double tmpl_LDouble_Log_E_Ten = TMPL_LDOUBLE_LOG_E_TEN;
+const float tmpl_float_log_e_ten = TMPL_FLOAT_LOG_E_TEN;
+const double tmpl_double_log_e_ten = TMPL_DOUBLE_LOG_E_TEN;
+const long double tmpl_ldouble_log_e_ten = TMPL_LDOUBLE_LOG_E_TEN;
 
 #if TMPL_HAS_IEEE754_FLOAT == 1
 const float tmpl_Min_Float_Base_E = -85.1956484408F;

@@ -373,12 +373,12 @@ extern const long double tmpl_ldouble_rcpr_euler_e;
 /******************************************************************************
  *                              Common Logarithms                             *
  ******************************************************************************/
-extern const float tmpl_Float_Log_E_Two;
-extern const double tmpl_Double_Log_E_Two;
-extern const long double tmpl_LDouble_Log_E_Two;
+extern const float tmpl_float_log_e_two;
+extern const double tmpl_double_log_e_two;
+extern const long double tmpl_ldouble_log_e_two;
 
-extern const float tmpl_Float_Log_E_Ten;
-extern const double tmpl_Double_Log_E_Ten;
-extern const long double tmpl_LDouble_Log_E_Ten;
+extern const float tmpl_float_log_e_ten;
+extern const double tmpl_double_log_e_ten;
+extern const long double tmpl_ldouble_log_e_ten;
 
 #endif
