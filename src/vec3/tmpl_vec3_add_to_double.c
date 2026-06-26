@@ -59,7 +59,9 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_vec3.h:                                                          *
  *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -75,10 +77,15 @@
  *      Merged inline and non-inline versions.                                *
  ******************************************************************************/
 
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Three-vector typedef and function prototype found here.                   */
 #include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for performing vector addition in R^3.                           */
+TMPL_SIMD_DECL
+TMPL_ALWAYS_INLINE
 void
 tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
                     const tmpl_ThreeVectorDouble * const source)

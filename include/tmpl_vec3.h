@@ -110,7 +110,6 @@ extern void
 tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat * const target,
                    const tmpl_ThreeVectorFloat * const source);
 
-TMPL_SIMD_DECL
 TMPL_LEAF_FUNC
 extern void
 tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble * const target,
