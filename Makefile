@@ -508,7 +508,7 @@ install:
 	mkdir -p $(prefix)/include/libtmpl/
 	cp -r ./include $(prefix)/include/libtmpl/
 ifneq ("$(wildcard $(TARGET_LIB_SHARED))", "")
-	cp $(TARGET_LIB_STATIC) $(prefix)/lib/$(TARGET_LIB_SHARED)
+	cp $(TARGET_LIB_SHARED) $(prefix)/lib/$(TARGET_LIB_SHARED)
 else
 	cp $(TARGET_LIB_STATIC) $(prefix)/lib/$(TARGET_LIB_STATIC)
 endif
