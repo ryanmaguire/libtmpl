@@ -35,6 +35,9 @@
 #ifndef TMPL_COLOR_H
 #define TMPL_COLOR_H
 
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /******************************************************************************
  *                                  Typedefs                                  *
  ******************************************************************************/
@@ -82,9 +85,9 @@ extern "C" {
  *  Purpose:                                                                  *
  *      Adds two colors by summing over the individual channels.              *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGB24):                                                      *
+ *      c0 (const tmpl_RGB24):                                                *
  *          The first color.                                                  *
- *      c1 (tmpl_RGB24):                                                      *
+ *      c1 (const tmpl_RGB24):                                                *
  *          The second color.                                                 *
  *  Outputs:                                                                  *
  *      sum (tmpl_RGB24):                                                     *
@@ -96,12 +99,25 @@ extern "C" {
  *      If the sum overflows beyond the the maximum possible value in a       *
  *      given channel, the sum is set to the maximum possible value.          *
  ******************************************************************************/
-extern tmpl_RGB24 tmpl_RGB24_Add(tmpl_RGB24 c0, const tmpl_RGB24 c1);
-extern tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, const tmpl_RGB30 c1);
-extern tmpl_RGB48 tmpl_RGB48_Add(tmpl_RGB48 c0, const tmpl_RGB48 c1);
+TMPL_CONST_FUNC
+extern tmpl_RGB24
+tmpl_RGB24_Add(tmpl_RGB24 c0, const tmpl_RGB24 c1)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
+extern tmpl_RGB30
+tmpl_RGB30_Add(tmpl_RGB30 c0, const tmpl_RGB30 c1)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern tmpl_RGB48
+tmpl_RGB48_Add(tmpl_RGB48 c0, const tmpl_RGB48 c1)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern tmpl_RGB
-tmpl_RGB_Add(const tmpl_RGB * const c0, const tmpl_RGB * const c1);
+tmpl_RGB_Add(const tmpl_RGB * const c0, const tmpl_RGB * const c1)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

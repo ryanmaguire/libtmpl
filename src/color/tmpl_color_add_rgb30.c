@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGB30):                                                      *
+ *      c0 (const tmpl_RGB30):                                                *
  *          A color.                                                          *
- *      c1 (tmpl_RGB30):                                                      *
+ *      c1 (const tmpl_RGB30):                                                *
  *          Another color.                                                    *
  *  Output:                                                                   *
  *      sum (tmpl_RGB30):                                                     *
@@ -43,12 +43,19 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
+ *  3.) tmpl_cast.h:                                                          *
+ *          Provides the TMPL_CAST macro for C vs. C++ compatibility.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
  ******************************************************************************/
+
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Color typedef's and function prototypes provided here.                    */
 #include <libtmpl/include/tmpl_color.h>
@@ -60,19 +67,21 @@
 #define PEAK (0x3FFU)
 
 /*  Helper macro for computing the complement of a given color channel.       */
-#define COMPLEMENT(color) TMPL_CAST(PEAK - color, unsigned short int)
+#define TMPL_COMPLEMENT(color) TMPL_CAST(PEAK - (color), unsigned short int)
 
 /*  Function for adding together two colors in 30-bit RGB format.             */
-tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, tmpl_RGB30 c1)
+TMPL_CONST_FUNC
+tmpl_RGB30 tmpl_RGB30_Add(const tmpl_RGB30 c0, const tmpl_RGB30 c1)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGB30 sum;
 
     /*  Avoid overflowing the sums by ensuring the sums of the color channels *
      *  do not exceed 1023.                                                   */
-    const unsigned short int r_diff = COMPLEMENT(c0.red);
-    const unsigned short int g_diff = COMPLEMENT(c0.green);
-    const unsigned short int b_diff = COMPLEMENT(c0.blue);
+    const unsigned short int r_diff = TMPL_COMPLEMENT(c0.red);
+    const unsigned short int g_diff = TMPL_COMPLEMENT(c0.green);
+    const unsigned short int b_diff = TMPL_COMPLEMENT(c0.blue);
 
     /*  If a channel will overflow, set the channel to 1023 (max value).      *
      *  Otherwise compute the sum as normal. The "& PEAK" at the end is       *
@@ -87,6 +96,6 @@ tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, tmpl_RGB30 c1)
 }
 /*  End of tmpl_RGB30_Add.                                                    */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other files.                 */
 #undef PEAK
-#undef COMPLEMENT
+#undef TMPL_COMPLEMENT

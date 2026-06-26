@@ -36,7 +36,7 @@
  *      sum (tmpl_RGB):                                                       *
  *          The color sum of c0 and c1.                                       *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_Unit_Clamp:                                           *
  *              Clips a real valued input to fall between zero and one.       *
  *  Method:                                                                   *
@@ -47,14 +47,19 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
- *  2.) tmpl_math.h:                                                          *
+ *  3.) tmpl_math.h:                                                          *
  *          Unit clamp function provided here.                                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
  ******************************************************************************/
+
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Color typedef's and the function prototype provided here.                 */
 #include <libtmpl/include/tmpl_color.h>
@@ -63,7 +68,9 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for adding together two RGB colors.                              */
+TMPL_PURE_FUNC
 tmpl_RGB tmpl_RGB_Add(const tmpl_RGB * const c0, const tmpl_RGB * const c1)
+TMPL_UNSEQUENCED
 {
     /*  Struct for the output. C89 requires declarations at the top.          */
     tmpl_RGB sum;
