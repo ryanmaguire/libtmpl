@@ -58,9 +58,11 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_attributes.h:                                                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
  *          Provides C23 attributes for optimization.                         *
- *  2.) tmpl_vec3.h:                                                          *
+ *  3.) tmpl_vec3.h:                                                          *
  *          tmpl_ThreeVectorFloat and function prototype provided here.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -78,6 +80,9 @@
  *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
@@ -86,6 +91,7 @@
 
 /*  Function for adding 2 three-dimensional vectors.                          */
 TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
 tmpl_ThreeVectorFloat
 tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat * const p,
                  const tmpl_ThreeVectorFloat * const q)
