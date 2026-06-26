@@ -53,6 +53,20 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_Double_Sqrt)
+
+    /*  Modern CPUs provide vectorized versions of the square root function.  */
+#if defined(__AVX512F__) || defined(__AVX__) || defined(__AVX2__)
+    vsqrtsd %xmm0, %xmm0, %xmm0
+
+    /*  The scalar square root function has been provided as an instruction   *
+     *  since SSE 2, released in 2000.                                        */
+#else
     sqrtsd %xmm0, %xmm0
+
+#endif
+/*  End of #if defined(__AVX512F__) || defined(__AVX__) || defined(__AVX2__). */
+
+    /*  Return sqrt(x).                                                       */
     ret
+
 ASM_END(tmpl_Double_Sqrt)
