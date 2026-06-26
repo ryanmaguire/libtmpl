@@ -91,7 +91,7 @@ double tmpl_Double_Sin(double x)
         sgn_x = -1.0;
     }
 
-    arg = tmpl_Double_Mod_2(abs_x * tmpl_Double_Rcpr_Pi);
+    arg = tmpl_Double_Mod_2(abs_x * tmpl_double_rcpr_pi);
 
     if (arg >= 1.0)
     {

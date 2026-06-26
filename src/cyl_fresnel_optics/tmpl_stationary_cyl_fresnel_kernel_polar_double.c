@@ -262,7 +262,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
      *  where rho_s = (r cos(phi_s), r sin(phi_s)). The stationary            *
      *  cylindrical Fresnel kernel is r times this expression. This           *
      *  function computes this quantity.                                      */
-    factor = k * tmpl_Double_Rcpr_Two_Pi / tmpl_Double_Abs(d2psi);
+    factor = k * tmpl_double_rcpr_two_pi / tmpl_Double_Abs(d2psi);
     *weight = sin_opening * r_s * tmpl_Double_Sqrt(factor) / mag;
 
     /*  Return the stationary azimuth angle.                                  */

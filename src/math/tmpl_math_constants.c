@@ -114,17 +114,17 @@ const long double tmpl_ldouble_deg_to_rad = TMPL_LDOUBLE_DEG_TO_RAD;
 /******************************************************************************
  *                            Multiples of 1 / Pi                             *
  ******************************************************************************/
-const float tmpl_Float_Rcpr_Pi = TMPL_FLOAT_RCPR_PI;
-const double tmpl_Double_Rcpr_Pi = TMPL_DOUBLE_RCPR_PI;
-const long double tmpl_LDouble_Rcpr_Pi = TMPL_LDOUBLE_RCPR_PI;
+const float tmpl_float_rcpr_pi = TMPL_FLOAT_RCPR_PI;
+const double tmpl_double_rcpr_pi = TMPL_DOUBLE_RCPR_PI;
+const long double tmpl_ldouble_rcpr_pi = TMPL_LDOUBLE_RCPR_PI;
 
-const float tmpl_Float_Two_By_Pi = TMPL_FLOAT_TWO_BY_PI;
-const double tmpl_Double_Two_By_Pi = TMPL_DOUBLE_TWO_BY_PI;
-const long double tmpl_LDouble_Two_By_Pi = TMPL_LDOUBLE_TWO_BY_PI;
+const float tmpl_float_two_by_pi = TMPL_FLOAT_TWO_BY_PI;
+const double tmpl_double_two_by_pi = TMPL_DOUBLE_TWO_BY_PI;
+const long double tmpl_ldouble_two_by_pi = TMPL_LDOUBLE_TWO_BY_PI;
 
-const float tmpl_Float_Rcpr_Two_Pi = TMPL_FLOAT_RCPR_TWO_PI;
-const double tmpl_Double_Rcpr_Two_Pi = TMPL_DOUBLE_RCPR_TWO_PI;
-const long double tmpl_LDouble_Rcpr_Two_Pi = TMPL_LDOUBLE_RCPR_TWO_PI;
+const float tmpl_float_rcpr_two_pi = TMPL_FLOAT_RCPR_TWO_PI;
+const double tmpl_double_rcpr_two_pi = TMPL_DOUBLE_RCPR_TWO_PI;
+const long double tmpl_ldouble_rcpr_two_pi = TMPL_LDOUBLE_RCPR_TWO_PI;
 
 const float tmpl_Float_Rcpr_Four_Pi = TMPL_FLOAT_RCPR_FOUR_PI;
 const double tmpl_Double_Rcpr_Four_Pi = TMPL_DOUBLE_RCPR_FOUR_PI;

@@ -41,7 +41,7 @@ float tmpl_Float_Cos(float x)
     float arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
 
-    arg = tmpl_Float_Mod_2(tmpl_Float_Abs(x) * tmpl_Float_Rcpr_Pi);
+    arg = tmpl_Float_Mod_2(tmpl_Float_Abs(x) * tmpl_float_rcpr_pi);
 
     if (arg >= 1.0F)
     {

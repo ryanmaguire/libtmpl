@@ -85,7 +85,7 @@ TMPL_UNSEQUENCED
     double arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
 
-    arg = tmpl_Double_Mod_2(tmpl_Double_Abs(x) * tmpl_Double_Rcpr_Pi);
+    arg = tmpl_Double_Mod_2(tmpl_Double_Abs(x) * tmpl_double_rcpr_pi);
 
     if (arg >= 1.0)
     {

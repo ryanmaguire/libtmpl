@@ -278,17 +278,17 @@ extern const long double tmpl_ldouble_deg_to_rad;
 /******************************************************************************
  *                            Multiples of 1 / Pi                             *
  ******************************************************************************/
-extern const float tmpl_Float_Rcpr_Pi;
-extern const double tmpl_Double_Rcpr_Pi;
-extern const long double tmpl_LDouble_Rcpr_Pi;
+extern const float tmpl_float_rcpr_pi;
+extern const double tmpl_double_rcpr_pi;
+extern const long double tmpl_ldouble_rcpr_pi;
 
-extern const float tmpl_Float_Two_By_Pi;
-extern const double tmpl_Double_Two_By_Pi;
-extern const long double tmpl_LDouble_Two_By_Pi;
+extern const float tmpl_float_two_by_pi;
+extern const double tmpl_double_two_by_pi;
+extern const long double tmpl_ldouble_two_by_pi;
 
-extern const float tmpl_Float_Rcpr_Two_Pi;
-extern const double tmpl_Double_Rcpr_Two_Pi;
-extern const long double tmpl_LDouble_Rcpr_Two_Pi;
+extern const float tmpl_float_rcpr_two_pi;
+extern const double tmpl_double_rcpr_two_pi;
+extern const long double tmpl_ldouble_rcpr_two_pi;
 
 extern const float tmpl_Float_Rcpr_Four_Pi;
 extern const double tmpl_Double_Rcpr_Four_Pi;
