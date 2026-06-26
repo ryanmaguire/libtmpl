@@ -73,7 +73,7 @@ tmpl_Double_Fresnel_Diffraction_Well_Phase(double x,
                                            double b,
                                            double fresnel_scale)
 {
-    const double scale_factor = tmpl_Double_Sqrt_Pi_By_Two / fresnel_scale;
+    const double scale_factor = tmpl_double_sqrt_pi_by_two / fresnel_scale;
     const double arg1 = scale_factor * (a - x);
     const double arg2 = scale_factor * (b - x);
 

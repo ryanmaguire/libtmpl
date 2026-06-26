@@ -76,10 +76,10 @@ tmpl_ComplexDouble tmpl_CDouble_Fresnel_Integral_Real(double x)
     A = a/b-x*x;
     A *= tmpl_double_pi_by_two;
     R = c/d;
-    R *= tmpl_Double_Sqrt_Pi_By_Two;
+    R *= tmpl_double_sqrt_pi_by_two;
 
-    cx = sgn_x*(tmpl_Double_Sqrt_Pi_By_Eight - R*tmpl_Double_Sin(A));
-    sx = sgn_x*(tmpl_Double_Sqrt_Pi_By_Eight - R*tmpl_Double_Cos(A));
+    cx = sgn_x*(tmpl_double_sqrt_pi_by_eight - R*tmpl_Double_Sin(A));
+    sx = sgn_x*(tmpl_double_sqrt_pi_by_eight - R*tmpl_Double_Cos(A));
 
     out = tmpl_CDouble_Rect(cx, sx);
     return out;

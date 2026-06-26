@@ -60,7 +60,7 @@ tmpl_CDouble_Fresnel_Diffraction_Right_Straightedge(double x,
                                                     double fresnel_scale)
 {
     tmpl_ComplexDouble T;
-    const double scale_factor = tmpl_Double_Sqrt_Pi_By_Two / fresnel_scale;
+    const double scale_factor = tmpl_double_sqrt_pi_by_two / fresnel_scale;
     const double arg = scale_factor * (edge - x);
     const double re = tmpl_Double_Fresnel_Cos(arg);
     const double im = tmpl_Double_Fresnel_Sin(arg);

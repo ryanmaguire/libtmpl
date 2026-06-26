@@ -178,18 +178,18 @@ long double tmpl_LDouble_Fresnel_Cos(long double x)
         cx *= x;
 
         if (x > 0.0L)
-            cx += tmpl_LDouble_Sqrt_Pi_By_Eight;
+            cx += tmpl_ldouble_sqrt_pi_by_eight;
         else
-            cx -= tmpl_LDouble_Sqrt_Pi_By_Eight;
+            cx -= tmpl_ldouble_sqrt_pi_by_eight;
     }
 
     /* For large values, return the limit of S(x) as x -> +/- infinity.       */
     else
     {
         if (x > 0.0L)
-            return tmpl_LDouble_Sqrt_Pi_By_Eight;
+            return tmpl_ldouble_sqrt_pi_by_eight;
         else
-            return -tmpl_LDouble_Sqrt_Pi_By_Eight;
+            return -tmpl_ldouble_sqrt_pi_by_eight;
     }
 
     return cx;

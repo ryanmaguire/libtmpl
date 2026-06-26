@@ -82,7 +82,7 @@ tmpl_CDouble_Fresnel_Diffraction_Well(double x,
 
     /*  The bounds of the integral are sqrt(pi/2)(a-x)/F and                  *
      *  sqrt(pi/2)(b-x)/F, and the output is computed in terms of this.       */
-    const double scale_factor = tmpl_Double_Sqrt_Pi_By_Two / fresnel_scale;
+    const double scale_factor = tmpl_double_sqrt_pi_by_two / fresnel_scale;
     const double arg1 = scale_factor * (left_edge - x);
     const double arg2 = scale_factor * (right_edge - x);
 

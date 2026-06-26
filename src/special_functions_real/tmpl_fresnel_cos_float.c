@@ -154,18 +154,18 @@ float tmpl_Float_Fresnel_Cos(float x)
         cx *= x;
 
         if (x > 0.0F)
-            cx += tmpl_Float_Sqrt_Pi_By_Eight;
+            cx += tmpl_float_sqrt_pi_by_eight;
         else
-            cx -= tmpl_Float_Sqrt_Pi_By_Eight;
+            cx -= tmpl_float_sqrt_pi_by_eight;
     }
 
     /* For large values, return the limit of S(x) as x -> +/- infinity.       */
     else
     {
         if (x > 0.0F)
-            return tmpl_Float_Sqrt_Pi_By_Eight;
+            return tmpl_float_sqrt_pi_by_eight;
         else
-            return -tmpl_Float_Sqrt_Pi_By_Eight;
+            return -tmpl_float_sqrt_pi_by_eight;
     }
 
     return cx;
