@@ -72,9 +72,9 @@ const float tmpl_float_pi_by_three = TMPL_FLOAT_PI_BY_THREE;
 const double tmpl_double_pi_by_three = TMPL_DOUBLE_PI_BY_THREE;
 const long double tmpl_ldouble_pi_by_three = TMPL_LDOUBLE_PI_BY_THREE;
 
-const float tmpl_Float_Pi_By_Four = TMPL_FLOAT_PI_BY_FOUR;
-const double tmpl_Double_Pi_By_Four = TMPL_DOUBLE_PI_BY_FOUR;
-const long double tmpl_LDouble_Pi_By_Four = TMPL_LDOUBLE_PI_BY_FOUR;
+const float tmpl_float_pi_by_four = TMPL_FLOAT_PI_BY_FOUR;
+const double tmpl_double_pi_by_four = TMPL_DOUBLE_PI_BY_FOUR;
+const long double tmpl_ldouble_pi_by_four = TMPL_LDOUBLE_PI_BY_FOUR;
 
 const float tmpl_Float_Pi_By_Five = TMPL_FLOAT_PI_BY_FIVE;
 const double tmpl_Double_Pi_By_Five = TMPL_DOUBLE_PI_BY_FIVE;

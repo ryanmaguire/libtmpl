@@ -236,9 +236,9 @@ extern const float tmpl_float_pi_by_three;
 extern const double tmpl_double_pi_by_three;
 extern const long double tmpl_ldouble_pi_by_three;
 
-extern const float tmpl_Float_Pi_By_Four;
-extern const double tmpl_Double_Pi_By_Four;
-extern const long double tmpl_LDouble_Pi_By_Four;
+extern const float tmpl_float_pi_by_four;
+extern const double tmpl_double_pi_by_four;
+extern const long double tmpl_ldouble_pi_by_four;
 
 extern const float tmpl_Float_Pi_By_Five;
 extern const double tmpl_Double_Pi_By_Five;
