@@ -362,13 +362,13 @@ extern const long double tmpl_ldouble_rcpr_sqrt_three;
 /******************************************************************************
  *                      Euler's Exponential Constant (e)                      *
  ******************************************************************************/
-extern const float tmpl_Float_Euler_E;
-extern const double tmpl_Double_Euler_E;
-extern const long double tmpl_LDouble_Euler_E;
+extern const float tmpl_float_euler_e;
+extern const double tmpl_double_euler_e;
+extern const long double tmpl_ldouble_euler_e;
 
-extern const float tmpl_Float_Rcpr_Euler_E;
-extern const double tmpl_Double_Rcpr_Euler_E;
-extern const long double tmpl_LDouble_Rcpr_Euler_E;
+extern const float tmpl_float_rcpr_euler_e;
+extern const double tmpl_double_rcpr_euler_e;
+extern const long double tmpl_ldouble_rcpr_euler_e;
 
 /******************************************************************************
  *                              Common Logarithms                             *

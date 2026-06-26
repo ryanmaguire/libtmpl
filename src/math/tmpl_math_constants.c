@@ -198,13 +198,13 @@ const long double tmpl_ldouble_rcpr_sqrt_three = TMPL_LDOUBLE_RCPR_SQRT_THREE;
 /******************************************************************************
  *                      Euler's Exponential Constant (e)                      *
  ******************************************************************************/
-const float tmpl_Float_Euler_E = TMPL_FLOAT_EULER_E;
-const double tmpl_Double_Euler_E = TMPL_DOUBLE_EULER_E;
-const long double tmpl_LDouble_Euler_E = TMPL_LDOUBLE_EULER_E;
+const float tmpl_float_euler_e = TMPL_FLOAT_EULER_E;
+const double tmpl_double_euler_e = TMPL_DOUBLE_EULER_E;
+const long double tmpl_ldouble_euler_e = TMPL_LDOUBLE_EULER_E;
 
-const float tmpl_Float_Rcpr_Euler_E = TMPL_FLOAT_RCPR_EULER_E;
-const double tmpl_Double_Rcpr_Euler_E = TMPL_DOUBLE_RCPR_EULER_E;
-const long double tmpl_LDouble_Rcpr_Euler_E = TMPL_LDOUBLE_RCPR_EULER_E;
+const float tmpl_float_rcpr_euler_e = TMPL_FLOAT_RCPR_EULER_E;
+const double tmpl_double_rcpr_euler_e = TMPL_DOUBLE_RCPR_EULER_E;
+const long double tmpl_ldouble_rcpr_euler_e = TMPL_LDOUBLE_RCPR_EULER_E;
 
 /******************************************************************************
  *                              Common Logarithms                             *
