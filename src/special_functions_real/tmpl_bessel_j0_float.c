@@ -223,7 +223,7 @@ float tmpl_Float_Bessel_J0(float x)
         cosarg *= tmpl_Float_Cos(x - tmpl_float_pi_by_four);
 
         /*  Multiply the result by the coefficient and return.                */
-        bessel_J0 = (cosarg + sinarg)*tmpl_Float_Sqrt_Two_By_Pi;
+        bessel_J0 = (cosarg + sinarg)*tmpl_float_sqrt_two_by_pi;
         bessel_J0 = bessel_J0 / tmpl_Float_Sqrt(x);
     }
 

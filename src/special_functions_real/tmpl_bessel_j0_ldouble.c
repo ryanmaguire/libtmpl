@@ -108,7 +108,7 @@ long double tmpl_LDouble_Bessel_J0(long double x)
         cosarg *= tmpl_LDouble_Cos(x - tmpl_ldouble_pi_by_four);
 
         /*  For very large arguments, use the limit (which is zero).          */
-        J0_x = (cosarg + sinarg)*tmpl_LDouble_Sqrt_Two_By_Pi;
+        J0_x = (cosarg + sinarg)*tmpl_ldouble_sqrt_two_by_pi;
         J0_x = J0_x / tmpl_LDouble_Sqrt(x);
     }
 

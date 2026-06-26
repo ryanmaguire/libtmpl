@@ -328,13 +328,13 @@ extern const float tmpl_float_rcpr_sqrt_two_pi;
 extern const double tmpl_double_rcpr_sqrt_two_pi;
 extern const long double tmpl_ldouble_rcpr_sqrt_two_pi;
 
-extern const float tmpl_Float_Two_By_Sqrt_Pi;
-extern const double tmpl_Double_Two_By_Sqrt_Pi;
-extern const long double tmpl_LDouble_Two_By_Sqrt_Pi;
+extern const float tmpl_float_two_by_sqrt_pi;
+extern const double tmpl_double_two_by_sqrt_pi;
+extern const long double tmpl_ldouble_two_by_sqrt_pi;
 
-extern const float tmpl_Float_Sqrt_Two_By_Pi;
-extern const double tmpl_Double_Sqrt_Two_By_Pi;
-extern const long double tmpl_LDouble_Sqrt_Two_By_Pi;
+extern const float tmpl_float_sqrt_two_by_pi;
+extern const double tmpl_double_sqrt_two_by_pi;
+extern const long double tmpl_ldouble_sqrt_two_by_pi;
 
 /******************************************************************************
  *                            Common Square Roots                             *

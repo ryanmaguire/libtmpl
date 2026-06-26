@@ -164,13 +164,13 @@ const float tmpl_float_rcpr_sqrt_two_pi = TMPL_FLOAT_RCPR_SQRT_TWO_PI;
 const double tmpl_double_rcpr_sqrt_two_pi = TMPL_DOUBLE_RCPR_SQRT_TWO_PI;
 const long double tmpl_ldouble_rcpr_sqrt_two_pi = TMPL_LDOUBLE_RCPR_SQRT_TWO_PI;
 
-const float tmpl_Float_Two_By_Sqrt_Pi = TMPL_FLOAT_TWO_BY_SQRT_PI;
-const double tmpl_Double_Two_By_Sqrt_Pi = TMPL_DOUBLE_TWO_BY_SQRT_PI;
-const long double tmpl_LDouble_Two_By_Sqrt_Pi = TMPL_LDOUBLE_TWO_BY_SQRT_PI;
+const float tmpl_float_two_by_sqrt_pi = TMPL_FLOAT_TWO_BY_SQRT_PI;
+const double tmpl_double_two_by_sqrt_pi = TMPL_DOUBLE_TWO_BY_SQRT_PI;
+const long double tmpl_ldouble_two_by_sqrt_pi = TMPL_LDOUBLE_TWO_BY_SQRT_PI;
 
-const float tmpl_Float_Sqrt_Two_By_Pi = TMPL_FLOAT_SQRT_TWO_BY_PI;
-const double tmpl_Double_Sqrt_Two_By_Pi = TMPL_DOUBLE_SQRT_TWO_BY_PI;
-const long double tmpl_LDouble_Sqrt_Two_By_Pi = TMPL_LDOUBLE_SQRT_TWO_BY_PI;
+const float tmpl_float_sqrt_two_by_pi = TMPL_FLOAT_SQRT_TWO_BY_PI;
+const double tmpl_double_sqrt_two_by_pi = TMPL_DOUBLE_SQRT_TWO_BY_PI;
+const long double tmpl_ldouble_sqrt_two_by_pi = TMPL_LDOUBLE_SQRT_TWO_BY_PI;
 
 /******************************************************************************
  *                            Common Square Roots                             *
