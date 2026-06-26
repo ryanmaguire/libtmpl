@@ -44,47 +44,52 @@
  *              Q      ||Q||^2                                                *
  *                                                                            *
  *  Called Functions:                                                         *
- *      tmpl_vec3.h:                                                          *
+ *      src/vec3/                                                             *
  *          tmpl_3DDouble_Normalize:                                          *
  *              Normalizes a vector to unit length.                           *
  *          tmpl_3DDouble_Dot_Product:                                        *
  *              Computes the dot product of two vectors.                      *
+ *          tmpl_3DDouble_Scale:                                              *
+ *              Multiplies a 3D vector by a scalar.                           *
  *  Notes:                                                                    *
  *      1.) No checks for Infs or NaNs are performed.                         *
- *      2.) No checks for NULL pointers are performed.                        *
- *      3.) If the second vector is zero, the output is NaN.                  *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
+ *                                                                            *
+ *      3.) The result is undefined if Q is the zero vector.                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  2.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 12, 2024                                                 *
  ******************************************************************************/
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Three-vector typedef and function prototype given here.                   */
 #include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing the component of one vector along another.         */
+TMPL_PURE_FUNC
 tmpl_ThreeVectorDouble
-tmpl_3DDouble_Component(const tmpl_ThreeVectorDouble * const P,
-                        const tmpl_ThreeVectorDouble * const Q)
+tmpl_3DDouble_Component(const tmpl_ThreeVectorDouble * const p,
+                        const tmpl_ThreeVectorDouble * const q)
+TMPL_UNSEQUENCED
 {
-    /*  Variable for the output.                                              */
-    tmpl_ThreeVectorDouble component;
+    /*  Normalize q to unit length. This makes the computation simpler and    *
+     *  avoids possible overflows and underflows.                             */
+    const tmpl_ThreeVectorDouble qn = tmpl_3DDouble_Normalize(q);
 
-    /*  Normalize Q to unit length. Makes the computation simpler and avoids  *
-     *  possible overflows or underflows.                                     */
-    const tmpl_ThreeVectorDouble Qn = tmpl_3DDouble_Normalize(Q);
-
-    /*  Since Qn is unit magnitude, the scale factor is just P . Qn.          */
-    const double factor = tmpl_3DDouble_Dot_Product(P, &Qn);
+    /*  Since qn is unit magnitude, the scale factor is just p . qn.          */
+    const double factor = tmpl_3DDouble_Dot_Product(p, &qn);
 
     /*  The component is (P . Qn) * Qn.                                       */
-    component.dat[0] = Qn.dat[0] * factor;
-    component.dat[1] = Qn.dat[1] * factor;
-    component.dat[2] = Qn.dat[2] * factor;
-    return component;
+    return tmpl_3DDouble_Scale(factor, &qn);
 }
 /*  End of tmpl_3DDouble_Component.                                           */
