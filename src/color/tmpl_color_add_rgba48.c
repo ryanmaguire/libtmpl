@@ -28,38 +28,56 @@
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGBA48):                                                     *
+ *      c0 (const tmpl_RGBA48):                                               *
  *          A color.                                                          *
- *      c1 (tmpl_RGBA48):                                                     *
+ *      c1 (const tmpl_RGBA48):                                               *
  *          Another color.                                                    *
  *  Output:                                                                   *
  *      sum (tmpl_RGBA48):                                                    *
  *          The color sum of c0 and c1.                                       *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/math/                                                             *
+ *          tmpl_Double_Unit_Clamp:                                           *
+ *              Clips a real valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Carefully sum the individual channels by checking that the result     *
- *      will not overflow, storing the max value of 65535 if it does.         *
+ *      will not overflow, storing the max value of 65535 if it does. The     *
+ *      alpha parameter is also summed and clipped.                           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
+ *  3.) tmpl_math.h:                                                          *
+ *          Unit clamp function provided here.                                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/27: Ryan Maguire                                                  *
+ *      Added C23 attributes, cleaned up docstring.                           *
  ******************************************************************************/
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Color typedef's and the function prototype provided here.                 */
 #include <libtmpl/include/tmpl_color.h>
 
-/*  Clipping functions are provided here.                                     */
+/*  Unit clamp function found here.                                           */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  The maximum value for a 16-bit color channel is 65535.                    */
 #define PEAK (0xFFFFU)
 
 /*  Function for adding together two colors in 48-bit RGB format.             */
-tmpl_RGBA48 tmpl_RGBA48_Add(tmpl_RGBA48 c0, tmpl_RGBA48 c1)
+TMPL_CONST_FUNC
+tmpl_RGBA48 tmpl_RGBA48_Add(const tmpl_RGBA48 c0, const tmpl_RGBA48 c1)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGBA48 sum;
@@ -70,10 +88,11 @@ tmpl_RGBA48 tmpl_RGBA48_Add(tmpl_RGBA48 c0, tmpl_RGBA48 c1)
     const unsigned short int g_diff = PEAK - c0.dat[1];
     const unsigned short int b_diff = PEAK - c0.dat[2];
 
-    /*  Sum the alpha channel as well.                                        */
+    /*  Sum the alpha parameters as well. This function does not perform      *
+     *  alpha compositing, it just adds the components.                       */
     const double alpha = c0.alpha + c1.alpha;
 
-    /*  If a channel will overflow, set the channel to 255 (max value).       *
+    /*  If a channel will overflow, set the channel to 65535 (max value).     *
      *  Otherwise compute the sum as normal. The "& PEAK" at the end is       *
      *  simply to avoid compiler warnings about conversions to int. As a      *
      *  reminder about ternary syntax, x = (a <= b ? c : d) sets x to "c" if  *
