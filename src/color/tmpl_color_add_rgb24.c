@@ -60,7 +60,7 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Color typedefs and function prototypes provided here.                     */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  Maximum value for 8-bit color channels is 255.                            */

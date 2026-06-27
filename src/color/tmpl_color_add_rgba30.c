@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_color_add_rgb30                            *
+ *                            tmpl_color_add_rgba30                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Adds two colors by summing over the individual color channels.        *
@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (const tmpl_RGBA30)                                                *
+ *      c0 (const tmpl_RGBA30):                                               *
  *          A color.                                                          *
  *      c1 (const tmpl_RGBA30):                                               *
  *          Another color.                                                    *
@@ -38,7 +38,7 @@
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_Double_Unit_Clamp:                                           *
- *              Clips a real valued input to fall between zero and one.       *
+ *              Clips a real-valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Carefully sum the individual channels by checking that the result     *
  *      will not overflow, storing the max value of 1023 if it does. The      *
@@ -67,14 +67,14 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Color typedefs and function prototypes provided here.                     */
 #include <libtmpl/include/tmpl_color.h>
-
-/*  Clipping functions are provided here.                                     */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  TMPL_CAST macro provided here.                                            */
 #include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  Clipping functions are provided here.                                     */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The maximum value for a 10-bit color channel is 1023.                     */
 #define PEAK (0x3FFU)
@@ -82,7 +82,7 @@
 /*  Helper macro for computing the complement of a given color channel.       */
 #define TMPL_COMPLEMENT(color) TMPL_CAST(PEAK - (color), unsigned short int)
 
-/*  Function for adding together two colors in 24-bit RGBA format.            */
+/*  Function for adding together two colors in 30-bit RGBA format.            */
 TMPL_CONST_FUNC
 tmpl_RGBA30 tmpl_RGBA30_Add(const tmpl_RGBA30 c0, const tmpl_RGBA30 c1)
 TMPL_UNSEQUENCED

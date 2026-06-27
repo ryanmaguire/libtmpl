@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_color_add_rgb24                            *
+ *                            tmpl_color_add_rgba24                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Adds two colors by summing over the individual color channels.        *
@@ -38,7 +38,7 @@
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_Double_Unit_Clamp:                                           *
- *              Clips a real valued input to fall between zero and one.       *
+ *              Clips a real-valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Carefully sum the individual channels by checking that the result     *
  *      will not overflow, storing the max value of 255 if it does. The alpha *
@@ -67,7 +67,7 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and the function prototype provided here.                 */
+/*  Color typedefs and the function prototype provided here.                  */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  Unit clamp function found here.                                           */

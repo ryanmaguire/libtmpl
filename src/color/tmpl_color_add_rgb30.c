@@ -62,7 +62,7 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Color typedefs and function prototypes provided here.                     */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  TMPL_CAST macro provided here.                                            */

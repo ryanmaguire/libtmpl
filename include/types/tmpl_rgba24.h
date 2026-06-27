@@ -37,7 +37,7 @@
 /*  Color struct for using 24-bit colors and alpha compositing.               */
 typedef struct tmpl_RGBA24_Def {
 
-    /*  24-bits for the color channels. Unsigned char is at least 8 bits wide *
+    /*  24 bits for the color channels. Unsigned char is at least 8 bits wide *
      *  so a 24-bit RGB value can be stored as an array of 3 unsigned chars.  */
     unsigned char dat[3];
 

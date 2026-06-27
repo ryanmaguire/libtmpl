@@ -38,7 +38,7 @@
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_Double_Unit_Clamp:                                           *
- *              Clips a real valued input to fall between zero and one.       *
+ *              Clips a real-valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Carefully sum the individual channels by checking that the result     *
  *      will not overflow, storing the max value of 65535 if it does. The     *
@@ -65,7 +65,7 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and the function prototype provided here.                 */
+/*  Color typedefs and the function prototype provided here.                  */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  Unit clamp function found here.                                           */
@@ -74,7 +74,7 @@
 /*  The maximum value for a 16-bit color channel is 65535.                    */
 #define PEAK (0xFFFFU)
 
-/*  Function for adding together two colors in 48-bit RGB format.             */
+/*  Function for adding together two colors in 48-bit RGBA format.            */
 TMPL_CONST_FUNC
 tmpl_RGBA48 tmpl_RGBA48_Add(const tmpl_RGBA48 c0, const tmpl_RGBA48 c1)
 TMPL_UNSEQUENCED

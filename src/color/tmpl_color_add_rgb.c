@@ -38,7 +38,7 @@
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_Double_Unit_Clamp:                                           *
- *              Clips a real valued input to fall between zero and one.       *
+ *              Clips a real-valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Sum the individual color channels and clip them to ensure the end     *
  *      results lie between 0 and 1.                                          *
@@ -66,7 +66,7 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and the function prototype provided here.                 */
+/*  Color typedefs and the function prototype provided here.                  */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  Unit clamp function found here.                                           */
