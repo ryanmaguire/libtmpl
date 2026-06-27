@@ -125,9 +125,9 @@ TMPL_UNSEQUENCED;
  *  Purpose:                                                                  *
  *      Adds two colors by summing over the individual channels.              *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGBA24):                                                     *
+ *      c0 (const tmpl_RGBA24):                                               *
  *          The first color.                                                  *
- *      c1 (tmpl_RGBA24):                                                     *
+ *      c1 (const tmpl_RGBA24):                                               *
  *          The second color.                                                 *
  *  Outputs:                                                                  *
  *      sum (tmpl_RGBA24):                                                    *
@@ -136,11 +136,27 @@ TMPL_UNSEQUENCED;
  *      30-bit and 48-bit equivalents are provided as well.                   *
  *      If the sum overflows beyond the the maximum possible value in a       *
  *      given channel, the sum is set to the maximum possible value.          *
+ *      The alpha parameters are also added together.                         *
  ******************************************************************************/
-extern tmpl_RGBA24 tmpl_RGBA24_Add(tmpl_RGBA24 c0, const tmpl_RGBA24 c1);
-extern tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, const tmpl_RGBA30 c1);
-extern tmpl_RGBA48 tmpl_RGBA48_Add(tmpl_RGBA48 c0, const tmpl_RGBA48 c1);
-extern tmpl_RGBA tmpl_RGBA_Add(const tmpl_RGBA *c0, const tmpl_RGBA *c1);
+TMPL_CONST_FUNC
+extern tmpl_RGBA24
+tmpl_RGBA24_Add(const tmpl_RGBA24 c0, const tmpl_RGBA24 c1)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern tmpl_RGBA30
+tmpl_RGBA30_Add(const tmpl_RGBA30 c0, const tmpl_RGBA30 c1)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern tmpl_RGBA48
+tmpl_RGBA48_Add(const tmpl_RGBA48 c0, const tmpl_RGBA48 c1)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_RGBA
+tmpl_RGBA_Add(const tmpl_RGBA * const c0, const tmpl_RGBA * const c1)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
