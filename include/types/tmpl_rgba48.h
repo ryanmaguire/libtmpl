@@ -40,7 +40,7 @@ typedef struct tmpl_RGBA48_Def {
     /*  Unsigned short must be at least 16 bits wide. Use an array of three   *
      *  unsigned short ints, one for each color channel. Using an array makes *
      *  the data contiguous.                                                  */
-    unsigned short dat[3];
+    unsigned short int dat[3];
 
     /*  Parameter for alpha compositing (real number between 0 and 1).        */
     double alpha;
