@@ -62,7 +62,9 @@
 #define PEAK (0xFFFFU)
 
 /*  Function for adding together two colors in 48-bit RGB format.             */
-tmpl_RGB48 tmpl_RGB48_Add(tmpl_RGB48 c0, tmpl_RGB48 c1)
+TMPL_CONST_FUNC
+tmpl_RGB48 tmpl_RGB48_Add(const tmpl_RGB48 c0, const tmpl_RGB48 c1)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGB48 sum;

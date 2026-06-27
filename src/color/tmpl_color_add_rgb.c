@@ -43,7 +43,7 @@
  *      Sum the individual color channels and clip them to ensure the end     *
  *      results lie between 0 and 1.                                          *
  *  Notes:                                                                    *
- *      Colors channels will be "clipped" into the interval [0, 1].           *
+ *      Color channels will be "clipped" into the interval [0, 1].            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
