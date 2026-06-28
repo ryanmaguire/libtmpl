@@ -169,39 +169,29 @@ TMPL_UNSEQUENCED;
  *                                                                            *
  *      3.) Two-point form requires x0 != x1. No checks for this are made.    *
  ******************************************************************************/
-
-/*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE == 1
-
-/*  Location of the inlined versions.                                         */
-#include TMPL_INLINE_FILE(tmpl_affine_point_point_double.h)
-#include TMPL_INLINE_FILE(tmpl_affine_point_point_float.h)
-#include TMPL_INLINE_FILE(tmpl_affine_point_point_ldouble.h)
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/affine/.                  */
+TMPL_CONST_FUNC
 extern tmpl_AffineDouble
 tmpl_AffDouble_Point_Point(const double x0,
                            const double y0,
                            const double x1,
-                           const double y1);
+                           const double y1)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineFloat
 tmpl_AffFloat_Point_Point(const float x0,
                           const float y0,
                           const float x1,
-                          const float y1);
+                          const float y1)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineLongDouble
 tmpl_AffLDouble_Point_Point(const long double x0,
                             const long double y0,
                             const long double x1,
-                            const long double y1);
-
-#endif
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+                            const long double y1)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
