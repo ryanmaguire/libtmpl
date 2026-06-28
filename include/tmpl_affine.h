@@ -43,6 +43,9 @@
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Optional C23 attributes for optimization are found here.                  */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  Locations of the Affine data types at various precisions.                 */
 #include <libtmpl/include/types/tmpl_affine_double.h>
 #include <libtmpl/include/types/tmpl_affine_float.h>
@@ -84,30 +87,20 @@
  *          the y-intercept are non-zero. That is, the line is not allowed to *
  *          pass through the origin. No checks are made for non-zero inputs.  *
  ******************************************************************************/
-
-/*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE == 1
-
-/*  Location of the inlined versions.                                         */
-#include TMPL_INLINE_FILE(tmpl_affine_intercept_form_double.h)
-#include TMPL_INLINE_FILE(tmpl_affine_intercept_form_float.h)
-#include TMPL_INLINE_FILE(tmpl_affine_intercept_form_ldouble.h)
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/affine/.                  */
+TMPL_CONST_FUNC
 extern tmpl_AffineDouble
-tmpl_AffDouble_Intercept_Form(const double x0, const double y0);
+tmpl_AffDouble_Intercept_Form(const double x0, const double y0)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineFloat
-tmpl_AffFloat_Intercept_Form(const float x0, const float y0);
+tmpl_AffFloat_Intercept_Form(const float x0, const float y0)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineLongDouble
-tmpl_AffLDouble_Intercept_Form(const long double x0, const long double y0);
-
-#endif
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+tmpl_AffLDouble_Intercept_Form(const long double x0, const long double y0)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
