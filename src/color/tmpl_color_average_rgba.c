@@ -43,7 +43,7 @@
  *      Average the individual color channels and clip them to ensure the end *
  *      results lie between 0 and 1.                                          *
  *  Notes:                                                                    *
- *      Colors channels will be "clipped" into the interval [0, 1].           *
+ *      Color channels will be "clipped" into the interval [0, 1].            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -74,7 +74,7 @@ tmpl_RGBA tmpl_RGBA_Average(const tmpl_RGBA *c0, const tmpl_RGBA *c1)
     const double blue = 0.5 * (c0->dat[2] + c1->dat[2]);
 
     /*  Average the alpha channels as well.                                   */
-    const double alpha = 0.5 * (c0->dat[3] + c1->dat[2]);
+    const double alpha = 0.5 * (c0->dat[3] + c1->dat[3]);
 
     /*  Ensure the color values lie between 0 and 1 by clipping.              */
     average.dat[0] = tmpl_Double_Unit_Clamp(red);

@@ -16,100 +16,74 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_color_average_rgb24                          *
+ *                          tmpl_color_average_rgb48                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by averaging over the individual color channels.       *
+ *      Blends two colors by averaging over their individual color channels.  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RGB24_Average                                                    *
+ *      tmpl_RGB48_Average                                                    *
  *  Purpose:                                                                  *
- *      Adds two colors together by summing the color channels.               *
+ *      Blends two colors together by averaging their color channels.         *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGB24):                                                      *
+ *      c0 (const tmpl_RGB48):                                                *
  *          A color.                                                          *
- *      c1 (tmpl_RGB24):                                                      *
+ *      c1 (const tmpl_RGB48):                                                *
  *          Another color.                                                    *
  *  Output:                                                                   *
- *      sum (tmpl_RGB24):                                                     *
- *          The color sum of c0 and c1.                                       *
+ *      average (tmpl_RGB48):                                                 *
+ *          The color average of c0 and c1.                                   *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/integer/                                                          *
+ *          tmpl_UShort_Average:                                              *
+ *              Averages two integers without overflow.                       *
  *  Method:                                                                   *
- *      Carefully sum the individual channels by checking that the result     *
- *      will not overflow, storing the max value of 255 if it does.           *
+ *      Compute the average of each color channel and store it in the result. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
+ *  3.) tmpl_integer.h:                                                       *
+ *          Integer average function provided here.                           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/28: Ryan Maguire                                                  *
+ *      Added C23 attributes, switched to using the new averaging function.   *
  ******************************************************************************/
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Color typedefs and function prototypes provided here.                     */
 #include <libtmpl/include/tmpl_color.h>
 
-#include <libtmpl/include/tmpl_limits.h>
+/*  Averaging function found here.                                            */
+#include <libtmpl/include/tmpl_integer.h>
 
-#define PEAK (0xFFFFU)
-
-/*  Function for adding together two colors in 24-bit RGB format.             */
-tmpl_RGB48 tmpl_RGB48_Average(tmpl_RGB48 c0, tmpl_RGB48 c1)
+/*  Function for averaging together two colors in 48-bit RGB format.          */
+TMPL_CONST_FUNC
+tmpl_RGB48 tmpl_RGB48_Average(const tmpl_RGB48 c0, const tmpl_RGB48 c1)
+TMPL_UNSEQUENCED
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_RGB48 sum;
+    /*  Struct for the output. C89 requires declarations at the top.          */
+    tmpl_RGB48 average;
 
-    /*  Unsigned long is required to be at least 32 bits. On many systems it  *
-     *  is 64-bits, and int is 32-bits (though int is only required to be     *
-     *  at least 16-bits). Because of this it may be more efficient to use    *
-     *  "int" to perform the computation. If int is not big enough, use long. *
-     *  To avoid overflow with 16-bit integer arithmetic, int needs to be     *
-     *  at least 17-bits wide. Check for this.                                */
-#if TMPL_UINT_BIT >= 17
-    unsigned int r = (unsigned int)c0.dat[0];
-    unsigned int g = (unsigned int)c0.dat[1];
-    unsigned int b = (unsigned int)c0.dat[2];
+    /*  The averaging function safely avoids overflow. Use it to average the  *
+     *  individual channels of the two colors.                                */
+    average.dat[0] = tmpl_UShort_Average(c0.dat[0], c1.dat[0]);
+    average.dat[1] = tmpl_UShort_Average(c0.dat[1], c1.dat[1]);
+    average.dat[2] = tmpl_UShort_Average(c0.dat[2], c1.dat[2]);
 
-    /*  We can safely add the channels from the other color without overflow. */
-    r += (unsigned int)c1.dat[0];
-    g += (unsigned int)c1.dat[1];
-    b += (unsigned int)c1.dat[2];
-
-#else
-/*  Else for #if TMPL_UINT_BIT >= 17.                                         */
-
-    /*  If int is not large enough, long int is required to be at least 32    *
-     *  bits wide. This is more than enough to safely compute with.           */
-    unsigned long int r = (unsigned long int)c0.dat[0];
-    unsigned long int g = (unsigned long int)c0.dat[1];
-    unsigned long int b = (unsigned long int)c0.dat[2];
-
-    /*  We can safely add the channels from the other color without overflow. */
-    r += (unsigned long int)c1.dat[0];
-    g += (unsigned long int)c1.dat[1];
-    b += (unsigned long int)c1.dat[2];
-
-#endif
-/*  End of #if TMPL_UINT_BIT >= 17.                                           */
-
-    /*  Lastly, divide the channels by two to get the average.                */
-    r >>= 1U;
-    g >>= 1U;
-    b >>= 1U;
-
-    /*  If the value is larger than the max allowed for 8-bit integers, clip  *
-     *  the average.                                                          */
-    sum.dat[0] = (r > PEAK ? PEAK : (unsigned char)r);
-    sum.dat[1] = (g > PEAK ? PEAK : (unsigned char)g);
-    sum.dat[2] = (b > PEAK ? PEAK : (unsigned char)b);
-
-    return sum;
+    return average;
 }
 /*  End of tmpl_RGB48_Average.                                                */
 
-/*  Undefine everything in case someone wants to #include this file.          */
-#undef PEAK

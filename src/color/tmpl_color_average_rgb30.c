@@ -19,75 +19,80 @@
  *                          tmpl_color_average_rgb30                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by averaging over the individual color channels.       *
+ *      Blends two colors by averaging over their individual color channels.  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_RGB30_Average                                                    *
  *  Purpose:                                                                  *
- *      Adds two colors together by summing the color channels.               *
+ *      Blends two colors together by averaging their color channels.         *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGB30):                                                      *
+ *      c0 (const tmpl_RGB30):                                                *
  *          A color.                                                          *
- *      c1 (tmpl_RGB30):                                                      *
+ *      c1 (const tmpl_RGB30):                                                *
  *          Another color.                                                    *
  *  Output:                                                                   *
- *      sum (tmpl_RGB30):                                                     *
- *          The color sum of c0 and c1.                                       *
+ *      average (tmpl_RGB30):                                                 *
+ *          The color average of c0 and c1.                                   *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/integer/                                                          *
+ *          tmpl_UShort_Average:                                              *
+ *              Averages two integers without overflow.                       *
  *  Method:                                                                   *
- *      Carefully sum the individual channels by checking that the result     *
- *      will not overflow, storing the max value of 255 if it does.           *
+ *      Compute the average of each color channel and store it in the result. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
+ *  3.) tmpl_integer.h:                                                       *
+ *          Integer average function provided here.                           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/28: Ryan Maguire                                                  *
+ *      Added C23 attributes, switched to using the new averaging function.   *
  ******************************************************************************/
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Color typedefs and function prototypes provided here.                     */
 #include <libtmpl/include/tmpl_color.h>
 
-#define PEAK (0x3FFU)
+/*  Averaging function found here.                                            */
+#include <libtmpl/include/tmpl_integer.h>
 
-/*  Function for adding together two colors in 24-bit RGB format.             */
-tmpl_RGB30 tmpl_RGB30_Average(tmpl_RGB30 c0, tmpl_RGB30 c1)
+/*  Function for averaging together two colors in 30-bit RGB format.          */
+TMPL_CONST_FUNC
+tmpl_RGB30 tmpl_RGB30_Average(const tmpl_RGB30 c0, const tmpl_RGB30 c1)
+TMPL_UNSEQUENCED
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_RGB30 sum;
+    /*  Struct for the output. C89 requires declarations at the top.          */
+    tmpl_RGB30 average;
 
-    /*  Unsigned short is required to be at least 16 bits wide, which is      *
-     *  large enough to fit 10-bit arithmetic and avoid overflow. Cast the    *
-     *  color channels to safely average them.                                */
-    unsigned short int r = (unsigned short int)c0.red;
-    unsigned short int g = (unsigned short int)c0.green;
-    unsigned short int b = (unsigned short int)c0.blue;
+    /*  The color channels use 10-bit bit fields to store the data. Unsigned  *
+     *  short is required to be at least 16 bits wide, meaning we can safely  *
+     *  compute the average using the ushort average function.                */
+    const unsigned short int red = tmpl_UShort_Average(c0.red, c1.red);
+    const unsigned short int green = tmpl_UShort_Average(c0.green, c1.green);
+    const unsigned short int blue = tmpl_UShort_Average(c0.blue, c1.blue);
 
-    /*  We can safely add the channels from the other color without overflow. */
-    r += (unsigned short int)c1.red;
-    g += (unsigned short int)c1.green;
-    b += (unsigned short int)c1.blue;
+    /*  The average of two 10-bit values cannot exceed the maximum of 10-bit  *
+     *  integers, so there is no need to check for overflow. The bit-wise AND *
+     *  with 0x3FFU (2^10 - 1) is simply to prevent compilers from warning    *
+     *  about converting short int (usually 16 bits) to a 10-bit integer.     */
+    average.red = red & 0x3FFU;
+    average.green = green & 0x3FFU;
+    average.blue = blue & 0x3FFU;
 
-    /*  Lastly, divide the channels by two to get the average.                */
-    r >>= 1U;
-    g >>= 1U;
-    b >>= 1U;
-
-    /*  If the value is larger than the max allowed for 8-bit integers, clip  *
-     *  the average. Note, the "& PEAK" at the end is to avoid compiler       *
-     *  warnings about possible conversions to int.                           */
-    sum.red = (r > PEAK ? PEAK : r & PEAK);
-    sum.green = (g > PEAK ? PEAK : g & PEAK);
-    sum.blue = (b > PEAK ? PEAK : b & PEAK);
-
-    return sum;
+    return average;
 }
 /*  End of tmpl_RGB30_Average.                                                */
 
-/*  Undefine everything in case someone wants to #include this file.          */
-#undef PEAK
