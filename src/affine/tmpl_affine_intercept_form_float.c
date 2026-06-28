@@ -88,7 +88,7 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  The affine typedef and function prototype are provided here.              */
-#include <libtmpl/include/types/tmpl_affine.h>
+#include <libtmpl/include/tmpl_affine.h>
 
 /*  Creates an affine transformation given its two intercepts.                */
 TMPL_CONST_FUNC
