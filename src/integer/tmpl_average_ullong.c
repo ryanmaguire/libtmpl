@@ -79,23 +79,28 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_attributes.h:                                                    *
+ *  1.) tmpl_inttype.h:                                                       *
+ *          Location of the TMPL_HAS_LONGLONG macro.                          *
+ *  2.) tmpl_attributes.h:                                                    *
  *          Provides (optional) C23 attributes for optimization.              *
- *  2.) tmpl_integer.h:                                                       *
+ *  3.) tmpl_integer.h:                                                       *
  *          Header file containing the function prototype.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 28, 2026                                                 *
  ******************************************************************************/
 
-/*  Function prototype and TMPL_HAS_LONGLONG macro found here.                */
-#include <libtmpl/include/tmpl_integer.h>
+/*  TMPL_HAS_LONGLONG macro found here.                                       */
+#include <libtmpl/include/tmpl_inttype.h>
 
 /*  Only compile if libtmpl has long long support.                            */
 #if TMPL_HAS_LONGLONG == 1
 
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
+
+/*  Function prototype here.                                                  */
+#include <libtmpl/include/tmpl_integer.h>
 
 /*  Function for averaging two unsigned long long ints, rounded down.         */
 TMPL_CONST_FUNC
