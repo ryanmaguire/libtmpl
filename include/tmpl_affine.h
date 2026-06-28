@@ -124,36 +124,26 @@ TMPL_UNSEQUENCED;
  *                                                                            *
  *      3.) Point-intercept requires x0 != 0. No checks for this are made.    *
  ******************************************************************************/
-
-/*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE == 1
-
-/*  Location of the inlined versions.                                         */
-#include TMPL_INLINE_FILE(tmpl_affine_point_intercept_double.h)
-#include TMPL_INLINE_FILE(tmpl_affine_point_intercept_float.h)
-#include TMPL_INLINE_FILE(tmpl_affine_point_intercept_ldouble.h)
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/affine/.                  */
+TMPL_CONST_FUNC
 extern tmpl_AffineDouble
 tmpl_AffDouble_Point_Intercept(const double x0,
                                const double y0,
-                               const double intercept);
+                               const double intercept)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineFloat
 tmpl_AffFloat_Point_Intercept(const float x0,
                               const float y0,
-                              const float intercept);
+                              const float intercept)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineLongDouble
 tmpl_AffLDouble_Point_Intercept(const long double x0,
                                 const long double y0,
-                                const long double intercept);
-
-#endif
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+                                const long double intercept)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

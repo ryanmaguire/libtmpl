@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_affine_point_intercept_double                     *
+ *                     tmpl_affine_point_intercept_float                      *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Creates an affine transformation from a point and the y-intercept.    *
@@ -24,18 +24,18 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function:                                                                 *
- *      tmpl_AffDouble_Point_Intercept                                        *
+ *      tmpl_AffFloat_Point_Intercept                                         *
  *  Purpose:                                                                  *
  *      Creates an affine transformation from a point and the y-intercept.    *
  *  Arguments:                                                                *
- *      x0 (const double):                                                    *
+ *      x0 (const float):                                                     *
  *          The x-component of the point.                                     *
- *      y0 (const double):                                                    *
+ *      y0 (const float):                                                     *
  *          The y-component of the point.                                     *
- *      intercept (const double):                                             *
+ *      intercept (const float):                                              *
  *          The y-intercept.                                                  *
  *  Output:                                                                   *
- *      transform (tmpl_AffineDouble):                                        *
+ *      transform (tmpl_AffineFloat):                                         *
  *          The transform f(x) = mx + b.                                      *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -60,36 +60,44 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_affine_double.h:                                                 *
- *          Location of the tmpl_AffineDouble typedef.                        *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_affine.h:                                                        *
+ *          Location of the affine typedef and function prototype.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 3, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/26: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_AFFINE_POINT_INTERCEPT_DOUBLE_H
-#define TMPL_AFFINE_POINT_INTERCEPT_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  The tmpl_AffineDouble typedef is provided here.                           */
-#include <libtmpl/include/types/tmpl_affine_double.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  The affine typedef and function prototype are provided here.              */
+#include <libtmpl/include/types/tmpl_affine.h>
 
 /*  Creates an affine transformation from point-intercept form.               */
-TMPL_INLINE_DECL
-tmpl_AffineDouble
-tmpl_AffDouble_Point_Intercept(const double x0,
-                               const double y0,
-                               const double intercept)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+tmpl_AffineFloat
+tmpl_AffFloat_Point_Intercept(const float x0,
+                              const float y0,
+                              const float intercept)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
-    tmpl_AffineDouble transform;
+    tmpl_AffineFloat transform;
 
     /*  Given (x0, y0) and (0, y1), the slope is the ratio of the difference. */
-    const double slope = (y0 - intercept) / x0;
+    const float slope = (y0 - intercept) / x0;
 
     /*  We now have the slope and the intercept. We can create the transform  *
      *  using the slope-intercept form.                                       */
@@ -97,7 +105,4 @@ tmpl_AffDouble_Point_Intercept(const double x0,
     transform.dat[1] = intercept;
     return transform;
 }
-/*  End of tmpl_AffDouble_Point_Intercept.                                    */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_AffFloat_Point_Intercept.                                     */
