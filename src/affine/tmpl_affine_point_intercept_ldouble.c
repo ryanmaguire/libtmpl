@@ -39,7 +39,7 @@
  *          The transform f(x) = mx + b.                                      *
  *  Called Functions:                                                         *
  *      src/affine/                                                           *
- *          tmpl_AffDouble_Slope_Intercept:                                   *
+ *          tmpl_AffLDouble_Slope_Intercept:                                  *
  *              Creates the transform f(x) = mx + b given m and b.            *
  *  Method:                                                                   *
  *      Given a line with points (x0, y0) and (x1, y1) on it, we have:        *
