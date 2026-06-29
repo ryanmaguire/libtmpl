@@ -19,28 +19,72 @@
  *                    tmpl_affine_slope_intercept_ldouble                     *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Creates an affine transformation from a given slope and y-intercept.  *
+ *      Creates an affine transformation from slope-intercept form.           *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_AffLDouble_Slope_Intercept                                       *
+ *  Purpose:                                                                  *
+ *      Creates an affine transformation from slope-intercept form.           *
+ *  Arguments:                                                                *
+ *      slope (const long double):                                            *
+ *          The slope of the transformation, "m" in f(x) = mx + b.            *
+ *      intercept (const long double):                                        *
+ *          The y-intercept of the transformation, "b" in f(x) = mx + b.      *
+ *  Output:                                                                   *
+ *      transform (tmpl_AffineLongDouble):                                    *
+ *          The transform f(x) = mx + b.                                      *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Copy the arguments into an affine transformation struct and return.   *
+ *  Notes:                                                                    *
+ *      1.) No checks for NaN or infinity are made.                           *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_affine.h:                                                        *
+ *          Location of the affine typedef and function prototype.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 29, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/29: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only used if inline support is not available.                             */
-#if TMPL_USE_INLINE != 1
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  tmpl_AffineLongDouble typedef provided here.                              */
-#include <libtmpl/include/types/tmpl_affine_ldouble.h>
+/*  The affine typedef and function prototype are provided here.              */
+#include <libtmpl/include/tmpl_affine.h>
 
-/*  Function prototype / forward declaration.                                 */
-extern tmpl_AffineLongDouble
+/*  Creates an affine transformation given its slope and y-intercept.         */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+tmpl_AffineLongDouble
 tmpl_AffLDouble_Slope_Intercept(const long double slope,
-                                const long double intercept);
+                                const long double intercept)
+TMPL_UNSEQUENCED
+{
+    /*  Variable for the output.                                              */
+    tmpl_AffineLongDouble transform;
 
-/*  Implemented here.                                                         */
-#include "../../include/inline/affine/tmpl_affine_slope_intercept_ldouble.h"
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+    /*  The data in an affine transformation is a contiguous array. The       *
+     *  zeroth element represents the slope and the first is the y-intercept. *
+     *  Copy the arguments into the struct and return.                        */
+    transform.dat[0] = slope;
+    transform.dat[1] = intercept;
+    return transform;
+}
+/*  End of tmpl_AffLDouble_Slope_Intercept.                                   */
