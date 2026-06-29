@@ -19,51 +19,63 @@
  *                           tmpl_color_average_rgb                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by averaging over the color channels.                  *
+ *      Blends two colors by averaging over their individual color channels.  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_RGB_Average                                                      *
  *  Purpose:                                                                  *
- *      Adds two colors together by averaging the color channels.             *
+ *      Blends two colors together by averaging their color channels.         *
  *  Arguments:                                                                *
- *      c0 (const tmpl_RGB *):                                                *
+ *      c0 (const tmpl_RGB * const):                                          *
  *          A color.                                                          *
- *      c1 (const tmpl_RGB *):                                                *
+ *      c1 (const tmpl_RGB * const):                                          *
  *          Another color.                                                    *
  *  Output:                                                                   *
- *      sum (tmpl_RGB):                                                       *
+ *      average (tmpl_RGB):                                                   *
  *          The color average of c0 and c1.                                   *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_Unit_Clamp:                                           *
- *              Clips a real valued input to fall between zero and one.       *
+ *              Clips a real-valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Average the individual color channels and clip them to ensure the end *
  *      results lie between 0 and 1.                                          *
  *  Notes:                                                                    *
- *      Colors channels will be "clipped" into the interval [0, 1].           *
+ *      Color channels will be "clipped" into the interval [0, 1].            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
- *  2.) tmpl_math.h:                                                          *
+ *  3.) tmpl_math.h:                                                          *
  *          Unit clamp function provided here.                                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/28: Ryan Maguire                                                  *
+ *      Added C23 attributes, cleaned up docstring.                           *
  ******************************************************************************/
 
-/*  Color typedef's and the function prototype provided here.                 */
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Color typedefs and the function prototype provided here.                  */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  Unit clamp function found here.                                           */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Function for adding together two RGB colors.                              */
-tmpl_RGB tmpl_RGB_Average(const tmpl_RGB *c0, const tmpl_RGB *c1)
+/*  Function for averaging together two RGB colors.                           */
+TMPL_PURE_FUNC
+tmpl_RGB tmpl_RGB_Average(const tmpl_RGB * const c0, const tmpl_RGB * const c1)
+TMPL_UNSEQUENCED
 {
     /*  Struct for the output. C89 requires declarations at the top.          */
     tmpl_RGB average;

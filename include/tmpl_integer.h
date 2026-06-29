@@ -43,6 +43,9 @@
 /*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  TMPL_HAS_LONGLONG macro found here.                                       */
 #include <libtmpl/include/tmpl_inttype.h>
 
@@ -50,6 +53,51 @@
  *  "C" statement. Check if C++ is being used with __cplusplus.               */
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UInt_Average                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the average of two unsigned integers.                        *
+ *  Arguments:                                                                *
+ *      m (const unsigned int):                                               *
+ *          An integer.                                                       *
+ *      n (const unsigned int):                                               *
+ *          Another integer.                                                  *
+ *  Output:                                                                   *
+ *      avg (unsigned int):                                                   *
+ *          The average or m and n, rounded down.                             *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern unsigned char
+tmpl_UChar_Average(const unsigned char m, const unsigned char n)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern unsigned short int
+tmpl_UShort_Average(const unsigned short int m, const unsigned short int n)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern unsigned int
+tmpl_UInt_Average(const unsigned int m, const unsigned int n)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern unsigned long int
+tmpl_ULong_Average(const unsigned long int m, const unsigned long int n)
+TMPL_UNSEQUENCED;
+
+/*  Long long function if support is available.                               */
+#if TMPL_HAS_LONGLONG == 1
+
+TMPL_CONST_FUNC
+extern unsigned long long int
+tmpl_ULLong_Average(const unsigned long long int m,
+                    const unsigned long long int n)
+TMPL_UNSEQUENCED;
+
 #endif
 
 /******************************************************************************

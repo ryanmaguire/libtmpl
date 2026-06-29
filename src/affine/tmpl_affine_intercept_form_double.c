@@ -16,89 +16,93 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_affine_point_point_double                       *
+ *                     tmpl_affine_intercept_form_double                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Creates an affine transformation from two-point form.                 *
+ *      Creates an affine transformation from intercept form.                 *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function:                                                                 *
- *      tmpl_AffDouble_Point_Point                                            *
+ *      tmpl_AffDouble_Intercept_Form                                         *
  *  Purpose:                                                                  *
- *      Creates an affine transformation from two-point form.                 *
+ *      Creates an affine transformation from intercept form.                 *
  *  Arguments:                                                                *
  *      x0 (const double):                                                    *
- *          The x-component of the zeroth point.                              *
+ *          The solution to f(x) = 0 for the transformation f(x) = mx + b.    *
  *      y0 (const double):                                                    *
- *          The y-component of the zeroth point.                              *
- *      x1 (const double):                                                    *
- *          The x-component of the first point.                               *
- *      y1 (const double):                                                    *
- *          The y-component of the first point.                               *
+ *          The y-intercept of the transformation, "b" in f(x) = mx + b.      *
  *  Output:                                                                   *
  *      transform (tmpl_AffineDouble):                                        *
  *          The transform f(x) = mx + b.                                      *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Given a line with points (x0, y0) and (x1, y1) on it, we have:        *
+ *      If x0 and y0 are the x and y intercepts, respectively, and if both of *
+ *      them are non-zero (meaning the line is not parallel to either axis,   *
+ *      and it does not pass through the origin), then:                       *
  *                                                                            *
- *              y  -  y   -      -                                            *
- *               1     0 |        |                                           *
- *          y = -------- | x - x  | + y                                       *
- *              x  -  x  |      0 |    0                                      *
- *               1     0  -      -                                            *
+ *          x     y                                                           *
+ *          -  +  -  =  1                                                     *
+ *          x     y                                                           *
+ *           0     0                                                          *
  *                                                                            *
- *      The slope is m = (y1 - y0) / (x1 - x0) and the y-intercept is         *
- *      b = y0 - m * x0.                                                      *
+ *      From this, we get:                                                    *
+ *                                                                            *
+ *                   y                                                        *
+ *                    0                                                       *
+ *          y = y  - -- x                                                     *
+ *               0   x                                                        *
+ *                    0                                                       *
+ *                                                                            *
+ *      The y-intercept is y0 and the slope is -y0 / x0.                      *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
  *                                                                            *
- *      2.) Two-point form requires x0 != x1. No checks for this are made.    *
+ *      2.) Intercept form is only well-defined when both the x-intercept and *
+ *          the y-intercept are non-zero. That is, the line is not allowed to *
+ *          pass through the origin. No checks are made for non-zero inputs.  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_affine_double.h:                                                 *
- *          Location of the tmpl_AffineDouble typedef.                        *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_affine.h:                                                        *
+ *          Location of the affine typedef and function prototype.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 3, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/26: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_AFFINE_POINT_POINT_DOUBLE_H
-#define TMPL_AFFINE_POINT_POINT_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  The tmpl_AffineDouble typedef is provided here.                           */
-#include <libtmpl/include/types/tmpl_affine_double.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Creates an affine transformation from two-point form.                     */
-TMPL_INLINE_DECL
+/*  The affine typedef and function prototype are provided here.              */
+#include <libtmpl/include/tmpl_affine.h>
+
+/*  Creates an affine transformation given its two intercepts.                */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 tmpl_AffineDouble
-tmpl_AffDouble_Point_Point(const double x0,
-                           const double y0,
-                           const double x1,
-                           const double y1)
+tmpl_AffDouble_Intercept_Form(const double x0, const double y0)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     tmpl_AffineDouble transform;
 
-    /*  Given (x0, y0) and (x1, y1), the slope is the ratio of the difference.*/
-    const double slope = (y1 - y0) / (x1 - x0);
-
-    /*  We now have the slope and a point on the line, (x0, y0). We may       *
-     *  produce the transformation using the point-slope form.                */
-    transform.dat[0] = slope;
-    transform.dat[1] = y0 - slope * x0;
+    /*  Solving x / x0 + y / y0 = 1 gives us m = -y0 / x0 and b = y0.         */
+    transform.dat[0] = -y0 / x0;
+    transform.dat[1] = y0;
     return transform;
 }
-/*  End of tmpl_AffDouble_Point_Point.                                        */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_AffDouble_Intercept_Form.                                     */

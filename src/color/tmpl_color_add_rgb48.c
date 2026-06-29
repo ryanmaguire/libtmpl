@@ -50,19 +50,26 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/26: Ryan Maguire                                                  *
+ *      Added C23 attributes, cleaned up docstring.                           *
  ******************************************************************************/
 
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Color typedefs and function prototypes provided here.                     */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  The maximum value for a 16-bit color channel is 65535.                    */
 #define PEAK (0xFFFFU)
 
 /*  Function for adding together two colors in 48-bit RGB format.             */
-tmpl_RGB48 tmpl_RGB48_Add(tmpl_RGB48 c0, tmpl_RGB48 c1)
+TMPL_CONST_FUNC
+tmpl_RGB48 tmpl_RGB48_Add(const tmpl_RGB48 c0, const tmpl_RGB48 c1)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGB48 sum;

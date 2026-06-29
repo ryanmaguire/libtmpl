@@ -52,12 +52,17 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/26: Ryan Maguire                                                  *
+ *      Added C23 attributes, cleaned up docstring.                           *
  ******************************************************************************/
 
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedef's and function prototypes provided here.                    */
+/*  Color typedefs and function prototypes provided here.                     */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  TMPL_CAST macro provided here.                                            */

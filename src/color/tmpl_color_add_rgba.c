@@ -28,43 +28,55 @@
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (const tmpl_RGBA *):                                               *
+ *      c0 (const tmpl_RGBA * const):                                         *
  *          A color.                                                          *
- *      c1 (const tmpl_RGBA *):                                               *
+ *      c1 (const tmpl_RGBA * const):                                         *
  *          Another color.                                                    *
  *  Output:                                                                   *
  *      sum (tmpl_RGBA):                                                      *
  *          The color sum of c0 and c1.                                       *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_Unit_Clamp:                                           *
- *              Clips a real valued input to fall between zero and one.       *
+ *              Clips a real-valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Sum the individual color channels and clip them to ensure the end     *
  *      results lie between 0 and 1. The alpha parameter will also be added   *
  *      and clamped to fall within this region.                               *
  *  Notes:                                                                    *
- *      Colors channels will be "clipped" into the interval [0, 1].           *
+ *      Color channels will be "clipped" into the interval [0, 1].            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
- *  2.) tmpl_math.h:                                                          *
+ *  3.) tmpl_math.h:                                                          *
  *          Unit clamp function provided here.                                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/27: Ryan Maguire                                                  *
+ *      Added C23 attributes, cleaned up docstring.                           *
  ******************************************************************************/
 
-/*  Color typedef's and the function prototype provided here.                 */
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Color typedefs and the function prototype provided here.                  */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  Unit clamp function found here.                                           */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for adding together two RGBA colors.                             */
-tmpl_RGBA tmpl_RGBA_Add(const tmpl_RGBA *c0, const tmpl_RGBA *c1)
+TMPL_PURE_FUNC
+tmpl_RGBA tmpl_RGBA_Add(const tmpl_RGBA * const c0, const tmpl_RGBA * const c1)
+TMPL_UNSEQUENCED
 {
     /*  Struct for the output. C89 requires declarations at the top.          */
     tmpl_RGBA sum;
@@ -83,7 +95,7 @@ tmpl_RGBA tmpl_RGBA_Add(const tmpl_RGBA *c0, const tmpl_RGBA *c1)
     sum.dat[1] = tmpl_Double_Unit_Clamp(green);
     sum.dat[2] = tmpl_Double_Unit_Clamp(blue);
 
-    /*  Perform the same safety check for the alpha parameter.                */
+    /*  Ensure the alpha parameter doesn't overflow by clipping it.           */
     sum.dat[3] = tmpl_Double_Unit_Clamp(alpha);
 
     return sum;

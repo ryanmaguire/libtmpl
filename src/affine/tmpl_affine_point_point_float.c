@@ -16,29 +16,33 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_affine_point_intercept_ldouble                     *
+ *                       tmpl_affine_point_point_float                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Creates an affine transformation from a point and the y-intercept.    *
+ *      Creates an affine transformation from two-point form.                 *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function:                                                                 *
- *      tmpl_AffLDouble_Point_Intercept                                       *
+ *      tmpl_AffFloat_Point_Point                                             *
  *  Purpose:                                                                  *
- *      Creates an affine transformation from a point and the y-intercept.    *
+ *      Creates an affine transformation from two-point form.                 *
  *  Arguments:                                                                *
- *      x0 (const long double):                                               *
- *          The x-component of the point.                                     *
- *      y0 (const long double):                                               *
- *          The y-component of the point.                                     *
- *      intercept (const long double):                                        *
- *          The y-intercept.                                                  *
+ *      x0 (const float):                                                     *
+ *          The x-component of the zeroth point.                              *
+ *      y0 (const float):                                                     *
+ *          The y-component of the zeroth point.                              *
+ *      x1 (const float):                                                     *
+ *          The x-component of the first point.                               *
+ *      y1 (const float):                                                     *
+ *          The y-component of the first point.                               *
  *  Output:                                                                   *
- *      transform (tmpl_AffineLongDouble):                                    *
+ *      transform (tmpl_AffineFloat):                                         *
  *          The transform f(x) = mx + b.                                      *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/affine/                                                           *
+ *          tmpl_AffFloat_Point_Slope:                                        *
+ *              Creates an affine transformation from point-slope form.       *
  *  Method:                                                                   *
  *      Given a line with points (x0, y0) and (x1, y1) on it, we have:        *
  *                                                                            *
@@ -49,55 +53,54 @@
  *               1     0  -      -                                            *
  *                                                                            *
  *      The slope is m = (y1 - y0) / (x1 - x0) and the y-intercept is         *
- *      b = y0 - m * x0. If (x1, y1) corresponds to the y-intercept, then     *
- *      x1 = 0 and hence the slope becomes m = (y0 - y1) / x0 and the         *
- *      y-intercept is simply y1.                                             *
+ *      b = y0 - m * x0.                                                      *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
  *                                                                            *
- *      2.) Point-intercept requires x0 != 0. No checks for this are made.    *
+ *      2.) Two-point form requires x0 != x1. No checks for this are made.    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_affine_ldouble.h:                                                *
- *          Location of the tmpl_AffineLongDouble typedef.                    *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_affine.h:                                                        *
+ *          Location of the affine typedef and function prototype.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 3, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/28: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_AFFINE_POINT_INTERCEPT_LDOUBLE_H
-#define TMPL_AFFINE_POINT_INTERCEPT_LDOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  The tmpl_AffineLongDouble typedef is provided here.                       */
-#include <libtmpl/include/types/tmpl_affine_ldouble.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Creates an affine transformation from point-intercept form.               */
-TMPL_INLINE_DECL
-tmpl_AffineLongDouble
-tmpl_AffLDouble_Point_Intercept(const long double x0,
-                                const long double y0,
-                                const long double intercept)
+/*  The affine typedef and function prototype are provided here.              */
+#include <libtmpl/include/tmpl_affine.h>
+
+/*  Creates an affine transformation from two-point form.                     */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+tmpl_AffineFloat
+tmpl_AffFloat_Point_Point(const float x0,
+                          const float y0,
+                          const float x1,
+                          const float y1)
+TMPL_UNSEQUENCED
 {
-    /*  Variable for the output.                                              */
-    tmpl_AffineLongDouble transform;
+    /*  Given (x0, y0) and (x1, y1), the slope is the ratio of the difference.*/
+    const float slope = (y1 - y0) / (x1 - x0);
 
-    /*  Given (x0, y0) and (0, y1), the slope is the ratio of the difference. */
-    const long double slope = (y0 - intercept) / x0;
-
-    /*  We now have the slope and the intercept. We can create the transform  *
-     *  using the slope-intercept form.                                       */
-    transform.dat[0] = slope;
-    transform.dat[1] = intercept;
-    return transform;
+    /*  We now have the slope and a point on the line, (x0, y0). We may       *
+     *  produce the transformation using the point-slope form.                */
+    return tmpl_AffFloat_Point_Slope(x0, y0, slope);
 }
-/*  End of tmpl_AffLDouble_Point_Intercept.                                   */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_AffFloat_Point_Point.                                         */

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_affine_intercept_form_float                      *
+ *                     tmpl_affine_intercept_form_ldouble                     *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Creates an affine transformation from intercept form.                 *
@@ -24,16 +24,16 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function:                                                                 *
- *      tmpl_AffFloat_Intercept_Form                                          *
+ *      tmpl_AffLDouble_Intercept_Form                                        *
  *  Purpose:                                                                  *
  *      Creates an affine transformation from intercept form.                 *
  *  Arguments:                                                                *
- *      x0 (const float):                                                     *
+ *      x0 (const long double):                                               *
  *          The solution to f(x) = 0 for the transformation f(x) = mx + b.    *
- *      y0 (const float):                                                     *
+ *      y0 (const long double):                                               *
  *          The y-intercept of the transformation, "b" in f(x) = mx + b.      *
  *  Output:                                                                   *
- *      transform (tmpl_AffineFloat):                                         *
+ *      transform (tmpl_AffineLongDouble):                                    *
  *          The transform f(x) = mx + b.                                      *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -66,38 +66,43 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_affine_float.h:                                                  *
- *          Location of the tmpl_AffineFloat typedef.                         *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_affine.h:                                                        *
+ *          Location of the affine typedef and function prototype.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 3, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/26: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_AFFINE_INTERCEPT_FORM_FLOAT_H
-#define TMPL_AFFINE_INTERCEPT_FORM_FLOAT_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  The tmpl_AffineFloat typedef is provided here.                            */
-#include <libtmpl/include/types/tmpl_affine_float.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  The affine typedef and function prototype are provided here.              */
+#include <libtmpl/include/tmpl_affine.h>
 
 /*  Creates an affine transformation given its two intercepts.                */
-TMPL_INLINE_DECL
-tmpl_AffineFloat
-tmpl_AffFloat_Intercept_Form(const float x0, const float y0)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+tmpl_AffineLongDouble
+tmpl_AffLDouble_Intercept_Form(const long double x0, const long double y0)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
-    tmpl_AffineFloat transform;
+    tmpl_AffineLongDouble transform;
 
     /*  Solving x / x0 + y / y0 = 1 gives us m = -y0 / x0 and b = y0.         */
     transform.dat[0] = -y0 / x0;
     transform.dat[1] = y0;
     return transform;
 }
-/*  End of tmpl_AffFloat_Intercept_Form.                                      */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_AffLDouble_Intercept_Form.                                    */

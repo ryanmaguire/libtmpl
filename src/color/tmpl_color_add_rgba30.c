@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_color_add_rgb30                            *
+ *                            tmpl_color_add_rgba30                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Adds two colors by summing over the individual color channels.        *
@@ -28,56 +28,76 @@
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGBA30)                                                      *
+ *      c0 (const tmpl_RGBA30):                                               *
  *          A color.                                                          *
- *      c1 (tmpl_RGBA30):                                                     *
+ *      c1 (const tmpl_RGBA30):                                               *
  *          Another color.                                                    *
  *  Output:                                                                   *
  *      sum (tmpl_RGBA30):                                                    *
  *          The color sum of c0 and c1.                                       *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/math/                                                             *
+ *          tmpl_Double_Unit_Clamp:                                           *
+ *              Clips a real-valued input to fall between zero and one.       *
  *  Method:                                                                   *
  *      Carefully sum the individual channels by checking that the result     *
- *      will not overflow, storing the max value of 1023 if it does.          *
+ *      will not overflow, storing the max value of 1023 if it does. The      *
+ *      alpha parameter is also summed and clipped.                           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
+ *  3.) tmpl_cast.h:                                                          *
+ *          Provides the TMPL_CAST macro for C vs. C++ compatibility.         *
+ *  4.) tmpl_math.h:                                                          *
+ *          Unit clamp function provided here.                                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/27: Ryan Maguire                                                  *
+ *      Added C23 attributes, cleaned up docstring.                           *
  ******************************************************************************/
 
-/*  Color typedef's and function prototypes provided here.                    */
-#include <libtmpl/include/tmpl_color.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Clipping functions are provided here.                                     */
-#include <libtmpl/include/tmpl_math.h>
+/*  Color typedefs and function prototypes provided here.                     */
+#include <libtmpl/include/tmpl_color.h>
 
 /*  TMPL_CAST macro provided here.                                            */
 #include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  Clipping functions are provided here.                                     */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The maximum value for a 10-bit color channel is 1023.                     */
 #define PEAK (0x3FFU)
 
 /*  Helper macro for computing the complement of a given color channel.       */
-#define COMPLEMENT(color) TMPL_CAST(PEAK - color, unsigned short int)
+#define TMPL_COMPLEMENT(color) TMPL_CAST(PEAK - (color), unsigned short int)
 
-/*  Function for adding together two colors in 24-bit RGBA format.            */
-tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, tmpl_RGBA30 c1)
+/*  Function for adding together two colors in 30-bit RGBA format.            */
+TMPL_CONST_FUNC
+tmpl_RGBA30 tmpl_RGBA30_Add(const tmpl_RGBA30 c0, const tmpl_RGBA30 c1)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGBA30 sum;
 
     /*  Avoid overflowing the sum by ensuring the sum of the color channels   *
      *  does not exceed 1023.                                                 */
-    const unsigned short int r_diff = COMPLEMENT(c0.red);
-    const unsigned short int g_diff = COMPLEMENT(c0.green);
-    const unsigned short int b_diff = COMPLEMENT(c0.blue);
+    const unsigned short int r_diff = TMPL_COMPLEMENT(c0.red);
+    const unsigned short int g_diff = TMPL_COMPLEMENT(c0.green);
+    const unsigned short int b_diff = TMPL_COMPLEMENT(c0.blue);
 
-    /*  The alpha parameter is also summed together.                          */
+    /*  Sum the alpha parameters as well. This function does not perform      *
+     *  alpha compositing, it just adds the components.                       */
     const double alpha = c0.alpha + c1.alpha;
 
     /*  If a channel will overflow, set the channel to 1023 (max value).      *
@@ -89,12 +109,13 @@ tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, tmpl_RGBA30 c1)
     sum.green = (g_diff <= c1.green ? PEAK : (c0.green + c1.green) & PEAK);
     sum.blue = (b_diff <= c1.blue ? PEAK : (c0.blue + c1.blue) & PEAK);
 
-    /*  Clip the alpha paramter to avoid overflow.                            */
+    /*  Ensure the alpha parameter doesn't overflow by clipping it.           */
     sum.alpha = tmpl_Double_Unit_Clamp(alpha);
 
     return sum;
 }
 /*  End of tmpl_RGBA30_Add.                                                   */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other files.                 */
 #undef PEAK
+#undef TMPL_COMPLEMENT
