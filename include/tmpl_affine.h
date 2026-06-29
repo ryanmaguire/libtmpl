@@ -51,20 +51,6 @@
 #include <libtmpl/include/types/tmpl_affine_float.h>
 #include <libtmpl/include/types/tmpl_affine_ldouble.h>
 
-/*  Helper macro for including the inline version of functions.               */
-#if TMPL_USE_INLINE == 1
-
-/*  Other headers provide this macro too. Make sure it is available.          */
-#ifdef TMPL_INLINE_FILE
-#undef TMPL_INLINE_FILE
-#endif
-
-/*  All inline versions are in libtmpl/include/inline/affine/.                */
-#define TMPL_INLINE_FILE(file) <libtmpl/include/inline/affine/file>
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_AffDouble_Intercept_Form                                         *
@@ -252,38 +238,23 @@ TMPL_UNSEQUENCED;
  *                                                                            *
  *      2.) No checks for NaN or infinity are made.                           *
  ******************************************************************************/
-
-/*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE == 1
-
-/*  Location of the inlined versions.                                         */
-#include TMPL_INLINE_FILE(tmpl_affine_slope_intercept_double.h)
-#include TMPL_INLINE_FILE(tmpl_affine_slope_intercept_float.h)
-#include TMPL_INLINE_FILE(tmpl_affine_slope_intercept_ldouble.h)
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/affine/.                  */
+TMPL_CONST_FUNC
 extern tmpl_AffineDouble
 tmpl_AffDouble_Slope_Intercept(const double slope,
-                               const double intercept);
+                               const double intercept)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineFloat
 tmpl_AffFloat_Slope_Intercept(const float slope,
-                              const float intercept);
+                              const float intercept)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineLongDouble
 tmpl_AffLDouble_Slope_Intercept(const long double slope,
-                                const long double intercept);
-
-#endif
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Undefine the helper macro since other headers use it too.                 */
-#if TMPL_USE_INLINE == 1
-#undef TMPL_INLINE_FILE
-#endif
+                                const long double intercept)
+TMPL_UNSEQUENCED;
 
 #endif
 /*  End of include guard.                                                     */

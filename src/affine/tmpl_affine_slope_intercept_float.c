@@ -45,28 +45,36 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_affine_float.h:                                                  *
- *          Location of the tmpl_AffineFloat typedef.                         *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_affine.h:                                                        *
+ *          Location of the affine typedef and function prototype.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 29, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/29: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_AFFINE_SLOPE_INTERCEPT_FLOAT_H
-#define TMPL_AFFINE_SLOPE_INTERCEPT_FLOAT_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  The tmpl_AffineFloat typedef is provided here.                            */
-#include <libtmpl/include/types/tmpl_affine_float.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  The affine typedef and function prototype are provided here.              */
+#include <libtmpl/include/tmpl_affine.h>
 
 /*  Creates an affine transformation given its slope and y-intercept.         */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 tmpl_AffineFloat
 tmpl_AffFloat_Slope_Intercept(const float slope, const float intercept)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     tmpl_AffineFloat transform;
@@ -79,6 +87,3 @@ tmpl_AffFloat_Slope_Intercept(const float slope, const float intercept)
     return transform;
 }
 /*  End of tmpl_AffFloat_Slope_Intercept.                                     */
-
-#endif
-/*  End of include guard.                                                     */
