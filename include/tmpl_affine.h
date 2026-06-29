@@ -213,36 +213,26 @@ TMPL_UNSEQUENCED;
  *                                                                            *
  *      2.) No checks for NaN or infinity are made.                           *
  ******************************************************************************/
-
-/*  These functions are small enough to inline. Check for inline support.     */
-#if TMPL_USE_INLINE == 1
-
-/*  Location of the inlined versions.                                         */
-#include TMPL_INLINE_FILE(tmpl_affine_point_slope_double.h)
-#include TMPL_INLINE_FILE(tmpl_affine_point_slope_float.h)
-#include TMPL_INLINE_FILE(tmpl_affine_point_slope_ldouble.h)
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/affine/.                  */
+TMPL_CONST_FUNC
 extern tmpl_AffineDouble
 tmpl_AffDouble_Point_Slope(const double x0,
                            const double y0,
-                           const double slope);
+                           const double slope)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineFloat
 tmpl_AffFloat_Point_Slope(const float x0,
                           const float y0,
-                          const float slope);
+                          const float slope)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
 extern tmpl_AffineLongDouble
 tmpl_AffLDouble_Point_Slope(const long double x0,
                             const long double y0,
-                            const long double slope);
-
-#endif
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+                            const long double slope)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

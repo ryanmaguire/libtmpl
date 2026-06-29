@@ -36,7 +36,7 @@
  *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *  Output:                                                                   *
  *      transform (tmpl_AffineDouble):                                        *
- *          The transform f(x) = m(x - x0) + y0.                              *
+ *          The transform f(x) = m * (x - x0) + y0.                           *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -57,30 +57,38 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_affine_double.h:                                                 *
- *          Location of the tmpl_AffineDouble typedef.                        *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_affine.h:                                                        *
+ *          Location of the affine typedef and function prototype.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 29, 2026                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/06/29: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_AFFINE_POINT_SLOPE_DOUBLE_H
-#define TMPL_AFFINE_POINT_SLOPE_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  The tmpl_AffineDouble typedef is provided here.                           */
-#include <libtmpl/include/types/tmpl_affine_double.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  The affine typedef and function prototype are provided here.              */
+#include <libtmpl/include/tmpl_affine.h>
 
 /*  Creates an affine transformation given its slope and y0 = f(x0).          */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 tmpl_AffineDouble
 tmpl_AffDouble_Point_Slope(const double x0,
                            const double y0,
                            const double slope)
+TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     tmpl_AffineDouble transform;
@@ -92,6 +100,3 @@ tmpl_AffDouble_Point_Slope(const double x0,
     return transform;
 }
 /*  End of tmpl_AffDouble_Point_Slope.                                        */
-
-#endif
-/*  End of include guard.                                                     */
