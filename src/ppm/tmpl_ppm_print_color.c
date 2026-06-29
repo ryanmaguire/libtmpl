@@ -30,7 +30,7 @@
  *  Arguments:                                                                *
  *      fp (FILE *):                                                          *
  *          The file the color is being written to.                           *
- *      color (tmpl_PPM_Color):                                               *
+ *      color (tmpl_RGB24):                                                   *
  *          The color being written to the file.                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -54,21 +54,6 @@
  *  2.) stdio.h:                                                              *
  *          Standard C library header file containing the FILE data type.     *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 7, 2022                                                 *
  ******************************************************************************/
@@ -80,8 +65,8 @@
 #include <stdio.h>
 
 /*  Function for writing an RGB color to a PPM file.                          */
-void tmpl_PPM_Print_Color(FILE *fp, tmpl_PPM_Color color)
+void tmpl_PPM_Print_Color(FILE *fp, tmpl_RGB24 color)
 {
-    fprintf(fp, "%u %u %u\n", color.red, color.green, color.blue);
+    fprintf(fp, "%u %u %u\n", color.dat[0], color.dat[1], color.dat[2]);
 }
 /*  End of tmpl_PPM_Print_Color.                                              */

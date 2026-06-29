@@ -1,3 +1,4 @@
+#include <libtmpl/include/constants/tmpl_rgb24_constants.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_ppm.h>
 
@@ -8,7 +9,7 @@ tmpl_PPM_Color tmpl_PPM_Scaled_Gradient(double val)
     double scaled;
 
     if (tmpl_Double_Is_NaN(val))
-        return tmpl_PPM_Black;
+        return tmpl_RGB24_Black;
 
     scaled = tmpl_double_pi_by_two + tmpl_Double_Arctan(val);
 

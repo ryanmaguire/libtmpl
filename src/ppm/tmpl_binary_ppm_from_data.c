@@ -52,12 +52,12 @@
  *      preamble for the PPM with fprintf, and then loop over the data and    *
  *      write it to the file with tmpl_PPM_Write_Color.                       *
  *  Notes:                                                                    *
- *      If fopen fails, nothing is done.                                      *
+ *      1.) This function checks for NULL pointers. If the input data pointer *
+ *          is NULL, nothing is done.                                         *
  *                                                                            *
- *      If the input data pointer is NULL, nothing is done.                   *
+ *      2.) If fopen fails, nothing is done.                                  *
  *                                                                            *
- *      If the input data pointer does not have width*height many             *
- *      elements allocated for it a segmentation fault may occur.             *
+ *      3.) The input data array should have width * height elements.         *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -68,49 +68,40 @@
  *  3.) limits.h:                                                             *
  *          Standard C library header file containing the UCHAR_MAX macro.    *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 10, 2022                                                *
  ******************************************************************************/
 
-/*  Avoid silly warning on Windows for using fopen. GNU/Linux, FreeBSD, and   *
- *  macOS have no such warnings for using standard library functions.         */
+/*  Disable warnings for using standard library functions with MSVC.          */
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#ifndef _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
+#endif
 
-/*  PPM color struct and function prototype defined here.                     */
+/*  TMPL_CAST macro provided here.                                            */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  The TMPL_RESTRICT macro is defined here.                                  */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Function prototype defined here.                                          */
 #include <libtmpl/include/tmpl_ppm.h>
 
-/*  Needed for fopen, fprintf, and fputc.                                     */
+/*  Needed for fopen, fprintf, and fwrite.                                    */
 #include <stdio.h>
 
-/*  UCHAR_MAX is found here.                                                  */
-#include <limits.h>
-
-/*  Function for creating a PPM file from a data set.                         */
+/*  Function for creating a binary PGM file from data.                        */
 void
-tmpl_Binary_PPM_From_Data(const char *filename,
-                          tmpl_PPM_Color *data,
-                          unsigned int width,
-                          unsigned int height)
+tmpl_Binary_PPM_From_Data(const char * TMPL_RESTRICT const filename,
+                          const tmpl_RGB24 * TMPL_RESTRICT const data,
+                          const unsigned int width,
+                          const unsigned int height)
 {
-    /*  Variable for indexing.                                                */
-    unsigned int n;
+    /*  The total number of pixels in the image.                              */
+    const size_t width_size = TMPL_CAST(width, size_t);
+    const size_t height_size = TMPL_CAST(height, size_t);
+    const size_t count = width_size * height_size;
 
     /*  The file the PPM is being written to.                                 */
     FILE *fp;
@@ -127,11 +118,10 @@ tmpl_Binary_PPM_From_Data(const char *filename,
         return;
 
     /*  Print the preamble to the PPM file.                                   */
-    fprintf(fp, "P6\n%u %u\n%u\n", width, height, (unsigned int)UCHAR_MAX);
+    fprintf(fp, "P6\n%u %u\n%u\n", width, height, 255U);
 
     /*  Write all of the data to the file.                                    */
-    for (n = 0U; n < width*height; ++n)
-        tmpl_PPM_Write_Color(fp, data[n]);
+    fwrite(data, sizeof(*data), count, fp);
 
     /*  Close the file since we're done with it.                              */
     fclose(fp);

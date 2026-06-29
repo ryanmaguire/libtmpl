@@ -48,21 +48,6 @@
  *  1.) tmpl_ppm.h:                                                           *
  *          Header file containing function prototype and PPM color data type.*
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March87, 2022                                                 *
  ******************************************************************************/
@@ -71,20 +56,20 @@
 #include <libtmpl/include/tmpl_ppm.h>
 
 /*  Function for scaling an RGB color by a real number.                       */
-tmpl_PPM_Color tmpl_PPM_Scale_Color(tmpl_PPM_Color color, double t)
+tmpl_PPM_Color tmpl_PPM_Scale_Color(tmpl_RGB24 color, double t)
 {
     /*  Variable for the output, the scaled color.                            */
-    tmpl_PPM_Color scaled;
+    tmpl_RGB24 scaled;
 
     /*  Convert the RGB values to double and scale the by the input t.        */
-    const double r = t * (double)color.red;
-    const double g = t * (double)color.green;
-    const double b = t * (double)color.blue;
+    const double r = t * (double)color.dat[0];
+    const double g = t * (double)color.dat[1];
+    const double b = t * (double)color.dat[2];
 
     /*  Convert these values back to unsigned char and return.                */
-    scaled.red = (unsigned char)r;
-    scaled.green = (unsigned char)g;
-    scaled.blue = (unsigned char)b;
+    scaled.dat[0] = (unsigned char)r;
+    scaled.dat[0] = (unsigned char)g;
+    scaled.dat[0] = (unsigned char)b;
     return scaled;
 }
 /*  End of tmpl_PPM_Scale_Color.                                              */
