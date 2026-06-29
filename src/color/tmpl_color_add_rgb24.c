@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGB24):                                                      *
+ *      c0 (const tmpl_RGB24):                                                *
  *          A color.                                                          *
- *      c1 (tmpl_RGB24):                                                      *
+ *      c1 (const tmpl_RGB24):                                                *
  *          Another color.                                                    *
  *  Output:                                                                   *
  *      sum (tmpl_RGB24):                                                     *
@@ -43,12 +43,17 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_color.h:                                                         *
  *          Header file containing the function prototype.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2024                                               *
  ******************************************************************************/
+
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Color typedef's and function prototypes provided here.                    */
 #include <libtmpl/include/tmpl_color.h>
@@ -57,7 +62,9 @@
 #define PEAK (0xFFU)
 
 /*  Function for adding together two colors in 24-bit RGB format.             */
-tmpl_RGB24 tmpl_RGB24_Add(tmpl_RGB24 c0, tmpl_RGB24 c1)
+TMPL_CONST_FUNC
+tmpl_RGB24 tmpl_RGB24_Add(const tmpl_RGB24 c0, const tmpl_RGB24 c1)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGB24 sum;
@@ -81,5 +88,5 @@ tmpl_RGB24 tmpl_RGB24_Add(tmpl_RGB24 c0, tmpl_RGB24 c1)
 }
 /*  End of tmpl_RGB24_Add.                                                    */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine everything to avoid collisions with other files.                 */
 #undef PEAK
