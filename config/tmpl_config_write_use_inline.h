@@ -119,6 +119,12 @@
 #endif
 /*  End of #if TMPL_HAS_ATTRIBUTE(clang::always_inline).                      */
 
+/*  Solaris Developer Studio C compiler supports __attribute__.               */
+#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+
+#define TMPL_FORCE_EXTERN_INLINE inline __attribute__((always_inline))
+#define TMPL_FORCE_STATIC_INLINE static inline __attribute__((always_inline))
+
 /*  Microsoft's C compiler MSVC supports forceinline, which produces an       *
  *  effect similar to GCC and Clang's always_inline.                          */
 #elif defined(_MSC_VER)
