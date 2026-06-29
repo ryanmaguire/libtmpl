@@ -38,7 +38,9 @@
  *      transform (tmpl_AffineFloat):                                         *
  *          The transform f(x) = mx + b.                                      *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/affine/                                                           *
+ *          tmpl_AffFloat_Slope_Intercept:                                    *
+ *              Creates the transform f(x) = mx + b given m and b.            *
  *  Method:                                                                   *
  *      Given a line with points (x0, y0) and (x1, y1) on it, we have:        *
  *                                                                            *
@@ -93,16 +95,11 @@ tmpl_AffFloat_Point_Intercept(const float x0,
                               const float intercept)
 TMPL_UNSEQUENCED
 {
-    /*  Variable for the output.                                              */
-    tmpl_AffineFloat transform;
-
     /*  Given (x0, y0) and (0, y1), the slope is the ratio of the difference. */
     const float slope = (y0 - intercept) / x0;
 
     /*  We now have the slope and the intercept. We can create the transform  *
      *  using the slope-intercept form.                                       */
-    transform.dat[0] = slope;
-    transform.dat[1] = intercept;
-    return transform;
+    return tmpl_AffFloat_Slope_Intercept(slope, intercept);
 }
 /*  End of tmpl_AffFloat_Point_Intercept.                                     */
