@@ -53,6 +53,44 @@
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_AffDouble_Compose                                                *
+ *  Purpose:                                                                  *
+ *      Composes two affine transformations.                                  *
+ *  Arguments:                                                                *
+ *      g (const tmpl_AffineDouble * const):                                  *
+ *          The outer transformation, the one composed on the left.           *
+ *      f (const tmpl_AffineDouble * const):                                  *
+ *          The inner transformation, the one composed on the right.          *
+ *  Output:                                                                   *
+ *      transform (tmpl_AffineDouble):                                        *
+ *          The transform h(x) = g(f(x)).                                     *
+ *  Notes:                                                                    *
+ *      1.) Float and long double equivalents are provided.                   *
+ *                                                                            *
+ *      2.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
+ *      3.) No checks for NULL pointers are made.                             *
+ ******************************************************************************/
+TMPL_PURE_FUNC
+extern tmpl_AffineDouble
+tmpl_AffDouble_Compose(const tmpl_AffineDouble * const g,
+                       const tmpl_AffineDouble * const f)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_AffineFloat
+tmpl_AffFloat_Compose(const tmpl_AffineFloat * const g,
+                      const tmpl_AffineFloat * const f)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_AffineLongDouble
+tmpl_AffLDouble_Compose(const tmpl_AffineLongDouble * const g,
+                        const tmpl_AffineLongDouble * const f)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_AffDouble_Intercept_Form                                         *
  *  Purpose:                                                                  *
  *      Creates an affine transformation from intercept form.                 *
