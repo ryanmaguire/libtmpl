@@ -63,7 +63,7 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Color typedefs and function prototypes provided here.                     */
+/*  Color typedefs and function prototype provided here.                      */
 #include <libtmpl/include/tmpl_color.h>
 
 /*  Averaging function found here.                                            */
