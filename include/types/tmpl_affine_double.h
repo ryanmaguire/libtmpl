@@ -19,7 +19,7 @@
  *                             tmpl_affine_double                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides a struct for Affine transformations, f(x) = Ax + B.          *
+ *      Provides a struct for affine transformations, f(x) = mx + b.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 29, 2026                                              *

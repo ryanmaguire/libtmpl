@@ -96,7 +96,7 @@ tmpl_AffFloat_Point_Point(const float x0,
                           const float y1)
 TMPL_UNSEQUENCED
 {
-    /*  Given (x0, y0) and (x1, y1), the slope is the ratio of the difference.*/
+    /*  Given (x0, y0) and (x1, y1) the slope is the ratio of the differences.*/
     const float slope = (y1 - y0) / (x1 - x0);
 
     /*  We now have the slope and a point on the line, (x0, y0). We may       *

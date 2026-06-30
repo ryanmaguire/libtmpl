@@ -95,7 +95,7 @@ tmpl_AffFloat_Point_Intercept(const float x0,
                               const float intercept)
 TMPL_UNSEQUENCED
 {
-    /*  Given (x0, y0) and (0, y1), the slope is the ratio of the difference. */
+    /*  Given (x0, y0) and (0, y1) the slope is the ratio of the differences. */
     const float slope = (y0 - intercept) / x0;
 
     /*  We now have the slope and the intercept. We can create the transform  *

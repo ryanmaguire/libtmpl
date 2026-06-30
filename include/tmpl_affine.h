@@ -193,7 +193,7 @@ TMPL_UNSEQUENCED;
  *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *  Output:                                                                   *
  *      transform (tmpl_AffineDouble):                                        *
- *          The transform f(x) = m(x - x0) + y0.                              *
+ *          The transform f(x) = m * (x - x0) + y0.                           *
  *  Notes:                                                                    *
  *      1.) Float and long double equivalents are provided.                   *
  *                                                                            *

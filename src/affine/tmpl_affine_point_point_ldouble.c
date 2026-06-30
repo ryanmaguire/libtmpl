@@ -96,7 +96,7 @@ tmpl_AffLDouble_Point_Point(const long double x0,
                             const long double y1)
 TMPL_UNSEQUENCED
 {
-    /*  Given (x0, y0) and (x1, y1), the slope is the ratio of the difference.*/
+    /*  Given (x0, y0) and (x1, y1) the slope is the ratio of the differences.*/
     const long double slope = (y1 - y0) / (x1 - x0);
 
     /*  We now have the slope and a point on the line, (x0, y0). We may       *
