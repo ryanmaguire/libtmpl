@@ -182,30 +182,16 @@
 #endif
 /*  End of include guard.                                                     */
 
-/*  long double barrier. Same opaque-asm idea as the float/double barriers,  *
- *  but "long double" has several storage layouts, so the constraint must    *
- *  match. Single-register layouts get a (near) zero-cost register barrier;   *
- *  multi-register / soft-float layouts fall back to a memory-operand        *
- *  barrier ("+m"), which spills but still blocks FMA and, crucially,        *
- *  associative reassociation -- and, unlike a per-function optimize pragma,  *
- *  it survives cross-TU inlining under LTO and -ffast-math.                  */
 #if (defined(__GNUC__) || defined(__clang__)) &&                             \
     !defined(TMPL_LDOUBLE_BARRIER) &&                                        \
     !defined(TMPL_LDOUBLE_BARRIER_SAME_AS_DOUBLE) && defined(__LDBL_MANT_DIG__)
 
-/*  long double == double: reuse the (single-register) double barrier.       */
 #if (__LDBL_MANT_DIG__ == 53)
 #define TMPL_LDOUBLE_BARRIER_SAME_AS_DOUBLE 1
 
-/*  80-bit x87 extended: one x87 register, tie to st(0). (Compile-tested;    *
- *  "+f" and "+x" are rejected for this mode, "+t" is the correct one.)      */
 #elif (__LDBL_MANT_DIG__ == 64) && (defined(__x86_64__) || defined(__i386__))
 #define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+t"(x))
 
-/*  PowerPC IBM double-double: two doubles in two FPRs. Barrier each half in *
- *  its own FPR and repack -- the pack/unpack are register aliasing, so this *
- *  avoids a memory round-trip. (Reasoned from the documented built-ins;     *
- *  not compile-tested here -- no PowerPC toolchain was available.)          */
 #elif defined(__LONG_DOUBLE_IBM128__)
 #define TMPL_LDOUBLE_BARRIER(x)                                              \
     do {                                                                     \
@@ -216,34 +202,22 @@
         (x) = __builtin_pack_longdouble(tmpl_tmp_ld_hi, tmpl_tmp_ld_lo);     \
     } while (0)
 
-/*  IEEE-128 held in a single register. AArch64: one 128-bit "w" (v/Q) reg.  *
- *  RISC-V with Q (__riscv_flen >= 128): one 128-bit "f" reg -- and the one  *
- *  target with a real long double FMA (fmadd.q), so the barrier earns its   *
- *  keep for contraction too. (Reasoned from the ABIs; verify the "w"/"f"    *
- *  constraint is accepted for the 128-bit mode on your toolchain.)          */
 #elif (__LDBL_MANT_DIG__ == 113) && defined(__aarch64__)
 #define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+w"(x))
 #elif (__LDBL_MANT_DIG__ == 113) && defined(__riscv) &&                      \
       defined(__riscv_flen) && (__riscv_flen >= 128)
 #define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+f"(x))
 
-/*  Everything else: s390x quad (FPR pair), soft binary128, unknown. No      *
- *  single register holds the value -> memory-operand barrier. (The "+m"     *
- *  mechanism is compile-tested; it blocks the same -ffast-math collapse.)   */
 #else
 #define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+m"(x))
 #endif
 
 #endif
-/*  End of the GCC/Clang layout-keyed long double barrier.                    */
 
-/*  Resolve the "same as double" alias (set just above, or in the armhf arm).*/
 #if defined(TMPL_LDOUBLE_BARRIER_SAME_AS_DOUBLE) && !defined(TMPL_LDOUBLE_BARRIER)
 #define TMPL_LDOUBLE_BARRIER(x) TMPL_DOUBLE_BARRIER(x)
 #endif
 
-/*  Final fallback: non-GCC/Clang compilers, or any layout not handled       *
- *  above. Portable volatile round-trip (your existing last resort).         */
 #if !defined(TMPL_LDOUBLE_BARRIER)
 #define TMPL_LDOUBLE_BARRIER(x)                                              \
     do {                                                                     \
@@ -251,36 +225,3 @@
         (x) = tmpl_tmp_ldouble_barrier_variable;                             \
     } while (0)
 #endif
-
-#define BARRIER(x) TMPL_LDOUBLE_BARRIER(x)
-#define real long double
-
-#include <stddef.h>
-
-size_t size_check(void)
-{
-    return sizeof(long double);
-}
-
-real my_func(real x)
-{
-    const real split = 134217729.0L;
-    real prod, diff;
-    prod = x * split;
-    BARRIER(prod);
-    diff = prod - x;
-    BARRIER(prod);
-    return prod - diff;
-}
-
-__attribute__((optimize("no-associative-math")))
-real my_func_alt(real x)
-{
-    const real split = 134217729;
-    real prod, diff;
-    prod = x * split;
-    diff = prod - x;
-    return prod - diff;
-}
-
-
