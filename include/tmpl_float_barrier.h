@@ -10,7 +10,7 @@
  *  double. A simple barrier can prevent aggressive optimizations without     *
  *  introducing redundant moves, producing a more performant build when       *
  *  compared to the volatile method.                                          */
-#if defined(__x86_64__)
+#if defined(__x86_64__) || defined(__amd64__)
 
 /*  "x" is the identifier for 32-bit and 64-bit floating-point SSE registers. */
 #define TMPL_FLOAT_BARRIER(x) __asm__ __volatile__("" : "+x"(x))
@@ -66,7 +66,7 @@
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+e"(x))
 
 /*  Hewlett-Packard PA-RISC and s390 can use the same trick.                  */
-#elif defined(__hppa__) || defined(__loongarch__) || defined(__s390__)
+#elif defined(__hppa__) || defined(__s390__)
 
 #define TMPL_FLOAT_BARRIER(x)  __asm__ __volatile__("" : "+f"(x))
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+f"(x))
@@ -102,7 +102,7 @@
 #define TMPL_FLOAT_BARRIER(x)  __asm__ __volatile__("" : "+f"(x))
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+f"(x))
 
-/*  RISC-V is a bit more subtle need to examine other macros as well.         */
+/*  RISC-V is a bit more subtle, we need to examine other macros as well.     */
 #elif defined(__riscv)
 
 /*  RISC-V defined the __riscv_flen macro for floating-point support.         */
@@ -147,7 +147,7 @@
 #else
 /*  Else for x86-64 vs. aarch64 vs. ... vs. riscv.                            */
 
-/*  Generic fallback, GCC and Clang provide "r" as a generic register.        */
+/*  Generic fallback, GCC and Clang provide "r" as a general register.        */
 #define TMPL_FLOAT_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
 
