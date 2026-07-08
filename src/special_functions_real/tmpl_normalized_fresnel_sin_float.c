@@ -114,15 +114,12 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_HAS_IEEE754_FLOAT macro.          *
- *  2.) tmpl_ieee754_float.h:                                                 *
+ *  1.) tmpl_ieee754_float.h:                                                 *
  *          Header file providing a union type for IEEE-754 float.            *
- *  3.) tmpl_special_functions_real.h:                                        *
- *          Header file containing the functions prototype.                   *
- *  4.) tmpl_math.h:                                                          *
- *          Header file containing tmpl_Float_Abs. Only included if IEEE-754  *
- *          support is not available.                                         *
+ *  2.) tmpl_math.h:                                                          *
+ *          Header file containing tmpl_Float_Abs.                            *
+ *  3.) tmpl_special_funtions_real.h:                                         *
+ *          Function prototype / forward declaration provided here.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 11, 2024                                                 *
@@ -131,7 +128,10 @@
 /*  TMPL_HAS_IEEE754_FLOAT macro found here.                                  */
 #include <libtmpl/include/types/tmpl_ieee754_float.h>
 
-/*  Function prototype given here.                                            */
+/*  tmpl_Float_Abs is found here.                                             */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
 /******************************************************************************
@@ -164,7 +164,7 @@
  ******************************************************************************/
 
 /*  Computes the normalized Fresnel sine of a real number.                    */
-float tmpl_Float_Normalized_Fresnel_Sin(float x)
+float tmpl_Float_Normalized_Fresnel_Sin(const float x)
 {
     /*  Variable for the output.                                              */
     float out;
@@ -217,7 +217,7 @@ float tmpl_Float_Normalized_Fresnel_Sin(float x)
     }
 
     /*  For larger numbers use the fact the the Fresnel functions are odd.    */
-    w.bits.sign = 0x00U;
+    w.r = tmpl_Float_Abs(w.r);
 
     /*  For |x| < 2^7 we can use the auxiliary functions.                     */
     if (w.bits.expo < TMPL_FLOAT_UBIAS + 0x07U)
@@ -258,17 +258,14 @@ float tmpl_Float_Normalized_Fresnel_Sin(float x)
 /*  End of tmpl_Float_Normalized_Fresnel_Sin.                                 */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  tmpl_Float_Abs is found here.                                             */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Computes the normalized Fresnel sine of a real number.                    */
-float tmpl_Float_Normalized_Fresnel_Sin(float x)
+float tmpl_Float_Normalized_Fresnel_Sin(const float x)
 {
     /*  Variable for the output.                                              */
     float out;
@@ -347,4 +344,4 @@ float tmpl_Float_Normalized_Fresnel_Sin(float x)
 /*  End of tmpl_Float_Normalized_Fresnel_Sin.                                 */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
