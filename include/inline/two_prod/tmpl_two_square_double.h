@@ -31,7 +31,7 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Splitting function for breaking a double into two parts.                  */
-#include <libtmpl/include/split/tmpl_even_high_split_double.h>
+#include <libtmpl/include/tmpl_split.h>
 
 /*  Standard 2Prod algorithm for squaring at double precision.                */
 TMPL_NO_ASSOCIATIVE_MATH

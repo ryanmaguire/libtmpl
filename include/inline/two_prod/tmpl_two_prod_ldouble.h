@@ -98,7 +98,7 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Splitting function for breaking a long double into two parts.             */
-#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
+#include <libtmpl/include/tmpl_split.h>
 
 /*  Standard 2Prod algorithm at double precision.                             */
 TMPL_NO_ASSOCIATIVE_MATH
