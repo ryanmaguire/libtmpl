@@ -65,18 +65,11 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_attributes.h:                                                    *
- *          Header with macros for C23 attributes on supported compilers.     *
- *  3.) tmpl_high_split_double.h:                                             *
+ *  2.) tmpl_split.h:                                                         *
  *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2026/05/28: Ryan Maguire                                                  *
- *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -86,11 +79,8 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
-
 /*  Splitting function for retrieving the high part of a double found here.   */
-#include <libtmpl/include/split/tmpl_high_split_double.h>
+#include <libtmpl/include/tmpl_split.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 extern const double tmpl_double_pi;
@@ -102,12 +92,8 @@ tmpl_Double_SinCosPi(const double theta,
                      double * TMPL_RESTRICT const cos_theta);
 
 /*  Function for computing the normalized Fresnel sine of a large input.      */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Normalized_Fresnel_Sin_Asymptotic(const double x)
-TMPL_UNSEQUENCED
 {
     /*  We use a double-double trick to split x into two parts, high and low. *
      *  The magic number 68719476737 is 2^(52 - 16) + 1. Hence xhi has the    *

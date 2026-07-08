@@ -79,9 +79,7 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_attributes.h:                                                    *
- *          Header with macros for C23 attributes on supported compilers.     *
- *  3.) tmpl_even_high_split_ldouble.h:                                       *
+ *  2.) tmpl_split.h:                                                         *
  *          Provides a function for splitting an input into two parts.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -100,11 +98,8 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
-
 /*  Splitting function for getting the high part of a long double found here. */
-#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
+#include <libtmpl/include/tmpl_split.h>
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 extern const long double tmpl_ldouble_pi;
@@ -116,13 +111,9 @@ tmpl_LDouble_SinCosPi(const long double theta,
                       long double * TMPL_RESTRICT const cos_theta);
 
 /*  Function for computing the normalized Fresnel cosine of a large input.    */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 long double
 tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic_Large(const long double x)
-TMPL_UNSEQUENCED
 {
     /*  Split the input into two parts. This allows us to compute the square  *
      *  of x more precisely.                                                  */
