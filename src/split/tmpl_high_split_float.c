@@ -35,7 +35,7 @@
  *          want the higher 24 - n bits to be returned, assuming float has    *
  *          23 bits in the mantissa.                                          *
  *  Output:                                                                   *
- *      x_hi (float):                                                         *
+ *      xhi (float):                                                          *
  *          The high part of x.                                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -48,88 +48,83 @@
  *      xhi = x. Since (computer) arithmetic is not associative, this has the *
  *      effect of zeroing out the lower bits of x.                            *
  *  Notes:                                                                    *
- *      Depending on compiler and architecture we may need to declare certain *
- *      variables as volatile. Failure to do so results in a poor split.      *
+ *      1.) Depending on compiler and architecture we may need to declare     *
+ *          certain variables as volatile. Failure to do so results in a poor *
+ *          split. If this function fails to produce a correct split, set     *
+ *          USE_VOLATILE to true when building libtmpl.                       *
  *  References:                                                               *
- *      1.) Schewchuk, J. (October 1997).                                     *
- *          "Adaptive Precision Floating-Point Arithmetic                     *
- *              and Fast Robust Geometric Predicates."                        *
+ *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
+ *          Library for Double-Double and Quad-Double Arithmetic              *
+ *                                                                            *
+ *      2.) Schewchuk, J. (October 1997).                                     *
+ *          Adaptive Precision Floating-Point Arithmetic                      *
+ *          and Fast Robust Geometric Predicates.                             *
  *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Contains several configuration macros.                            *
+ *  2.) tmpl_float_barrier.h:                                                 *
+ *          Provides macros to protect against aggressive optimizations.      *
+ *  3.) tmpl_split.h:                                                         *
+ *          Function prototype / forward declaration provided here.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 28, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/07/07: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added float barrier.           *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_FLOAT_HIGH_SPLIT_H
-#define TMPL_FLOAT_HIGH_SPLIT_H
-
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_ALWAYS_INLINE and TMPL_VOLATILE macros found here.                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
 
-/*  C23 attributes to improve performance and protect against aggressive      *
- *  optimizations.                                                            */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
+/*  Function prototype found here.                                            */
+#include <libtmpl/include/tmpl_split.h>
 
-/*  Depending on compiler and architecture, we may need to be very careful    *
- *  about how we split numbers. This first method is the most cautious.       */
-#if defined(TMPL_FLOAT_CAUTIOUS_SPLIT)
-
-/*  Function for splitting a float into two parts. The high part is returned. */
-TMPL_INLINE_DECL
+/*  Function for splitting a float into two parts.                            */
+TMPL_ALWAYS_INLINE
 float tmpl_Float_High_Split(const float x, const float splitter)
-TMPL_UNSEQUENCED
 {
-    /*  Declaring everything as volatile almost guarantees the split works.   */
-    volatile const float split = x * splitter;
-    volatile const float diff = split - x;
-    volatile const float out = split - diff;
-    return out;
+    /*  For compilers / architectures where the barrier macro has no effect,  *
+     *  the product variable needs to be declared volatile to correctly       *
+     *  perform the split. TMPL_VOLATILE expands to volatile on such systems, *
+     *  and nothing otherwise.                                                */
+    TMPL_VOLATILE float prod;
+
+    /*  The remaining variables do not need a volatile qualifier.             */
+    float diff, result;
+
+    /*  Scaling the input rounds off the lower order bits.                    */
+    prod = x * splitter;
+
+    /*  x * splitter - x may be treated as a single FMA instruction, yielding *
+     *  1 round instead of 2. This ruins the split, guard against this.       */
+    TMPL_FLOAT_BARRIER(prod);
+
+    /*  Remove the lower order bits of the product, which are the higher      *
+     *  order bits of the input.                                              */
+    diff = prod - x;
+
+    /*  (x * splitter) - ((x * splitter) - x) simplifies to x if the compiler *
+     *  aggressively reorders operations. Prevent this with a barrier.        */
+    TMPL_FLOAT_BARRIER(prod);
+
+    /*  prod now has the higher order bits of x times a scale factor, and     *
+     *  diff has only the scale factor. Subtracting recovers the higher order *
+     *  bits of the input.                                                    */
+    result = prod - diff;
+
+    /*  A final barrier to separate the end of this function from any calling *
+     *  functions. This is necessary since this function will likely be       *
+     *  inlined when link-time optimization is enabled.                       */
+    TMPL_FLOAT_BARRIER(result);
+    return result;
 }
 /*  End of tmpl_Float_High_Split.                                             */
-
-/*  For most architectures, one volatile declaration is sufficient.           */
-#elif defined(TMPL_FLOAT_VOLATILE_SPLIT)
-
-/*  Function for splitting a float into two parts. The high part is returned. */
-TMPL_INLINE_DECL
-float tmpl_Float_High_Split(const float x, const float splitter)
-TMPL_UNSEQUENCED
-{
-    /*  It is usually sufficient to declare the split product as volatile.    *
-     *  With optimizations on this is only slightly slower (1-3%) than        *
-     *  without the volatile declaration, but splits properly.                */
-    volatile const float split = x * splitter;
-    return split - (split - x);
-}
-/*  End of tmpl_Float_High_Split.                                             */
-
-/*  For x86_64 / amd64 we do not need to use volatile at all.                 */
-#else
-
-/*  Function for splitting a float into two parts. The high part is returned. */
-TMPL_INLINE_DECL
-float tmpl_Float_High_Split(const float x, const float splitter)
-TMPL_UNSEQUENCED
-{
-    /*  This is the "standard" way to perform a split. No volatile used.      */
-    const float split = x * splitter;
-    return split - (split - x);
-}
-/*  End of tmpl_Float_High_Split.                                             */
-
-#endif
-/*  End of #if defined(TMPL_FLOAT_CAUTIOUS_SPLIT).                            */
-
-#endif
-/*  End of include guard.                                                     */

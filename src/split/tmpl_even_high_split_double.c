@@ -53,7 +53,7 @@
  *          support, armv7, armv8, and PowerPC), inline assembly is provided. *
  *          For other compilers and architectures, the standard Dekker        *
  *          algorithm is provided in C with the TMPL_VOLATILE macro. This     *
- *          expands to volatile is libtmpl was compiled with USE_VOLATILE at  *
+ *          expands to volatile if libtmpl was compiled with USE_VOLATILE at  *
  *          build time, and nothing otherwise. Depending on compiler flags    *
  *          and architecture, you may need to set USE_VOLATILE to true in     *
  *          order to produce a correct split.                                 *
@@ -61,7 +61,7 @@
  *      2.) For compilers that support __asm__, the default C version uses    *
  *          floating-point barriers to protect against optimizations. On most *
  *          architectures (x86-64, aarch64, PowerPC, SPARC, and more), when   *
- *          uses with GCC or Clang, the barriers become no-ops and result in  *
+ *          used with GCC or Clang, the barriers become no-ops and results in *
  *          optimal code that produces a correct split. On some architectures *
  *          these barriers result in redundant move instructions. It is still *
  *          faster to use these barriers instead of using volatile.           *
@@ -148,7 +148,7 @@ double tmpl_Double_Even_High_Split(const double x)
 
         /*  The difference requires the product and the input x to have been  *
          *  already computed. Use an early clobber (&) with the product and   *
-         *  the difference prevent the compiler from overwriting registers.   */
+         *  difference to prevent the compiler from overwriting registers.    */
         [prod] "=&x" (prod),
         [diff] "=&x" (diff),
 
@@ -158,7 +158,7 @@ double tmpl_Double_Even_High_Split(const double x)
         :
 
         /*  The input comes from a register, use "x" for this.                */
-        [x] "x"  (x),
+        [x] "x" (x),
 
         /*  The constant c will likely be stored in read-only memory, but it  *
          *  may also live in a register. "x" allows registers, "m" allows     *
@@ -170,8 +170,8 @@ double tmpl_Double_Even_High_Split(const double x)
 }
 /*  End of tmpl_Double_Even_High_Split.                                       */
 
-/*  SSE support means we can use XMM registers.                               */
-#elif defined(__SSE__) || defined(__SSE2__) || defined(__SSE3__)
+/*  SSE2 support means we can use XMM registers.                              */
+#elif defined(__SSE2__) || defined(__SSE3__) || defined(__SSE4_1__)
 
 /******************************************************************************
  *                      x86-64 / amd64 with SSE Support                       *
@@ -197,7 +197,7 @@ double tmpl_Double_Even_High_Split(const double x)
         /*  prod now has c stored in it. Compute x * c and store it in prod.  */
         "mulsd %[x], %[prod]\n\t"
 
-        /*  The difference is x * c - x. Stored x * c in diff.                */
+        /*  The difference is x * c - x. Store x * c in diff.                 */
         "movapd %[prod], %[diff]\n\t"
 
         /*  Compute diff = prod - x, which clears out the lower order bits of *
@@ -212,27 +212,21 @@ double tmpl_Double_Even_High_Split(const double x)
         "subsd %[diff], %[prod]\n\t"
 
         /*  Copy the final value into the result so it may be returned.       */
-        "movapd %[prod], %[result]\n\t"
+        "movapd %[prod], %[result]"
 
         :
 
-        /*  The difference requires the product and the input x to have been  *
-         *  already computed. Use an early clobber (&) with the product and   *
-         *  the difference prevent the compiler from overwriting registers.   */
+        /*  Use "x" for SSE registers.                                        */
         [prod] "=&x" (prod),
         [diff] "=&x" (diff),
-
-        /*  The result is output only, and loaded into an SSE / AVX register. */
-        [result] "=x"  (result)
+        [result] "=x" (result)
 
         :
 
         /*  The input comes from a register, use "x" for this.                */
-        [x] "x"  (x),
+        [x] "x" (x),
 
-        /*  The constant c will likely be stored in read-only memory, but it  *
-         *  may also live in a register. "x" allows registers, "m" allows     *
-         *  memory, provide both options to the compiler.                     */
+        /*  The constant will live in a register or memory. Use "xm".         */
         [c] "xm" (c)
     );
 
@@ -249,32 +243,38 @@ double tmpl_Double_Even_High_Split(const double x)
 
 /*  Function for splitting a double evenly down the middle.                   */
 TMPL_ALWAYS_INLINE
-double tmpl_Double_Even_High_Split(double x)
+double tmpl_Double_Even_High_Split(const double x)
 {
-    /*  The output is the same register as the input. Initialize this.        */
-    double result = x;
+    /*  The scale factor for the split is 2^27 + 1.                           */
+    const double c = 134217729.0;
+
+    /*  Variables for the product, difference, and output, respectively.      */
+    double prod, diff, result;
 
     /*  Splitting algorithm using armv8 (aarch64) instructions.               */
     __asm__(
 
-        /*  Load c = 2^27 + 1 as a double into a register.                    */
-        "mov  x0, 33554432\n\t"
-        "movk x0, 0x41a0, lsl 48\n\t"
-        "fmov d31, x0\n\t"
-
         /*  Set prod = x * c.                                                 */
-        "fmul d31, d0, d31\n\t"
+        "fmul %d[prod], %d[x], %d[c]\n\t"
 
         /*  Compute diff = prod - x = x * c - x.                              */
-        "fsub d0, d31, d0\n\t"
+        "fsub %d[diff], %d[prod], %d[x]\n\t"
 
         /*  Lastly, compute result = prod - diff = (x * c) - ((x * c) - x).   */
-        "fsub d0, d31, d0"
+        "fsub %d[result], %d[prod], %d[diff]"
 
         :
 
-        /*  "w" is the identifier for floating-point registers on aarch64.    */
-        "+w"(result)
+        /*  "w" is the identifier for 64-bit floating-point registers d0-d31. */
+        [prod] "=&w" (prod),
+        [diff] "=&w" (diff),
+        [result] "=w" (result)
+
+        :
+
+        /*  The inputs live in registers, use "w" for this.                   */
+        [x] "w" (x),
+        [c] "w" (c)
     );
 
     return result;
@@ -295,31 +295,34 @@ double tmpl_Double_Even_High_Split(const double x)
     /*  The scale factor for the split is 2^27 + 1.                           */
     const double c = 134217729.0;
 
-    /*  The output is the same register as the input. Initialize this.        */
-    double result = x;
+    /*  Variables for the product, difference, and output, respectively.      */
+    double prod, diff, result;
 
     /*  Splitting algorithm using armv7 (armhf) instructions.                 */
     __asm__(
 
         /*  Set prod = x * c.                                                 */
-        "vmul.f64 d16, d0, %[c]\n\t"
+        "vmul.f64 %P[prod], %P[x], %P[c]\n\t"
 
         /*  Compute diff = prod - x = x * c - x.                              */
-        "vsub.f64 d0, d16, d0\n\t"
+        "vsub.f64 %P[diff], %P[prod], %P[x]\n\t"
 
         /*  Lastly, compute result = prod - diff = (x * c) - ((x * c) - x).   */
-        "vsub.f64 d0, d16, d0\n\t"
+        "vsub.f64 %P[result], %P[prod], %P[diff]"
 
         :
 
-        /*  "w" is the identifier for floating-point registers on aarch64.    */
-        [result] "+w" (result)
+        /*  "w" is the identifier for 64-bit floating-point registers d0-d31, *
+         *  just like aarch64 / armv8.                                        */
+        [prod] "=&w" (prod),
+        [diff] "=&w" (diff),
+        [result] "=w"  (result)
 
         :
 
-        /*  wm means the compiler can store the scale factor in a register,   *
-         *  or it may store it in memory.                                     */
-        [c] "wm" (c)
+        /*  The inputs live in registers, use "w" for this.                   */
+        [x] "w" (x),
+        [c] "w" (c)
     );
 
     return result;
@@ -340,33 +343,32 @@ double tmpl_Double_Even_High_Split(const double x)
     /*  The scale factor for the split is 2^27 + 1.                           */
     const double c = 134217729.0;
 
-    /*  The output is the same register as the input. Initialize this.        */
-    double result = x;
+    /*  Variables for the product, difference, and output, respectively.      */
+    double prod, diff, result;
 
     /*  Splitting algorithm with PowerPC assembly.                            */
     __asm__(
 
-        /*  Load the splitting factor into a register.                        */
-        "lfd 0, %[c]\n\t"
-
         /*  Compute prod = x * c.                                             */
-        "fmul 0, 1, 0\n\t"
+        "fmul %[prod], %[x], %[c]\n\t"
 
         /*  Compute diff = prod - x.                                          */
-        "fsub 1, 0, 1\n\t"
+        "fsub %[diff], %[prod], %[x]\n\t"
 
         /*  Lastly, compute result = prod - diff.                             */
-        "fsub 1, 0, 1\n\t"
+        "fsub %[result], %[prod], %[diff]"
 
         :
 
-        /*  "f" is the identifier for floating-point registers on PowerPC.    */
-        [result] "+f" (result)
+        /*  "f" is the identifier for 64-bit floating-point registers.        */
+        [prod] "=&f" (prod),
+        [diff] "=&f" (diff),
+        [result] "=f"  (result)
 
         :
 
-        /*  "fm" allows the compiler to store the constant in a register, or  *
-         *  in memory, whatever is more efficient.                            */
+        /*  The inputs may live in memory or registers, use "fm" for this.    */
+        [x] "fm" (x),
         [c] "fm" (c)
     );
 

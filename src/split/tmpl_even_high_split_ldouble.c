@@ -31,7 +31,7 @@
  *      x (const long double):                                                *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      x_hi (long double):                                                   *
+ *      xhi (long double):                                                    *
  *          The high part of x.                                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -46,37 +46,47 @@
  *                                                                            *
  *      For double-double, we cast to double and return (as a long double).   *
  *  Notes:                                                                    *
- *      Depending on compiler and architecture we may need to declare certain *
- *      variables as volatile. Failure to do so results in a poor split.      *
+ *      1.) Depending on compiler and architecture we may need to declare     *
+ *          certain variables as volatile. Failure to do so results in a poor *
+ *          split. If this function fails to produce a correct split, set     *
+ *          USE_VOLATILE to true when building libtmpl.                       *
  *  References:                                                               *
  *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
- *          "Library for Double-Double and Quad-Double Arithmetic"            *
+ *          Library for Double-Double and Quad-Double Arithmetic              *
  *                                                                            *
  *      2.) Schewchuk, J. (October 1997).                                     *
- *          "Adaptive Precision Floating-Point Arithmetic                     *
- *              and Fast Robust Geometric Predicates."                        *
+ *          Adaptive Precision Floating-Point Arithmetic                      *
+ *          and Fast Robust Geometric Predicates.                             *
  *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_cast.h:                                                          *
- *          Provides a helper macro for C vs. C++ compatibility with casting. *
+ *          Contains the TMPL_ALWAYS_INLINE and TMPL_VOLATILE macros.         *
+ *  2.) tmpl_float_barrier.h:                                                 *
+ *          Provides macros to protect against aggressive optimizations.      *
+ *  3.) tmpl_split.h:                                                         *
+ *          Function prototype / forward declaration provided here.           *
+ *  4.) tmpl_cast.h:                                                          *
+ *          Provides the TMPL_CAST macro for C vs. C++ compatibility.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 28, 2024                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/07/07: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added float barrier.           *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_LDOUBLE_EVEN_HIGH_SPLIT_H
-#define TMPL_LDOUBLE_EVEN_HIGH_SPLIT_H
-
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_ALWAYS_INLINE and TMPL_VOLATILE macros found here.                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
+
+/*  Function prototype found here.                                            */
+#include <libtmpl/include/tmpl_split.h>
 
 /*  Following Schewchuk's paper, the split is 2^{1 + floor(p / 2)} + 1, where *
  *  p is the number of bits in the mantissa. Thus xhi and xlo have floor(p/2) *
@@ -105,19 +115,12 @@
 #endif
 /*  End of double vs. quadruple vs. extended / portable.                      */
 
-/*  C23 attributes to improve performance and protect against aggressive      *
- *  optimizations.                                                            */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
-
 /*  Double-double behaves differently than the rest.                          */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  Function for splitting a long double. The high part is returned.          */
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_Even_High_Split(const long double x)
-TMPL_UNSEQUENCED
 {
     /*  We just need to cast to double since double-double is already split.  */
     const double x_double = TMPL_CAST(x, double);
@@ -125,62 +128,55 @@ TMPL_UNSEQUENCED
 }
 /*  End of tmpl_LDouble_Even_High_Split.                                      */
 
-/*  Depending on compiler and architecture, we may need to be very careful    *
- *  about how we split numbers. This first method is the most cautious.       */
-#elif defined(TMPL_LDOUBLE_CAUTIOUS_SPLIT)
-
-/*  Function for splitting a long double. The high part is returned.          */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x)
-TMPL_UNSEQUENCED
-{
-    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations are    *
-     *  needed to get the splitting trick to work with double. It doesn't     *
-     *  seem to be necessary for long double. Nevertheless, the overly        *
-     *  cautious method declares each step as volatile and then splits.       */
-    volatile const long double split = x * TMPL_LDOUBLE_SPLITTER;
-    volatile const long double diff = split - x;
-    volatile const long double out = split - diff;
-    return out;
-}
-/*  End of tmpl_LDouble_Even_High_Split.                                      */
-
-/*  For most architectures, one volatile declaration is sufficient.           */
-#elif defined(TMPL_LDOUBLE_VOLATILE_SPLIT)
-
-/*  Function for splitting a long double. The high part is returned.          */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Even_High_Split(const long double x)
-TMPL_UNSEQUENCED
-{
-    /*  For arm64, ppc64el, and other architectures, this first product must  *
-     *  be declared as volatile in the double implementation. Again, for long *
-     *  double this seems unnecessary.                                        */
-    volatile const long double split = x * TMPL_LDOUBLE_SPLITTER;
-    return split - (split - x);
-}
-/*  End of tmpl_LDouble_Even_High_Split.                                      */
-
-/*  For x86_64 / amd64 we do not need to use volatile at all.                 */
+/*  All other representations follow the usual splitting algorithm.           */
 #else
 
-/*  Function for splitting a long double. The high part is returned.          */
-TMPL_INLINE_DECL
+/*  Function for splitting a long double evenly down the middle.              */
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_Even_High_Split(const long double x)
-TMPL_UNSEQUENCED
 {
-    /*  This is the "standard" way to perform a split. It works on x86_64     *
-     *  machines for double, and x86_64, arm64, and more for long double.     */
-    const long double split = x * TMPL_LDOUBLE_SPLITTER;
-    return split - (split - x);
+    /*  For compilers / architectures where the barrier macro has no effect,  *
+     *  the product variable needs to be declared volatile to correctly       *
+     *  perform the split. TMPL_VOLATILE expands to volatile on such systems, *
+     *  and nothing otherwise.                                                */
+    TMPL_VOLATILE long double prod;
+
+    /*  The remaining variables do not need a volatile qualifier.             */
+    long double diff, result;
+
+    /*  The splitting factor saved as a variable.                             */
+    const long double splitter = TMPL_LDOUBLE_SPLITTER;
+
+    /*  Scaling the input by the factor rounds off the lower order bits.      */
+    prod = x * splitter;
+
+    /*  x * splitter - x may be treated as a single FMA instruction, yielding *
+     *  1 round instead of 2. This ruins the split, guard against this.       */
+    TMPL_LDOUBLE_BARRIER(prod);
+
+    /*  Remove the lower order bits of the product, which are the higher      *
+     *  order bits of the input.                                              */
+    diff = prod - x;
+
+    /*  (x * splitter) - ((x * splitter) - x) simplifies to x if the compiler *
+     *  aggressively reorders operations. Prevent this with a barrier.        */
+    TMPL_LDOUBLE_BARRIER(prod);
+
+    /*  prod now has the higher order bits of x times a scale factor, and     *
+     *  diff has only the scale factor. Subtracting recovers the higher order *
+     *  bits of the input.                                                    */
+    result = prod - diff;
+
+    /*  A final barrier to separate the end of this function from any calling *
+     *  functions. This is necessary since this function will likely be       *
+     *  inlined when link-time optimization is enabled.                       */
+    TMPL_LDOUBLE_BARRIER(result);
+    return result;
 }
-/*  End of tmpl_LDouble_Even_High_Split.                                      */
+/*  End of tmpl_Double_Even_High_Split.                                       */
 
 #endif
-/*  End of #if defined(TMPL_LDOUBLE_CAUTIOUS_SPLIT).                          */
+/*  End of double-double vs. everything else.                                 */
 
-/*  Undefine everything in case someone wants to #include this file.          */
+/*  Undefine the splitter macro to avoid collisions with other files.         */
 #undef TMPL_LDOUBLE_SPLITTER
-
-#endif
-/*  End of include guard.                                                     */
