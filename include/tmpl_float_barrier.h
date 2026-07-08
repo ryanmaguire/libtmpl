@@ -1,5 +1,43 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                             tmpl_float_barrier                             *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Provides macros for protecting against aggressive optimizations.      *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Provides the TMPL_LDOUBLE_TYPE macro.                             *
+ *  2.) tmpl_ieee754_ldouble.h:                                               *
+ *          Contains the tmpl_IEEE754_LDouble typedef.                        *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       July 7, 2026                                                  *
+ ******************************************************************************/
+
+/*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_FLOAT_BARRIER_H
 #define TMPL_FLOAT_BARRIER_H
+
+/*  TMPL_LDOUBLE_TYPE macro found here.                                       */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  The following __asm__ tricks are supported by GCC (version 3+) and Clang  *
  *  (version 9+). Older versions may work, but have not been tested.          */
@@ -61,9 +99,20 @@
  *  various routines. The same barrier trick also works on this architecture. */
 #elif defined(__sparc__)
 
-/*  For SPARC and SPARC64, floating-point registers use "e".                  */
+/*  On SPARC LEON we need to use a general register.                          */
+#if defined(__leon__)
+
+#define TMPL_FLOAT_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
+#define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
+
+/*  SPARC and SPARC64 (V8 and V9) use "+e" for floating-point registers.      */
+#else
+
 #define TMPL_FLOAT_BARRIER(x) __asm__ __volatile__("" : "+e"(x))
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+e"(x))
+
+#endif
+/*  End of SPARC options.                                                     */
 
 /*  Hewlett-Packard PA-RISC and s390 can use the same trick.                  */
 #elif defined(__hppa__) || defined(__s390__)
@@ -123,18 +172,6 @@
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
 #endif
 
-/*  SuperH with FPU (SH3e / SH4 / SH4A / SH2A-FPU). Single-precision float    *
- *  has the FMAC instruction, so the float barrier is necessary. There is no  *
- *  double FMAC, so the double barrier only prevents associative math         *
- *  optimizations from occurring.                                             */
-#elif defined(__SH_FPU_ANY__)
-#define TMPL_FLOAT_BARRIER(x)  __asm__ __volatile__("" : "+f"(x))
-#if defined(__SH_FPU_DOUBLE__)
-#define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+f"(x))
-#else
-#define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
-#endif
-
 /*  Generic fallback for RISC-V.                                              */
 #else
 
@@ -143,6 +180,19 @@
 
 #endif
 /*  End of RISC-V options.                                                    */
+
+/*  SuperH with FPU (SH3e / SH4 / SH4A / SH2A-FPU). Single-precision float    *
+ *  has the FMAC instruction, so the float barrier is necessary. There is no  *
+ *  double FMAC, so the double barrier only prevents associative math         *
+ *  optimizations from occurring.                                             */
+#elif defined(__SH_FPU_ANY__)
+#define TMPL_FLOAT_BARRIER(x)  __asm__ __volatile__("" : "+f"(x))
+
+#if defined(__SH_FPU_DOUBLE__)
+#define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+f"(x))
+#else
+#define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
+#endif
 
 #else
 /*  Else for x86-64 vs. aarch64 vs. ... vs. riscv.                            */
@@ -179,49 +229,69 @@
 #endif
 /*  End of GCC vs. Clang vs. Solaris.                                         */
 
-#endif
-/*  End of include guard.                                                     */
+/******************************************************************************
+ *                            Long Double Barrier                             *
+ ******************************************************************************/
 
-#if (defined(__GNUC__) || defined(__clang__)) &&                             \
-    !defined(TMPL_LDOUBLE_BARRIER) &&                                        \
-    !defined(TMPL_LDOUBLE_BARRIER_SAME_AS_DOUBLE) && defined(__LDBL_MANT_DIG__)
-
-#if (__LDBL_MANT_DIG__ == 53)
+/*  64-bit double representation of long double, use the same barrier.        */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 #define TMPL_LDOUBLE_BARRIER_SAME_AS_DOUBLE 1
 
-#elif (__LDBL_MANT_DIG__ == 64) && (defined(__x86_64__) || defined(__i386__))
-#define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+t"(x))
-
-#elif defined(__LONG_DOUBLE_IBM128__)
-#define TMPL_LDOUBLE_BARRIER(x)                                              \
-    do {                                                                     \
-        double tmpl_tmp_ld_hi = __builtin_unpack_longdouble((x), 0);         \
-        double tmpl_tmp_ld_lo = __builtin_unpack_longdouble((x), 1);         \
-        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_hi);                                 \
-        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_lo);                                 \
-        (x) = __builtin_pack_longdouble(tmpl_tmp_ld_hi, tmpl_tmp_ld_lo);     \
+/*  Double-double can use the double barriers twice.                          */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+#define TMPL_LDOUBLE_BARRIER(x)                                                \
+    do {                                                                       \
+        tmpl_IEEE754_LDouble tmpl_tmp_ld_word;                                 \
+        tmpl_tmp_ld_word.r = (x);                                              \
+        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_word.dat[0]);                          \
+        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_word.dat[1]);                          \
+        (x) = tmpl_tmp_ld_word.r;                                              \
     } while (0)
 
-#elif (__LDBL_MANT_DIG__ == 113) && defined(__aarch64__)
+/*  80-bit extended and 128-bit quadruple have similar tricks on some         *
+ *  architectures when using GCC or clang.                                    */
+#elif defined(__GNUC__) || defined(__clang__)
+
+/*  80-bit extended has "+t" with GCC and Clang.                              */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
+
+#if (defined(__x86_64__) || defined(__i386__))
+#define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+t"(x))
+#endif
+
+/*  128-bit has "+w" on aarch64 and "+f" on RISC-V.                           */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+
+#if defined(__aarch64__)
 #define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+w"(x))
-#elif (__LDBL_MANT_DIG__ == 113) && defined(__riscv) &&                      \
-      defined(__riscv_flen) && (__riscv_flen >= 128)
+
+#elif defined(__riscv) && defined(__riscv_flen) && (__riscv_flen >= 128)
 #define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+f"(x))
 
-#else
-#define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+m"(x))
 #endif
+/*  End of aarch64 vs. RISC-V.                                                */
 
 #endif
+/*  End of 80-bit vs. 128-bit.                                                */
 
-#if defined(TMPL_LDOUBLE_BARRIER_SAME_AS_DOUBLE) && !defined(TMPL_LDOUBLE_BARRIER)
-#define TMPL_LDOUBLE_BARRIER(x) TMPL_DOUBLE_BARRIER(x)
 #endif
+/*  End of #elif defined(__GNUC__) || defined(__clang__).                     */
 
 #if !defined(TMPL_LDOUBLE_BARRIER)
+
+#if defined(TMPL_LDOUBLE_BARRIER_SAME_AS_DOUBLE)
+#define TMPL_LDOUBLE_BARRIER(x) TMPL_DOUBLE_BARRIER(x)
+#else
+
 #define TMPL_LDOUBLE_BARRIER(x)                                              \
     do {                                                                     \
         const volatile long double tmpl_tmp_ldouble_barrier_variable = (x);  \
         (x) = tmpl_tmp_ldouble_barrier_variable;                             \
     } while (0)
+
 #endif
+
+#endif
+
+#endif
+/*  End of include guard.                                                     */
