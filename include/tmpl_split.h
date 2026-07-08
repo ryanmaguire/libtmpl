@@ -21,6 +21,9 @@
 #ifndef TMPL_SPLIT_H
 #define TMPL_SPLIT_H
 
+/*  The TMPL_USE_INLINE macro is found here.                                  */
+#include <libtmpl/include/tmpl_config.h>
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Even_High_Split                                           *
@@ -35,9 +38,9 @@
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-#include <libtmpl/include/split/tmpl_even_high_split_float.h>
-#include <libtmpl/include/split/tmpl_even_high_split_double.h>
-#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
+extern double tmpl_Double_Even_High_Split(const double x);
+extern float tmpl_Float_Even_High_Split(const float x);
+extern long double tmpl_LDouble_Even_High_Split(const long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -56,9 +59,29 @@
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-#include <libtmpl/include/split/tmpl_high_split_float.h>
-#include <libtmpl/include/split/tmpl_high_split_double.h>
-#include <libtmpl/include/split/tmpl_high_split_ldouble.h>
+extern double tmpl_Double_High_Split(const double x, const double splitter);
+extern float tmpl_Float_High_Split(const float x, const float splitter);
+
+/*  Double-Double is split differently than the other implementations. Since  *
+ *  double-double is literally two doubles together, the splitting factor is  *
+ *  of type "double" instead of "long double."                                */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+/*  Function for splitting a double-double into two parts using a             *
+ *  double-precision splitter. The high part is returned.                     */
+extern long double
+tmpl_LDouble_High_Split(const long double x, const double splitter);
+
+/*  All other versions are treated in a similar manner to float and double.   */
+#else
+
+/*  Function for splitting a long double into two parts. The high part        *
+ *  is returned.                                                              */
+extern long double
+tmpl_LDouble_High_Split(const long double x, const long double splitter);
+
+#endif
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
 
 #endif
 /*  End of include guard.                                                     */
