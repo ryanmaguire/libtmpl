@@ -200,8 +200,9 @@
  *  1.) tmpl_ieee754_double.h:                                                *
  *          Header file providing a union type for IEEE-754 double.           *
  *  2.) tmpl_math.h:                                                          *
- *          Header file containing tmpl_Double_Abs. Only included if IEEE-754 *
- *          support is not available.                                         *
+ *          Header file containing tmpl_Double_Abs.                           *
+ *  3.) tmpl_special_funtions_real.h:                                         *
+ *          Function prototype / forward declaration provided here.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 11, 2024                                                 *
@@ -210,11 +211,11 @@
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  tmpl_Double_Abs is found here.                                            */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  Function prototype / forward declaration.                                 */
-extern double tmpl_Double_Normalized_Fresnel_Cos(const double x);
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -249,11 +250,7 @@ extern double tmpl_Double_Normalized_Fresnel_Cos(const double x);
  ******************************************************************************/
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
 double tmpl_Double_Normalized_Fresnel_Cos(const double x)
-TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     double out;
@@ -297,7 +294,7 @@ TMPL_UNSEQUENCED
     }
 
     /*  For larger numbers use the fact the the Fresnel functions are odd.    */
-    w.bits.sign = 0x00U;
+    w.r = tmpl_Double_Abs(w.r);
 
     /*  For |x| < 2^17 we can use the auxiliary functions.                    */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x11U)
@@ -360,15 +357,8 @@ TMPL_UNSEQUENCED
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  tmpl_Double_Abs is found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
 double tmpl_Double_Normalized_Fresnel_Cos(const double x)
-TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     double out;

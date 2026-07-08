@@ -114,29 +114,25 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_ieee754_double.h:                                                *
- *          Header file providing a union type for IEEE-754 double.           *
- *  2.) tmpl_special_functions_real.h:                                        *
- *          Header file containing the functions prototype.                   *
- *  3.) tmpl_math.h:                                                          *
- *          Header file containing tmpl_Double_Abs. Only included if IEEE-754 *
- *          support is not available.                                         *
+ *  1.) tmpl_ieee754_ldouble.h:                                               *
+ *          Header file providing a union type for IEEE-754 long double.      *
+ *  2.) tmpl_math.h:                                                          *
+ *          Header file containing tmpl_LDouble_Abs.                          *
+ *  3.) tmpl_special_funtions_real.h:                                         *
+ *          Function prototype / forward declaration provided here.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 11, 2024                                                 *
  ******************************************************************************/
 
-/*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
+/*  TMPL_HAS_IEEE754_LDOUBLE macro found here.                                */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  tmpl_LDouble_Abs is found here.                                           */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  Function prototype / forward declaration.                                 */
-extern long double tmpl_LDouble_Normalized_Fresnel_Cos(const long double x);
-
-/*  Absolute value function needed.                                           */
-#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -193,11 +189,7 @@ extern long double tmpl_LDouble_Normalized_Fresnel_Cos(const long double x);
  ******************************************************************************/
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
 long double tmpl_LDouble_Normalized_Fresnel_Cos(const long double x)
-TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     long double out;
@@ -285,15 +277,8 @@ TMPL_UNSEQUENCED
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  tmpl_Double_Abs is found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_CONST_FUNC
 long double tmpl_LDouble_Normalized_Fresnel_Cos(const long double x)
-TMPL_UNSEQUENCED
 {
     /*  Variable for the output.                                              */
     long double out;
