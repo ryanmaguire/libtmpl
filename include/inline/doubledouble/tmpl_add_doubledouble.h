@@ -127,8 +127,6 @@
 #include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Performs addition for two double-doubles.                                 */
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 tmpl_DoubleDouble
 tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,

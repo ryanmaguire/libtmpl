@@ -31,8 +31,6 @@
 #include <libtmpl/include/tmpl_two_prod.h>
 #include <libtmpl/include/tmpl_two_sum.h>
 
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_INLINE_DECL
 tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Multiply(const tmpl_LongDoubleDouble * const x,
