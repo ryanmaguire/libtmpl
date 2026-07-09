@@ -115,7 +115,7 @@ tmpl_LDouble_Kahan_Two_Sum(const long double summand,
                            long double * TMPL_RESTRICT const err)
 {
     /*  Variables for sum, difference, compensation, and error respectively.  */
-    double add, diff, comp, error;
+    long double add, diff, comp, error;
 
     /*  Correction term, subtract the error term from the input. This         *
      *  produces the higher order bits for the sum.                           */
