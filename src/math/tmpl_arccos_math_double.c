@@ -176,14 +176,14 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_attributes.h:                                                    *
+ *  2.) tmpl_math.h:                                                          *
+ *          Provides the function prototype, absolute value, and NaN.         *
+ *  3.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
- *  3.) tmpl_nan_double.h:                                                    *
- *          Header file providing double-precision NaN (Not-a-Number).        *
  *  4.) tmpl_ieee754_double.h:                                                *
  *          Header file where the tmpl_IEEE754_Double type is defined.        *
- *  5.) tmpl_abs_double.h:                                                    *
- *          Provides the absolute value function (portable version only).     *
+ *  5.) tmpl_math_constants.h:                                                *
+ *          Contains constants like pi and pi / 2.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 3, 2023                                               *
@@ -214,21 +214,17 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Forward declaration for the function, also found in tmpl_math.h.          */
-extern double tmpl_Double_Arccos(const double x);
+/*  Function prototype / forward, absolute value, and NaN found here.         */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
-
-/*  TMPL_NAN macro found here which provides double-precision NaN.            */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Both pi and pi / 2 are needed for the implementation.                     */
-extern const double tmpl_double_pi;
-extern const double tmpl_double_pi_by_two;
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -246,15 +242,6 @@ extern const double tmpl_double_pi_by_two;
 
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
 #include "auxiliary/tmpl_arccos_tail_end_double.h"
-
-/*  The portable version needs to use the absolute value function.            */
-#if TMPL_HAS_IEEE754_DOUBLE != 1
-
-/*  Forward declaration provided here.                                        */
-#include <libtmpl/include/abs/tmpl_abs_double.h>
-
-#endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE != 1.                                  */
 
 #endif
 /*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
