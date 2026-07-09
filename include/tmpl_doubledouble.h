@@ -62,11 +62,6 @@ extern "C" {
  *  Notes:                                                                    *
  *      long double-double is also provided.                                  *
  ******************************************************************************/
-
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/doubledouble/tmpl_add_doubledouble.h>
-#include <libtmpl/include/inline/doubledouble/tmpl_add_ldoubledouble.h>
-#else
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
                       const tmpl_DoubleDouble * const y);
@@ -74,7 +69,6 @@ tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
 extern tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
                        const tmpl_LongDoubleDouble * const y);
-#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -153,17 +147,11 @@ tmpl_LDoubleDouble_Multiply(const tmpl_LongDoubleDouble * const x,
  *  Notes:                                                                    *
  *      long double-double is also provided.                                  *
  ******************************************************************************/
-
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/doubledouble/tmpl_create_doubledouble.h>
-#include <libtmpl/include/inline/doubledouble/tmpl_create_ldoubledouble.h>
-#else
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Create(double hi, double lo);
 
 extern tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Create(long double hi, long double lo);
-#endif
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus

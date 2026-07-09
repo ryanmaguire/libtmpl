@@ -110,24 +110,17 @@
  *  Date:       November 26, 2024                                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ADD_LDOUBLEDOUBLE_H
-#define TMPL_ADD_LDOUBLEDOUBLE_H
-
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
-
 /*  tmpl_LongDoubleDouble typedef provided here.                              */
-#include <libtmpl/include/types/tmpl_doubledouble_ldouble.h>
+#include <libtmpl/include/tmpl_doubledouble.h>
 
 /*  2Sum and Fast2Sum are needed for double-double addition.                  */
 #include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Performs addition for two long-double-doubles.                            */
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
                        const tmpl_LongDoubleDouble * const y)
@@ -190,6 +183,3 @@ tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
     return out;
 }
 /*  End of tmpl_LDoubleDouble_Add.                                            */
-
-#endif
-/*  End of include guard.                                                     */

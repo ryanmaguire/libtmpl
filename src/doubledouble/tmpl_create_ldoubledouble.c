@@ -16,31 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_add_doubledouble                           *
- ******************************************************************************
- *  Purpose:                                                                  *
- *      DWAdd algorithm. See include/doubledouble/tmpl_add_doubledouble.h.    *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 29, 2024                                             *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only used if inline support is not available.                             */
-#if TMPL_USE_INLINE != 1
+/*  tmpl_LongDoubleDouble typedef provided here.                              */
+#include <libtmpl/include/tmpl_doubledouble.h>
 
-/*  tmpl_DoubleDouble typedef provided here.                                  */
-#include <libtmpl/include/types/tmpl_doubledouble_double.h>
+/*  2Sum and Fast2Sum are needed for double-double addition.                  */
+#include <libtmpl/include/tmpl_two_sum.h>
 
-/*  Function prototype / forward declaration.                                 */
-extern tmpl_DoubleDouble
-tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
-                      const tmpl_DoubleDouble * const y);
-
-/*  Implemented in include/doubledouble/tmpl_add_doubledouble.h.              */
-#include "../../include/inline/doubledouble/tmpl_add_doubledouble.h"
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+TMPL_ALWAYS_INLINE
+tmpl_LongDoubleDouble
+tmpl_LDoubleDouble_Create(long double x, long double y)
+{
+    tmpl_LongDoubleDouble out;
+    tmpl_LDouble_Two_Sum(x, y, &out.dat[0], &out.dat[1]);
+    return out;
+}
