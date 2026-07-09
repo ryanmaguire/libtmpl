@@ -122,14 +122,14 @@ tmpl_LDouble_Kahan_Two_Sum(const long double summand,
     diff = summand - *err;
 
     /*  Protect the difference from aggressive optimizations with a barrier.  */
-    TMPL_DOUBLE_BARRIER(diff);
+    TMPL_LDOUBLE_BARRIER(diff);
 
     /*  The "sum" variable contains the higher order parts. Add these in.     */
     add = *sum + diff;
 
     /*  Aggressive optimizations may contract arithmetic operations using     *
      *  associativity, which ruins the sum. Guard against this.               */
-    TMPL_DOUBLE_BARRIER(add);
+    TMPL_LDOUBLE_BARRIER(add);
 
     /*  Compensation term. Mathematically we have:                            *
      *                                                                        *
@@ -140,7 +140,7 @@ tmpl_LDouble_Kahan_Two_Sum(const long double summand,
      *  does not occur. Instead, this rounds off the lower order parts of     *
      *  diff.                                                                 */
     comp = add - *sum;
-    TMPL_DOUBLE_BARRIER(comp);
+    TMPL_LDOUBLE_BARRIER(comp);
 
     /*  Subtracting gives us:                                                 *
      *                                                                        *
@@ -156,7 +156,7 @@ tmpl_LDouble_Kahan_Two_Sum(const long double summand,
     /*  A final barrier to separate the end of this function from any calling *
      *  functions. This is necessary since this function will likely be       *
      *  inlined when link-time optimization is enabled.                       */
-    TMPL_DOUBLE_BARRIER(error);
+    TMPL_LDOUBLE_BARRIER(error);
 
     /*  Store the results using the provided pointers to conclude.            */
     *sum = add;
