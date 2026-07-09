@@ -592,9 +592,12 @@ long double tmpl_LDouble_Truncate(long double x)
         w.d[1] = 0.0;
 
     /*  If trunc(xhi) = xhi, then xhi is an integer, in which case we have    *
-     *  trunc(x) = trunc(xhi + xlo) = xhi + trunc(xlo). Compute trunc(xlo).   */
+     *  trunc(x) = trunc(xhi + xlo) = xhi + floor(xlo) or xhi + ceil(xlo),    *
+     *  depending on the sign of the high part.                               */
+    else if (w.d[0] > 0.0)
+        w.d[1] = tmpl_Double_Floor(w.d[1]);
     else
-        w.d[1] = tmpl_Double_Truncate(w.d[1]);
+        w.d[1] = tmpl_Double_Ceil(w.d[1]);
 
     /*  We're done comparing the high part of the input and can replace it    *
      *  with its trunc.                                                       */
