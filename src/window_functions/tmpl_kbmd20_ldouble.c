@@ -256,8 +256,8 @@ tmpl_LDouble_KBMD20(const long double x, const long double width);
 /*  TMPL_HAS_IEEE754_LDOUBLE macro and tmpl_IEEE754_LDouble type given here.  */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
-/*  The absolute value function is found here.                                */
-#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
+/*  Absolute value function found here.                                       */
+#include <libtmpl/include/tmpl_math.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
