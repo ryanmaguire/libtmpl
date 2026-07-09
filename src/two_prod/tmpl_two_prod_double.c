@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_two_prod_ldouble                            *
+ *                            tmpl_two_prod_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Uses the 2Prod algorithm for multiplying with error.                  *
@@ -24,24 +24,24 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Two_Prod                                                 *
+ *      tmpl_Double_Two_Prod                                                  *
  *  Purpose:                                                                  *
- *      Evaluates the product of two long doubles, with the rounding error.   *
+ *      Evaluates the product of two doubles, with the rounding error.        *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      y (ong double):                                                       *
+ *      y (const double):                                                     *
  *          Another real number.                                              *
- *      out (long double * TMPL_RESTRICT const):                              *
+ *      out (double * TMPL_RESTRICT const):                                   *
  *          The rounded product x * y will be stored here.                    *
- *      err (long double * TMPL_RESTRICT const):                              *
+ *      err (double * TMPL_RESTRICT const):                                   *
  *          The error term, prod(x, y) - (x * y), is stored here.             *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      split/                                                                *
- *          tmpl_LDouble_Even_High_Split:                                     *
- *              Splits an input into two parts, xhi and xlo, so that xhi and  *
+ *          tmpl_Double_Even_High_Split:                                      *
+ *              Splits a double into two parts, xhi and xlo, so that xhi and  *
  *              xlo have half the number of bits of x. This function returns  *
  *              xhi. xlo is computed via xlo = x - hi.                        *
  *  Method:                                                                   *
@@ -53,12 +53,12 @@
  *      The product is then:                                                  *
  *                                                                            *
  *          x * y = (xhi + xlo) * (yhi + ylo)                                 *
- *                = xhi*yhi + xhi*ylo + xlo*yhi + xlo*ylo                     *
+ *                = xhi * yhi + xhi * ylo + xlo * yhi + xlo * ylo             *
  *                                                                            *
- *      xhi*yhi has the highest order bits of the product. Let prod be the    *
+ *      xhi * yhi has the highest order bits of the product. Let prod be the  *
  *      product of x and y, with rounding. The error is then:                 *
  *                                                                            *
- *          err = ((xhi*yhi - prod) + xhi*ylo + yhi*xlo) + xlo*ylo            *
+ *          err = ((xhi * yhi - prod) + xhi * ylo + yhi * xlo) + xlo * ylo    *
  *                                                                            *
  *      We store prod in "out" and err in "err", and return.                  *
  *  Notes:                                                                    *
@@ -69,6 +69,7 @@
  *  References:                                                               *
  *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
  *          "Library for Double-Double and Quad-Double Arithmetic."           *
+ *                                                                            *
  *      2.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
@@ -80,58 +81,80 @@
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
- *  3.) tmpl_even_high_split_double.h:                                        *
+ *  3.) tmpl_split.h:                                                         *
  *          Provides a function for splitting an input into two parts.        *
+ *  4.) tmpl_two_prod.h:                                                      *
+ *          Function prototype / forward declaration found here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 24, 2024                                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TWO_PROD_LDOUBLE_H
-#define TMPL_TWO_PROD_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_RESTRICT.                   */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
 
-/*  Splitting function for breaking a long double into two parts.             */
+/*  Splitting functions provided here.                                        */
 #include <libtmpl/include/tmpl_split.h>
 
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_prod.h>
+
 /*  Standard 2Prod algorithm at double precision.                             */
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 void
-tmpl_LDouble_Two_Prod(long double x,
-                      long double y,
-                      long double * TMPL_RESTRICT const out,
-                      long double * TMPL_RESTRICT const err)
+tmpl_Double_Two_Prod(double x,
+                     double y,
+                     double * TMPL_RESTRICT const out,
+                     double * TMPL_RESTRICT const err)
 {
     /*  Split the inputs into two parts with half the bits stored in each.    */
-    const long double xhi = tmpl_LDouble_Even_High_Split(x);
-    const long double yhi = tmpl_LDouble_Even_High_Split(y);
+    const double xhi = tmpl_Double_Even_High_Split(x);
+    const double yhi = tmpl_Double_Even_High_Split(y);
 
     /*  The low parts can be computed from the difference.                    */
-    const long double xlo = x - xhi;
-    const long double ylo = y - yhi;
+    const double xlo = x - xhi;
+    const double ylo = y - yhi;
+
+    /*  The cross terms from the product.                                     */
+    const double prod_mid = xhi * ylo + xlo * yhi;
+    const double prod_lo = xlo * ylo;
+
+    /*  Remaining variables need to be guarded using a barrier.               */
+    double prod, err_hi, err_hi_sum, error;
 
     /*  Perform the two-product. We have:                                     *
      *      x * y = (xhi + xlo) * (yhi + ylo)                                 *
      *            = xhi * yhi + xhi * ylo + xlo * yhi + xlo * ylo.            *
      *  We perform this sum, and keep track of the error term from rounding.  */
-    TMPL_VOLATILE const long double prod = x * y;
-    TMPL_VOLATILE const long double err_hi = xhi * yhi - prod;
-    const long double prod_mid = xhi * ylo + xlo * yhi;
-    const long double prod_lo = xlo * ylo;
-    TMPL_VOLATILE const long double err_hi_sum = err_hi + prod_mid;
+    prod = x * y;
 
-    /*  "prod" has the rounded product. The error is computed from the sum.   */
+    /*  The expression xhi * yhi - prod may be reduced to a single FMA which  *
+     *  ruins the 2Prod algorithm. Prevent this with a barrier.               */
+    TMPL_DOUBLE_BARRIER(prod);
+
+    /*  We can now perform the difference safely.                             */
+    err_hi = xhi * yhi - prod;
+
+    /*  Prevent aggressive compiler optimizations from reordering the         *
+     *  arithmetic using associativity. Apply a barrier.                      */
+    TMPL_DOUBLE_BARRIER(err_hi);
+
+    /*  The sum of the error and the middle part of the product also needs a  *
+     *  barrier to prevent aggressive optimizations.                          */
+    err_hi_sum = err_hi + prod_mid;
+    TMPL_DOUBLE_BARRIER(err_hi_sum);
+
+    /*  A final barrier to separate the end of this function from any calling *
+     *  functions. This is necessary since this function will likely be       *
+     *  inlined when link-time optimization is enabled.                       */
+    error = err_hi_sum + prod_lo;
+    TMPL_DOUBLE_BARRIER(error);
+
+    /*  Store the results using the provided pointers to conclude.            */
     *out = prod;
-    *err = err_hi_sum + prod_lo;
+    *err = error;
 }
-/*  End of tmpl_LDouble_Two_Prod.                                             */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_Double_Two_Prod.                                              */

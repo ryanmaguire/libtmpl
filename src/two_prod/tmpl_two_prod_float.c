@@ -68,25 +68,26 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_cast.h:                                                          *
- *          Provides a helper macro for C vs. C++ compatibility with casting. *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_two_prod.h:                                                      *
+ *          Function prototype / forward declaration found here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 24, 2024                                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TWO_PROD_FLOAT_H
-#define TMPL_TWO_PROD_FLOAT_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_RESTRICT.                   */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Helper macros for C vs. C++ compatibility.                                */
+/*  TMPL_CAST macro found here providing C vs. C++ compatibility.             */
 #include <libtmpl/include/compat/tmpl_cast.h>
 
-/*  Multiplication with rounding error at single precision.                   */
-TMPL_INLINE_DECL
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_prod.h>
+
+/*  Standard 2Prod algorithm at single precision.                             */
+TMPL_ALWAYS_INLINE
 void
 tmpl_Float_Two_Prod(float x,
                     float y,
@@ -114,6 +115,3 @@ tmpl_Float_Two_Prod(float x,
     *err = TMPL_CAST(prod_error, float);
 }
 /*  End of tmpl_Float_Two_Prod.                                               */
-
-#endif
-/*  End of include guard.                                                     */

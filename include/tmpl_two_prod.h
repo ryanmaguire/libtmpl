@@ -43,25 +43,6 @@
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-
-/*  These functions are very small and should be inlined, if possible.        */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/inline/two_prod/tmpl_two_prod_float.h>
-#include <libtmpl/include/inline/two_prod/tmpl_two_prod_double.h>
-#include <libtmpl/include/inline/two_prod/tmpl_two_prod_ldouble.h>
-
-#else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
-
-/*  Lacking inline support, use the versions in src/two_prod/.                */
-extern void
-tmpl_Float_Two_Prod(const float x,
-                    const float y,
-                    float * const TMPL_RESTRICT out,
-                    float * const TMPL_RESTRICT err);
-
 extern void
 tmpl_Double_Two_Prod(const double x,
                      const double y,
@@ -69,13 +50,48 @@ tmpl_Double_Two_Prod(const double x,
                      double * const TMPL_RESTRICT err);
 
 extern void
+tmpl_Float_Two_Prod(const float x,
+                    const float y,
+                    float * const TMPL_RESTRICT out,
+                    float * const TMPL_RESTRICT err);
+
+extern void
 tmpl_LDouble_Two_Prod(const long double x,
                       const long double y,
                       long double * const TMPL_RESTRICT out,
                       long double * const TMPL_RESTRICT err);
 
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Two_Square                                                *
+ *  Purpose:                                                                  *
+ *      Performs the 2Square algorithm for floating-point multiplication.     *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number.                                                    *
+ *      out (double * const):                                                 *
+ *          The floating-point product fl(x * x) is stored here.              *
+ *      err (double * const):                                                 *
+ *          The error, (x * y) - fl(x * y), is stored here.                   *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern void
+tmpl_Double_Two_Square(const double x,
+                       double * const TMPL_RESTRICT out,
+                       double * const TMPL_RESTRICT err);
+
+extern void
+tmpl_Float_Two_Square(const float x,
+                      float * const TMPL_RESTRICT out,
+                      float * const TMPL_RESTRICT err);
+
+extern void
+tmpl_LDouble_Two_Square(const long double x,
+                        long double * const TMPL_RESTRICT out,
+                        long double * const TMPL_RESTRICT err);
 
 #endif
 /*  End of include guard.                                                     */
