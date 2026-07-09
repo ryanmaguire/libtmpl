@@ -124,7 +124,7 @@
 #include <libtmpl/include/tmpl_attributes.h>
 
 /*  Absolute value function found here.                                       */
-#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Neumaier summation algorithm for accurately evaluating sum += summand.    */
 TMPL_NO_ASSOCIATIVE_MATH

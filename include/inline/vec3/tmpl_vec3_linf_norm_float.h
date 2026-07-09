@@ -75,7 +75,7 @@
 #include <libtmpl/include/helper/tmpl_max.h>
 
 /*  Absolute value function found here.                                       */
-#include <libtmpl/include/abs/tmpl_abs_float.h>
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Function for computing the L-Infinity norm of a 3D vector.                */
 TMPL_INLINE_DECL
