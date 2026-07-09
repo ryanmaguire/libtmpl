@@ -20,24 +20,22 @@
  *  Date:       November 25, 2024                                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TWO_SQUARE_DOUBLE_H
-#define TMPL_TWO_SQUARE_DOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_RESTRICT.                   */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
 
-/*  Splitting function for breaking a double into two parts.                  */
+/*  Splitting functions provided here.                                        */
 #include <libtmpl/include/tmpl_split.h>
 
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_prod.h>
+
 /*  Standard 2Prod algorithm for squaring at double precision.                */
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 void
-tmpl_Double_Two_Square(double x,
+tmpl_Double_Two_Square(const double x,
                        double * TMPL_RESTRICT const out,
                        double * TMPL_RESTRICT const err)
 {
@@ -47,21 +45,43 @@ tmpl_Double_Two_Square(double x,
     /*  The low part can be computed from the difference.                     */
     const double xlo = x - xhi;
 
+    /*  The cross terms from the product (xhi + xlo) * (xhi + xlo).           */
+    const double prod_mid = 2.0 * xlo * xhi;
+    const double prod_lo = xlo * xlo;
+
+    /*  The remaining variables need to be guarded using a barrier.           */
+    double prod, err_hi, err_hi_sum, error;
+
     /*  Perform the two-product. We have:                                     *
      *      x * x = (xhi + xlo) * (xhi + xlo)                                 *
      *            = xhi * xhi + 2 * xhi * xlo + xlo * xlo                     *
      *  We perform this sum, and keep track of the error term from rounding.  */
-    TMPL_VOLATILE const double prod = x * x;
-    TMPL_VOLATILE const double err_hi = xhi * xhi - prod;
-    const double prod_mid = 2.0 * xlo * xhi;
-    const double prod_lo = xlo * xlo;
-    TMPL_VOLATILE const double err_hi_sum = err_hi + prod_mid;
+    prod = x * x;
 
-    /*  "prod" has the rounded product. The error is computed from the sum.   */
+    /*  The expression xhi * xhi - prod may be reduced to a single FMA which  *
+     *  ruins the 2Prod algorithm. Prevent this with a barrier.               */
+    TMPL_DOUBLE_BARRIER(prod);
+
+    /*  We can now perform the difference safely.                             */
+    err_hi = xhi * xhi - prod;
+
+    /*  Prevent aggressive compiler optimizations from reordering the         *
+     *  arithmetic using associativity. Apply a barrier.                      */
+    TMPL_DOUBLE_BARRIER(err_hi);
+
+    /*  The sum of the error and the middle part of the product also needs a  *
+     *  barrier to prevent aggressive optimizations.                          */
+    err_hi_sum = err_hi + prod_mid;
+    TMPL_DOUBLE_BARRIER(err_hi_sum);
+
+    /*  A final barrier to separate the end of this function from any calling *
+     *  functions. This is necessary since this function will likely be       *
+     *  inlined when link-time optimization is enabled.                       */
+    error = err_hi_sum + prod_lo;
+    TMPL_DOUBLE_BARRIER(error);
+
+    /*  Store the results using the provided pointers to conclude.            */
     *out = prod;
-    *err = err_hi_sum + prod_lo;
+    *err = error;
 }
 /*  End of tmpl_Double_Two_Square.                                            */
-
-#endif
-/*  End of include guard.                                                     */

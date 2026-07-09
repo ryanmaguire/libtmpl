@@ -24,6 +24,12 @@
 /*  TMPL_USE_INLINE macro provided here, as is TMPL_RESTRICT.                 */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Two_Prod                                                  *
@@ -92,6 +98,11 @@ extern void
 tmpl_LDouble_Two_Square(const long double x,
                         long double * const TMPL_RESTRICT out,
                         long double * const TMPL_RESTRICT err);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */

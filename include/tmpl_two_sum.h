@@ -64,6 +64,12 @@
 /*  TMPL_RESTRICT macro found here.                                           */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Fast_Two_Sum                                              *
@@ -211,6 +217,11 @@ tmpl_LDouble_Two_Sum(const long double x,
                      const long double y,
                      long double * TMPL_RESTRICT const out,
                      long double * TMPL_RESTRICT const err);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */
