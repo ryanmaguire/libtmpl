@@ -141,7 +141,13 @@
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Provides the function prototype, absolute value, and NaN.         *
+ *  3.) tmpl_attributes.h:                                                    *
+ *          Header with macros for C23 attributes on supported compilers.     *
+ *  4.) tmpl_ieee754_ldouble.h:                                               *
+ *          Header file where the tmpl_IEEE754_LDouble type is defined.       *
+ *  5.) tmpl_math_constants.h:                                                *
+ *          Contains constants like pi and pi / 2.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 9, 2023                                                   *
@@ -153,14 +159,17 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Forward declaration / function prototype.                                 */
-extern long double tmpl_LDouble_Arcsin(const long double x);
+/*  Function prototype / forward, absolute value, and NaN found here.         */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  TMPL_NANL macro found here which provides long double precision NaN.      */
-#include <libtmpl/include/nan/tmpl_nan_ldouble.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  TMPL_HAS_IEEE754_LDOUBLE macro found here.                                */
+/*  TMPL_HAS_IEEE754_LDOUBLE macro and tmpl_IEEE754_LDouble type given here.  */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+
+/*  pi / 2 is needed for the implementation.                                  */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -175,21 +184,9 @@ extern long double tmpl_LDouble_Arcsin(const long double x);
 /*  Tail-end arcsin function that uses the reflection formula with arccos.    */
 #include "auxiliary/tmpl_arcsin_tail_end_ldouble.h"
 
-/*  The portable version needs to use the absolute value function.            */
-#if TMPL_HAS_IEEE754_LDOUBLE != 1
-
-/*  Forward declaration provided here.                                        */
-#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
-
-#endif
-/*  End of #if TMPL_HAS_IEEE754_LDOUBLE != 1.                                 */
-
 /******************************************************************************
  *                              Constant Values                               *
  ******************************************************************************/
-
-/*  The endpoints evaluate to +/- pi/2, depending on the sign of the input.   */
-#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00L)
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
@@ -263,7 +260,9 @@ extern long double tmpl_LDouble_Arcsin(const long double x);
  *  IEEE-754 method a slight performance boost over the portable one below.   */
 
 /*  Long double precision inverse sine (asinl equivalent).                    */
+TMPL_CONST_FUNC
 long double tmpl_LDouble_Arcsin(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_LDouble w;
@@ -279,7 +278,7 @@ long double tmpl_LDouble_Arcsin(const long double x)
             return x;
 
         /*  For small x the Maclaurin series is sufficient.                   */
-        else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCSIN_SMALL_EXPONENT)
+        if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCSIN_SMALL_EXPONENT)
             return tmpl_LDouble_Arcsin_Maclaurin(x);
 
         /*  For all other x with |x| < 0.5 use the minimax approximation.     */
@@ -287,7 +286,7 @@ long double tmpl_LDouble_Arcsin(const long double x)
     }
 
     /*  For |x| < 1 use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2). */
-    else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
@@ -297,11 +296,24 @@ long double tmpl_LDouble_Arcsin(const long double x)
         return tmpl_LDouble_Arcsin_Tail_End(x);
     }
 
+    /*  Special case, handle NaN and infinity. The fast-math optimization     *
+     *  means the compiler can assume the input is finite. To properly handle *
+     *  NaN or infinity with this optimization, we check for NaN and infinity *
+     *  by examining the bits of the input. Note, if the fast-math            *
+     *  optimization is enabled, then failure to provide this check here      *
+     *  means an input of NaN may reach the if (x == -1.0) branch below and   *
+     *  produce "true," even though NaN is not equal to -1.0. For both NaN    *
+     *  and infinity, the input is outside of the domain of arccos, so the    *
+     *  output is NaN.                                                        */
+    if (TMPL_LDOUBLE_IS_NAN_OR_INF(w))
+        return TMPL_NANL;
+
     /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
     if (x == -1.0L)
-        return -TMPL_PI_BY_TWO;
-    else if (x == 1.0L)
-        return TMPL_PI_BY_TWO;
+        return -tmpl_ldouble_pi_by_two;
+
+    if (x == 1.0L)
+        return tmpl_ldouble_pi_by_two;
 
     /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.      *
      *  Note, this catches NaN and infinity since we are checking the         *
@@ -311,6 +323,10 @@ long double tmpl_LDouble_Arcsin(const long double x)
 }
 /*  End of tmpl_LDouble_Arcsin.                                               */
 
+/*  Undefine everything to avoid collisions with other files.                 */
+#undef TMPL_ARCCOS_TINY_EXPONENT
+#undef TMPL_ARCCOS_SMALL_EXPONENT
+
 #else
 /*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
 
@@ -319,7 +335,9 @@ long double tmpl_LDouble_Arcsin(const long double x)
  ******************************************************************************/
 
 /*  Long double precision inverse sine (asinl equivalent).                    */
+TMPL_CONST_FUNC
 long double tmpl_LDouble_Arcsin(const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const long double abs_x = tmpl_LDouble_Abs(x);
@@ -332,7 +350,7 @@ long double tmpl_LDouble_Arcsin(const long double x)
             return x;
 
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
-        else if (abs_x < 0.125L)
+        if (abs_x < 0.125L)
             return tmpl_LDouble_Arcsin_Maclaurin(x);
 
         /*  Otherwise use the Remez rational minimax function.                */
@@ -340,7 +358,7 @@ long double tmpl_LDouble_Arcsin(const long double x)
     }
 
     /*  Otherwise use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).   */
-    else if (abs_x < 1.0L)
+    if (abs_x < 1.0L)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
         if (x < 0.0L)
@@ -352,9 +370,10 @@ long double tmpl_LDouble_Arcsin(const long double x)
 
     /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
     if (x == -1.0L)
-        return -TMPL_PI_BY_TWO;
-    else if (x == 1.0L)
-        return TMPL_PI_BY_TWO;
+        return -tmpl_ldouble_pi_by_two;
+
+    if (x == 1.0L)
+        return tmpl_ldouble_pi_by_two;
 
     /*  For |x| > 1 the function is undefined. Return NaN.                    */
     return TMPL_NANL;
