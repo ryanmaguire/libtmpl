@@ -146,7 +146,7 @@
 #include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  Absolute value function found here.                                       */
-#include <libtmpl/include/abs/tmpl_abs_float.h>
+#include <libtmpl/include/tmpl_math.h>
 
 /*  In C99, since _Complex is a built-in data type, given float _Complex z    *
  *  and float _Complex w, you can just do z / w. Structs cannot be            *
