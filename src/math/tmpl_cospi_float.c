@@ -16,8 +16,18 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Function prototype, absolute value, and mod 2 function found here.        */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  C23 attributes for optimization found here.                               */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Look-up tables for sinpi and cospi given here.                            */
+#include <libtmpl/include/tables/tmpl_cospi_tables.h>
+#include <libtmpl/include/tables/tmpl_sinpi_tables.h>
+
+/*  Remez minimax polynomials for very small inputs.                          */
 #include "auxiliary/tmpl_cospi_maclaurin_float.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_float.h"
 

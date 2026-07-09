@@ -16,15 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Function prototype, absolute value, and mod 2 function found here.        */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  C23 attributes for optimization found here.                               */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Look-up tables for sinpi and cospi given here.                            */
+#include <libtmpl/include/tables/tmpl_cospi_tables.h>
+#include <libtmpl/include/tables/tmpl_sinpi_tables.h>
+
+/*  Remez minimax polynomials for very small inputs.                          */
 #include "auxiliary/tmpl_cospi_maclaurin_ldouble.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_ldouble.h"
 
 /*  Significantly faster, and more accurate near integers, using IEEE-754.    */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
-
-#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
 
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 #define TMPL_LDOUBLE_SHIFTER (+3.5184372088832E+13L)

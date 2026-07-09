@@ -17,14 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Forward declaration / function prototype.                                 */
-extern double tmpl_Double_CosPi(const double x);
+/*  Function prototype, absolute value, and mod 2 function found here.        */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  C23 attributes for optimization found here.                               */
 #include <libtmpl/include/tmpl_attributes.h>
-
-/*  Double-precision NaN provided here.                                       */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
 
 /*  Look-up tables for sinpi and cospi given here.                            */
 #include <libtmpl/include/tables/tmpl_cospi_tables.h>
@@ -34,19 +31,11 @@ extern double tmpl_Double_CosPi(const double x);
 #include "auxiliary/tmpl_cospi_remez_small_double.h"
 #include "auxiliary/tmpl_sinpi_remez_small_double.h"
 
-/*  Mod 2 function, used to reduce the argument for cospi.                    */
-TMPL_CONST_FUNC
-extern double tmpl_Double_Mod_2(const double x)
-TMPL_UNSEQUENCED;
-
-/*  The portable version has a few more requirements.                         */
+/*  The portable version has one more requirement.                            */
 #if TMPL_HAS_IEEE754_DOUBLE != 1
 
 /*  Helper macro for C vs. C++ compatibility with casting.                    */
 #include <libtmpl/include/compat/tmpl_cast.h>
-
-/*  Absolute value function provided here.                                    */
-#include <libtmpl/include/abs/tmpl_abs_double.h>
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE != 1.                                  */
