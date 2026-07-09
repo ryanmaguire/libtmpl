@@ -36,7 +36,7 @@
  *      sum (double):                                                         *
  *          The sum of the array.                                             *
  *  Called Functions:                                                         *
- *      include/inline/two_sum/                                               *
+ *      src/two_sum/                                                          *
  *          tmpl_Double_Neumaier_Two_Sum:                                     *
  *              Performs the Neumaier version of the 2Sum algorithm.          *
  *  Method:                                                                   *
@@ -133,7 +133,7 @@
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Neumaier 2Sum found here.                                                 */
-#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_double.h>
+#include <libtmpl/include/tmpl_two_sum.h>
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>

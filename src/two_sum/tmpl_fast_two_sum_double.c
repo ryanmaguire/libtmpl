@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_two_sum_double                            *
+ *                          tmpl_fast_two_sum_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Uses the (non-fast) 2Sum algorithm for summing with error.            *
+ *      Uses the Fast2Sum algorithm for summing with error.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Two_Sum                                                   *
+ *      tmpl_Double_Fast_Two_Sum                                              *
  *  Purpose:                                                                  *
  *      Evaluates the sum of two doubles, computing the sum and error.        *
  *  Arguments:                                                                *
@@ -33,49 +33,39 @@
  *      y (const double):                                                     *
  *          Another real number.                                              *
  *      out (double * TMPL_RESTRICT const):                                   *
- *          The rounded sum x + y will be stored here.                        *
+ *          The rounded sum fl(x + y) will be stored here.                    *
  *      err (double * TMPL_RESTRICT const):                                   *
- *          The error term, sum(x, y) - (x + y), is stored here.              *
+ *          The error term (exact sum minus rounded sum) is stored here.      *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      We use the standard 2Sum algorithm. In most cases it is far more      *
- *      beneficial to use the Fast2Sum algorithm, tmpl_Double_Fast_Two_Sum,   *
- *      since this uses only three floating point operations, but this has    *
- *      the caveat of requiring beforehand knowledge that |x| >= |y| is true. *
- *      The standard 2Sum goes as follows. Let "+" denote floating-point      *
- *      addition, and "sum" denote real addition. Let "xerr" and "yerr"       *
- *      denote the error from the x and y terms, respectively, and "xcomp"    *
- *      and "ycomp" denote the compensation factor from x and y, respectively.*
- *      Using this, we have:                                                  *
+ *      Use the standard Fast2Sum algorithm. Let "+" denote real addition     *
+ *      with infinite precision, and let fl denote the floating-point round   *
+ *      function. We have:                                                    *
  *                                                                            *
- *          sum(x, y) = (x + y) + err                                         *
- *                    = (x + y) + (xerr + yerr)                               *
- *                    = (x + y) + ((x - xcomp) + (y - ycomp))                 *
+ *          x + y = fl(x + y) + err                                           *
+ *                = fl(x + y) + fl(y - ycomp)                                 *
+ *                = fl(x + y) + fl(y - fl(fl(x + y) - x))                     *
  *                                                                            *
- *      If floating-point addition were associative, this error term would    *
- *      simplify to zero, and we would have sum(x, y) = x + y. Since          *
- *      floating-point addition rounds the result, it is not associative, and *
- *      the error term is often non-zero. We compute err by reversing this    *
- *      set of equations. That is:                                            *
+ *      This assumes |x| >= |y|. Note that if floating-point arithmetic were  *
+ *      exact (that is, if fl(x) = x), then the error term would be zero and  *
+ *      we'd have x + y = fl(x + y). Since floating-point arithmetic is not   *
+ *      exact, it is often the case that the error is non-zero. We compute    *
+ *      the sum and the error by reversing the above equations. We have:      *
  *                                                                            *
- *          sum   = x + y                                                     *
- *          xcomp = sum - y                                                   *
- *          ycomp = sum - xcomp                                               *
- *          xerr  = x - xcomp                                                 *
- *          yerr  = y - ycomp                                                 *
- *          err   = xerr + yerr                                               *
+ *          sum   = fl(x + y)                                                 *
+ *          ycomp = fl(sum - x)                                               *
+ *          err   = fl(y - ycomp)                                             *
  *                                                                            *
  *      The values "sum" and "err" are stored using the input pointers.       *
  *  Notes:                                                                    *
- *      1.) 2Sum does not require |x| >= |y|, but it requires twice as many   *
- *          arithmetic operations as Fast2Sum.                                *
+ *      1.) Fast2Sum assumes |x| >= |y|.                                      *
  *                                                                            *
  *      2.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
- *          poor 2Sum.                                                        *
+ *          poor Fast2Sum.                                                    *
  *                                                                            *
  *      3.) Compilers supporting the C23 standard and implementing the        *
  *          gnu::optimize attribute may not need to use the volatile keyword. *
@@ -89,7 +79,7 @@
  *                                                                            *
  *      5.) There are no checks for NULL pointers.                            *
  *                                                                            *
- *      6.) There are no checks for NaN or Infinity.                          *
+ *      6.) There are no checks for NaN or infinity.                          *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
  *                                                                            *
@@ -128,19 +118,15 @@
  *          extending these algorithms to the various long double types such  *
  *          as 80-bit extended and 128-bit quadruple. Proofs are included     *
  *          along with the algorithms.                                        *
- *                                                                            *
- *      6.) Moller, Ole (March 1965).                                         *
- *          Quasi double-precision in floating point addition.                *
- *          BIT Numerical Mathematics. Volume 5: Pages 37-50.                 *
- *                                                                            *
- *          The original paper describing 2Sum and Fast2Sum.                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_attributes.h:                                                    *
- *          Header with macros for C23 attributes on supported compilers.     *
+ *          Header file providing the TMPL_ALWAYS_INLINE macro.               *
+ *  2.) tmpl_float_barrier.h:                                                 *
+ *          Provides macros to protect against aggressive optimizations.      *
+ *  3.) tmpl_two_sum.h:                                                       *
+ *          Function prototype / forward declaration provided here.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
@@ -151,44 +137,49 @@
  *      Added C23 attributes and fixed algorithm.                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TWO_SUM_DOUBLE_H
-#define TMPL_TWO_SUM_DOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
 
-/*  Standard 2Sum algorithm at double precision.                              */
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_INLINE_DECL
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_sum.h>
+
+/*  Standard Fast2Sum algorithm at double precision.                          */
+TMPL_ALWAYS_INLINE
 void
-tmpl_Double_Two_Sum(const double x,
-                    const double y,
-                    double * TMPL_RESTRICT const out,
-                    double * TMPL_RESTRICT const err)
-TMPL_REPRODUCIBLE
+tmpl_Double_Fast_Two_Sum(const double x,
+                         const double y,
+                         double * TMPL_RESTRICT const out,
+                         double * TMPL_RESTRICT const err)
 {
-    /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    TMPL_VOLATILE const double sum = x + y;
+    /*  Variables for the sum, compensation, and difference, respectively.    */
+    double sum, ycomp, diff;
 
-    /*  Compensated values for x and y.                                       */
-    TMPL_VOLATILE const double xc = sum - y;
-    TMPL_VOLATILE const double yc = sum - xc;
+    /*  The rounded floating-point sum.                                       */
+    sum = x + y;
 
-    /*  The error terms for x and y from the compensated values.              */
-    TMPL_VOLATILE const double xerr = x - xc;
-    TMPL_VOLATILE const double yerr = y - yc;
-    TMPL_VOLATILE const double err_sum = xerr + yerr;
+    /*  Protect the sum variable for being collapsed by optimizations.        */
+    TMPL_DOUBLE_BARRIER(sum);
 
-    /*  The output is the floating point sum, the error can be computed by    *
-     *  summing together the error terms for x and y.                         */
+    /*  The compensated y term, the bits that remain after summing with x.    */
+    ycomp = sum - x;
+
+    /*  The compensation term also needs to be protected from optimizations.  */
+    TMPL_DOUBLE_BARRIER(ycomp);
+
+    /*  The error can be computed by removing the compensation term from the  *
+     *  smaller value. Note, this assumes |x| >= |y|.                         */
+    diff = y - ycomp;
+
+    /*  A final barrier to separate the end of this function from any calling *
+     *  functions. This is necessary since this function will likely be       *
+     *  inlined when link-time optimization is enabled.                       */
+    TMPL_DOUBLE_BARRIER(diff);
+
+    /*  Store the results using the provided pointers to conclude.            */
     *out = sum;
-    *err = err_sum;
+    *err = diff;
 }
-/*  End of tmpl_Double_Two_Sum.                                               */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_Double_Fast_Two_Sum.                                          */

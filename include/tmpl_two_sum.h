@@ -61,6 +61,9 @@
 #ifndef TMPL_TWO_SUM_H
 #define TMPL_TWO_SUM_H
 
+/*  TMPL_RESTRICT macro found here.                                           */
+#include <libtmpl/include/tmpl_config.h>
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Fast_Two_Sum                                              *
@@ -81,9 +84,23 @@
  *  Notes:                                                                    *
  *      1.) Fast2Sum assumes |x| >= |y|.                                      *
  ******************************************************************************/
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_float.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_ldouble.h>
+extern void
+tmpl_Double_Fast_Two_Sum(const double x,
+                         const double y,
+                         double * TMPL_RESTRICT const out,
+                         double * TMPL_RESTRICT const err);
+
+extern void
+tmpl_Float_Fast_Two_Sum(const float x,
+                        const float y,
+                        float * TMPL_RESTRICT const out,
+                        float * TMPL_RESTRICT const err);
+
+extern void
+tmpl_LDouble_Fast_Two_Sum(const long double x,
+                          const long double y,
+                          long double * TMPL_RESTRICT const out,
+                          long double * TMPL_RESTRICT const err);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -105,9 +122,20 @@
  *      1.) The Kahan summation algorithm assumes the running sum is greater  *
  *          in magnitude than the summand.                                    *
  ******************************************************************************/
-#include <libtmpl/include/two_sum/tmpl_kahan_two_sum_float.h>
-#include <libtmpl/include/two_sum/tmpl_kahan_two_sum_double.h>
-#include <libtmpl/include/two_sum/tmpl_kahan_two_sum_ldouble.h>
+extern void
+tmpl_Double_Kahan_Two_Sum(const double summand,
+                          double * TMPL_RESTRICT const sum,
+                          double * TMPL_RESTRICT const err);
+
+extern void
+tmpl_Float_Kahan_Two_Sum(const float summand,
+                         float * TMPL_RESTRICT const sum,
+                         float * TMPL_RESTRICT const err);
+
+extern void
+tmpl_LDouble_Kahan_Two_Sum(const long double summand,
+                           long double * TMPL_RESTRICT const sum,
+                           long double * TMPL_RESTRICT const err);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -130,9 +158,20 @@
  *          is greater in magnitude than the summand, but this comes at the   *
  *          cost of a branch.                                                 *
  ******************************************************************************/
-#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_float.h>
-#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_double.h>
-#include <libtmpl/include/two_sum/tmpl_neumaier_two_sum_ldouble.h>
+extern void
+tmpl_Double_Neumaier_Two_Sum(const double summand,
+                             double * TMPL_RESTRICT const out,
+                             double * TMPL_RESTRICT const err);
+
+extern void
+tmpl_Float_Neumaier_Two_Sum(const float summand,
+                            float * TMPL_RESTRICT const sum,
+                            float * TMPL_RESTRICT const err);
+
+extern void
+tmpl_LDouble_Neumaier_Two_Sum(const long double summand,
+                              long double * TMPL_RESTRICT const sum,
+                              long double * TMPL_RESTRICT const err);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -155,9 +194,23 @@
  *      1.) 2Sum does not require |x| >= |y|, but it requires twice as many   *
  *          arithmetic operations as Fast2Sum.                                *
  ******************************************************************************/
-#include <libtmpl/include/two_sum/tmpl_two_sum_float.h>
-#include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
-#include <libtmpl/include/two_sum/tmpl_two_sum_ldouble.h>
+extern void
+tmpl_Double_Two_Sum(const double x,
+                    const double y,
+                    double * TMPL_RESTRICT const out,
+                    double * TMPL_RESTRICT const err);
+
+extern void
+tmpl_Float_Two_Sum(const float x,
+                   const float y,
+                   float * TMPL_RESTRICT const out,
+                   float * TMPL_RESTRICT const err);
+
+extern void
+tmpl_LDouble_Two_Sum(const long double x,
+                     const long double y,
+                     long double * TMPL_RESTRICT const out,
+                     long double * TMPL_RESTRICT const err);
 
 #endif
 /*  End of include guard.                                                     */

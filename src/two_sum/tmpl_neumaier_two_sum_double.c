@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_neumaier_two_sum_float                         *
+ *                        tmpl_neumaier_two_sum_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Evaluates the Neumaier sum from the Neumaier summation algorithm.     *
@@ -24,23 +24,23 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Neumaier_Two_Sum                                           *
+ *      tmpl_Double_Neumaier_Two_Sum                                          *
  *  Purpose:                                                                  *
  *      Evaluates sum += summand using Neumaier summation.                    *
  *  Arguments:                                                                *
- *      summand (const float):                                                *
+ *      summand (const double):                                               *
  *          A real number.                                                    *
- *      sum (float * TMPL_RESTRICT const):                                    *
+ *      sum (double * TMPL_RESTRICT const):                                   *
  *          The current sum. The higher-order component of the sum will be    *
  *          stored here.                                                      *
- *      err (float * TMPL_RESTRICT const):                                    *
+ *      err (double * TMPL_RESTRICT const):                                   *
  *          The error term in the summation. The updated error in the sum     *
  *          will be stored here.                                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
- *          tmpl_Float_Abs:                                                   *
+ *          tmpl_Double_Abs:                                                  *
  *              Computes the absolute value of a real number.                 *
  *  Method:                                                                   *
  *      The Neumaier sum is similar to the Kahan sum, but does not assume     *
@@ -98,11 +98,13 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_attributes.h:                                                    *
- *          Header with macros for C23 attributes on supported compilers.     *
- *  3.) tmpl_abs_float.h:                                                     *
- *          Header file providing single-precision absolute value.            *
+ *          Header file providing the TMPL_ALWAYS_INLINE macro.               *
+ *  2.) tmpl_float_barrier.h:                                                 *
+ *          Provides macros to protect against aggressive optimizations.      *
+ *  3.) tmpl_two_sum.h:                                                       *
+ *          Function prototype / forward declaration provided here.           *
+ *  4.) tmpl_math.h:                                                          *
+ *          Absolute value function provided here.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
@@ -113,48 +115,61 @@
  *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NEUMAIER_TWO_SUM_FLOAT_H
-#define TMPL_NEUMAIER_TWO_SUM_FLOAT_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
 
-/*  Absolute value function found here.                                       */
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_sum.h>
+
+/*  Absolute value function declared here.                                    */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Neumaier summation algorithm for accurately evaluating sum += summand.    */
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 void
-tmpl_Float_Neumaier_Two_Sum(const float summand,
-                            float * TMPL_RESTRICT const sum,
-                            float * TMPL_RESTRICT const err)
+tmpl_Double_Neumaier_Two_Sum(const double summand,
+                             double * TMPL_RESTRICT const sum,
+                             double * TMPL_RESTRICT const err)
 {
-    /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    TMPL_VOLATILE const float add = summand + *sum;
+    /*  Variables for the sum and correction term.                            */
+    double add, correction;
+
+    /*  The normal floating-point sum with whatever rounding mode is used.    */
+    add = summand + *sum;
+
+    /*  Prevent the compiler from using aggressive optimizations.             */
+    TMPL_DOUBLE_BARRIER(add);
 
     /*  If |sum| > |summand|, then this becomes the usual Kahan sum.          */
-    if (tmpl_Float_Abs(*sum) > tmpl_Float_Abs(summand))
+    if (tmpl_Double_Abs(*sum) > tmpl_Double_Abs(summand))
     {
-        TMPL_VOLATILE const float correction = *sum - add;
+        correction = *sum - add;
+
+        /*  Compilers may contract the error term is associative arithmetic   *
+         *  is allowed. Prevent this.                                         */
+        TMPL_DOUBLE_BARRIER(correction);
+
+        /*  Update the error term in the sum.                                 */
         *err += correction + summand;
     }
 
     /*  Otherwise we swap the roles of sum and summand and apply Fast2Sum.    */
     else
     {
-        TMPL_VOLATILE const float correction = summand - add;
+        correction = summand - add;
+
+        /*  Same protection from before.                                      */
+        TMPL_DOUBLE_BARRIER(correction);
+
+        /*  Update the error term in the sum.                                 */
         *err += correction + *sum;
     }
 
     /*  The higher order bits are independent of |sum| and |summand|.         */
     *sum = add;
 }
-/*  End of tmpl_Float_Neumaier_Two_Sum.                                       */
+/*  End of tmpl_Double_Neumaier_Two_Sum.                                      */
 
-#endif
-/*  End of include guard.                                                     */

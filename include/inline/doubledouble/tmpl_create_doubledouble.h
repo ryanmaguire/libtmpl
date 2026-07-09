@@ -5,8 +5,8 @@
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  2Sum is needed to create a double-double.                                 */
-#include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
+/*  2Sum and Fast2Sum are needed for double-double addition.                  */
+#include <libtmpl/include/tmpl_two_sum.h>
 
 TMPL_INLINE_DECL
 tmpl_DoubleDouble

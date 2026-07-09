@@ -36,7 +36,7 @@
  *      sum (double):                                                         *
  *          The sum of the array.                                             *
  *  Called Functions:                                                         *
- *      include/inline/two_sum/                                               *
+ *      src/two_sum/                                                          *
  *          tmpl_Double_Two_Sum:                                              *
  *              Performs the 2Sum algorithm. Only used on exotic platforms.   *
  *  Method:                                                                   *
@@ -60,8 +60,8 @@
  *          Header file providing the TMPL_UINT_BIT macro.                    *
  *  4.) tmpl_ieee754_double.h:                                                *
  *          Provides TMPL_HAS_IEEE754_DOUBLE indicating 64-bit double support.*
- *  5.) tmpl_two_sum_double.h:                                                *
- *          Provides an inlined 2Sum (if inline support is available).        *
+ *  5.) tmpl_two_sum.h:                                                       *
+ *          Provides the Kahan 2Sum function.                                 *
  *  6.) stddef.h:                                                             *
  *          Standard header file containing the size_t typedef.               *
  ******************************************************************************
@@ -98,24 +98,8 @@ tmpl_Int_Array_Double_Sum(const signed int * const arr, size_t len);
  *  use the Kahan summation algorithm to prevent precision loss.              */
 #if (TMPL_UINT_BIT > 32) || (TMPL_HAS_IEEE754_DOUBLE == 0)
 
-/*  Check for inline support for 2Sum. 2Sum is a short routine.               */
-#if TMPL_USE_INLINE == 1
-
-/*  2Sum found here.                                                          */
-#include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the function.             */
-extern void
-tmpl_Double_Two_Sum(const double x,
-                    const double y,
-                    double * TMPL_RESTRICT const out,
-                    double * TMPL_RESTRICT const err);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Kahan 2Sum algorithm found here.                                          */
+#include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Function for summing the elements of a signed int array.                  */
 double tmpl_Int_Array_Double_Sum(const signed int * const arr, size_t len)

@@ -83,38 +83,53 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_attributes.h:                                                    *
- *          Header with macros for C23 attributes on supported compilers.     *
+ *          Header file providing the TMPL_ALWAYS_INLINE macro.               *
+ *  2.) tmpl_float_barrier.h:                                                 *
+ *          Provides macros to protect against aggressive optimizations.      *
+ *  3.) tmpl_two_sum.h:                                                       *
+ *          Function prototype / forward declaration provided here.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 29, 2026                                                  *
+ *  Date:       December 18, 2025                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/29: Ryan Maguire                                                  *
+ *      Added C23 attributes and fixed algorithm.                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_KAHAN_TWO_SUM_FLOAT_H
-#define TMPL_KAHAN_TWO_SUM_FLOAT_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE and TMPL_RESTRICT. */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Kahan summation algorithm for accurately evaluating sum += summand.       */
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 void
 tmpl_Float_Kahan_Two_Sum(const float summand,
                          float * TMPL_RESTRICT const sum,
                          float * TMPL_RESTRICT const err)
 {
+    /*  Variables for sum, difference, compensation, and error respectively.  */
+    float add, diff, comp, error;
+
     /*  Correction term, subtract the error term from the input. This         *
      *  produces the higher order bits for the sum.                           */
-    const float diff = summand - *err;
+    diff = summand - *err;
+
+    /*  Protect the difference from aggressive optimizations with a barrier.  */
+    TMPL_FLOAT_BARRIER(diff);
 
     /*  The "sum" variable contains the higher order parts. Add these in.     */
-    TMPL_VOLATILE const float add = *sum + diff;
+    add = *sum + diff;
+
+    /*  Aggressive optimizations may contract arithmetic operations using     *
+     *  associativity, which ruins the sum. Guard against this.               */
+    TMPL_FLOAT_BARRIER(add);
 
     /*  Compensation term. Mathematically we have:                            *
      *                                                                        *
@@ -124,11 +139,8 @@ tmpl_Float_Kahan_Two_Sum(const float summand,
      *  Since floating-point arithmetic is not associative, this cancellation *
      *  does not occur. Instead, this rounds off the lower order parts of     *
      *  diff.                                                                 */
-    TMPL_VOLATILE const float comp = add - *sum;
-
-    /*  Store the higher order parts in sum. If floating-point arithmetic was *
-     *  exact, then err = 0 and this is simply *sum += summand.               */
-    *sum = add;
+    comp = add - *sum;
+    TMPL_FLOAT_BARRIER(comp);
 
     /*  Subtracting gives us:                                                 *
      *                                                                        *
@@ -139,9 +151,15 @@ tmpl_Float_Kahan_Two_Sum(const float summand,
      *  Subtracting sum from this produces the higher order bits of           *
      *  summand - err. Subtracting summand - err from this retrieves the      *
      *  lower order bits, which is the error in the sum.                      */
-    *err = comp - diff;
+    error = comp - diff;
+
+    /*  A final barrier to separate the end of this function from any calling *
+     *  functions. This is necessary since this function will likely be       *
+     *  inlined when link-time optimization is enabled.                       */
+    TMPL_FLOAT_BARRIER(error);
+
+    /*  Store the results using the provided pointers to conclude.            */
+    *sum = add;
+    *err = error;
 }
 /*  End of tmpl_Float_Kahan_Two_Sum.                                          */
-
-#endif
-/*  End of include guard.                                                     */

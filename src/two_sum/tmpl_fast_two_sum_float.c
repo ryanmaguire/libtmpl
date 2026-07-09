@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_fast_two_sum_ldouble                         *
+ *                          tmpl_fast_two_sum_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Uses the Fast2Sum algorithm for summing with error.                   *
@@ -24,17 +24,17 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Fast_Two_Sum                                             *
+ *      tmpl_Float_Fast_Two_Sum                                               *
  *  Purpose:                                                                  *
- *      Evaluates the sum of two long doubles, computing the sum and error.   *
+ *      Evaluates the sum of two floats, computing the sum and error.         *
  *  Arguments:                                                                *
- *      x (const long double):                                                *
+ *      x (const float):                                                      *
  *          A real number.                                                    *
- *      y (const long double):                                                *
+ *      y (const float):                                                      *
  *          Another real number.                                              *
- *      out (long double * TMPL_RESTRICT const):                              *
+ *      out (float * TMPL_RESTRICT const):                                    *
  *          The rounded sum fl(x + y) will be stored here.                    *
- *      err (long double * TMPL_RESTRICT const):                              *
+ *      err (float * TMPL_RESTRICT const):                                    *
  *          The error term (exact sum minus rounded sum) is stored here.      *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -135,39 +135,49 @@
  *      Added C23 attributes and fixed algorithm.                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_FAST_TWO_SUM_LDOUBLE_H
-#define TMPL_FAST_TWO_SUM_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE and TMPL_RESTRICT. */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
 
-/*  Standard Fast2Sum algorithm at long double precision.                     */
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_INLINE_DECL
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_sum.h>
+
+/*  Standard Fast2Sum algorithm at single precision.                          */
+TMPL_ALWAYS_INLINE
 void
-tmpl_LDouble_Fast_Two_Sum(const long double x,
-                          const long double y,
-                          long double * TMPL_RESTRICT const out,
-                          long double * TMPL_RESTRICT const err)
-TMPL_REPRODUCIBLE
+tmpl_Float_Fast_Two_Sum(const float x,
+                        const float y,
+                        float * TMPL_RESTRICT const out,
+                        float * TMPL_RESTRICT const err)
 {
+    /*  Variables for the sum, compensation, and difference, respectively.    */
+    float sum, ycomp, diff;
+
     /*  The rounded floating-point sum.                                       */
-    TMPL_VOLATILE const long double sum = x + y;
+    sum = x + y;
+
+    /*  Protect the sum variable for being collapsed by optimizations.        */
+    TMPL_FLOAT_BARRIER(sum);
 
     /*  The compensated y term, the bits that remain after summing with x.    */
-    TMPL_VOLATILE const long double ycomp = sum - x;
+    ycomp = sum - x;
 
-    /*  The output is the floating-point sum, the error can be computed by    *
-     *  removing the compensation term from the smaller value. Note, this     *
-     *  assumes |x| >= |y|.                                                   */
+    /*  The compensation term also needs to be protected from optimizations.  */
+    TMPL_FLOAT_BARRIER(ycomp);
+
+    /*  The error can be computed by removing the compensation term from the  *
+     *  smaller value. Note, this assumes |x| >= |y|.                         */
+    diff = y - ycomp;
+
+    /*  A final barrier to separate the end of this function from any calling *
+     *  functions. This is necessary since this function will likely be       *
+     *  inlined when link-time optimization is enabled.                       */
+    TMPL_FLOAT_BARRIER(diff);
+
+    /*  Store the results using the provided pointers to conclude.            */
     *out = sum;
-    *err = y - ycomp;
+    *err = diff;
 }
-/*  End of tmpl_LDouble_Fast_Two_Sum.                                         */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_Float_Fast_Two_Sum.                                           */

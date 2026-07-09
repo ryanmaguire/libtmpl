@@ -27,30 +27,9 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  2Prod and Fast2Sum are short enough that they can be inlined.             */
-#if TMPL_USE_INLINE == 1
-
-#include <libtmpl/include/inline/two_prod/tmpl_two_prod_ldouble.h>
-#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about these functions.          */
-extern void
-tmpl_LDouble_Two_Prod(const long double x,
-                      const long double y,
-                      long double * TMPL_RESTRICT const out,
-                      long double * TMPL_RESTRICT const err);
-
-extern void
-tmpl_LDouble_Fast_Two_Sum(const long double x,
-                          const long double y,
-                          long double * TMPL_RESTRICT const out,
-                          long double * TMPL_RESTRICT const err);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  2Prod and Fast2Sum are needed for double-double addition.                 */
+#include <libtmpl/include/tmpl_two_prod.h>
+#include <libtmpl/include/tmpl_two_sum.h>
 
 TMPL_NO_CONTRACT_MATH
 TMPL_NO_ASSOCIATIVE_MATH

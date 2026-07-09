@@ -124,8 +124,7 @@
 #include <libtmpl/include/types/tmpl_doubledouble_ldouble.h>
 
 /*  2Sum and Fast2Sum are needed for double-double addition.                  */
-#include <libtmpl/include/two_sum/tmpl_two_sum_ldouble.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_ldouble.h>
+#include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Performs addition for two long-double-doubles.                            */
 TMPL_NO_CONTRACT_MATH

@@ -16,43 +16,50 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_kahan_two_sum_ldouble                         *
+ *                        tmpl_neumaier_two_sum_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Evaluates the Kahan sum from the Kahan summation algorithm.           *
+ *      Evaluates the Neumaier sum from the Neumaier summation algorithm.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Kahan_Two_Sum                                            *
+ *      tmpl_Float_Neumaier_Two_Sum                                           *
  *  Purpose:                                                                  *
- *      Evaluates sum += summand using Kahan summation.                       *
+ *      Evaluates sum += summand using Neumaier summation.                    *
  *  Arguments:                                                                *
- *      summand (const long double):                                          *
+ *      summand (const float):                                                *
  *          A real number.                                                    *
- *      sum (long double * TMPL_RESTRICT const):                              *
+ *      sum (float * TMPL_RESTRICT const):                                    *
  *          The current sum. The higher-order component of the sum will be    *
  *          stored here.                                                      *
- *      err (long double * TMPL_RESTRICT const):                              *
+ *      err (float * TMPL_RESTRICT const):                                    *
  *          The error term in the summation. The updated error in the sum     *
  *          will be stored here.                                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/math/                                                             *
+ *          tmpl_Float_Abs:                                                   *
+ *              Computes the absolute value of a real number.                 *
  *  Method:                                                                   *
- *      Kahan summation assumes |*sum| > |summand|, and mimics the Fast2Sum   *
- *      algorithm applied to *sum and summand. We have:                       *
+ *      The Neumaier sum is similar to the Kahan sum, but does not assume     *
+ *      |sum| > |summand|. If |sum| > |summand|, then the usual Kahan sum is  *
+ *      performed, otherwise the roles of sum and summand are swapped. That   *
+ *      is, we compute:                                                       *
  *                                                                            *
- *          hi_part = *sum + (summand - *err)                                 *
- *          lo_part = (hi_part - *sum) - (summand - *err)                     *
+ *          hi_part = sum + summand                                           *
  *                                                                            *
- *      This is computed, and then hi_part is stored in "sum" and lo_part is  *
- *      stored in "err."                                                      *
+ *          if |sum| > |summand|                                              *
+ *              lo_part = (sum - add) + summand                               *
+ *          else                                                              *
+ *              lo_part = (summand - add) + sum                               *
+ *                                                                            *
+ *      This is computed, and we then set *sum = hi_part and *err += lo_part. *
  *  Notes:                                                                    *
  *      1.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
- *          poor Kahan sum.                                                   *
+ *          poor Neumaier sum.                                                *
  *                                                                            *
  *      2.) Compilers supporting the C23 standard and providing support for   *
  *          the gnu::optimize attribute may not need to use the volatile      *
@@ -74,7 +81,15 @@
  *                                                                            *
  *          The original summation algorithm is described here.               *
  *                                                                            *
- *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
+ *      2.) Neumaier, A. (1974)                                               *
+ *          Rundungsfehleranalyse einiger Verfahren zur Summation             *
+ *          endlicher Summen                                                  *
+ *          Zeitschrift fur Angewandte Mathematik und Mechanik, Vol 54,       *
+ *          Number 1: Pages 39-51.                                            *
+ *                                                                            *
+ *          Original paper describing the algorithm (in German).              *
+ *                                                                            *
+ *      3.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
  *                                                                            *
  *          Wikipedia article for Kahan summation. The standard Kahan         *
  *          algorithm uses Fast2Sum to improve the accuracy when summing      *
@@ -83,65 +98,77 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_attributes.h:                                                    *
- *          Header with macros for C23 attributes on supported compilers.     *
+ *          Header file providing the TMPL_ALWAYS_INLINE macro.               *
+ *  2.) tmpl_float_barrier.h:                                                 *
+ *          Provides macros to protect against aggressive optimizations.      *
+ *  3.) tmpl_two_sum.h:                                                       *
+ *          Function prototype / forward declaration provided here.           *
+ *  4.) tmpl_math.h:                                                          *
+ *          Absolute value function provided here.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 29, 2026                                                  *
+ *  Date:       November 22, 2024                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/05/29: Ryan Maguire                                                  *
+ *      Added C23 attributes to prevent aggressive optimizations.             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_KAHAN_TWO_SUM_LDOUBLE_H
-#define TMPL_KAHAN_TWO_SUM_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE and TMPL_RESTRICT. */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Macros preventing aggressive compiler optimizations given here.           */
+#include <libtmpl/include/tmpl_float_barrier.h>
 
-/*  Kahan summation algorithm for accurately evaluating sum += summand.       */
-TMPL_NO_ASSOCIATIVE_MATH
-TMPL_INLINE_DECL
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_two_sum.h>
+
+/*  Absolute value function declared here.                                    */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Neumaier summation algorithm for accurately evaluating sum += summand.    */
+TMPL_ALWAYS_INLINE
 void
-tmpl_LDouble_Kahan_Two_Sum(const long double summand,
-                           long double * TMPL_RESTRICT const sum,
-                           long double * TMPL_RESTRICT const err)
+tmpl_Float_Neumaier_Two_Sum(const float summand,
+                            float * TMPL_RESTRICT const sum,
+                            float * TMPL_RESTRICT const err)
 {
-    /*  Correction term, subtract the error term from the input. This         *
-     *  produces the higher order bits for the sum.                           */
-    const long double diff = summand - *err;
+    /*  Variables for the sum and correction term.                            */
+    float add, correction;
 
-    /*  The "sum" variable contains the higher order parts. Add these in.     */
-    TMPL_VOLATILE const long double add = *sum + diff;
+    /*  The normal floating-point sum with whatever rounding mode is used.    */
+    add = summand + *sum;
 
-    /*  Compensation term. Mathematically we have:                            *
-     *                                                                        *
-     *      add - sum = (sum + diff) - sum                                    *
-     *                = diff                                                  *
-     *                                                                        *
-     *  Since floating-point arithmetic is not associative, this cancellation *
-     *  does not occur. Instead, this rounds off the lower order parts of     *
-     *  diff.                                                                 */
-    TMPL_VOLATILE const long double comp = add - *sum;
+    /*  Prevent the compiler from using aggressive optimizations.             */
+    TMPL_FLOAT_BARRIER(add);
 
-    /*  Store the higher order parts in sum. If floating-point arithmetic was *
-     *  exact, then err = 0 and this is simply *sum += summand.               */
+    /*  If |sum| > |summand|, then this becomes the usual Kahan sum.          */
+    if (tmpl_Float_Abs(*sum) > tmpl_Float_Abs(summand))
+    {
+        correction = *sum - add;
+
+        /*  Compilers may contract the error term is associative arithmetic   *
+         *  is allowed. Prevent this.                                         */
+        TMPL_FLOAT_BARRIER(correction);
+
+        /*  Update the error term in the sum.                                 */
+        *err += correction + summand;
+    }
+
+    /*  Otherwise we swap the roles of sum and summand and apply Fast2Sum.    */
+    else
+    {
+        correction = summand - add;
+
+        /*  Same protection from before.                                      */
+        TMPL_FLOAT_BARRIER(correction);
+
+        /*  Update the error term in the sum.                                 */
+        *err += correction + *sum;
+    }
+
+    /*  The higher order bits are independent of |sum| and |summand|.         */
     *sum = add;
-
-    /*  Subtracting gives us:                                                 *
-     *                                                                        *
-     *      comp - diff = ((sum + diff) - sum) - diff                         *
-     *                  = ((sum + (summand - err)) - sum) - (summand - err)   *
-     *                                                                        *
-     *  sum + (summand - err) is the higher order bits of the sum.            *
-     *  Subtracting sum from this produces the higher order bits of           *
-     *  summand - err. Subtracting summand - err from this retrieves the      *
-     *  lower order bits, which is the error in the sum.                      */
-    *err = comp - diff;
 }
-/*  End of tmpl_LDouble_Kahan_Two_Sum.                                        */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_Float_Neumaier_Two_Sum.                                       */
