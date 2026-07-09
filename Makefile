@@ -237,6 +237,9 @@ ARCH = $(shell uname -m)
 ifdef DEBUG_BUILD
 CFLAGS = -I../ -g -fPIC -c
 LFLAGS = -fPIC -g -shared
+else ifdef SUNCC
+CFLAGS = -I../ -Xc -xO5 -xipo -KPIC -DNDEBUG -c
+LFLAGS = -xO5 -xipo -KPIC -G
 else
 CFLAGS = -I../ -O3 -flto -fPIC -DNDEBUG -c
 LFLAGS = -O3 -fPIC -flto -DNDEBUG -shared
