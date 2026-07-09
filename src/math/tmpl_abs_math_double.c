@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_abs_impl_double                            *
+ *                              tmpl_abs_double                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x) = |x| at double precision.                              *
@@ -118,17 +118,18 @@
  *      Added C23 attributes to improve optimization on modern compilers.     *
  *  2026/06/10: Ryan Maguire                                                  *
  *      Changed filename to include _impl_ to be consistent with other files. *
+ *  2026/07/09: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE use.  *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_MATH_ABS_IMPL_DOUBLE_H
-#define TMPL_INLINE_MATH_ABS_IMPL_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Only used if libtmpl algorithms are requested.                            */
 #if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
@@ -145,7 +146,7 @@
 
 /*  Double precision absolute value function (fabs equivalent).               */
 TMPL_CONST_FUNC
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 double tmpl_Double_Abs(const double x)
 TMPL_UNSEQUENCED
 {
@@ -174,7 +175,7 @@ TMPL_UNSEQUENCED
 
 /*  Double precision absolute value function (fabs equivalent).               */
 TMPL_CONST_FUNC
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 double tmpl_Double_Abs(const double x)
 TMPL_UNSEQUENCED
 {
@@ -193,6 +194,3 @@ TMPL_UNSEQUENCED
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
-
-#endif
-/*  End of include guard.                                                     */

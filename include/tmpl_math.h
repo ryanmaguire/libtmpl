@@ -1801,26 +1801,25 @@ extern long double tmpl_LDouble_Truncate(long double x);
  *  Purpose:                                                                  *
  *      Compute the absolute value of a real number (fabs equivalent).        *
  *  Arguments:                                                                *
- *      double x:                                                             *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      double abs_x:                                                         *
+ *      abs_x (double):                                                       *
  *          The absolute value of x, |x|.                                     *
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
- *  Source Code:                                                              *
- *      libtmpl/src/math/                                                     *
- *          tmpl_abs_float.c                                                  *
- *          tmpl_abs_double.c                                                 *
- *          tmpl_abs_ldouble.c                                                *
- *      libtmpl/include/inline/math/ (inline version)                         *
- *          tmpl_abs_double.h                                                 *
- *          tmpl_abs_float.h                                                  *
- *          tmpl_abs_ldouble.h                                                *
  ******************************************************************************/
-#include <libtmpl/include/abs/tmpl_abs_double.h>
-#include <libtmpl/include/abs/tmpl_abs_float.h>
-#include <libtmpl/include/abs/tmpl_abs_ldouble.h>
+TMPL_CONST_FUNC
+double tmpl_Double_Abs(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+float tmpl_Float_Abs(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+long double tmpl_LDouble_Abs(const long double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

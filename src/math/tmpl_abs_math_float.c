@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_abs_impl_ldouble                           *
+ *                               tmpl_abs_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x) = |x| at long double precision.                         *
+ *      Computes f(x) = |x| at single precision.                              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Abs                                                      *
+ *      tmpl_Float_Abs                                                        *
  *  Purpose:                                                                  *
  *      Computes the absolute value of a real number.                         *
  *                   --                                                       *
@@ -32,53 +32,26 @@
  *          |x|  =  |  -x,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      x (const long double):                                                *
+ *      x (const float):                                                      *
  *          A real number, the argument for |x|.                              *
  *  Output:                                                                   *
- *      abs_x (long double):                                                  *
+ *      abs_x (float):                                                        *
  *          The absolute value of x.                                          *
- *  64-bit Double / 80-bit Extended / 128-bit Quadruple Versions:             *
+ *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Set the sign bit of the input to zero. Note, this                 *
+ *          Set the sign bit to 0. A 32-bit float is represented by:          *
+ *                                                                            *
+ *              s eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                            *
+ *              - -------- -----------------------                            *
+ *           sign exponent        mantissa                                    *
+ *                                                                            *
+ *          The absolute value can be computed by setting s to 0. Note, this  *
  *          method will work for NaN and inf, and the output will be          *
  *          "positive" NaN and positive infinity, respectively.               *
  *      Error:                                                                *
- *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
- *              max relative error: 0.0                                       *
- *              rms relative error: 0.0                                       *
- *              max absolute error: 0.0                                       *
- *              rms absolute error: 0.0                                       *
- *  128-bit Double-Double Version:                                            *
- *      Called Functions:                                                     *
- *          None.                                                             *
- *      Method:                                                               *
- *          Given:                                                            *
- *                                                                            *
- *              x = x_hi + x_lo                                               *
- *                                                                            *
- *          we compute:                                                       *
- *                                                                            *
- *              abs_x = abs_xhi + abs_xlo                                     *
- *                                                                            *
- *          as follows. If x_hi and x_lo have the same sign, then:            *
- *                                                                            *
- *              |x_hi + x_lo| = |x_hi| + |x_lo|                               *
- *                                                                            *
- *          so abs_xhi = |x_hi| and abs_xlo = |x_lo|. If x_hi and x_lo have   *
- *          different signs, then:                                            *
- *                                                                            *
- *              |x_hi + x_lo| = |x_hi| - |x_lo|                               *
- *                                                                            *
- *          So abs_xhi = |x_hi| and abs_xlo = -|x_lo|. In both cases,         *
- *          abs_xhi = |x_hi|. To compute this we just set the sign bit of     *
- *          x_hi to zero. abs_xlo depends on whether x_hi and x_lo have the   *
- *          same sign. This can be computed via the exclusive or, or XOR.     *
- *          The sign of abs_xlo is the exclusive or of the signs of x_hi      *
- *          and x_lo.                                                         *
- *      Error:                                                                *
- *          Based on 10,000,000 samples with -10^6 < x < 10^6.                *
+ *          Based on 2,103,916,953 samples with -10^6 < x < 10^6.             *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -90,7 +63,7 @@
  *          Use an if-then statement to check if the input is negative,       *
  *          returning x for non-negative and -x otherwise.                    *
  *      Error:                                                                *
- *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
+ *          Based on 2,103,916,953 samples with -10^6 < x < 10^6.             *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -104,7 +77,7 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_ieee754_ldouble.h:                                               *
+ *  2.) tmpl_ieee754_float.h:                                                 *
  *          Header file containing the IEEE data type.                        *
  *  3.) tmpl_attributes.h:                                                    *
  *          Provides optional C23 attributes for optimization.                *
@@ -126,15 +99,15 @@
  *      Moved float and long double to their own files.                       *
  *  2022/03/01: Ryan Maguire                                                  *
  *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
- *      use fabsl from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.           *
- *  2022/09/12: Ryan Maguire                                                  *
- *      Added inline support.                                                 *
+ *      simply use fabsf from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.    *
+ *  2022/09/05: Ryan Maguire                                                  *
+ *      Added inline version.                                                 *
  *  2022/09/13: Ryan Maguire                                                  *
- *      Removed math.h version (fabsl alias). This version is now a macro for *
- *      the fabsl function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS   *
+ *      Removed math.h version (fabsf alias). This version is now a macro for *
+ *      the fabsf function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS   *
  *      is set to zero).                                                      *
  *  2023/04/18: Ryan Maguire                                                  *
- *      Changed src/math/tmpl_abs_ldouble.c to just include this file.        *
+ *      Changed src/math/tmpl_abs_float.c to just include this file.          *
  *  2024/10/23: Ryan Maguire                                                  *
  *      Added clarification that the portable method does not change signed   *
  *      zeros. That is, negative zero will output negative zero.              *
@@ -144,94 +117,50 @@
  *      Changed filename to include _impl_ to be consistent with other files. *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_MATH_ABS_IMPL_LDOUBLE_H
-#define TMPL_INLINE_MATH_ABS_IMPL_LDOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Only used if libtmpl algorithms are requested.                            */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
-#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Check for IEEE-754 long double support.                                   */
-#if TMPL_HAS_IEEE754_LDOUBLE == 1
-
-/*  64-bit double, 80-bit extended, and 128-bit quadruple implementations     *
- *  of long double use the same idea: Set the sign bit to zero. The           *
- *  double-double implementation of long double needs to be more careful.     */
-#if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
+/*  Check for IEEE-754 support.                                               */
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 /******************************************************************************
- *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
+ *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Long double precision absolute value function (fabsl equivalent).         */
+/*  Single precision absolute value function (fabsf equivalent).              */
 TMPL_CONST_FUNC
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(const long double x)
+TMPL_ALWAYS_INLINE
+float tmpl_Float_Abs(const float x)
 TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_LDouble w;
+    tmpl_IEEE754_Float w;
 
-    /*  Set the long double part of w to the input.                           */
+    /*  Set the float part of the word to the input x.                        */
     w.r = x;
 
-    /*  Set the sign bit to 0, indicating positive.                           */
+    /*  Set the sign bit to zero, indicating positive.                        */
     w.bits.sign = 0x0U;
 
-    /*  Return the long double part of the union.                             */
+    /*  Return the float part of the union.                                   */
     return w.r;
 }
-/*  End of tmpl_LDouble_Abs.                                                  */
+/*  End of tmpl_Float_Abs.                                                    */
 
 #else
-/*  Else for 64-bit double / 80-bit extended / 128-bit quadruple versions.    */
-
-/******************************************************************************
- *                       128-bit Double-Double Version                        *
- ******************************************************************************/
-
-/*  Long double precision absolute value function (fabsl equivalent).         */
-TMPL_CONST_FUNC
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(const long double x)
-TMPL_UNSEQUENCED
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_LDouble w;
-
-    /*  Set the long double part of w to the input.                           */
-    w.r = x;
-
-    /*  For double-double we have x = xhi + xlo. Define                       *
-     *  abs_x = |x| = abs_xhi + abs_xlo. If xhi and xlo have the same sign,   *
-     *  |x| = |xhi| + |xlo| and so abs_xhi = |xhi| and abs_xlo = |xlo|. If    *
-     *  xhi and xlo have different signs, |x| = |xhi| - |xlo| so              *
-     *  abs_xhi = |xhi| and abs_xlo = -|xlo|. In both cases abs_xhi = |xhi|.  *
-     *  The sign of abs_xlo depends on the signs of xhi and xlo. That is,     *
-     *  whether or not they are the same. Indeed, the sign of abs_xlo is the  *
-     *  exclusive or, also called XOR, of the signs of xhi and xlo. Use this. */
-    w.bits.signl = w.bits.sign ^ w.bits.signl;
-    w.bits.sign = 0x0U;
-
-    /*  Return the long double part of the union.                             */
-    return w.r;
-}
-/*  End of tmpl_LDouble_Abs.                                                  */
-
-#endif
-/*  End of 128-bit double-double version.                                     */
-
-#else
-/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
  *                              Portable Version                              *
@@ -239,27 +168,24 @@ TMPL_UNSEQUENCED
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
-/*  Long double precision absolute value function (fabsl equivalent).         */
+/*  Single precision absolute value function (fabsf equivalent).              */
 TMPL_CONST_FUNC
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Abs(const long double x)
+TMPL_ALWAYS_INLINE
+float tmpl_Float_Abs(const float x)
 TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */
-    if (x < 0.0L)
+    if (x < 0.0F)
         return -x;
 
     /*  Otherwise return the input. Note, "negative" zero will still be       *
      *  negative. The portable method is unable to detect signed zeros.       */
     return x;
 }
-/*  End of tmpl_LDouble_Abs.                                                  */
+/*  End of tmpl_Float_Abs.                                                    */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
-
-#endif
-/*  End of include guard.                                                     */
