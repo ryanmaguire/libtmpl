@@ -367,9 +367,9 @@ double tmpl_Double_Even_High_Split(const double x)
 
         :
 
-        /*  The inputs may live in memory or registers, use "fm" for this.    */
-        [x] "fm" (x),
-        [c] "fm" (c)
+        /*  The inputs live in registers, use "f" for this.                   */
+        [x] "f" (x),
+        [c] "f" (c)
     );
 
     return result;
