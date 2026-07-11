@@ -89,6 +89,72 @@ tmpl_LDouble_High_Split(const long double x, const long double splitter);
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Left_Difference                                           *
+ *  Purpose:                                                                  *
+ *      Performs the subtraction (a - b) - c without associative reordering.  *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number.                                                    *
+ *      y (const double):                                                     *
+ *          Another real number.                                              *
+ *      z (const double):                                                     *
+ *          A third real number.                                              *
+ *  Output:                                                                   *
+ *      left_diff (double):                                                   *
+ *          The floating-point difference (a - b) - c, in that order.         *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern double
+tmpl_Double_Left_Difference(const double a,
+                            const double b,
+                            const double c);
+
+extern float
+tmpl_Float_Left_Difference(const float a,
+                           const float b,
+                           const float c);
+
+extern long double
+tmpl_LDouble_Left_Difference(const long double a,
+                             const long double b,
+                             const long double c);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Right_Difference                                          *
+ *  Purpose:                                                                  *
+ *      Performs the subtraction a - (b - c) without associative reordering.  *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number.                                                    *
+ *      y (const double):                                                     *
+ *          Another real number.                                              *
+ *      z (const double):                                                     *
+ *          A third real number.                                              *
+ *  Output:                                                                   *
+ *      right_diff (double):                                                  *
+ *          The floating-point difference a - (b - c), in that order.         *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern double
+tmpl_Double_Right_Difference(const double a,
+                             const double b,
+                             const double c);
+
+extern float
+tmpl_Float_Right_Difference(const float a,
+                            const float b,
+                            const float c);
+
+extern long double
+tmpl_LDouble_Right_Difference(const long double a,
+                              const long double b,
+                              const long double c);
+
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
 }
