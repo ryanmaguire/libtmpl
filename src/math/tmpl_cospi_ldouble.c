@@ -173,7 +173,6 @@ TMPL_UNSEQUENCED
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Computes cos(pi x) at double precision.                                   */
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_CONST_FUNC
 long double tmpl_LDouble_CosPi(const long double x)
 TMPL_UNSEQUENCED
