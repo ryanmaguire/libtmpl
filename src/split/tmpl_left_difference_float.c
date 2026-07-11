@@ -85,7 +85,7 @@ tmpl_Float_Left_Difference(const float a, const float b, const float c)
 
     /*  Compute the first difference, a - b, and guard it with a barrier.     */
     a_minus_b = a_val - b;
-    TMPL_FLOAT_tmpl_Double_Left_DifferenceBARRIER(a_minus_b);
+    TMPL_FLOAT_BARRIER(a_minus_b);
 
     /*  The previous barrier prevents compilers from reordering operations    *
      *  using associativity. We can now compute the result.                   */

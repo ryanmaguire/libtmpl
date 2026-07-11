@@ -80,7 +80,7 @@ tmpl_Double_Right_Difference(const double a, const double b, const double c)
      *  is inlined. We need to separate lines in the calling function from    *
      *  the difference performed in this function. Make a copy and create a   *
      *  barrier.                                                              */
-    b_val = a;
+    b_val = b;
     TMPL_DOUBLE_BARRIER(b_val);
 
     /*  Compute the second difference, b - c, and guard it with a barrier.    */
