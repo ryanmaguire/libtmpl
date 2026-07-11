@@ -98,8 +98,8 @@
  *          TMPL_HAS_LONGLONG found here. This file is compiled if this is 1. *
  *  2.) tmpl_config.h:                                                        *
  *          Provides the TMPL_USE_INLINE macro.                               *
- *  3.) tmpl_attributes.h:                                                    *
- *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_array_integer.h:                                                 *
+ *          Header providing the function prototype / forward declaration.    *
  *  4.) tmpl_cast.h:                                                          *
  *          Header providing TMPL_CAST with C vs. C++ compatibility.          *
  *  5.) tmpl_neumaier_two_sum_double.h:                                       *
@@ -126,8 +126,8 @@
 /*  TMPL_USE_INLINE macro found here, indicating inline support.              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Macros providing C23 attributes (for optimization) are found here.        */
-#include <libtmpl/include/tmpl_attributes.h>
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_array_integer.h>
 
 /*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
 #include <libtmpl/include/compat/tmpl_cast.h>
@@ -143,12 +143,7 @@
 #define TMPL_NEG_BITS(n) -(TMPL_CAST(TMPL_NEG_CAST(n), signed long long int))
 #define TMPL_LOW_BITS(n) ((n) < 0 ? TMPL_NEG_BITS(n) : ((n) & 0xFFFFFFFFLL))
 
-/*  Forward declaration / function prototype, found in tmpl_array_integer.h.  */
-extern double
-tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len);
-
 /*  Function for summing the elements of a signed int array.                  */
-TMPL_NO_ASSOCIATIVE_MATH
 double
 tmpl_LLong_Array_Double_Sum(const signed long long int * const arr, size_t len)
 {
