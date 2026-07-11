@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Even_High_Split                                           *
+ *      tmpl_Double_Left_Difference                                           *
  *  Purpose:                                                                  *
  *      Computes (a - b) - c while preventing compilers from reordering.      *
  *  Arguments:                                                                *

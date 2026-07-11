@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_left_difference_ldouble                        *
+ *                        tmpl_right_difference_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Performs floating-point subtraction without associative reordering.   *
@@ -24,23 +24,23 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Left_Difference                                          *
+ *      tmpl_Float_Right_Difference                                           *
  *  Purpose:                                                                  *
- *      Computes (a - b) - c while preventing compilers from reordering.      *
+ *      Computes a - (b - c) while preventing compilers from reordering.      *
  *  Arguments:                                                                *
- *      a (const long double):                                                *
+ *      a (const float):                                                      *
  *          A real number.                                                    *
- *      b (const long double):                                                *
+ *      b (const float):                                                      *
  *          Another real number.                                              *
- *      c (const long double):                                                *
+ *      c (const float):                                                      *
  *          A third real number.                                              *
  *  Output:                                                                   *
- *      left_diff (long double):                                              *
- *          The floating-point difference (a - b) - c, in that order.         *
+ *      right_diff (float):                                                   *
+ *          The floating-point difference a - (b - c), in that order.         *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute (a - b) - c using floating-point barriers to guard against    *
+ *      Compute a - (b - c) using floating-point barriers to guard against    *
  *      aggressive compiler optimizations.                                    *
  *  Notes:                                                                    *
  *      1.) Depending on compiler, floating-point barriers may produce a      *
@@ -70,33 +70,31 @@
 
 /*  Function for performing floating-point subtraction without reordering.    */
 TMPL_ALWAYS_INLINE
-long double
-tmpl_LDouble_Left_Difference(const long double a,
-                             const long double b,
-                             const long double c)
+float
+tmpl_Float_Right_Difference(const float a, const float b, const float c)
 {
     /*  Declare variables for the intermediate steps.                         */
-    long double a_val, a_minus_b, result;
+    float b_val, b_minus_c, result;
 
     /*  A barrier is needed at the start of the function in case this routine *
      *  is inlined. We need to separate lines in the calling function from    *
      *  the difference performed in this function. Make a copy and create a   *
      *  barrier.                                                              */
-    a_val = a;
-    TMPL_LDOUBLE_BARRIER(a_val);
+    b_val = a;
+    TMPL_FLOAT_BARRIER(b_val);
 
-    /*  Compute the first difference, a - b, and guard it with a barrier.     */
-    a_minus_b = a_val - b;
-    TMPL_LDOUBLE_BARRIER(a_minus_b);
+    /*  Compute the second difference, b - c, and guard it with a barrier.    */
+    b_minus_c = b_val - c;
+    TMPL_FLOAT_BARRIER(b_minus_c);
 
     /*  The previous barrier prevents compilers from reordering operations    *
      *  using associativity. We can now compute the result.                   */
-    result = a_minus_b - c;
+    result = a - b_minus_c;
 
     /*  A final barrier to separate the end of this function from any calling *
      *  functions. This is necessary since this function will likely be       *
      *  inlined when link-time optimization is enabled.                       */
-    TMPL_LDOUBLE_BARRIER(result);
+    TMPL_FLOAT_BARRIER(result);
     return result;
 }
-/*  End of tmpl_LDouble_Left_Difference.                                      */
+/*  End of tmpl_Float_Right_Difference.                                       */
