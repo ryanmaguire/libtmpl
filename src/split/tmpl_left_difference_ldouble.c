@@ -76,10 +76,17 @@ tmpl_LDouble_Left_Difference(const long double a,
                              const long double c)
 {
     /*  Declare variables for the intermediate steps.                         */
-    long double a_minus_b, result;
+    long double a_val, a_minus_b, result;
+
+    /*  A barrier is needed at the start of the function in case this routine *
+     *  is inlined. We need to separate lines in the calling function from    *
+     *  the difference performed in this function. Make a copy and create a   *
+     *  barrier.                                                              */
+    a_val = a;
+    TMPL_LDOUBLE_BARRIER(a_val);
 
     /*  Compute the first difference, a - b, and guard it with a barrier.     */
-    a_minus_b = a - b;
+    a_minus_b = a_val - b;
     TMPL_LDOUBLE_BARRIER(a_minus_b);
 
     /*  The previous barrier prevents compilers from reordering operations    *
