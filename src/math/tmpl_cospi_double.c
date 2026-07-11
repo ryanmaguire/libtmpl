@@ -17,6 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
 /*  Function prototype, absolute value, and mod 2 function found here.        */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -44,7 +47,6 @@
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  Computes cos(pi x) at double precision.                                   */
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_CONST_FUNC
 double tmpl_Double_CosPi(const double x)
 TMPL_UNSEQUENCED
@@ -133,7 +135,7 @@ TMPL_UNSEQUENCED
 
     /*  shifted - shifter is equal to |x| mod 2 truncated to 2^-7. The dr     *
      *  factor is then just the difference. Compute this.                     */
-    dr = w.r - (shifted.r - shifter);
+    dr = tmpl_Double_Right_Difference(w.r, shifted.r, shifter);
 
     /*  Compute cos(pi y) using the angle sum formula.                        */
     sin_pi_r = tmpl_double_sinpi_table[index];
