@@ -135,7 +135,7 @@ tmpl_LDouble_Neumaier_Two_Sum(const long double summand,
                               long double * TMPL_RESTRICT const err)
 {
     /*  Variables for the sum and correction term.                            */
-    double add, correction, error;
+    long double add, correction, error;
 
     /*  The normal floating-point sum with whatever rounding mode is used.    */
     add = summand + *sum;
