@@ -169,14 +169,14 @@
  *      Added docstring with comments, license, and references.               *
  ******************************************************************************/
 
-/*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
-#include <libtmpl/include/tmpl_config.h>
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
+/*  Function prototype, absolute value, and mod 2 function found here.        */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
-
-/*  TMPL_NAN macro found here which provides double precision NaN.            */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
 
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
@@ -184,31 +184,21 @@
 /*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
-/*  Forward declaration for the function, also found in tmpl_math.h.          */
-TMPL_CONST_FUNC
-extern double tmpl_Double_SinPi(const double x)
-TMPL_UNSEQUENCED;
-
-/*  Tell the compiler about the mod 2 function, used for argument reduction.  */
-TMPL_CONST_FUNC
-extern double tmpl_Double_Mod_2(const double x)
-TMPL_UNSEQUENCED;
-
 /******************************************************************************
  *                                   Tables                                   *
  ******************************************************************************/
 
-/*  The values cos(pi * k / 128) and sin(pi * k / 128) for k = 0, 1, ..., 127.*/
-extern const double tmpl_double_cospi_table[128];
-extern const double tmpl_double_sinpi_table[128];
+/*  Look-up tables for sinpi and cospi given here.                            */
+#include <libtmpl/include/tables/tmpl_cospi_tables.h>
+#include <libtmpl/include/tables/tmpl_sinpi_tables.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
  ******************************************************************************/
 
-/*  Maclaurin series for sin(pi x) and cos(pi x), accurate for |x| < 2^-7.    */
-#include "auxiliary/tmpl_cospi_maclaurin_double.h"
-#include "auxiliary/tmpl_sinpi_maclaurin_double.h"
+/*  Remez minimax polynomials for very small inputs.                          */
+#include "auxiliary/tmpl_cospi_remez_small_double.h"
+#include "auxiliary/tmpl_sinpi_remez_small_double.h"
 
 /*  Remez polynomial for sin(pi x), accurate for |x| < 2^-4.                  */
 #include "auxiliary/tmpl_sinpi_remez_double.h"
@@ -249,11 +239,7 @@ TMPL_UNSEQUENCED
     unsigned int negate, sign;
 
     /*  Unions of doubles and the bits representing them.                     */
-    tmpl_IEEE754_Double w;
-
-    /*  If -ffast-math is enabled, this variable needs to be declared as      *
-     *  volatile to prevent the compiler from optimizing away the split.      */
-    TMPL_VOLATILE tmpl_IEEE754_Double shifted;
+    tmpl_IEEE754_Double w, shifted;
 
     /*  The value 2^45 = 2^(53 - 8). We will use this to get the index of the *
      *  lookup table by shifting the input and extracting the lower 8 bits.   */
@@ -370,13 +356,13 @@ TMPL_UNSEQUENCED
 
     /*  shifted - shifter is equal to |x| mod 2 rounded to the nearest 2^-7.  *
      *  The dr factor is then just the difference. Compute this.              */
-    dr = w.r - (shifted.r - shifter);
+    dr = tmpl_Double_Right_Difference(w.r, shifted.r, shifter);
 
     /*  Compute sin(pi y) using the angle sum formula.                        */
     sin_pi_r = tmpl_double_sinpi_table[index];
     cos_pi_r = tmpl_double_cospi_table[index];
-    sin_pi_dr = tmpl_Double_SinPi_Maclaurin(dr);
-    cos_pi_dr = tmpl_Double_CosPi_Maclaurin(dr);
+    sin_pi_dr = tmpl_Double_SinPi_Remez_Small(dr);
+    cos_pi_dr = tmpl_Double_CosPi_Remez_Small(dr);
     out = cos_pi_r*sin_pi_dr + sin_pi_r*cos_pi_dr;
 
     /*  Negate if necessary. The "negate" Boolean has the answer.             */
