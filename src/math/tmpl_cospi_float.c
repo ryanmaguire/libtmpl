@@ -26,6 +26,9 @@
 /*  C23 attributes for optimization found here.                               */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
+
 /*  Look-up tables for sinpi and cospi given here.                            */
 #include <libtmpl/include/tables/tmpl_cospi_tables.h>
 #include <libtmpl/include/tables/tmpl_sinpi_tables.h>
@@ -64,11 +67,7 @@ TMPL_UNSEQUENCED
     unsigned int negate;
 
     /*  Unions of floats and the bits representing them.                      */
-    tmpl_IEEE754_Float w;
-
-    /*  If -ffast-math is enabled, this variable needs to be declared as      *
-     *  volatile to prevent the compiler from optimizing away the split.      */
-    TMPL_VOLATILE tmpl_IEEE754_Float shifted;
+    tmpl_IEEE754_Float w, shifted;
 
     /*  The value 2^16 = 2^(24 - 8). We will use this to get the index of the *
      *  lookup table by shifting the input and extracting the lower 8 bits.   */
