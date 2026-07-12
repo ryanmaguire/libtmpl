@@ -25,6 +25,9 @@
 #include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
 /*  The lookup table is defined here.                                         */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -38,12 +41,7 @@
 #define C1 (-4.16666666666664434524222570944589E-02)
 #define C2 (+1.38888874007937613028114285595617E-03)
 
-/*  Shift factor for reducing the argument. This is 1.5 x 2^45. This trick    *
- *  requires IEEE-754 64-bit doubles in order to work.                        */
-#define TMPL_BIG_NUMBER (5.2776558133248E+13)
-
 /*  Computes cos(x) for small values of x.                                    */
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Cos_Small_Eval(const double x)
@@ -52,14 +50,17 @@ TMPL_UNSEQUENCED
     tmpl_IEEE754_Double w;
     double sn, ssn, cs, ccs, cor;
     unsigned int k;
+
+    /*  Shift factor for reducing the argument. This is 1.5 x 2^45.           */
+    const double shifter = 5.2776558133248E+13;
     const double abs_x = tmpl_Double_Abs(x);
-    const double x_shift = TMPL_BIG_NUMBER + abs_x;
-    const double arg = abs_x - (x_shift - TMPL_BIG_NUMBER);
-    const double arg_sq = arg*arg;
+    const double x_shift = shifter + abs_x;
+    const double arg = tmpl_Double_Right_Difference(abs_x, x_shift, shifter);
+    const double arg_sq = arg * arg;
 
     /*  Approximate cosine and sine using Remez minimax polynomials.          */
-    const double sin_arg = arg * (S0 + arg_sq*(S1 + arg_sq*S2));
-    const double cos_arg = arg_sq * (C0 + arg_sq*(C1 + arg_sq*C2));
+    const double sin_arg = arg * (S0 + arg_sq * (S1 + arg_sq * S2));
+    const double cos_arg = arg_sq * (C0 + arg_sq * (C1 + arg_sq * C2));
 
     w.r = x_shift;
     k = (w.bits.man3 << 2U) & 0xFFFF;
@@ -80,7 +81,6 @@ TMPL_UNSEQUENCED
 #undef C0
 #undef C1
 #undef C2
-#undef TMPL_BIG_NUMBER
 
 #endif
 /*  End of include guard.                                                     */

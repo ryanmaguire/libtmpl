@@ -25,6 +25,9 @@
 #include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
 /*  The lookup table is defined here.                                         */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -45,17 +48,14 @@
 #define C1 (-4.16666666666664434524222570944589E-02)
 #define C2 (+1.38888874007937613028114285595617E-03)
 
-/*  Shift factor for reducing the argument. This is 1.5 x 2^45. This trick    *
- *  requires IEEE-754 64-bit doubles in order to work.                        */
-#define TMPL_BIG_NUMBER (5.2776558133248E13)
-
 /*  Computes sin(x + dx) for small dx.                                        */
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 double tmpl_Double_Sin_Precise_Eval(double x, double dx)
 TMPL_UNSEQUENCED
 {
+    /*  Shift factor for reducing the argument. This is 1.5 x 2^45.           */
+    const double shifter = 5.2776558133248E+13;
     double x2, s, sn, ssn, c, cs, ccs, cor;
     tmpl_IEEE754_Double w, tmp;
     unsigned int k;
@@ -74,18 +74,20 @@ TMPL_UNSEQUENCED
         dx = -dx;
     }
 
-    w.r = TMPL_BIG_NUMBER + x;
-    x = x - (w.r - TMPL_BIG_NUMBER);
+    w.r = shifter + x;
+    x = tmpl_Double_Right_Difference(x, w.r, shifter);
 
-    x2 = x*x;
-    s = dx + x*(S0 + x2*(S1 + x2*S2));
-    c = x*dx + x2*(C0 + x2*(C1 + x2*C2));
+    x2 = x * x;
+    s = dx + x * (S0 + x2 * (S1 + x2 * S2));
+    c = x * dx + x2 * (C0 + x2 * (C1 + x2 * C2));
+
     k = (w.bits.man3 << 2U) & 0xFFFF;
     sn = tmpl_double_sincos_table[k];
     ssn = tmpl_double_sincos_table[k + 1];
     cs = tmpl_double_sincos_table[k + 2];
     ccs = tmpl_double_sincos_table[k + 3];
     cor = (ssn + s * ccs - sn * c) + cs * s;
+
     w.r = cor + sn;
     w.bits.sign = tmp.bits.sign;
     return w.r;

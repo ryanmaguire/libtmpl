@@ -20,6 +20,9 @@
 
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_attributes.h>
 
@@ -30,8 +33,6 @@
 #include "auxiliary/tmpl_sin_precise_eval_double.h"
 #include "auxiliary/tmpl_sincos_reduction.h"
 
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_CONST_FUNC
 double tmpl_Double_Cos(const double x)
 TMPL_UNSEQUENCED
@@ -59,7 +60,7 @@ TMPL_UNSEQUENCED
     {
         w.r = pi_by_two_hi - w.r;
         a = w.r + pi_by_two_lo;
-        da = (w.r - a) + pi_by_two_lo;
+        da = tmpl_Double_Right_Difference(pi_by_two_lo, a, w.r);
         return tmpl_Double_Sin_Precise_Eval(a, da);
     }
 

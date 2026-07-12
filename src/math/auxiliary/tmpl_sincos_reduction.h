@@ -25,6 +25,9 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
 /*  Argument reduction for very large inputs.                                 */
 #include "tmpl_sincos_reduction_very_large.h"
 
@@ -36,8 +39,6 @@
 #define hpinv (6.366197723675813824328884038550e-01)
 #define toint (6.755399441055744000000000000000e+15)
 
-TMPL_NO_CONTRACT_MATH
-TMPL_NO_ASSOCIATIVE_MATH
 TMPL_CONST_FUNC
 TMPL_STATIC_INLINE
 unsigned int tmpl_Double_SinCos_Reduction(double x, double *a, double *da)
@@ -46,17 +47,17 @@ TMPL_UNSEQUENCED
     if (x < 1.05414350E+08)
     {
         tmpl_IEEE754_Double w;
-        const double t = (x * hpinv + toint);
-        const double xn = t - toint;
-        const double y = (x - xn * mp1) - xn * mp2;
+        const double t = x * hpinv + toint;
+        const double xn = tmpl_Double_Left_Difference(t, toint, 0.0);
+        const double y = tmpl_Double_Left_Difference(x, xn * mp1, xn * mp2);
         const double t1 = xn * pp3;
         const double t2 = y - t1;
         const double t3 = xn * pp4;
         const double b = t2 - t3;
-        const double db = (y - t2) - t1;
+        const double db = tmpl_Double_Left_Difference(y, t2, t1);
         w.r = t;
         *a = b;
-        *da = db + ((t2 - b) - t3);
+        *da = db + tmpl_Double_Left_Difference(t2, b, t3);
         return w.bits.man3 & 3;
     }
 
