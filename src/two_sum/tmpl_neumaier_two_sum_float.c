@@ -135,7 +135,7 @@ tmpl_Float_Neumaier_Two_Sum(const float summand,
                             float * TMPL_RESTRICT const err)
 {
     /*  Variables for the sum and correction term.                            */
-    float add, correction;
+    float add, correction, error;
 
     /*  The normal floating-point sum with whatever rounding mode is used.    */
     add = summand + *sum;
@@ -153,7 +153,7 @@ tmpl_Float_Neumaier_Two_Sum(const float summand,
         TMPL_FLOAT_BARRIER(correction);
 
         /*  Update the error term in the sum.                                 */
-        *err += correction + summand;
+        error = correction + summand;
     }
 
     /*  Otherwise we swap the roles of sum and summand and apply Fast2Sum.    */
@@ -165,10 +165,11 @@ tmpl_Float_Neumaier_Two_Sum(const float summand,
         TMPL_FLOAT_BARRIER(correction);
 
         /*  Update the error term in the sum.                                 */
-        *err += correction + *sum;
+        error = correction + *sum;
     }
 
     /*  The higher order bits are independent of |sum| and |summand|.         */
     *sum = add;
+    *err += error;
 }
 /*  End of tmpl_Float_Neumaier_Two_Sum.                                       */
