@@ -123,9 +123,6 @@
 /*  Only compile this if long long support is available / requested.          */
 #if TMPL_HAS_LONGLONG == 1
 
-/*  TMPL_USE_INLINE macro found here, indicating inline support.              */
-#include <libtmpl/include/tmpl_config.h>
-
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_array_integer.h>
 
