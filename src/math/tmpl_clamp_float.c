@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_clamp_impl_ldouble                           *
+ *                           tmpl_clamp_impl_float                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x) = Min(Max(x, min), max). That is, "clamps" the input.   *
@@ -24,21 +24,21 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Clamp                                                    *
+ *      tmpl_Float_Clamp                                                      *
  *  Purpose:                                                                  *
  *      Clamps a real number to fall between two values.                      *
  *                                                                            *
  *          clamp(x, min, max) = Min(Max(x, min), max)                        *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (const long double):                                                *
+ *      x (const float):                                                      *
  *          A real number.                                                    *
- *      min (const long double):                                              *
+ *      min (const float):                                                    *
  *          The smallest allowed value for x.                                 *
- *      max (const long double):                                              *
+ *      max (const float):                                                    *
  *          The largest allowed value for x.                                  *
  *  Output:                                                                   *
- *      clamp_x (long double):                                                *
+ *      clamp_x (float):                                                      *
  *          The clamped value of x. Lies between min and max.                 *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -52,6 +52,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
+ *  1.) tmpl_config.h:                                                        *
  *          Header file containing the TMPL_INLINE_DECL macro.                *
  *  2.) tmpl_attributes.h:                                                    *
  *          Provides optional C23 attributes for optimization.                *
@@ -59,6 +60,8 @@
  *          Header where the TMPL_MAX macro is defined.                       *
  *  4.) tmpl_min.h:                                                           *
  *          Header where the TMPL_MIN macro is defined.                       *
+ *  5.) tmpl_math.h:                                                          *
+ *          Location of the function prototype / forward declaration.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -68,13 +71,11 @@
  *  2026/06/10: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
  *      Changed implementation to use the TMPL_MIN and TMPL_MAX macros.       *
+ *  2026/07/13: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE macro.*
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_MATH_CLAMP_IMPL_LDOUBLE_H
-#define TMPL_INLINE_MATH_CLAMP_IMPL_LDOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
@@ -84,20 +85,18 @@
 #include <libtmpl/include/helper/tmpl_max.h>
 #include <libtmpl/include/helper/tmpl_min.h>
 
-/*  Long double precision clamp function.                                     */
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Single precision clamp function.                                          */
 TMPL_CONST_FUNC
-TMPL_INLINE_DECL
-long double
-tmpl_LDouble_Clamp(const long double x,
-                   const long double min,
-                   const long double max)
+TMPL_ALWAYS_INLINE
+float
+tmpl_Float_Clamp(const float x, const float min, const float max)
 TMPL_UNSEQUENCED
 {
     /*  Use the clamp formula directly, compute Min(Max(x, min), max).        */
-    const long double lower_clamp = TMPL_MAX(x, min);
+    const float lower_clamp = TMPL_MAX(x, min);
     return TMPL_MIN(lower_clamp, max);
 }
-/*  End of tmpl_LDouble_Clamp.                                                */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_Float_Clamp.                                                  */

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_clamp_impl_double                           *
+ *                          tmpl_clamp_impl_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x) = Min(Max(x, min), max). That is, "clamps" the input.   *
@@ -24,21 +24,21 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Clamp                                                     *
+ *      tmpl_LDouble_Clamp                                                    *
  *  Purpose:                                                                  *
  *      Clamps a real number to fall between two values.                      *
  *                                                                            *
  *          clamp(x, min, max) = Min(Max(x, min), max)                        *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (const double):                                                     *
+ *      x (const long double):                                                *
  *          A real number.                                                    *
- *      min (const double):                                                   *
+ *      min (const long double):                                              *
  *          The smallest allowed value for x.                                 *
- *      max (const double):                                                   *
+ *      max (const long double):                                              *
  *          The largest allowed value for x.                                  *
  *  Output:                                                                   *
- *      clamp_x (double):                                                     *
+ *      clamp_x (long double):                                                *
  *          The clamped value of x. Lies between min and max.                 *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -59,6 +59,8 @@
  *          Header where the TMPL_MAX macro is defined.                       *
  *  4.) tmpl_min.h:                                                           *
  *          Header where the TMPL_MIN macro is defined.                       *
+ *  5.) tmpl_math.h:                                                          *
+ *          Location of the function prototype / forward declaration.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -68,13 +70,11 @@
  *  2026/06/10: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
  *      Changed implementation to use the TMPL_MIN and TMPL_MAX macros.       *
+ *  2026/07/13: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE macro.*
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_MATH_CLAMP_IMPL_DOUBLE_H
-#define TMPL_INLINE_MATH_CLAMP_IMPL_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
@@ -84,18 +84,20 @@
 #include <libtmpl/include/helper/tmpl_max.h>
 #include <libtmpl/include/helper/tmpl_min.h>
 
-/*  Double precision clamp function.                                          */
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Long double precision clamp function.                                     */
 TMPL_CONST_FUNC
-TMPL_INLINE_DECL
-double
-tmpl_Double_Clamp(const double x, const double min, const double max)
+TMPL_ALWAYS_INLINE
+long double
+tmpl_LDouble_Clamp(const long double x,
+                   const long double min,
+                   const long double max)
 TMPL_UNSEQUENCED
 {
     /*  Use the clamp formula directly, compute Min(Max(x, min), max).        */
-    const double lower_clamp = TMPL_MAX(x, min);
+    const long double lower_clamp = TMPL_MAX(x, min);
     return TMPL_MIN(lower_clamp, max);
 }
-/*  End of tmpl_Double_Clamp.                                                 */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_LDouble_Clamp.                                                */

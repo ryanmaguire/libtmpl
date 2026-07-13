@@ -1844,9 +1844,26 @@ TMPL_UNSEQUENCED;
  *                                                                            *
  *      3.) There are no checks for min < max.                                *
  ******************************************************************************/
-#include <libtmpl/include/clamp/tmpl_clamp_float.h>
-#include <libtmpl/include/clamp/tmpl_clamp_double.h>
-#include <libtmpl/include/clamp/tmpl_clamp_ldouble.h>
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Clamp(const double x,
+                  const double min,
+                  const double max)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Clamp(const float x,
+                 const float min,
+                 const float max)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Clamp(const long double x,
+                   const long double min,
+                   const long double max)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1862,9 +1879,17 @@ TMPL_UNSEQUENCED;
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-#include <libtmpl/include/clamp/tmpl_unit_clamp_float.h>
-#include <libtmpl/include/clamp/tmpl_unit_clamp_double.h>
-#include <libtmpl/include/clamp/tmpl_unit_clamp_ldouble.h>
+TMPL_CONST_FUNC
+extern double tmpl_Double_Unit_Clamp(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float tmpl_Float_Unit_Clamp(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_Unit_Clamp(const long double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
