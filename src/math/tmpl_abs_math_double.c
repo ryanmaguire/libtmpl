@@ -76,7 +76,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
  *  2.) tmpl_ieee754_double.h:                                                *
  *          Header file containing the IEEE data type.                        *
  *  3.) tmpl_attributes.h:                                                    *
