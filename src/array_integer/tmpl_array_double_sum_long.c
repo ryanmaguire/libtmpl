@@ -97,7 +97,7 @@ double tmpl_Long_Array_Double_Sum(const signed long int * const arr, size_t len)
         /*  The higher bits are only non-zero if arr[n] is very large,        *
          *  greater than 2^32. Because of this it is likely that these bits   *
          *  are zero. We can skip the second Neumaier 2Sum in this case.      */
-        if (high_ll != 0LL)
+        if (high_ll != 0L)
         {
             /*  The input is a large number and contains higher-order bits.   *
              *  Cast to double and perform another 2Sum.                      */
