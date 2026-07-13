@@ -46,13 +46,15 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
  *  2.) tmpl_attributes.h:                                                    *
  *          Provides optional C23 attributes for optimization.                *
  *  3.) tmpl_max.h:                                                           *
  *          Header where the TMPL_MAX macro is defined.                       *
  *  4.) tmpl_min.h:                                                           *
  *          Header where the TMPL_MIN macro is defined.                       *
+ *  5.) tmpl_math.h:                                                          *
+ *          Location of the function prototype / forward declaration.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -62,13 +64,11 @@
  *  2026/06/10: Ryan Maguire                                                  *
  *      Added C23 attributes to improve optimization on modern compilers.     *
  *      Changed implementation to use the TMPL_MIN and TMPL_MAX macros.       *
+ *  2026/07/13: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE macro.*
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_MATH_UNIT_CLAMP_IMPL_DOUBLE_H
-#define TMPL_INLINE_MATH_UNIT_CLAMP_IMPL_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
@@ -78,9 +78,12 @@
 #include <libtmpl/include/helper/tmpl_max.h>
 #include <libtmpl/include/helper/tmpl_min.h>
 
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
+
 /*  Double precision unit clamp function.                                     */
 TMPL_CONST_FUNC
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 double tmpl_Double_Unit_Clamp(const double x)
 TMPL_UNSEQUENCED
 {
@@ -89,6 +92,3 @@ TMPL_UNSEQUENCED
     return TMPL_MIN(lower_clamp, 1.0);
 }
 /*  End of tmpl_Double_Unit_Clamp.                                            */
-
-#endif
-/*  End of include guard.                                                     */
