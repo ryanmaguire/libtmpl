@@ -116,6 +116,9 @@
 /*  Function for converting from int to float.                                */
 #include <libtmpl/include/inline/floatint/tmpl_uint64_to_double.h>
 
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
 /*  Lookup table for the exponential function.                                */
 extern const tmpl_UInt64 tmpl_double_exp_table[256];
 
@@ -141,7 +144,10 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
     const double kd = (double)(ki);
 
     /*  Compute x - floor(x)/ln(2).                                           */
-    const double r = (x + kd*minus_ln2_by_128_hi) + kd*minus_ln2_by_128_lo;
+    const double kd_minus_ln2_by_128_hi = kd * minus_ln2_by_128_hi;
+    const double kd_minus_ln2_by_128_lo = kd * minus_ln2_by_128_lo;
+    const double r_hi = tmpl_Double_Guarded_Add(x, kd_minus_ln2_by_128_hi);
+    const double r = tmpl_Double_Guarded_Add(r_hi, kd_minus_ln2_by_128_lo);
 
     /*  Index for the lookup table of pre-computed exponential values.        */
     const tmpl_UInt64 ind = (ki & 0x7F) << 1;
