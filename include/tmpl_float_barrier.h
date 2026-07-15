@@ -248,8 +248,8 @@
     do {                                                                       \
         tmpl_IEEE754_LDouble tmpl_tmp_ld_word;                                 \
         tmpl_tmp_ld_word.r = (x);                                              \
-        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_word.dat[0]);                          \
-        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_word.dat[1]);                          \
+        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_word.d[0]);                            \
+        TMPL_DOUBLE_BARRIER(tmpl_tmp_ld_word.d[1]);                            \
         (x) = tmpl_tmp_ld_word.r;                                              \
     } while (0)
 
