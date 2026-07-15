@@ -239,6 +239,11 @@
 
 /*  Double-double can use the double barriers twice.                          */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+/*  tmptmpl_IEEE754_LDouble type found here.                                  */
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+
+/*  Barrier for the IBM-style 128-bit double-double.                          */
 #define TMPL_LDOUBLE_BARRIER(x)                                                \
     do {                                                                       \
         tmpl_IEEE754_LDouble tmpl_tmp_ld_word;                                 \
