@@ -246,7 +246,7 @@
 
 /*  With little-endian 96-bit long double, the last used bit is the sign bit  *
  *  and the remaining 32 bits are padding bits (junk).                        */
-#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT32_LITERAL(0xFFFE0000)
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT32_LITERAL(0x00007FFF)
 
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
 
@@ -259,7 +259,7 @@
 /*  128-bit little-endian extended-precision long double has 48 bits of       *
  *  padding at the end of the high word. The sign bit is the last used bit,   *
  *  meaning there are 49 zeros total in the mask at the end of the word.      */
-#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT64_LITERAL(0xFFFE000000000000)
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT64_LITERAL(0x0000000000007FFF)
 
 #else
 
