@@ -75,6 +75,31 @@ tmpl_LDouble_Guarded_Add(const long double a, const long double b);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Guarded_Subtract                                          *
+ *  Purpose:                                                                  *
+ *      Computes a - b, guarding this from aggressive compiler optimizations. *
+ *  Arguments:                                                                *
+ *      a (const double):                                                     *
+ *          A real number.                                                    *
+ *      b (const double):                                                     *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      diff (double):                                                        *
+ *          The floating-point difference a - b.                              *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern double
+tmpl_Double_Guarded_Subtract(const double a, const double b);
+
+extern float
+tmpl_Float_Guarded_Subtract(const float a, const float b);
+
+extern long double
+tmpl_LDouble_Guarded_Subtract(const long double a, const long double b);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_High_Split                                                *
  *  Purpose:                                                                  *
  *      Splits a double and retrieves the higher order bits.                  *
