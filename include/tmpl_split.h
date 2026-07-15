@@ -50,6 +50,31 @@ extern long double tmpl_LDouble_Even_High_Split(const long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Guarded_Add                                               *
+ *  Purpose:                                                                  *
+ *      Computes a + b, guarding this from aggressive compiler optimizations. *
+ *  Arguments:                                                                *
+ *      a (const double):                                                     *
+ *          A real number.                                                    *
+ *      b (const double):                                                     *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      sum (double):                                                         *
+ *          The floating-point sum a + b.                                     *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern double
+tmpl_Double_Guarded_Add(const double a, const double b);
+
+extern float
+tmpl_Float_Guarded_Add(const float a, const float b);
+
+extern long double
+tmpl_LDouble_Guarded_Add(const long double a, const long double b);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_High_Split                                                *
  *  Purpose:                                                                  *
  *      Splits a double and retrieves the higher order bits.                  *
