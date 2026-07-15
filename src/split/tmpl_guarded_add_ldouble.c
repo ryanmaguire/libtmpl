@@ -56,10 +56,11 @@
  *          like the one used to compute exp(x).                              *
  *                                                                            *
  *      3.) Non-destructive optimizations will still work with this function. *
- *          For example, on an x86-64 machine with AVX support, this compiles *
- *          to (GCC 16.1, -O3 -ffast-math enabled):                           *
+ *          For example, on x86-64 machine this compiles to (GCC 16.1, -O3):  *
  *                                                                            *
- *              vaddsd xmm0, xmm0, xmm1                                       *
+ *              fld     TBYTE PTR [rsp+8]                                     *
+ *              fld     TBYTE PTR [rsp+24]                                    *
+ *              faddp   st(1), st                                             *
  *              ret                                                           *
  *                                                                            *
  *          This function will also be inlined across translation units when  *

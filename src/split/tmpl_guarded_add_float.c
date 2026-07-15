@@ -59,7 +59,7 @@
  *          For example, on an x86-64 machine with AVX support, this compiles *
  *          to (GCC 16.1, -O3 -ffast-math enabled):                           *
  *                                                                            *
- *              vaddsd xmm0, xmm0, xmm1                                       *
+ *              vaddss xmm0, xmm0, xmm1                                       *
  *              ret                                                           *
  *                                                                            *
  *          This function will also be inlined across translation units when  *
