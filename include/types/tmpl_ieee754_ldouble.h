@@ -594,8 +594,8 @@ typedef union tmpl_IEEE754_LDouble_Type {
     /*  The integer value the 128 bits for the long double represent.         */
 #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
     struct {
-        tmpl_UInt64 lo;
         tmpl_UInt64 hi;
+        tmpl_UInt64 lo;
     } words;
 #endif
 
