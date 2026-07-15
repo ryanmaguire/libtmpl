@@ -122,8 +122,22 @@
  *  change whether a value is zero, so this is ignored.                       */
 #define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT64_LITERAL(0x7FFFFFFFFFFFFFFF)
 
+/*  64-bit double has a single element "n", double-double has two elements.   */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
+
 /*  With 64-bit unsigned integers, we can use a simple bit-mask.              */
 #define TMPL_LDOUBLE_IS_ZERO(w) (((w).n & TMPL_LDOUBLE_IS_ZERO_MASK) == 0)
+
+#else
+/*  Else for #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                    */
+
+/*  Similar bit-mask pattern, we can ignore the low part for double-double.   */
+#define TMPL_LDOUBLE_IS_ZERO(w) (                   \
+    ((w).words.hi & TMPL_LDOUBLE_IS_ZERO_MASK) == 0 \
+)
+
+#endif
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */
 
 #else
 /*  Else for #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                          */
