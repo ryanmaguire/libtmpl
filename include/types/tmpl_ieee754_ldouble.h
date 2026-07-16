@@ -28,6 +28,8 @@
  ******************************************************************************
  *  2025/01/13: Ryan Maguire                                                  *
  *      Moved this typedef to the types directory.                            *
+ *  2026/07/15: Ryan Maguire                                                  *
+ *      Added type punning IS_ZERO macro to avoid floating-point comparisons. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -36,6 +38,9 @@
 
 /*  TMPL_LDOUBLE_ENDIANNESS and TMPL_LDOUBLE_TYPE provided here.              */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  tmpl_UInt64 and tmpl_UInt32 found here, used for type punning.            */
+#include <libtmpl/include/tmpl_inttype.h>
 
 /******************************************************************************
  *                        Long Double Macros and Unions                       *
@@ -106,12 +111,48 @@
 /*  The value 2**52, used to normalize subnormal / denormal values.           */
 #define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
-
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_LDOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for determining if a long double represents + / - 0.                */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+
+/*  Bit-mask for checking if a long double is zero. The sign bit does not     *
+ *  change whether a value is zero, so this is ignored.                       */
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT64_LITERAL(0x7FFFFFFFFFFFFFFF)
+
+/*  64-bit double has a single element "n", double-double has two elements.   */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
+
+/*  With 64-bit unsigned integers, we can use a simple bit-mask.              */
+#define TMPL_LDOUBLE_IS_ZERO(w) (((w).n & TMPL_LDOUBLE_IS_ZERO_MASK) == 0)
+
+#else
+/*  Else for #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                    */
+
+/*  Similar bit-mask pattern, we can ignore the low part for double-double.   */
+#define TMPL_LDOUBLE_IS_ZERO(w) (                   \
+    ((w).words.hi & TMPL_LDOUBLE_IS_ZERO_MASK) == 0 \
+)
+
+#endif
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT.                      */
+
+#else
+/*  Else for #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                          */
+
+/*  Lacking 64-bit fixed-width unsigned integers, check the bit fields.       */
+#define TMPL_LDOUBLE_IS_ZERO(w) (   \
+    ((w).bits.expo == 0x0) &&       \
+    ((w).bits.man0 == 0x0) &&       \
+    ((w).bits.man1 == 0x0) &&       \
+    ((w).bits.man2 == 0x0) &&       \
+    ((w).bits.man3 == 0x0)          \
+)
+
+#endif
+/*  End of #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                            */
 
 /*  Some of the macros for 80-bit extended are the same as 128-bit quadruple. */
 #else
@@ -141,13 +182,40 @@
 /*  The value 2**112, used to normalize subnormal / denormal values.          */
 #define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
 
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_LDOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
   (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
+
+/*  Macro for determining if a long double represents + / - 0.                */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+
+/*  Bit-mask for checking if a long double is zero. The sign bit does not     *
+ *  change whether a value is zero, so this is ignored.                       */
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT64_LITERAL(0x7FFFFFFFFFFFFFFF)
+
+/*  With 64-bit unsigned integers, we can use a simple bit-mask.              */
+#define TMPL_LDOUBLE_IS_ZERO(w) (                                              \
+    (((w).words.hi & TMPL_LDOUBLE_IS_ZERO_MASK) == 0) && ((w).words.lo == 0)   \
+)
+
+#else
+/*  Else for #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                          */
+
+/*  Lacking 64-bit fixed-width unsigned integers, check the bit fields.       */
+#define TMPL_LDOUBLE_IS_ZERO(w) (   \
+    ((w).bits.expo == 0x0) &&       \
+    ((w).bits.man0 == 0x0) &&       \
+    ((w).bits.man1 == 0x0) &&       \
+    ((w).bits.man2 == 0x0) &&       \
+    ((w).bits.man3 == 0x0) &&       \
+    ((w).bits.man4 == 0x0) &&       \
+    ((w).bits.man5 == 0x0) &&       \
+    ((w).bits.man6 == 0x0)          \
+)
+
+#endif
+/*  End of #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                            */
 
 /*  These are the macros for 80-bit extended precision.                       */
 #else
@@ -163,12 +231,66 @@
 /*  The value 2**63, used to normalize subnormal / denormal values.           */
 #define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_LDOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for determining if a long double represents + / - 0.                */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+
+/*  Bit-mask for checking if a long double is zero. The sign bit does not     *
+ *  change whether a value is zero, so this is ignored. Where the sign bit is *
+ *  depends on where the padding is (96-bit struct vs. 128-bit struct) and    *
+ *  the endianness of the object.                                             */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
+
+/*  With little-endian 96-bit long double, the last used bit is the sign bit  *
+ *  and the remaining 32 bits are padding bits (junk).                        */
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT32_LITERAL(0x00007FFF)
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
+
+/*  96-bit big-endian long double has 32 bits of padding as well, but the     *
+ *  leading bit is the sign bit. This shifts the mask.                        */
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT32_LITERAL(0x7FFF0000)
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
+
+/*  128-bit little-endian extended-precision long double has 48 bits of       *
+ *  padding at the end of the high word. The sign bit is the last used bit,   *
+ *  meaning there are 49 zeros total in the mask at the end of the word.      */
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT64_LITERAL(0x0000000000007FFF)
+
+#else
+
+/*  128-bit big-endian extendend-precision long double also has 48 bits of    *
+ *  padding, but places 32 bits of padding at the start and 16 bits of        *
+ *  padding at the end. The sign bit is the leading bit, hence there are 33   *
+ *  leading zeros in the mask and 16 trailing zeros.                          */
+#define TMPL_LDOUBLE_IS_ZERO_MASK TMPL_UINT64_LITERAL(0x000000007FFF0000)
+
+#endif
+/*  End of is-zero mask for extended-precision long double.                   */
+
+/*  With 32-bit and 64-bit unsigned integers, we can use a bit-mask.          */
+#define TMPL_LDOUBLE_IS_ZERO(w) (                                              \
+    (((w).words.hi & TMPL_LDOUBLE_IS_ZERO_MASK) == 0) && ((w).words.lo == 0)   \
+)
+
+#else
+/*  Else for #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                          */
+
+/*  Lacking 64-bit fixed-width unsigned integers, check the bit fields.       */
+#define TMPL_LDOUBLE_IS_ZERO(w) (   \
+    ((w).bits.expo == 0x0) &&       \
+    ((w).bits.man0 == 0x0) &&       \
+    ((w).bits.man1 == 0x0) &&       \
+    ((w).bits.man2 == 0x0) &&       \
+    ((w).bits.man3 == 0x0)          \
+)
+
+#endif
+/*  End of #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                            */
 
 #endif
 /*  End of difference between extended and quadruple precision.               */
@@ -177,6 +299,9 @@
 /*  End of quadruple / extended vs. double / double-double.                   */
 
 /*  All types have these macros in common.                                    */
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == TMPL_LDOUBLE_NANINF_EXP)
 
 /*  Macro for determining if a word is NaN.                                   */
 #define TMPL_LDOUBLE_IS_NOT_A_NUMBER(w) \
@@ -199,7 +324,9 @@
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 
 /*  Same union for 64-bit double, little-endian.                              */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for the individual bits of a 64-bit little-endian word.   */
     struct {
         unsigned int man3 : 16;
         unsigned int man2 : 16;
@@ -208,6 +335,13 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int expo : 11;
         unsigned int sign : 1;
     } bits;
+
+    /*  The integer value the 64-bits for the long double represent.          */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    tmpl_UInt64 n;
+#endif
+
+    /*  The actual floating-point number.                                     */
     long double r;
 } tmpl_IEEE754_LDouble;
 
@@ -215,7 +349,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
 
 /*  Same union for 64-bit double, big-endian.                                 */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for the individual bits of a 64-bit big-endian word.      */
     struct {
         unsigned int sign : 1;
         unsigned int expo : 11;
@@ -224,6 +360,13 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int man2 : 16;
         unsigned int man3 : 16;
     } bits;
+
+    /*  The integer value the 64-bits for the long double represent.          */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    tmpl_UInt64 n;
+#endif
+
+    /*  The actual floating-point number.                                     */
     long double r;
 } tmpl_IEEE754_LDouble;
 
@@ -231,7 +374,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
 
 /*  80-bit extended precision union with 16 bits of padding, 96 bits total.   */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for the individual bits of a 96-bit little-endian word.   */
     struct {
         unsigned int man3 : 16;
         unsigned int man2 : 16;
@@ -242,6 +387,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int sign : 1;
         unsigned int pad0 : 16;
     } bits;
+
+    /*  The integer value the 96-bits for the long double represent.          */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt64 lo;
+        tmpl_UInt32 hi;
+    } words;
+#endif
 
     /*  Long double the above struct represents.                              */
     long double r;
@@ -251,7 +404,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
 
 /*  80-bit extended precision union with 16 bits of padding, 96 bits total.   */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for the individual bits of a 96-bit big-endian word.      */
     struct {
         unsigned int sign : 1;
         unsigned int expo : 15;
@@ -262,6 +417,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int man2 : 16;
         unsigned int man3 : 16;
     } bits;
+
+    /*  The integer value the 96-bits for the long double represent.          */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt32 hi;
+        tmpl_UInt64 lo;
+    } words;
+#endif
 
     /*  Long double the above struct represents.                              */
     long double r;
@@ -275,7 +438,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
  *  the IEEE-754 extended precision 80-bit format with 48 bits of padding     *
  *  to create a single 128-bit object. The padding components are junk        *
  *  and can almost always be ignored.                                         */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for a 128-bit extended-precision little-endian word.      */
     struct {
         unsigned int man3 : 16;
         unsigned int man2 : 16;
@@ -294,6 +459,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int pad0 : 16;
     } bits;
 
+    /*  The integer value the 128 bits for the long double represent.         */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt64 lo;
+        tmpl_UInt64 hi;
+    } words;
+#endif
+
     /*  Long double the above struct represents.                              */
     long double r;
 } tmpl_IEEE754_LDouble;
@@ -302,7 +475,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
 
 /*  80-bit extended precision union with 48 bits of padding, 128 bits total.  */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for a 128-bit extended-precision big-endian word.         */
     struct {
         unsigned int pad0 : 16;
         unsigned int pad1 : 16;
@@ -316,6 +491,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int man3 : 16;
     } bits;
 
+    /*  The integer value the 128 bits for the long double represent.         */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt64 hi;
+        tmpl_UInt64 lo;
+    } words;
+#endif
+
     /*  Long double the above struct represents.                              */
     long double r;
 } tmpl_IEEE754_LDouble;
@@ -324,7 +507,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
 
 /*  128-bit quadruple precision, 15-bit exponent, 112-bit mantissa.           */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for a 128-bit quadruple-precision little-endian word.     */
     struct {
         unsigned int man6 : 16;
         unsigned int man5 : 16;
@@ -336,6 +521,16 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int expo : 15;
         unsigned int sign : 1;
     } bits;
+
+    /*  The integer value the 128 bits for the long double represent.         */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt64 lo;
+        tmpl_UInt64 hi;
+    } words;
+#endif
+
+    /*  The actual floating-point number.                                     */
     long double r;
 } tmpl_IEEE754_LDouble;
 
@@ -343,7 +538,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
 
 /*  128-bit quadruple precision, 15-bit exponent, 112-bit mantissa.           */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for a 128-bit quadruple-precision big-endian word.        */
     struct {
         unsigned int sign : 1;
         unsigned int expo : 15;
@@ -355,6 +552,16 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int man5 : 16;
         unsigned int man6 : 16;
     } bits;
+
+    /*  The integer value the 128 bits for the long double represent.         */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt64 hi;
+        tmpl_UInt64 lo;
+    } words;
+#endif
+
+    /*  The actual floating-point number.                                     */
     long double r;
 } tmpl_IEEE754_LDouble;
 
@@ -362,8 +569,11 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
 
 /*  Double-double representation. Two doubles stacked together.               */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for a 128-bit double-double little-endian word.           */
     struct {
+
         /*  The most significant double.                                      */
         unsigned int man3 : 16;
         unsigned int man2 : 16;
@@ -380,6 +590,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int expol : 11;
         unsigned int signl : 1;
     } bits;
+
+    /*  The integer value the 128 bits for the long double represent.         */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt64 hi;
+        tmpl_UInt64 lo;
+    } words;
+#endif
 
     /*  The two doubles making up r. r = d[0] + d[1].                         */
     double d[2];
@@ -392,8 +610,11 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
 
 /*  Big endian version of double-double. Same as little with order flipped.   */
-typedef union tmpl_IEEE754_LDouble_Def {
+typedef union tmpl_IEEE754_LDouble_Type {
+
+    /*  A bit-field for a 128-bit double-double big-endian word.              */
     struct {
+
         /*  The most significant double.                                      */
         unsigned int sign : 1;
         unsigned int expo : 11;
@@ -410,6 +631,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int man2l : 16;
         unsigned int man3l : 16;
     } bits;
+
+    /*  The integer value the 128 bits for the long double represent.         */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+    struct {
+        tmpl_UInt64 hi;
+        tmpl_UInt64 lo;
+    } words;
+#endif
 
     /*  The two doubles making up r. r = d[0] + d[1].                         */
     double d[2];

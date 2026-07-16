@@ -88,6 +88,9 @@
 /*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
+/*  Splitting functions found here.                                           */
+#include <libtmpl/include/tmpl_split.h>
+
 /*  Coefficients for the Remez polynomial.                                    */
 #define A0 (+1.0000000000000000098676804486032581931971677454305E+00)
 #define A1 (+1.0000000000000000077001514598996570259345221024298E+00)
@@ -117,17 +120,6 @@
 /*  Lookup table for the exponential function.                                */
 extern const tmpl_UInt64 tmpl_double_exp_table[256];
 
-/*
- *  TODO:
- *      Rewrite to work on i386.
- *      Need to declare kd_shift and kd as "volatile" for the shift to work.
- *      Bring back TMPL_VOLATILE so that other architectures are not slowed
- *      down by the unnecessary volatile declaration.
- *
- *      Also, find out why tmpl_Double_Exp_Pos_Kernel does NOT require
- *      volatile. Very strange indeed.
- */
-
 /*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Neg_Kernel(double x)
@@ -144,18 +136,20 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
 
     /*  exp(x) = e^(ln(2) x / ln(2)) = 2^(x / ln(2)). Compute using this.     */
     const double z = rcpr_ln2_times_128 * x;
-
-    const double kd_shift = z + shift;
+    const double kd_shift = tmpl_Double_Guarded_Add(z, shift);
 
     /*  Round the input to an integer.                                        */
     const tmpl_UInt64 ki = tmpl_Double_To_UInt64(kd_shift);
 
     /*  Cast this integer as a double. exp(k + r) = exp(k) * exp(r). We'll    *
      *  be using this in a few lines.                                         */
-    const double kd = kd_shift - shift;
+    const double kd = tmpl_Double_Guarded_Subtract(kd_shift, shift);
 
     /*  Compute x - floor(x)/ln(2).                                           */
-    const double r = (x + kd*minus_ln2_by_128_hi) + kd*minus_ln2_by_128_lo;
+    const double kd_minus_ln2_by_128_hi = kd * minus_ln2_by_128_hi;
+    const double kd_minus_ln2_by_128_lo = kd * minus_ln2_by_128_lo;
+    const double r_hi = tmpl_Double_Guarded_Add(x, kd_minus_ln2_by_128_hi);
+    const double r = tmpl_Double_Guarded_Add(r_hi, kd_minus_ln2_by_128_lo);
 
     /*  Index for the lookup table of pre-computed exponential values.        */
     const tmpl_UInt64 ind = (ki & 0x7F) << 1;
