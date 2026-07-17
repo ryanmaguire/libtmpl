@@ -365,9 +365,6 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const P,
                            const tmpl_ThreeVectorLongDouble * const Q)
 TMPL_UNSEQUENCED;
 
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_3DFloat_L1_Norm                                                  *
