@@ -26,6 +26,7 @@
 #include <libtmpl/include/types/tmpl_point_charge_double.h>
 #include <libtmpl/include/types/tmpl_point_charge_float.h>
 #include <libtmpl/include/types/tmpl_point_charge_ldouble.h>
+#include <stddef.h>
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -57,6 +58,49 @@ TMPL_PURE_FUNC
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Coulomb_Field(const tmpl_ThreeVectorLongDouble * const observer,
                              const tmpl_PointChargeLongDouble * const charge)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DDouble_Net_Coulomb_Field                                       *
+ *  Purpose:                                                                  *
+ *      Computes the static Coulomb field given by many charges.              *
+ *  Arguments:                                                                *
+ *      observer (const tmpl_ThreeVectorDouble * const):                      *
+ *          The location of the observer.                                     *
+ *      charges (const tmpl_ThreeVectorDouble * const):                       *
+ *          The point charges producing the electric field.                   *
+ *      number_of_charges (const size_t):                                     *
+ *          The number of charges pointed to by the "charges" pointer.        *
+ *  Output:                                                                   *
+ *      e_field (tmpl_ThreeVectorDouble):                                     *
+ *          The electric field from the charges at the observer.              *
+ ******************************************************************************/
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Net_Coulomb_Field(
+    const tmpl_ThreeVectorDouble * const observer,
+    const tmpl_PointChargeDouble * const charges,
+    const size_t number_of_charges
+)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Net_Coulomb_Field(
+    const tmpl_ThreeVectorFloat * const observer,
+    const tmpl_PointChargeFloat * const charges,
+    const size_t number_of_charges
+)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Net_Coulomb_Field(
+    const tmpl_ThreeVectorLongDouble * const observer,
+    const tmpl_PointChargeLongDouble * const charges,
+    const size_t number_of_charges
+)
 TMPL_UNSEQUENCED;
 
 #endif
