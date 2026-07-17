@@ -793,6 +793,44 @@ extern void tmpl_3DLDouble_NegateSelf(tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DDouble_Neumaier_Two_Sum                                        *
+ *  Purpose:                                                                  *
+ *      Computes Neumaier addition with floating-point correction error.      *
+ *  Arguments:                                                                *
+ *      summand (const tmpl_ThreeVectorDouble * const):                       *
+ *          A three dimensional vector.                                       *
+ *      sum (tmpl_ThreeVectorDouble * TMPL_RESTRICT const):                   *
+ *          The current sum. The higher-order component of the sum will be    *
+ *          stored here.                                                      *
+ *      err (tmpl_ThreeVectorDouble * TMPL_RESTRICT const):                   *
+ *          The error term in the summation. The updated error in the sum     *
+ *          will be stored here.                                              *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_3DDouble_Neumaier_Two_Sum(
+    const tmpl_ThreeVectorDouble * const summand,
+    tmpl_ThreeVectorDouble * TMPL_RESTRICT const sum,
+    tmpl_ThreeVectorDouble * TMPL_RESTRICT const err
+);
+
+extern void
+tmpl_3DFloat_Neumaier_Two_Sum(
+    const tmpl_ThreeVectorFloat * const summand,
+    tmpl_ThreeVectorFloat * TMPL_RESTRICT const sum,
+    tmpl_ThreeVectorFloat * TMPL_RESTRICT const err
+);
+
+extern void
+tmpl_3DLDouble_Neumaier_Two_Sum(
+    const tmpl_ThreeVectorLongDouble * const summand,
+    tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const sum,
+    tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const err
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Normalize                                                *
  *  Purpose:                                                                  *
  *      Computes the unit normal of a given non-zero vector at single         *
