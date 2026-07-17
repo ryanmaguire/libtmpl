@@ -59,10 +59,12 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_attributes.h:                                                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
  *          Provides C23 attributes for optimization.                         *
- *  2.) tmpl_vec3_float.h:                                                    *
- *          The tmpl_ThreeVectorFloat typedef is provided here.               *
+ *  3.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorFloat and function prototype provided here.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -79,19 +81,18 @@
  *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Three-vector typedef provided here.                                       */
-#include <libtmpl/include/types/tmpl_vec3_float.h>
-
-/*  Function prototype / forward declaration.                                 */
-extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const p,
-                           const tmpl_ThreeVectorFloat * const q);
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing the cross product at single precision.             */
 TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
 tmpl_ThreeVectorFloat
 tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const p,
                            const tmpl_ThreeVectorFloat * const q)

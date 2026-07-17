@@ -59,10 +59,12 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_attributes.h:                                                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
  *          Provides C23 attributes for optimization.                         *
- *  2.) tmpl_vec3_ldouble.h:                                                  *
- *          The tmpl_ThreeVectorLongDouble typedef is provided here.          *
+ *  3.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -79,19 +81,18 @@
  *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Three-vector typedef provided here.                                       */
-#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
-/*  Function prototype / forward declaration.                                 */
-extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble * const p,
-                             const tmpl_ThreeVectorLongDouble * const q);
-
-/*  Function for computing the cross product at long double precision.        */
+/*  Function for computing the cross product at double precision.             */
 TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
 tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble * const p,
                              const tmpl_ThreeVectorLongDouble * const q)
