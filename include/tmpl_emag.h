@@ -105,23 +105,23 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DDouble_Bar_Magnet_Field                                        *
+ *      tmpl_3DDouble_Magnetic_Dipole_Field                                   *
  *  Purpose:                                                                  *
  *      Computes the magnetic field from a dipole magnetic moment.            *
  *  Arguments:                                                                *
  *      observer (const tmpl_ThreeVectorDouble * const):                      *
  *          The location of the observer.                                     *
  *      position (const tmpl_ThreeVectorDouble * const):                      *
- *          The position vector for the center of the bar magnet.             *
+ *          The position vector for the center of the dipole.                 *
  *      moment (const tmpl_ThreeVectorDouble * const):                        *
  *          The magnetic moment.                                              *
  *  Output:                                                                   *
  *      b_field (tmpl_ThreeVectorDouble):                                     *
- *          The magnetic field from the bar magnet.                           *
+ *          The magnetic field from the dipole.                               *
  ******************************************************************************/
 TMPL_PURE_FUNC
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Bar_Magnet_Field(
+tmpl_3DDouble_Magnetic_Dipole_Field(
     const tmpl_ThreeVectorDouble * const observer,
     const tmpl_ThreeVectorDouble * const position,
     const tmpl_ThreeVectorDouble * const moment
@@ -130,7 +130,7 @@ TMPL_UNSEQUENCED;
 
 TMPL_PURE_FUNC
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Bar_Magnet_Field(
+tmpl_3DFloat_Magnetic_Dipole_Field(
     const tmpl_ThreeVectorFloat * const observer,
     const tmpl_ThreeVectorFloat * const position,
     const tmpl_ThreeVectorFloat * const moment
@@ -139,7 +139,7 @@ TMPL_UNSEQUENCED;
 
 TMPL_PURE_FUNC
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Bar_Magnet_Field(
+tmpl_3DLDouble_Magnetic_Dipole_Field(
     const tmpl_ThreeVectorLongDouble * const observer,
     const tmpl_ThreeVectorLongDouble * const position,
     const tmpl_ThreeVectorLongDouble * const moment

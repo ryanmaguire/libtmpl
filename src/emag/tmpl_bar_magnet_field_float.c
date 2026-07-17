@@ -29,10 +29,10 @@
 /*  Permeability of vacuum in SI units given here.                            */
 #include <libtmpl/include/constants/tmpl_emag_constants.h>
 
-/*  Function for computing the magnetic field from a bar magnet.              */
+/*  Function for computing the magnetic field from a magnetic dipole.         */
 TMPL_PURE_FUNC
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Bar_Magnet_Field(
+tmpl_3DFloat_Magnetic_Dipole_Field(
     const tmpl_ThreeVectorFloat * const observer,
     const tmpl_ThreeVectorFloat * const position,
     const tmpl_ThreeVectorFloat * const moment
@@ -46,11 +46,10 @@ TMPL_UNSEQUENCED
     /*  Variables for computing the scale factors for the magnetic field.     */
     float dist, dist_cubed, m_dot_r, scale;
 
-    /*  The magnetic field points away from the bar magnet. The relative      *
-     *  position vector is the observer minus the position for the dipole.    */
+    /*  The dipole field is computed from the relative position vector.       */
     vec = tmpl_3DFloat_Subtract(observer, position);
 
-    /*  The magnetic field from a bar magnet has a 1 / r^3 law.               */
+    /*  The magnetic field from a dipole has a 1 / r^3 law.                   */
     dist = tmpl_3DFloat_L2_Norm(&vec);
     dist_cubed = dist * dist * dist;
 
@@ -75,4 +74,4 @@ TMPL_UNSEQUENCED
      *  factor mu_0 / (4 pi r^3). Compute this and return.                    */
     return tmpl_3DFloat_Scale(scale, &vec);
 }
-/*  End of tmpl_3DFloat_Bar_Magnet_Field.                                     */
+/*  End of tmpl_3DFloat_Magnetic_Dipole_Field.                                */
