@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Computes the dot product of two vectors at double precision.          *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorDouble * const):                             *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorDouble * const):                             *
+ *      q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      dot (double):                                                         *
@@ -38,19 +38,24 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the dot product. If P = (Px, Py, Pz) and        *
- *      Q = (Qx, Qy, Qz), then the dot product is:                            *
- *          dot = PxQx + PyQy + PzQz                                          *
+ *      Use the definition of the dot product. If p = (px, py, pz) and        *
+ *      q = (qx, qy, qz), then the dot product is                             *
+ *                                                                            *
+ *          p . q = px * qx + py * qy + pz * qz                               *
+ *                                                                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for NULL pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_double.h:                                                   *
- *          The tmpl_ThreeVectorDouble typedef is provided here.              *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  3.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -63,23 +68,26 @@
  *      Changed function to pass by reference instead of by value.            *
  *  2024/06/07: Ryan Maguire                                                  *
  *      Inlined the function.                                                 *
+ *  2026/07/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_DOT_PRODUCT_DOUBLE_H
-#define TMPL_VEC3_DOT_PRODUCT_DOUBLE_H
-
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_double.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing the dot product of 2 three-vectors.                */
-TMPL_INLINE_DECL
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
 double
 tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble * const p,
                           const tmpl_ThreeVectorDouble * const q)
+TMPL_UNSEQUENCED
 {
     /*  Use the Euclidean dot product formula and return.                     */
     return p->dat[0] * q->dat[0] +
@@ -87,6 +95,3 @@ tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble * const p,
            p->dat[2] * q->dat[2];
 }
 /*  End of tmpl_3DDouble_Dot_Product.                                         */
-
-#endif
-/*  End of include guard.                                                     */

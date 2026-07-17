@@ -335,50 +335,35 @@ tmpl_3DLDouble_DivideBy(tmpl_ThreeVectorLongDouble * const target,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Dot_Product                                              *
+ *      tmpl_3DDouble_Dot_Product                                             *
  *  Purpose:                                                                  *
- *      Computes the Euclidean dot product of two vector in R^3 at single     *
- *      precision. Similar functions are provided for double and long double. *
+ *      Computes the Euclidean dot product of two vector in R^3.              *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      P (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      Q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      dot (float):                                                          *
- *          The dot product of P and Q, P . Q.                                *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_dot_product_no_inline_float.c                           *
- *          tmpl_vec3_dot_product_no_inline_double.c                          *
- *          tmpl_vec3_dot_product_no_inline_ldouble.c                         *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_dot_product_float.h                                     *
- *          tmpl_vec3_dot_product_double.h                                    *
- *          tmpl_vec3_dot_product_ldouble.h                                   *
+ *      dot (double):                                                         *
+ *          The dot product of p and q, p . q.                                *
  ******************************************************************************/
-
-/*  The dot product is a one-line. Definitely worth inlining.                 */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_dot_product_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_dot_product_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_dot_product_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-extern float
-tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat * const P,
-                         const tmpl_ThreeVectorFloat * const Q);
-
+TMPL_PURE_FUNC
 extern double
 tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble * const P,
-                          const tmpl_ThreeVectorDouble * const Q);
+                          const tmpl_ThreeVectorDouble * const Q)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
+extern float
+tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat * const P,
+                         const tmpl_ThreeVectorFloat * const Q)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern long double
 tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const P,
-                           const tmpl_ThreeVectorLongDouble * const Q);
+                           const tmpl_ThreeVectorLongDouble * const Q)
+TMPL_UNSEQUENCED;
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

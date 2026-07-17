@@ -16,41 +16,46 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_vec3_dot_product_float                         *
+ *                        tmpl_vec3_dot_product_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for the Euclidean dot product at single precision.      *
+ *      Contains code for the Euclidean dot product at long double precision. *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_Dot_Product                                              *
+ *      tmpl_3DLDouble_Dot_Product                                            *
  *  Purpose:                                                                  *
- *      Computes the dot product of two vectors at single precision.          *
+ *      Computes the dot product of two vectors at long double precision.     *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorLongDouble * const):                         *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorLongDouble * const):                         *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
- *      dot (float):                                                          *
+ *      dot (long double):                                                    *
  *          The dot product P . Q.                                            *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the dot product. If P = (Px, Py, Pz) and        *
- *      Q = (Qx, Qy, Qz), then the dot product is:                            *
- *          dot = PxQx + PyQy + PzQz                                          *
+ *      Use the definition of the dot product. If p = (px, py, pz) and        *
+ *      q = (qx, qy, qz), then the dot product is                             *
+ *                                                                            *
+ *          p . q = px * qx + py * qy + pz * qz                               *
+ *                                                                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for NULL pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_float.h:                                                    *
- *          The tmpl_ThreeVectorFloat typedef is provided here.               *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  3.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorLongDouble and function prototype provided here.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -63,30 +68,30 @@
  *      Changed function to pass by reference instead of by value.            *
  *  2024/06/07: Ryan Maguire                                                  *
  *      Inlined the function.                                                 *
+ *  2026/07/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_DOT_PRODUCT_FLOAT_H
-#define TMPL_VEC3_DOT_PRODUCT_FLOAT_H
-
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_float.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing the dot product of 2 three-vectors.                */
-TMPL_INLINE_DECL
-float
-tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat * const p,
-                         const tmpl_ThreeVectorFloat * const q)
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+long double
+tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const p,
+                           const tmpl_ThreeVectorLongDouble * const q)
+TMPL_UNSEQUENCED
 {
     /*  Use the Euclidean dot product formula and return.                     */
     return p->dat[0] * q->dat[0] +
            p->dat[1] * q->dat[1] +
            p->dat[2] * q->dat[2];
 }
-/*  End of tmpl_3DFloat_Dot_Product.                                          */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_3DLDouble_Dot_Product.                                        */
