@@ -238,18 +238,6 @@ TMPL_UNSEQUENCED;
  *          tmpl_vec3_cross_with_double.h                                     *
  *          tmpl_vec3_cross_with_ldouble.h                                    *
  ******************************************************************************/
-
-/*  This function is only a few lines. We can inline it.                      */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_with_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_with_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_with_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
 extern void
 tmpl_3DFloat_CrossWith(tmpl_ThreeVectorFloat * const target,
                        const tmpl_ThreeVectorFloat * const source);
@@ -262,59 +250,37 @@ extern void
 tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble * const target,
                          const tmpl_ThreeVectorLongDouble * const source);
 
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Dist                                                     *
+ *      tmpl_3DDouble_Dist                                                    *
  *  Purpose:                                                                  *
  *      Computes the Euclidean distance between two points.                   *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A three dimensional vector.                                       *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another three dimensional vector.                                 *
  *  Output:                                                                   *
- *      dist (float):                                                         *
- *          The distance between P and Q.                                     *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_dist_no_inline_float.c                                  *
- *          tmpl_vec3_dist_no_inline_double.c                                 *
- *          tmpl_vec3_dist_no_inline_ldouble.c                                *
- *      libtmpl/src/include/                                                  *
- *          tmpl_vec3_dist_float.h                                            *
- *          tmpl_vec3_dist_double.h                                           *
- *          tmpl_vec3_dist_ldouble.h                                          *
+ *      dist (double):                                                        *
+ *          The distance between p and q.                                     *
  ******************************************************************************/
-
-/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_dist_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_dist_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_dist_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/vec3.                     */
-extern float
-tmpl_3DFloat_Dist(const tmpl_ThreeVectorFloat * const P,
-                  const tmpl_ThreeVectorFloat * const Q);
-
+TMPL_PURE_FUNC
 extern double
-tmpl_3DDouble_Dist(const tmpl_ThreeVectorDouble * const P,
-                   const tmpl_ThreeVectorDouble * const Q);
+tmpl_3DDouble_Dist(const tmpl_ThreeVectorDouble * const p,
+                   const tmpl_ThreeVectorDouble * const q)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
+extern float
+tmpl_3DFloat_Dist(const tmpl_ThreeVectorFloat * const p,
+                  const tmpl_ThreeVectorFloat * const q)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern long double
-tmpl_3DLDouble_Dist(const tmpl_ThreeVectorLongDouble * const P,
-                    const tmpl_ThreeVectorLongDouble * const Q);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_Dist(const tmpl_ThreeVectorLongDouble * const p,
+                    const tmpl_ThreeVectorLongDouble * const q)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

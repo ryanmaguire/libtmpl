@@ -28,64 +28,70 @@
  *  Purpose:                                                                  *
  *      Computes the distance between two points in space.                    *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorLongDouble * const):                         *
+ *      p (const tmpl_ThreeVectorLongDouble * const):                         *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorLongDouble * const):                         *
+ *      q (const tmpl_ThreeVectorLongDouble * const):                         *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      dist (long double):                                                   *
- *          The distance between P and Q.                                     *
+ *          The distance between p and q.                                     *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_LDouble_Hypot3:                                              *
  *              Computes the magnitude of (x, y, z).                          *
  *  Method:                                                                   *
- *      Compute the L2 norm of P - Q and return.                              *
+ *      Compute the L2 norm of p - q and return.                              *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_ldouble.h:                                                  *
- *          Header containing ThreeVector typedef.                            *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
  *  3.) tmpl_math.h:                                                          *
  *          Header file providing the Hypot3 function.                        *
+ *  4.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorLongDouble and function prototype provided here.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 12, 2024                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/07/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_DIST_LDOUBLE_H
-#define TMPL_VEC3_DIST_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Hypot3 function found here.                                               */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Computes the Euclidean distance between two points.                       */
-TMPL_INLINE_DECL
-long double
-tmpl_3DLDouble_Dist(const tmpl_ThreeVectorLongDouble * const P,
-                    const tmpl_ThreeVectorLongDouble * const Q)
-{
-    /*  Compute the components of P - Q.                                      */
-    const long double dx = P->dat[0] - Q->dat[0];
-    const long double dy = P->dat[1] - Q->dat[1];
-    const long double dz = P->dat[2] - Q->dat[2];
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
-    /*  The Euclidean distance is the norm of P - Q. Return this.             */
+/*  Computes the Euclidean distance between two points.                       */
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+long double
+tmpl_3DLDouble_Dist(const tmpl_ThreeVectorLongDouble * const p,
+                    const tmpl_ThreeVectorLongDouble * const q)
+TMPL_UNSEQUENCED
+{
+    /*  Compute the components of p - q.                                      */
+    const long double dx = p->dat[0] - q->dat[0];
+    const long double dy = p->dat[1] - q->dat[1];
+    const long double dz = p->dat[2] - q->dat[2];
+
+    /*  The Euclidean distance is the norm of p - q. Return this.             */
     return tmpl_LDouble_Hypot3(dx, dy, dz);
 }
 /*  End of tmpl_3DLDouble_Dist.                                               */
-
-#endif
-/*  End of include guard.                                                     */

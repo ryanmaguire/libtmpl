@@ -59,26 +59,27 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_double.h:                                                   *
- *          The tmpl_ThreeVectorDouble typedef is provided here.              *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 18, 2022                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/07/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions.                                *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_CROSS_WITH_DOUBLE_H
-#define TMPL_VEC3_CROSS_WITH_DOUBLE_H
-
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_double.h>
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing the cross product of vectors at double precision.  */
-TMPL_INLINE_DECL
+TMPL_ALWAYS_INLINE
 void
 tmpl_3DDouble_CrossWith(tmpl_ThreeVectorDouble * const target,
                         const tmpl_ThreeVectorDouble * const source)
@@ -87,12 +88,9 @@ tmpl_3DDouble_CrossWith(tmpl_ThreeVectorDouble * const target,
     const double x = target->dat[0];
     const double y = target->dat[1];
 
-    /*  Compute the components of the cross product PxQ.                      */
-    target->dat[0] = y*source->dat[2] - target->dat[2]*source->dat[1];
-    target->dat[1] = target->dat[2]*source->dat[0] - x*source->dat[2];
-    target->dat[2] = x*source->dat[1] - y*source->dat[0];
+    /*  Compute the components of the cross product target x source.          */
+    target->dat[0] = y * source->dat[2] - target->dat[2] * source->dat[1];
+    target->dat[1] = target->dat[2] * source->dat[0] - x * source->dat[2];
+    target->dat[2] = x * source->dat[1] - y * source->dat[0];
 }
 /*  End of tmpl_3DDouble_CrossWith.                                           */
-
-#endif
-/*  End of include guard.                                                     */
