@@ -36,7 +36,7 @@
  *  Arguments:                                                                *
  *      observer (const tmpl_ThreeVectorDouble * const):                      *
  *          The location of the observer.                                     *
- *      charge (const tmpl_ThreeVectorDouble * const):                        *
+ *      charge (const tmpl_PointChargeDouble * const):                        *
  *          The point charge producing the electric field.                    *
  *  Output:                                                                   *
  *      e_field (tmpl_ThreeVectorDouble):                                     *
@@ -68,7 +68,7 @@ TMPL_UNSEQUENCED;
  *  Arguments:                                                                *
  *      observer (const tmpl_ThreeVectorDouble * const):                      *
  *          The location of the observer.                                     *
- *      charges (const tmpl_ThreeVectorDouble * const):                       *
+ *      charges (const tmpl_PointChargeDouble * const):                       *
  *          The point charges producing the electric field.                   *
  *      number_of_charges (const size_t):                                     *
  *          The number of charges pointed to by the "charges" pointer.        *
@@ -102,5 +102,49 @@ tmpl_3DLDouble_Net_Coulomb_Field(
     const size_t number_of_charges
 )
 TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DDouble_Bar_Magnet_Field                                        *
+ *  Purpose:                                                                  *
+ *      Computes the magnetic field from a dipole magnetic moment.            *
+ *  Arguments:                                                                *
+ *      observer (const tmpl_ThreeVectorDouble * const):                      *
+ *          The location of the observer.                                     *
+ *      position (const tmpl_ThreeVectorDouble * const):                      *
+ *          The position vector for the center of the bar magnet.             *
+ *      moment (const tmpl_ThreeVectorDouble * const):                        *
+ *          The magnetic moment.                                              *
+ *  Output:                                                                   *
+ *      b_field (tmpl_ThreeVectorDouble):                                     *
+ *          The magnetic field from the bar magnet.                           *
+ ******************************************************************************/
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Bar_Magnet_Field(
+    const tmpl_ThreeVectorDouble * const observer,
+    const tmpl_ThreeVectorDouble * const position,
+    const tmpl_ThreeVectorDouble * const moment
+)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Bar_Magnet_Field(
+    const tmpl_ThreeVectorFloat * const observer,
+    const tmpl_ThreeVectorFloat * const position,
+    const tmpl_ThreeVectorFloat * const moment
+)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Bar_Magnet_Field(
+    const tmpl_ThreeVectorLongDouble * const observer,
+    const tmpl_ThreeVectorLongDouble * const position,
+    const tmpl_ThreeVectorLongDouble * const moment
+)
+TMPL_UNSEQUENCED;
+
 
 #endif
