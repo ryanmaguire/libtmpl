@@ -284,104 +284,54 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Divide                                                   *
+ *      tmpl_3DDouble_Divide                                                  *
  *  Purpose:                                                                  *
  *      Computes the Hadamard (component-wise) division of two vectors in R^3.*
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      quot (tmpl_ThreeVectorFloat):                                         *
- *          The Hadamard quotient of P and Q.                                 *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_divide_no_inline_float.c                                *
- *          tmpl_vec3_divide_no_inline_double.c                               *
- *          tmpl_vec3_divide_no_inline_ldouble.c                              *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_divide_float.h                                          *
- *          tmpl_vec3_divide_double.h                                         *
- *          tmpl_vec3_divide_ldouble.h                                        *
+ *      quot (tmpl_ThreeVectorDouble):                                        *
+ *          The Hadamard quotient of p and q.                                 *
  ******************************************************************************/
-
-/*  Arithmetic functions are very small and can be inlined.                   */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, use the versions found in src/vec3/.                           */
-extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Divide(const tmpl_ThreeVectorFloat * const P,
-                    const tmpl_ThreeVectorFloat * const Q);
-
 extern tmpl_ThreeVectorDouble
 tmpl_3DDouble_Divide(const tmpl_ThreeVectorDouble * const P,
                      const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Divide(const tmpl_ThreeVectorFloat * const P,
+                    const tmpl_ThreeVectorFloat * const Q);
 
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Divide(const tmpl_ThreeVectorLongDouble * const P,
                       const tmpl_ThreeVectorLongDouble * const Q);
 
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_DivideBy                                                 *
+ *      tmpl_3DDouble_DivideBy                                                *
  *  Purpose:                                                                  *
  *      Computes the Hadamard (component-wise) division of two vectors in R^3.*
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat * const):                               *
+ *      target (tmpl_ThreeVectorDouble * const):                              *
  *          A pointer to a vector. The quotient is stored here.               *
- *      source (const tmpl_ThreeVectorFloat * const):                         *
+ *      source (const tmpl_ThreeVectorDouble * const):                        *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_divide_by_no_inline_float.c                             *
- *          tmpl_vec3_divide_by_no_inline_double.c                            *
- *          tmpl_vec3_divide_by_no_inline_ldouble.c                           *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_divide_by_float.h                                       *
- *          tmpl_vec3_divide_by_double.h                                      *
- *          tmpl_vec3_divide_by_ldouble.h                                     *
  ******************************************************************************/
-
-/*  Arithmetic functions are very small and can be inlined.                   */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_by_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_by_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_by_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, use the versions found in src/vec3/.                           */
-extern void
-tmpl_3DFloat_DivideBy(tmpl_ThreeVectorFloat * const target,
-                      const tmpl_ThreeVectorFloat * const source);
-
 extern void
 tmpl_3DDouble_DivideBy(tmpl_ThreeVectorDouble * const target,
                        const tmpl_ThreeVectorDouble * const source);
 
 extern void
+tmpl_3DFloat_DivideBy(tmpl_ThreeVectorFloat * const target,
+                      const tmpl_ThreeVectorFloat * const source);
+
+extern void
 tmpl_3DLDouble_DivideBy(tmpl_ThreeVectorLongDouble * const target,
                         const tmpl_ThreeVectorLongDouble * const source);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

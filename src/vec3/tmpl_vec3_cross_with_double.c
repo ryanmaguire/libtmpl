@@ -44,17 +44,25 @@
  *          y = PzQx - PxQz                                                   *
  *          z = PxQy - PyQx                                                   *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
+ *      1.) No checks for Infs or NaNs are performed.                         *
  *                                                                            *
- *      The cross product is not commutative, but anti-commutative. That is,  *
- *      PxQ = -QxP. The order of P and Q matters for this function.           *
+ *      2.) The cross product is not commutative, but anti-commutative. That  *
+ *          is, p x q = -q x p. The order of p and q matters.                 *
  *                                                                            *
- *      If tmpl_3DDouble_Cross_Product is the equivalent of the "x" operator  *
- *      for the tmpl_ThreeVectorDouble struct, this is the equivalent of "x=".*
- *      It is about 2-3x faster to do tmpl_3DDouble_CrossWith(&P, &Q) instead *
- *      of doing P = tmpl_3DDouble_Cross_Product(&P, &Q).                     *
+ *      3.) If tmpl_3DDouble_Cross_Product is the equivalent of the "x"       *
+ *          operator for the tmpl_ThreeVectorDouble struct, this is the       *
+ *          equivalent of "x=". It is about 2-3x faster to do                 *
  *                                                                            *
- *      No checks for NULL pointers are performed.                            *
+ *              tmpl_3DDouble_CrossWith(&p, &q);                              *
+ *                                                                            *
+ *          instead of doing                                                  *
+ *                                                                            *
+ *              p = tmpl_3DDouble_Cross_Product(&q, &q);                      *
+ *                                                                            *
+ *          When ALWAYS_INLINE is used and link-time optimization is enabled, *
+ *          the performance difference between the two methods is smaller.    *
+ *                                                                            *
+ *      4.) No checks for NULL pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

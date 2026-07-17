@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_vec3_divide_double                          *
+ *                         tmpl_vec3_divide_by_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for performing the Hadamard quotient.                   *
@@ -24,66 +24,62 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DDouble_Divide                                                  *
+ *      tmpl_3DDouble_DivideBy                                                *
  *  Purpose:                                                                  *
- *      Computes the Hadamard quotient of two vectors at double precision.    *
+ *      Computes the Hadamard quotient of at double precision.                *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorDouble * const):                             *
- *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorDouble * const):                             *
+ *      target (tmpl_ThreeVectorDouble * const):                              *
+ *          A pointer to a vector in R^3. The quotient will be stored here.   *
+ *      source (const tmpl_ThreeVectorDouble * const):                        *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
- *      quot (tmpl_ThreeVectorDouble):                                        *
- *          The Hadamard quotient of P and Q.                                 *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of Hadamard quotient. If P = (Px, Py, Pz) and      *
- *      Q = (Qx, Qy, Qz), then the quotient has coordinates:                  *
- *          x = Px / Qx                                                       *
- *          y = Py / Qy                                                       *
- *          z = Pz / Qz                                                       *
+ *      Use the definition of Hadamard division. If p = (px, py, pz) and      *
+ *      q = (qx, qy, qz), then the quotient has coordinates:                  *
+ *                                                                            *
+ *          x = px / qx                                                       *
+ *          y = py / qy                                                       *
+ *          z = pz / qz                                                       *
+ *                                                                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_double.h:                                                   *
- *          The tmpl_ThreeVectorDouble typedef is provided here.              *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 13, 2024                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/07/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_DIVIDE_DOUBLE_H
-#define TMPL_VEC3_DIVIDE_DOUBLE_H
-
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_double.h>
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for performing the Hadamard quotient in R^3.                     */
-TMPL_INLINE_DECL
-tmpl_ThreeVectorDouble
-tmpl_3DDouble_Divide(const tmpl_ThreeVectorDouble * const P,
-                     const tmpl_ThreeVectorDouble * const Q)
+TMPL_ALWAYS_INLINE
+void
+tmpl_3DDouble_DivideBy(tmpl_ThreeVectorDouble * const target,
+                       const tmpl_ThreeVectorDouble * const source)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVectorDouble quot;
-
-    /*  The Hadamard quotient divides the components.                         */
-    quot.dat[0] = P->dat[0] / Q->dat[0];
-    quot.dat[1] = P->dat[1] / Q->dat[1];
-    quot.dat[2] = P->dat[2] / Q->dat[2];
-    return quot;
+    /*  The Hadamard quotient is performed component-wise.                    */
+    target->dat[0] /= source->dat[0];
+    target->dat[1] /= source->dat[1];
+    target->dat[2] /= source->dat[2];
 }
-/*  End of tmpl_3DDouble_Divide.                                              */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_3DDouble_DivideBy.                                            */
