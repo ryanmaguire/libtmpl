@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_vec3_l2_norm_ldouble                         *
+ *                         tmpl_vec3_l2_norm_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for the Euclidean norm at long double precision.        *
@@ -28,29 +28,32 @@
  *  Purpose:                                                                  *
  *      Computes the Euclidean norm, also called the L2 norm, of the input.   *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorLongDouble * const):                         *
+ *      p (const tmpl_ThreeVectorLongDouble * const):                         *
  *          A pointer to a vector in R^3.                                     *
  *  Output:                                                                   *
  *      norm (long double):                                                   *
- *          The Euclidean norm of P.                                          *
+ *          The Euclidean norm of p.                                          *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_LDouble_Hypot3:                                              *
  *              Computes the magnitude of (x, y, z).                          *
  *  Method:                                                                   *
  *      Pass the components to the Hypot3 function.                           *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_ldouble.h:                                                  *
- *          Header containing ThreeVector typedef.                            *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
  *  3.) tmpl_math.h:                                                          *
- *          Header file providing the Hypot3 function.                        *
+ *          Header file providing the hypot3 function.                        *
+ *  4.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorLongDouble and function prototype provided here.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -64,28 +67,28 @@
  *  2024/06/10: Ryan Maguire                                                  *
  *      Migrated the bulk of the code to src/math into the Hypot3 function.   *
  *      Inlined the routine.                                                  *
+ *  2026/07/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_L2_NORM_LDOUBLE_H
-#define TMPL_VEC3_L2_NORM_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL found here.                                              */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Hypot3 function found here.                                               */
+/*  Hypot3 function given here.                                               */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Computes the L2 norm of a 3D vector.                                      */
-TMPL_INLINE_DECL
-long double tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble * const P)
+/*  Three-vector typedef and function prototype provided here.                */
+#include <libtmpl/include/tmpl_vec3.h>
+
+/*  Function for computing the L2 norm of a vector at long double precision.  */
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+long double tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble * const p)
+TMPL_UNSEQUENCED
 {
-    return tmpl_LDouble_Hypot3(P->dat[0], P->dat[1], P->dat[2]);
+    return tmpl_LDouble_Hypot3(p->dat[0], p->dat[1], p->dat[2]);
 }
 /*  End of tmpl_3DLDouble_L2_Norm.                                            */
-
-#endif
-/*  End of include guard.                                                     */

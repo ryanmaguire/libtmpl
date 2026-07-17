@@ -367,95 +367,69 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_L1_Norm                                                  *
+ *      tmpl_3DDouble_L1_Norm                                                 *
  *  Purpose:                                                                  *
- *      Computes the L1 norm of a vector in R^3 at single precision. This is  *
- *      defined as follows. If P = (x, y, z), we have:                        *
- *          ||P||_1 = |x| + |y| + |z|                                         *
- *      Functions for double and long double precision are also provided.     *
+ *      Computes the L1 norm of a vector in R^3 at double precision. This is  *
+ *      defined as follows. If p = (x, y, z), then we have:                   *
+ *                                                                            *
+ *          || p ||  = |x| + |y| + |z|                                        *
+ *                 1                                                          *
+ *                                                                            *
+ *      Functions for single and long double precision are also provided.     *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A three dimensional vector.                                       *
  *  Output:                                                                   *
- *      norm (float):                                                         *
+ *      norm (double):                                                        *
  *          The L1 norm of P.                                                 *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_l1_norm_no_inline_float.c                               *
- *          tmpl_vec3_l1_norm_no_inline_double.c                              *
- *          tmpl_vec3_l1_norm_no_inline_ldouble.c                             *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_l1_norm_float.h                                         *
- *          tmpl_vec3_l1_norm_double.h                                        *
- *          tmpl_vec3_l1_norm_ldouble.h                                       *
  ******************************************************************************/
+TMPL_PURE_FUNC
+extern double
+tmpl_3DDouble_L1_Norm(const tmpl_ThreeVectorDouble * const p)
+TMPL_UNSEQUENCED;
 
-/*  Small enough to inline. Just sums the absolute values of the components.  */
-#if TMPL_USE_INLINE == 1
+TMPL_PURE_FUNC
+extern float
+tmpl_3DFloat_L1_Norm(const tmpl_ThreeVectorFloat * const p)
+TMPL_UNSEQUENCED;
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l1_norm_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l1_norm_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l1_norm_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Non-inlined versions found in src/vec3.                                   */
-extern float tmpl_3DFloat_L1_Norm(const tmpl_ThreeVectorFloat * const P);
-extern double tmpl_3DDouble_L1_Norm(const tmpl_ThreeVectorDouble * const P);
-
+TMPL_PURE_FUNC
 extern long double
-tmpl_3DLDouble_L1_Norm(const tmpl_ThreeVectorLongDouble * const P);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_L1_Norm(const tmpl_ThreeVectorLongDouble * const p)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_3DFloat_L2_Norm                                                  *
  *  Purpose:                                                                  *
  *      Computes the Euclidean L2 norm of a vector in R^3. This is defined by *
- *      the Pythagorean theorem as follows. If P = (x, y, z), we have:        *
- *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
+ *      the Pythagorean theorem as follows. If p = (x, y, z), we have:        *
+ *                                                                            *
+ *          || p ||  = sqrt(x^2 + y^2 + z^2)                                  *
+ *                 2                                                          *
+ *                                                                            *
  *      Functions for single, double, and long double precision are provided. *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A three dimensional vector.                                       *
  *  Output:                                                                   *
- *      norm (float):                                                         *
- *          The Euclidean norm of P.                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_l2_norm_no_inline_float.c                               *
- *          tmpl_vec3_l2_norm_no_inline_double.c                              *
- *          tmpl_vec3_l2_norm_no_inline_ldouble.c                             *
- *      libtmpl/src/include/                                                  *
- *          tmpl_vec3_l2_norm_float.h                                         *
- *          tmpl_vec3_l2_norm_double.h                                        *
- *          tmpl_vec3_l2_norm_ldouble.h                                       *
+ *      norm (double):                                                        *
+ *          The Euclidean norm of p.                                          *
  ******************************************************************************/
+TMPL_PURE_FUNC
+extern double
+tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble * const p)
+TMPL_UNSEQUENCED;
 
-/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
-#if TMPL_USE_INLINE == 1
+TMPL_PURE_FUNC
+extern float
+tmpl_3DFloat_L2_Norm(const tmpl_ThreeVectorFloat * const p)
+TMPL_UNSEQUENCED;
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/vec3.                     */
-extern float tmpl_3DFloat_L2_Norm(const tmpl_ThreeVectorFloat * const P);
-extern double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble * const P);
-
+TMPL_PURE_FUNC
 extern long double
-tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble * const P);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble * const p)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

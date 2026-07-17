@@ -16,73 +16,76 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_vec3_l1_norm_float                           *
+ *                         tmpl_vec3_l1_norm_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for the Manhattan norm at single precision.             *
+ *      Contains code for the Manhattan norm at long double precision.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_L1_Norm                                                  *
+ *      tmpl_3DLDouble_L1_Norm                                                *
  *  Purpose:                                                                  *
  *      Computes the Manhattan norm, also called the L1 norm, of the input.   *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorLongDouble * const):                         *
  *          A pointer to a vector in R^3.                                     *
  *  Output:                                                                   *
- *      norm (float):                                                         *
- *          The Manhattan norm of P.                                          *
+ *      norm (long double):                                                   *
+ *          The Manhattan norm of p.                                          *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_Float_Abs:                                                   *
+ *      src/math/                                                             *
+ *          tmpl_LDouble_Abs:                                                 *
  *              Computes the absolute value of a real number.                 *
  *  Method:                                                                   *
  *      Sum the absolute values of the components.                            *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_float.h:                                                    *
- *          Header containing ThreeVector typedef.                            *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
  *  3.) tmpl_math.h:                                                          *
- *          Header file providing the Hypot3 function.                        *
+ *          Header file providing the absolute value function.                *
+ *  4.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorLongDouble and function prototype provided here.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 5, 2022                                               *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2024/06/11: Ryan Maguire                                                  *
  *      Inlined the routine.                                                  *
+ *  2026/07/17: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_L1_NORM_FLOAT_H
-#define TMPL_VEC3_L1_NORM_FLOAT_H
-
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_float.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Absolute value function found here.                                       */
+/*  Absolute value function given here.                                       */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Function for computing the L1 norm of a 3D vector at single precision.    */
-TMPL_INLINE_DECL
-float tmpl_3DFloat_L1_Norm(const tmpl_ThreeVectorFloat * const P)
-{
-    return tmpl_Float_Abs(P->dat[0]) +
-           tmpl_Float_Abs(P->dat[1]) +
-           tmpl_Float_Abs(P->dat[2]);
-}
-/*  End of tmpl_3DFloat_L1_Norm.                                              */
+/*  Three-vector typedef and function prototype provided here.                */
+#include <libtmpl/include/tmpl_vec3.h>
 
-#endif
-/*  End of include guard.                                                     */
+/*  Function for computing the L1 norm of a vector at long double precision.  */
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+long double tmpl_3DLDouble_L1_Norm(const tmpl_ThreeVectorLongDouble * const p)
+TMPL_UNSEQUENCED
+{
+    return tmpl_LDouble_Abs(p->dat[0]) +
+           tmpl_LDouble_Abs(p->dat[1]) +
+           tmpl_LDouble_Abs(p->dat[2]);
+}
+/*  End of tmpl_3DLDouble_L1_Norm.                                            */
