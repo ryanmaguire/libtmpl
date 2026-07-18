@@ -433,53 +433,36 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_L2_Norm_Squared                                          *
+ *      tmpl_3DDouble_L2_Norm_Squared                                         *
  *  Purpose:                                                                  *
  *      Computes the square of the Euclidean L2 norm of a vector in R^3. This *
- *      is defined by the Pythagorean theorem as follows. If P = (x, y, z),   *
+ *      is defined by the Pythagorean theorem as follows. If p = (x, y, z),   *
  *      we have:                                                              *
- *          ||P||^2 = x^2 + y^2 + z^2                                         *
+ *                                                                            *
+ *          || p ||^2 = x^2 + y^2 + z^2                                       *
+ *                                                                            *
  *      Functions for single, double, and long double precision are provided. *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A three dimensional vector.                                       *
  *  Output:                                                                   *
- *      norm_sq (float):                                                      *
+ *      norm_squared (double):                                                *
  *          The square of the Euclidean norm of P.                            *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_l2_norm_squared_no_inline_float.c                       *
- *          tmpl_vec3_l2_norm_squared_no_inline_double.c                      *
- *          tmpl_vec3_l2_norm_squared_no_inline_ldouble.c                     *
- *      libtmpl/src/include/                                                  *
- *          tmpl_vec3_l2_norm_squared_float.h                                 *
- *          tmpl_vec3_l2_norm_squared_double.h                                *
- *          tmpl_vec3_l2_norm_squared_ldouble.h                               *
  ******************************************************************************/
-
-/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_squared_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_squared_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_squared_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/vec3.                     */
-extern float
-tmpl_3DFloat_L2_Norm_Squared(const tmpl_ThreeVectorFloat * const P);
-
+TMPL_PURE_FUNC
 extern double
-tmpl_3DDouble_L2_Norm_Squared(const tmpl_ThreeVectorDouble * const P);
+tmpl_3DDouble_L2_Norm_Squared(const tmpl_ThreeVectorDouble * const p)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
+extern float
+tmpl_3DFloat_L2_Norm_Squared(const tmpl_ThreeVectorFloat * const p)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern long double
-tmpl_3DLDouble_L2_Norm_Squared(const tmpl_ThreeVectorLongDouble * const P);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_L2_Norm_Squared(const tmpl_ThreeVectorLongDouble * const p)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

@@ -58,7 +58,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2022/03/03: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
