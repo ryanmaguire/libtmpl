@@ -61,12 +61,6 @@
 #define TMPL_FLOAT_DAYS_PER_JULIAN_YEAR (3.6525E+02F)
 #define TMPL_LDOUBLE_DAYS_PER_JULIAN_YEAR (3.6525E+02L)
 
-/*  If using with C++ (and not C), wrap the entire header file in an extern   *
- *  "C" statement. Check if C++ is being used with __cplusplus.               */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
  *                               Speed of Light                               *
  ******************************************************************************/
@@ -94,11 +88,6 @@ extern const long double tmpl_ldouble_seconds_per_day;
 extern const double tmpl_double_days_per_julian_year;
 extern const float tmpl_float_days_per_julian_year;
 extern const long double tmpl_ldouble_days_per_julian_year;
-
-/*  End of extern "C" statement allowing C++ compatibility.                   */
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 /*  End of include guard.                                                     */
