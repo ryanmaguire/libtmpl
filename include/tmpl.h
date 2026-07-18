@@ -158,6 +158,7 @@
 #include <libtmpl/include/tmpl_split.h>
 #include <libtmpl/include/tmpl_string.h>
 #include <libtmpl/include/tmpl_svg.h>
+#include <libtmpl/include/tmpl_two_diff.h>
 #include <libtmpl/include/tmpl_two_prod.h>
 #include <libtmpl/include/tmpl_two_sum.h>
 #include <libtmpl/include/tmpl_utility.h>
