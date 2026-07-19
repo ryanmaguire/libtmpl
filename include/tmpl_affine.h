@@ -53,6 +53,44 @@
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_AffDouble_Add                                                    *
+ *  Purpose:                                                                  *
+ *      Adds two affine transformations.                                      *
+ *  Arguments:                                                                *
+ *      f (const tmpl_AffineDouble * const):                                  *
+ *          An affine transformation, f(x) = a * x + b.                       *
+ *      g (const tmpl_AffineDouble * const):                                  *
+ *          Another affine transformation, g(x) = c * x + d.                  *
+ *  Output:                                                                   *
+ *      transform (tmpl_AffineDouble):                                        *
+ *          The transform h(x) = f(x) + g(x).                                 *
+ *  Notes:                                                                    *
+ *      1.) Float and long double equivalents are provided.                   *
+ *                                                                            *
+ *      2.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
+ *      3.) No checks for NULL pointers are made.                             *
+ ******************************************************************************/
+TMPL_PURE_FUNC
+extern tmpl_AffineDouble
+tmpl_AffDouble_Add(const tmpl_AffineDouble * const f,
+                   const tmpl_AffineDouble * const g)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_AffineFloat
+tmpl_AffFloat_Add(const tmpl_AffineFloat * const f,
+                  const tmpl_AffineFloat * const g)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_AffineLongDouble
+tmpl_AffLDouble_Add(const tmpl_AffineLongDouble * const f,
+                    const tmpl_AffineLongDouble * const g)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_AffDouble_Compose                                                *
  *  Purpose:                                                                  *
  *      Composes two affine transformations.                                  *
