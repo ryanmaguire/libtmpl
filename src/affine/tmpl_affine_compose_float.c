@@ -77,12 +77,12 @@
 /*  Composes two affine transformations together.                             */
 TMPL_PURE_FUNC
 TMPL_ALWAYS_INLINE
-extern tmpl_AffineFloat
+tmpl_AffineFloat
 tmpl_AffFloat_Compose(const tmpl_AffineFloat * const g,
                       const tmpl_AffineFloat * const f)
 TMPL_UNSEQUENCED
 {
-    /*  Given f(x) = a * x + b ang g(x) = c * x + d, the composition has      *
+    /*  Given f(x) = a * x + b and g(x) = c * x + d, the composition has      *
      *  y-intercept b * c + d and slope a * c. Compute these.                 */
     const float intercept = f->dat[1] * g->dat[0] + g->dat[1];
     const float slope = f->dat[0] * g->dat[0];

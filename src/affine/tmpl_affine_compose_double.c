@@ -77,12 +77,12 @@
 /*  Composes two affine transformations together.                             */
 TMPL_PURE_FUNC
 TMPL_ALWAYS_INLINE
-extern tmpl_AffineDouble
+tmpl_AffineDouble
 tmpl_AffDouble_Compose(const tmpl_AffineDouble * const g,
                        const tmpl_AffineDouble * const f)
 TMPL_UNSEQUENCED
 {
-    /*  Given f(x) = a * x + b ang g(x) = c * x + d, the composition has      *
+    /*  Given f(x) = a * x + b and g(x) = c * x + d, the composition has      *
      *  y-intercept b * c + d and slope a * c. Compute these.                 */
     const double intercept = f->dat[1] * g->dat[0] + g->dat[1];
     const double slope = f->dat[0] * g->dat[0];

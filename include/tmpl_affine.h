@@ -116,7 +116,6 @@ extern void
 tmpl_AffFloat_AddTo(tmpl_AffineFloat * const target,
                     const tmpl_AffineFloat * const source);
 
-
 extern void
 tmpl_AffLDouble_AddTo(tmpl_AffineLongDouble * const target,
                       const tmpl_AffineLongDouble * const source);
