@@ -35,7 +35,7 @@
 /*  Function prototype and two-vector typedef found here.                     */
 #include <libtmpl/include/tmpl_vec2.h>
 
-/*  Function for returning the point (x, y) given two flaots x and y.         */
+/*  Function for returning the point (x, y) given two floats x and y.         */
 tmpl_TwoVectorFloat tmpl_2DFloat_Rect(float x, float y)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
