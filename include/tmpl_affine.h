@@ -91,6 +91,38 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_AffDouble_AddTo                                                  *
+ *  Purpose:                                                                  *
+ *      Adds one affine transformation to another.                            *
+ *  Arguments:                                                                *
+ *      target (tmpl_AffineDouble * const):                                   *
+ *          An affine transformation, the sum is stored here.                 *
+ *      source (const tmpl_AffineDouble * const):                             *
+ *          Another affine transformation.                                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      1.) Float and long double equivalents are provided.                   *
+ *                                                                            *
+ *      2.) No checks for NaN or infinity are made.                           *
+ *                                                                            *
+ *      3.) No checks for NULL pointers are made.                             *
+ ******************************************************************************/
+extern void
+tmpl_AffDouble_AddTo(tmpl_AffineDouble * const target,
+                     const tmpl_AffineDouble * const source);
+
+extern void
+tmpl_AffFloat_AddTo(tmpl_AffineFloat * const target,
+                    const tmpl_AffineFloat * const source);
+
+
+extern void
+tmpl_AffLDouble_AddTo(tmpl_AffineLongDouble * const target,
+                      const tmpl_AffineLongDouble * const source);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_AffDouble_Compose                                                *
  *  Purpose:                                                                  *
  *      Composes two affine transformations.                                  *
