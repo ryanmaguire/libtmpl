@@ -95,7 +95,8 @@ tmpl_AffLDouble_Point_Intercept(const long double x0,
                                 const long double intercept)
 TMPL_UNSEQUENCED
 {
-    /*  Given (x0, y0) and (0, y1) the slope is the ratio of the differences. */
+    /*  Given (x0, y0) and (0, intercept), the slope is the ratio of the      *
+     *  differences.                                                          */
     const long double slope = (y0 - intercept) / x0;
 
     /*  We now have the slope and the intercept. We can create the transform  *
