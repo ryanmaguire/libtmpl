@@ -29,9 +29,9 @@
  *      Creates an affine transformation from point-slope form.               *
  *  Arguments:                                                                *
  *      x0 (const float):                                                     *
- *          The x component of the point.                                     *
+ *          The x-component of the point.                                     *
  *      y0 (const float):                                                     *
- *          The y component of the point.                                     *
+ *          The y-component of the point.                                     *
  *      slope (const float):                                                  *
  *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *  Output:                                                                   *

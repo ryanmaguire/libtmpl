@@ -29,9 +29,9 @@
  *      Creates an affine transformation from point-slope form.               *
  *  Arguments:                                                                *
  *      x0 (const long double):                                               *
- *          The x component of the point.                                     *
+ *          The x-component of the point.                                     *
  *      y0 (const long double):                                               *
- *          The y component of the point.                                     *
+ *          The y-component of the point.                                     *
  *      slope (const long double):                                            *
  *          The slope of the transformation, "m" in f(x) = mx + b.            *
  *  Output:                                                                   *
