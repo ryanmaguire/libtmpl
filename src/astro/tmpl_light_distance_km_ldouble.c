@@ -16,62 +16,85 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_light_distance_float                          *
+ *                       tmpl_light_distance_km_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes distance traveled by light over a given time interval.       *
+ *      Computes the distance (kilometers) traveled by light over time.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Light_Distance                                             *
+ *      tmpl_LDouble_Light_Distance_KM                                        *
  *  Purpose:                                                                  *
- *      Computes the distance traveled by light in a vacuum.                  *
+ *      Computes the distance traveled by light in a vacuum, in kilometers.   *
  *  Arguments:                                                                *
- *      t0 (const float):                                                     *
+ *      t0 (const long double):                                               *
  *          The start time, in seconds.                                       *
- *      t1 (const float):                                                     *
+ *      t1 (const long double):                                               *
  *          The final time, in seconds.                                       *
  *  Output:                                                                   *
- *      dist (float):                                                         *
- *          The distance traveled by light over time |t1 - t0|.               *
+ *      dist (long double):                                                   *
+ *          The distance traveled in kilometers by light over time |t1 - t0|. *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_Float_Dist:                                                  *
- *              Computes the distance on the number line form x to y.         *
+ *      src/                                                                  *
+ *          tmpl_LDouble_Dist:                                                *
+ *              Computes the distance on the number line from x to y.         *
  *  Method:                                                                   *
- *      Compute SPEED_OF_LIGHT * |t1 - t0|, in kilometers per second.         *
+ *      Compute speed_of_light * |t1 - t0|.                                   *
  *  Notes:                                                                    *
- *      1.) The units are kilometers per second.                              *
+ *      1.) Lengths are in kilometers, times are in seconds.                  *
+ *                                                                            *
  *      2.) Distance is a non-negative quantity.                              *
- *      3.) No checks for NaNs or Infs are made.                              *
+ *                                                                            *
+ *      3.) No checks for NaNs or infinity are made.                          *
+ *                                                                            *
+ *      4.) There is no assumption that t0 < t1 or t1 < t0. That is, you may  *
+ *          swap the order of the inputs without changing the output.         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_astro.h:                                                         *
+ *  1.) tmpl_config.h:                                                        *
+ *          Provides the TMPL_ALWAYS_INLINE macro.                            *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_astro.h:                                                         *
  *          Function prototype given here.                                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing trigonometric functions.                   *
+ *  4.) tmpl_astro_constants.h:                                               *
+ *          Provides useful astronomical constants, like the speed of light.  *
+ *  5.) tmpl_math.h:                                                          *
+ *          Header file containing the distance function.                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 30, 2024                                            *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/07/23: Ryan Maguire                                                  *
+ *      Added C23 attributes, added KM to function name.                      *
  ******************************************************************************/
+
+/*  TMPL_ALWAYS_INLINE macro found here, used for link-time optimization.     */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_astro.h>
 
+/*  Speed of light in kilometers per second found here.                       */
+#include <libtmpl/include/constants/tmpl_astro_constants.h>
+
 /*  Distance function found here.                                             */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The speed of light, in kilometers per second, as a float.                 */
-#define TMPL_SPEED_OF_LIGHT_KILOMETERS_PER_SECOND (299792.4580F)
-
-/*  Function for computing the distance light travels in time t1-t0.          */
-float tmpl_Float_Light_Distance(const float t0, const float t1)
+/*  Function for computing the distance light travels in time t1 - t0.        */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+long double
+tmpl_LDouble_Light_Distance_KM(const long double t0, const long double t1)
+TMPL_UNSEQUENCED
 {
-    return TMPL_SPEED_OF_LIGHT_KILOMETERS_PER_SECOND*tmpl_Float_Dist(t0, t1);
+    return tmpl_ldouble_speed_of_light_kmps * tmpl_LDouble_Dist(t0, t1);
 }
-/*  End tmpl_Float_Light_Distance.                                            */
-
-/*  Undefine everything in case someone wants to #include this file.          */
-#undef TMPL_SPEED_OF_LIGHT_KILOMETERS_PER_SECOND
+/*  End tmpl_LDouble_Light_Distance_KM.                                       */
