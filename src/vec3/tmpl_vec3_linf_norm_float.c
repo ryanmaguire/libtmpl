@@ -16,41 +16,46 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_vec3_quick_linf_norm_ldouble                     *
+ *                         tmpl_vec3_linf_norm_float                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for the supremum norm at long double precision.         *
+ *      Contains code for the supremum norm at single precision.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DLDouble_LInf_Norm                                              *
+ *      tmpl_3DFloat_LInf_Norm                                                *
  *  Purpose:                                                                  *
  *      Computes the supremum norm (L-infinity norm) of the input.            *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorLongDouble * const):                         *
+ *      p (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a vector in R^3.                                     *
  *  Output:                                                                   *
- *      norm (long double):                                                   *
+ *      norm (float):                                                         *
  *          The supremum norm of P.                                           *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_LDouble_Abs:                                                 *
+ *      src/math/                                                             *
+ *          tmpl_Float_Abs:                                                   *
  *              Computes the absolute value of a real number.                 *
  *  Method:                                                                   *
  *      Compute the max of the absolute values of the components.             *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_ldouble.h:                                                  *
- *          Header containing ThreeVector typedef.                            *
- *  3.) tmpl_max.h:                                                           *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  3.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorFloat and function prototype provided here.       *
+ *  4.) tmpl_max.h:                                                           *
  *          Provides a helper macro for computing the max of 3 real numbers.  *
+ *  5.) tmpl_math.h:                                                          *
+ *          Location of the absolute value function.                          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 5, 2022                                               *
@@ -59,17 +64,18 @@
  ******************************************************************************
  *  2024/06/11: Ryan Maguire                                                  *
  *      Inlined the routine.                                                  *
+ *  2026/07/24: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_LINF_LDOUBLE_H
-#define TMPL_VEC3_LINF_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  TMPL_MAX3 helper macro found here.                                        */
 #include <libtmpl/include/helper/tmpl_max.h>
@@ -78,15 +84,14 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for computing the L-Infinity norm of a 3D vector.                */
-TMPL_INLINE_DECL
-long double tmpl_3DLDouble_LInf_Norm(const tmpl_ThreeVectorLongDouble * const P)
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+float tmpl_3DFloat_LInf_Norm(const tmpl_ThreeVectorFloat * const p)
+TMPL_UNSEQUENCED
 {
-    const long double absx = tmpl_LDouble_Abs(P->dat[0]);
-    const long double absy = tmpl_LDouble_Abs(P->dat[1]);
-    const long double absz = tmpl_LDouble_Abs(P->dat[2]);
-    return TMPL_MAX3(absx, absy, absz);
+    const float abs_x = tmpl_Float_Abs(p->dat[0]);
+    const float abs_y = tmpl_Float_Abs(p->dat[1]);
+    const float abs_z = tmpl_Float_Abs(p->dat[2]);
+    return TMPL_MAX3(abs_x, abs_y, abs_z);
 }
-/*  End of tmpl_3LDDouble_LInf_Norm.                                          */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_3DFloat_LInf_Norm.                                            */

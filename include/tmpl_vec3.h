@@ -466,49 +466,39 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_LInf_Norm                                                *
+ *      tmpl_3DDouble_LInf_Norm                                               *
  *  Purpose:                                                                  *
- *      Computes the L-Infinity norm of a vector in R^3 at single precision.  *
- *      This is defined as follows. If P = (x, y, z), we have:                *
- *          ||P||_infinity = max(|x|, |y|, |z|)                               *
- *      Functions for double and long double precision are also provided.     *
+ *      Computes the L-Infinity norm of a vector in R^3 at double precision.  *
+ *      This is defined as follows. If p = (x, y, z), then we have:           *
+ *                                                                            *
+ *          || p ||    = max(|x|, |y|, |z|)                                   *
+ *                 inf                                                        *
+ *                                                                            *
+ *      Functions for single and long double precision are also provided.     *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A three dimensional vector.                                       *
  *  Output:                                                                   *
- *      norm (float):                                                         *
- *          The L1 norm of P.                                                 *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_linf_norm_no_inline_float.c                             *
- *          tmpl_vec3_linf_norm_no_inline_double.c                            *
- *          tmpl_vec3_linf_norm_no_inline_ldouble.c                           *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_linf_norm_float.h                                       *
- *          tmpl_vec3_linf_norm_double.h                                      *
- *          tmpl_vec3_linf_norm_ldouble.h                                     *
+ *      norm (double):                                                        *
+ *          The L-Infinity norm of p.                                         *
  ******************************************************************************/
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+extern double
+tmpl_3DDouble_LInf_Norm(const tmpl_ThreeVectorDouble * const p)
+TMPL_UNSEQUENCED;
 
-/*  Small function, can be inlined.                                           */
-#if TMPL_USE_INLINE == 1
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+extern float
+tmpl_3DFloat_LInf_Norm(const tmpl_ThreeVectorFloat * const p)
+TMPL_UNSEQUENCED;
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_linf_norm_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_linf_norm_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_linf_norm_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Non-inline versions found in src/vec3.                                    */
-extern float tmpl_3DFloat_LInf_Norm(const tmpl_ThreeVectorFloat * const P);
-extern double tmpl_3DDouble_LInf_Norm(const tmpl_ThreeVectorDouble * const P);
-
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
 extern long double
-tmpl_3DLDouble_LInf_Norm(const tmpl_ThreeVectorLongDouble * const P);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_LInf_Norm(const tmpl_ThreeVectorLongDouble * const p)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_vec3_quick_linf_norm_double                      *
+ *                         tmpl_vec3_linf_norm_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for the supremum norm at double precision.              *
@@ -28,29 +28,34 @@
  *  Purpose:                                                                  *
  *      Computes the supremum norm (L-infinity norm) of the input.            *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorDouble * const):                             *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a vector in R^3.                                     *
  *  Output:                                                                   *
  *      norm (double):                                                        *
  *          The supremum norm of P.                                           *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_Abs:                                                  *
  *              Computes the absolute value of a real number.                 *
  *  Method:                                                                   *
  *      Compute the max of the absolute values of the components.             *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_double.h:                                                   *
- *          Header containing ThreeVector typedef.                            *
- *  3.) tmpl_max.h:                                                           *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  3.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorDouble and function prototype provided here.      *
+ *  4.) tmpl_max.h:                                                           *
  *          Provides a helper macro for computing the max of 3 real numbers.  *
+ *  5.) tmpl_math.h:                                                          *
+ *          Location of the absolute value function.                          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 5, 2022                                               *
@@ -59,17 +64,18 @@
  ******************************************************************************
  *  2024/06/11: Ryan Maguire                                                  *
  *      Inlined the routine.                                                  *
+ *  2026/07/24: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_LINF_DOUBLE_H
-#define TMPL_VEC3_LINF_DOUBLE_H
-
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_double.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  TMPL_MAX3 helper macro found here.                                        */
 #include <libtmpl/include/helper/tmpl_max.h>
@@ -78,15 +84,14 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for computing the L-Infinity norm of a 3D vector.                */
-TMPL_INLINE_DECL
-double tmpl_3DDouble_LInf_Norm(const tmpl_ThreeVectorDouble * const P)
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+double tmpl_3DDouble_LInf_Norm(const tmpl_ThreeVectorDouble * const p)
+TMPL_UNSEQUENCED
 {
-    const double absx = tmpl_Double_Abs(P->dat[0]);
-    const double absy = tmpl_Double_Abs(P->dat[1]);
-    const double absz = tmpl_Double_Abs(P->dat[2]);
-    return TMPL_MAX3(absx, absy, absz);
+    const double abs_x = tmpl_Double_Abs(p->dat[0]);
+    const double abs_y = tmpl_Double_Abs(p->dat[1]);
+    const double abs_z = tmpl_Double_Abs(p->dat[2]);
+    return TMPL_MAX3(abs_x, abs_y, abs_z);
 }
 /*  End of tmpl_3DDouble_LInf_Norm.                                           */
-
-#endif
-/*  End of include guard.                                                     */
