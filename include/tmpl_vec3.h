@@ -499,54 +499,35 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Midpoint                                                 *
+ *      tmpl_3DDouble_Midpoint                                                *
  *  Purpose:                                                                  *
  *      Computes the midpoint of two points in R^3.                           *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      midpoint (tmpl_ThreeVectorFloat):                                     *
- *          The midpoint of P and Q.                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_midpoint_no_inline_float.c                              *
- *          tmpl_vec3_midpoint_no_inline_double.c                             *
- *          tmpl_vec3_midpoint_no_inline_ldouble.c                            *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_midpoint_float.h                                        *
- *          tmpl_vec3_midpoint_double.h                                       *
- *          tmpl_vec3_midpoint_ldouble.h                                      *
+ *      midpoint (tmpl_ThreeVectorDouble):                                    *
+ *          The midpoint of p and q.                                          *
  ******************************************************************************/
-
-/*  Arithmetic functions are very small and can be inlined.                   */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_midpoint_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_midpoint_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_midpoint_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, use the versions found in src/vec3/.                           */
-extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Midpoint(const tmpl_ThreeVectorFloat * const P,
-                      const tmpl_ThreeVectorFloat * const Q);
-
+TMPL_PURE_FUNC
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Midpoint(const tmpl_ThreeVectorDouble * const P,
-                       const tmpl_ThreeVectorDouble * const Q);
+tmpl_3DDouble_Midpoint(const tmpl_ThreeVectorDouble * const p,
+                       const tmpl_ThreeVectorDouble * const q)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Midpoint(const tmpl_ThreeVectorFloat * const p,
+                      const tmpl_ThreeVectorFloat * const q)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Midpoint(const tmpl_ThreeVectorLongDouble * const P,
-                        const tmpl_ThreeVectorLongDouble * const Q);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+tmpl_3DLDouble_Midpoint(const tmpl_ThreeVectorLongDouble * const p,
+                        const tmpl_ThreeVectorLongDouble * const q)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *

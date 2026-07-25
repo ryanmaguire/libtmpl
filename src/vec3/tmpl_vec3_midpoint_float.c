@@ -28,62 +28,83 @@
  *  Purpose:                                                                  *
  *      Computes the midpoint of two points in R^3.                           *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *      p (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *      q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      midpoint (tmpl_ThreeVectorFloat):                                     *
- *          The midpoint of P and Q.                                          *
+ *          The midpoint of p and q.                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of midpoints. If P = (Px, Py, Pz) and              *
- *      Q = (Qx, Qy, Qz), then the midpoint has coordinates:                  *
- *          x = (Px + Qx) / 2                                                 *
- *          y = (Py + Qy) / 2                                                 *
- *          z = (Pz + Qz) / 2                                                 *
+ *      Use the definition of midpoints. If p = (px, py, pz) and              *
+ *      q = (qx, qy, qz), then the midpoint has coordinates:                  *
+ *                                                                            *
+ *          x = (px + qx) / 2                                                 *
+ *          y = (py + qy) / 2                                                 *
+ *          z = (pz + qz) / 2                                                 *
+ *                                                                            *
+ *      These values are stored in a new 3D vector and returned.              *
  *  Notes:                                                                    *
- *      No checks for Infs or NaNs are performed.                             *
- *      No checks for Null pointers are performed.                            *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
+ *                                                                            *
+ *      3.) The expression (a + b) / 2 will overflow if a and b are large,    *
+ *          even if the average is a representable value. There is a safer    *
+ *          method, min(a, b) + (max(a, b) - min(a, b)) / 2, but this         *
+ *          requires additional operations (min, max, subtract), and will     *
+ *          still overflow if a and b are large and have opposite signs.      *
+ *          For the sake of speed this function uses the standard method.     *
+ *                                                                            *
+ *      4.) For normal single-precision floating-point numbers, division by   *
+ *          two is a lossless operation. The midpoint formula hence only      *
+ *          produces a single round, not two.                                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec3_float.h:                                                    *
- *          The tmpl_ThreeVectorFloat typedef is provided here.               *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  3.) tmpl_vec3.h:                                                          *
+ *          tmpl_ThreeVectorFloat and function prototype provided here.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 12, 2024                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/07/25: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_MIDPOINT_FLOAT_H
-#define TMPL_VEC3_MIDPOINT_FLOAT_H
-
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/types/tmpl_vec3_float.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Three-vector typedef and function prototype found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing the midpoint of two points.                        */
-TMPL_INLINE_DECL
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
 tmpl_ThreeVectorFloat
-tmpl_3DFloat_Midpoint(const tmpl_ThreeVectorFloat * const P,
-                      const tmpl_ThreeVectorFloat * const Q)
+tmpl_3DFloat_Midpoint(const tmpl_ThreeVectorFloat * const p,
+                      const tmpl_ThreeVectorFloat * const q)
+TMPL_UNSEQUENCED
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
+    /*  Declare a variable for the midpoint of p and q.                       */
     tmpl_ThreeVectorFloat midpoint;
 
     /*  Use the midpoint formula and return.                                  */
-    midpoint.dat[0] = (P->dat[0] + Q->dat[0]) * 0.5F;
-    midpoint.dat[1] = (P->dat[1] + Q->dat[1]) * 0.5F;
-    midpoint.dat[2] = (P->dat[2] + Q->dat[2]) * 0.5F;
+    midpoint.dat[0] = (p->dat[0] + q->dat[0]) * 0.5F;
+    midpoint.dat[1] = (p->dat[1] + q->dat[1]) * 0.5F;
+    midpoint.dat[2] = (p->dat[2] + q->dat[2]) * 0.5F;
+
     return midpoint;
 }
 /*  End of tmpl_3DFloat_Midpoint.                                             */
-
-#endif
-/*  End of include guard.                                                     */
