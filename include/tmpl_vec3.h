@@ -483,19 +483,16 @@ TMPL_UNSEQUENCED;
  *          The L-Infinity norm of p.                                         *
  ******************************************************************************/
 TMPL_PURE_FUNC
-TMPL_ALWAYS_INLINE
 extern double
 tmpl_3DDouble_LInf_Norm(const tmpl_ThreeVectorDouble * const p)
 TMPL_UNSEQUENCED;
 
 TMPL_PURE_FUNC
-TMPL_ALWAYS_INLINE
 extern float
 tmpl_3DFloat_LInf_Norm(const tmpl_ThreeVectorFloat * const p)
 TMPL_UNSEQUENCED;
 
 TMPL_PURE_FUNC
-TMPL_ALWAYS_INLINE
 extern long double
 tmpl_3DLDouble_LInf_Norm(const tmpl_ThreeVectorLongDouble * const p)
 TMPL_UNSEQUENCED;
