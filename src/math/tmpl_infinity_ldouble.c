@@ -54,9 +54,13 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
- *  2.) tmpl_ieee754_ldouble.h:                                               *
- *          Provides tmpl_IEEE754_LDouble, used for type punning.             *
+ *          Header file containing TMPL_ALWAYS_INLINE and other macros.       *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_ieee754_ldouble.h:                                               *
+ *          Provides tmpl_IEEE754_LDouble, used for type punning if available.*
+ *  4.) tmpl_math.h:                                                          *
+ *          Provides the function prototype.                                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
@@ -67,12 +71,17 @@
  *      Migrated inf functions to their own directory. Added inline support.  *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_INFINITY_LDOUBLE_H
-#define TMPL_INLINE_INFINITY_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL and other helper macros found here.                      */
+/*  TMPL_ALWAYS_INLINE and other helper macros found here.                    */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Union used for type-punning long doubles using a bit-field found here.    */
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+
+/*  Function prototype found here.                                            */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  With IEEE-754 support we can set the value of infinity bit-by-bit.        */
 #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN
@@ -88,8 +97,10 @@
  ******************************************************************************/
 
 /*  Long double precision real positive infinity.                             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_Infinity(void)
+TMPL_UNSEQUENCED
 {
     /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
@@ -118,8 +129,10 @@ long double tmpl_LDouble_Infinity(void)
  ******************************************************************************/
 
 /*  Long double precision real positive infinity.                             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_Infinity(void)
+TMPL_UNSEQUENCED
 {
     /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
@@ -147,8 +160,10 @@ long double tmpl_LDouble_Infinity(void)
  ******************************************************************************/
 
 /*  Long double precision real positive infinity.                             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_Infinity(void)
+TMPL_UNSEQUENCED
 {
     /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
@@ -177,8 +192,10 @@ long double tmpl_LDouble_Infinity(void)
  ******************************************************************************/
 
 /*  Long double precision real positive infinity.                             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_Infinity(void)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables.                                          */
     tmpl_IEEE754_LDouble x;
@@ -208,8 +225,10 @@ long double tmpl_LDouble_Infinity(void)
  ******************************************************************************/
 
 /*  Long double precision real positive infinity.                             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_Infinity(void)
+TMPL_UNSEQUENCED
 {
     /*  glibc sets HUGE_VAL to 1.0E10000 for compilers lacking IEEE support.  *
      *  This works in practice, but is undefined behavior and may result in   *
@@ -233,6 +252,3 @@ long double tmpl_LDouble_Infinity(void)
 
 #endif
 /*  End of #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN.               */
-
-#endif
-/*  End of include guard.                                                     */

@@ -446,9 +446,6 @@ extern const long double tmpl_Min_LDouble_Base_E;
 /*  Float, double, and long double precision NaN found here.                  */
 #include <libtmpl/include/tmpl_nan.h>
 
-/*  Float, double, and long double precision infinity found here.             */
-#include <libtmpl/include/tmpl_inf.h>
-
 /******************************************************************************
  *                              Tables and Data                               *
  ******************************************************************************/
@@ -1316,6 +1313,40 @@ tmpl_LDouble_Hypot3(long double x, long double y, long double z);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Infinity                                                  *
+ *  Purpose:                                                                  *
+ *      Returns positive infinity.                                            *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      inf (double):                                                         *
+ *          Infinity.                                                         *
+ *  Notes:                                                                    *
+ *      1.) Single and long double equivalents are also provided.             *
+ *                                                                            *
+ *      2.) If IEEE-754 support is available, this code creates infinity      *
+ *          using the format. If not, the function mimics glibc's method,     *
+ *          returning the number 1.0E100000 which is guaranteed to overflow.  *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double tmpl_Double_Infinity(void)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float tmpl_Float_Infinity(void)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_Infinity(void)
+TMPL_UNSEQUENCED;
+
+/*  Macros for positive infinity                                              */
+#define TMPL_INFINITYF (tmpl_Float_Infinity())
+#define TMPL_INFINITY (tmpl_Double_Infinity())
+#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Log                                                       *
  *  Purpose:                                                                  *
  *      Computes the natural log function of the input.                       *
@@ -1782,11 +1813,6 @@ extern long double tmpl_LDouble_Tanh(long double x);
 extern float tmpl_Float_Truncate(float x);
 extern double tmpl_Double_Truncate(double x);
 extern long double tmpl_LDouble_Truncate(long double x);
-
-/*  Macro for positive infinity                                               */
-#define TMPL_INFINITYF (tmpl_Float_Infinity())
-#define TMPL_INFINITY (tmpl_Double_Infinity())
-#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
 
 /******************************************************************************
  *                       Independent Inlined Functions                        *

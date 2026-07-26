@@ -125,7 +125,6 @@
 #include <libtmpl/include/tmpl_fraunhofer_diffraction.h>
 #include <libtmpl/include/tmpl_fresnel_diffraction.h>
 #include <libtmpl/include/tmpl_graph_theory.h>
-#include <libtmpl/include/tmpl_inf.h>
 #include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_integration.h>
 #include <libtmpl/include/tmpl_interpolate.h>
