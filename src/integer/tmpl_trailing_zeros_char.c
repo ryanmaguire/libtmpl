@@ -86,9 +86,8 @@
  ******************************************************************************
  *  1.) tmpl_integer.h:                                                       *
  *          Header where the function prototype is defined.                   *
- *  2.) limits.h:                                                             *
- *          Standard C library header file containing information on the size *
- *          of an unsigned char.                                              *
+ *  2.) tmpl_limits.h:                                                        *
+ *          Location of the TMPL_UCHAR_BIT macro.                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       2022/05/12                                                    *
@@ -174,7 +173,7 @@ int tmpl_Char_Trailing_Zeros(const signed char n)
 #else
 
 /*  Portable trailing zeros function.                                         */
-int tmpl_Char_Trailing_Zeros(signed char n)
+int tmpl_Char_Trailing_Zeros(const signed char n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -218,4 +217,4 @@ int tmpl_Char_Trailing_Zeros(signed char n)
 /*  End of tmpl_Char_Trailing_Zeros.                                          */
 
 #endif
-/*  End of #if UCHAR_MAX == 0xFFU.                                            */
+/*  End of #if TMPL_UCHAR_BIT == 8, 16, 32.                                   */

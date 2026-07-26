@@ -86,9 +86,8 @@
  ******************************************************************************
  *  1.) tmpl_integer.h:                                                       *
  *          Header where the function prototype is defined.                   *
- *  2.) limits.h:                                                             *
- *          Standard C library header file containing information on the size *
- *          of an int.                                                        *
+ *  2.) tmpl_limits.h:                                                        *
+ *          Location of the TMPL_UINT_BIT macro.                              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       2022/05/12                                                    *
@@ -97,14 +96,14 @@
 /*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  Size of unsigned int here.                                                */
-#include <limits.h>
+/*  Size of unsigned int is here.                                             */
+#include <libtmpl/include/tmpl_limits.h>
 
-/*  The C standard requires int to be at LEAST 16 bits. It usually is 32.     */
-#if UINT_MAX == 0xFFFF
+/*  The most likely candidate for int is 32 bits. Other sizes are possible.   */
+#if TMPL_UINT_BIT == 16 || TMPL_UINT_BIT == 32 || TMPL_UINT_BIT == 64
 
-/*  16-bit trailing-zeros function.                                           */
-int tmpl_Int_Trailing_Zeros(int n)
+/*  Signed int trailing-zeros function.                                       */
+int tmpl_Int_Trailing_Zeros(const signed int n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -112,165 +111,74 @@ int tmpl_Int_Trailing_Zeros(int n)
     /*  We want the largest value N such that n >> N (n bit-shift to the      *
      *  right N times) does not erase any non-zeros. To avoid sign issues,    *
      *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
+    signed int abs_n = tmpl_Int_Abs(n);
 
     /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
+    if (abs_n != 0)
     {
-        /*  Set the upper 8 bits to zero and see if the number ends up being  *
-         *  zero. If yes, there are at least 8 trailing zeros.                */
-        if (!(n & 0xFF))
-        {
-            bits += 8;
-            n >>= 8;
-        }
+        /*  Rare, but not impossible, handle 64-bit int first.                */
+#if TMPL_UINT_BIT == 64
 
-        /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
-        {
-            bits += 4;
-            n >>= 4;
-        }
-
-        /*  Next two bits.                                                    */
-        if (!(n & 0x03))
-        {
-            bits += 2;
-            n >>= 2;
-        }
-
-        /*  The last bit of n.                                                */
-        if (!(n & 0x01))
-            bits += 1;
-    }
-    return bits;
-}
-/*  End of tmpl_Int_Trailing_Zeros.                                           */
-
-/*  32-bit is more common.                                                    */
-#elif UINT_MAX == 0xFFFFFFFF
-
-/*  32-bit trailing-zeros function.                                           */
-int tmpl_Int_Trailing_Zeros(int n)
-{
-    /*  Variable for the number of trailing zeros.                            */
-    int bits = 0;
-
-    /*  We want the largest value N such that n >> N (n bit-shift to the      *
-     *  right N times) does not erase any non-zeros. To avoid sign issues,    *
-     *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
-
-    /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
-    {
-        /*  Set the upper 16 bits to zero and see if the number ends up being *
-         *  zero. If yes, there are at least 16 trailing zeros.               */
-        if (!(n & 0xFFFF))
-        {
-            bits += 16;
-            n >>= 16;
-        }
-
-        /*  The next 8 bits.                                                  */
-        if (!(n & 0xFF))
-        {
-            bits += 8;
-            n >>= 8;
-        }
-
-        /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
-        {
-            bits += 4;
-            n >>= 4;
-        }
-
-        /*  Next two bits.                                                    */
-        if (!(n & 0x03))
-        {
-            bits += 2;
-            n >>= 2;
-        }
-
-        /*  The last bit of n.                                                */
-        if (!(n & 0x01))
-            bits += 1;
-    }
-    return bits;
-}
-/*  End of tmpl_Int_Trailing_Zeros.                                           */
-
-/*  Rare, 64-bit int.                                                         */
-#elif UINT_MAX == 0xFFFFFFFFFFFFFFFF
-
-/*  64-bit trailing-zeros function.                                           */
-int tmpl_Int_Trailing_Zeros(int n)
-{
-    /*  Variable for the number of trailing zeros.                            */
-    int bits = 0;
-
-    /*  We want the largest value N such that n >> N (n bit-shift to the      *
-     *  right N times) does not erase any non-zeros. To avoid sign issues,    *
-     *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
-
-    /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
-    {
         /*  Set the upper 32 bits to zero and see if the number ends up being *
          *  zero. If yes, there are at least 32 trailing zeros.               */
-        if (!(n & 0xFFFFFFFF))
+        if (!(abs_n & 0xFFFFFFFF))
         {
             bits += 32;
-            n >>= 32;
+            abs_n >>= 32;
         }
+#endif
+/*  End of #if TMPL_UINT_BIT == 32.                                           */
 
-        /*  The next 16-bits.                                                 */
-        if (!(n & 0xFFFF))
+        /*  The most common representation of int uses 32 bits.               */
+#if TMPL_UINT_BIT == 32 || TMPL_UINT_BIT == 64
+
+        /*  Set the next 16 bits to zero and see if the number ends up being  *
+         *  zero. If yes, there are at least 16 more trailing zeros.          */
+        if (!(abs_n & 0xFFFF))
         {
             bits += 16;
-            n >>= 16;
+            abs_n >>= 16;
         }
+#endif
+/*  End of #if TMPL_UINT_BIT == 16.                                           */
 
-        /*  The next 8 bits.                                                  */
-        if (!(n & 0xFF))
+        /*  Set the upper 8 bits to zero and see if the number ends up being  *
+         *  zero. If yes, there are at least 8 more trailing zeros.           */
+        if (!(abs_n & 0xFF))
         {
             bits += 8;
-            n >>= 8;
+            abs_n >>= 8;
         }
 
-        /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
+        /*  Check the next four bits.                                         */
+        if (!(abs_n & 0x0F))
         {
             bits += 4;
-            n >>= 4;
+            abs_n >>= 4;
         }
 
-        /*  Next two bits.                                                    */
-        if (!(n & 0x03))
+        /*  The next two bits.                                                */
+        if (!(abs_n & 0x03))
         {
             bits += 2;
-            n >>= 2;
+            abs_n >>= 2;
         }
 
         /*  The last bit of n.                                                */
-        if (!(n & 0x01))
+        if (!(abs_n & 0x01))
             bits += 1;
     }
+
     return bits;
 }
 /*  End of tmpl_Int_Trailing_Zeros.                                           */
 
-/*  This is for exotic systems. The C standard requires int to be at least    *
- *  16 bits wide, so we can loop through the bits of the input 16 at a time.  */
+/*  All other strange architectures. The C standard requires int is at least  *
+ *  16 bits wide, so we can loop through the bits of the number 16 at a time. */
 #else
 
-/*  Portable trailing-zeros function.                                         */
-int tmpl_Int_Trailing_Zeros(int n)
+/*  Portable trailing zeros function.                                         */
+int tmpl_Int_Trailing_Zeros(const signed int n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -278,47 +186,47 @@ int tmpl_Int_Trailing_Zeros(int n)
     /*  We want the largest value N such that n >> N (n bit-shift to the      *
      *  right N times) does not erase any non-zeros. To avoid sign issues,    *
      *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
+    signed int abs_n = tmpl_Int_Abs(n);
 
     /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
+    if (abs_n != 0)
     {
         /*  Keep zeroing out the lower 16 bits and shifting the number.       */
-        while (!(n & 0xFFFF))
+        while (!(abs_n & 0xFFFF))
         {
             bits += 16;
-            n >>= 16;
+            abs_n >>= 16;
         }
 
-        /*  The next 8 bits.                                                  */
-        if (!(n & 0xFF))
+        /*  The next eight bits in the number.                                */
+        if (!(abs_n & 0xFF))
         {
             bits += 8;
-            n >>= 8;
+            abs_n >>= 8;
         }
 
         /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
+        if (!(abs_n & 0x0F))
         {
             bits += 4;
-            n >>= 4;
+            abs_n >>= 4;
         }
 
         /*  Next two bits.                                                    */
-        if (!(n & 0x03))
+        if (!(abs_n & 0x03))
         {
             bits += 2;
-            n >>= 2;
+            abs_n >>= 2;
         }
 
         /*  The last bit of n.                                                */
-        if (!(n & 0x01))
+        if (!(abs_n & 0x01))
             bits += 1;
     }
+
     return bits;
 }
 /*  End of tmpl_Int_Trailing_Zeros.                                           */
 
 #endif
-/*  End of #if UINT_MAX == 0xFFFF.                                            */
+/*  End of #if TMPL_UINT_BIT == 16, 32, 64.                                   */
