@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                tmpl_abs_int                                *
+ *                               tmpl_abs_short                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(n) = |n|, the absolute value of n.                         *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Int_Abs                                                          *
+ *      tmpl_Short_Abs                                                        *
  *  Purpose:                                                                  *
  *      Computes the absolute value of an integer.                            *
  *                   --                                                       *
@@ -32,10 +32,10 @@
  *          |n|  =  |  -n,  else                                              *
  *                   --                                                       *
  *  Arguments:                                                                *
- *      n (const signed int):                                                 *
+ *      n (const signed short int):                                           *
  *          An integer.                                                       *
  *  Output:                                                                   *
- *      abs_n (signed int):                                                   *
+ *      abs_n (signed short int):                                             *
  *          The absolute value of n.                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -47,7 +47,13 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_cast.h:                                                          *
+ *          Contains the TMPL_CAST macro.                                     *
+ *  4.) tmpl_integer.h:                                                       *
+ *          Function prototype / forward declaration found here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -56,27 +62,44 @@
  ******************************************************************************
  *  2024/05/17: Ryan Maguire                                                  *
  *      Moved all versions to their own files.                                *
+ *  2026/07/26: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes, removed  *
+ *      undefined behavior when using two's complement.                       *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ABS_INT_H
-#define TMPL_ABS_INT_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Computes the absolute value of a signed int.                              */
-TMPL_INLINE_DECL
-signed int tmpl_Int_Abs(const signed int n)
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  TMPL_CAST found here, used for casting with C vs. C++ compatibility.      */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  Function prototype / forward declaration provided here.                   */
+#include <libtmpl/include/tmpl_integer.h>
+
+/*  Computes the absolute value of a signed short int.                        */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+signed short int tmpl_Short_Abs(const signed short int n)
+TMPL_UNSEQUENCED
 {
-    /*  For negative inputs we just negate and return.                        */
-    if (n < 0)
-        return -n;
+    /*  For negative inputs we carefully negate and return.                   */
+    if (n < 0L)
+    {
+        /*  On two's complement machines, negating the most negative value    *
+         *  produces undefined behavior. What is defined is casting the       *
+         *  result to unsigned, negating this, and then casting back to       *
+         *  signed. For all other inputs, this produces the absolute value.   *
+         *  For the most negative two's complement integer, this produces 0,  *
+         *  which is the absolute value mod 2^width, where width is the       *
+         *  number of bits in the unsigned type.                              */
+        const unsigned short int n_u = TMPL_CAST(n, unsigned short int);
+        return TMPL_CAST(-n_u, signed short int);
+    }
 
     /*  Otherwise, nothing to do. Return the input.                           */
     return n;
 }
-/*  End of tmpl_Int_Abs.                                                      */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_Short_Abs.                                                    */

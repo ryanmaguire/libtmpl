@@ -112,39 +112,30 @@ TMPL_UNSEQUENCED;
  *      abs_n (int):                                                          *
  *          The absolute value of n.                                          *
  ******************************************************************************/
+TMPL_CONST_FUNC
+extern signed char tmpl_Char_Abs(const signed char n)
+TMPL_UNSEQUENCED;
 
-/*  Small function worth inlining.                                            */
-#if TMPL_USE_INLINE == 1
+TMPL_CONST_FUNC
+extern signed short int tmpl_Short_Abs(const signed short int n)
+TMPL_UNSEQUENCED;
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/integer/tmpl_abs_char.h>
-#include <libtmpl/include/inline/integer/tmpl_abs_int.h>
-#include <libtmpl/include/inline/integer/tmpl_abs_long.h>
-#include <libtmpl/include/inline/integer/tmpl_abs_short.h>
+TMPL_CONST_FUNC
+extern signed int tmpl_Int_Abs(const signed int n)
+TMPL_UNSEQUENCED;
 
-/*  Long long function if support is available.                               */
-#if TMPL_HAS_LONGLONG == 1
-#include <libtmpl/include/inline/integer/tmpl_abs_llong.h>
-#endif
-/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise use the functions in src/integer/.                              */
-extern signed char tmpl_Char_Abs(const signed char n);
-extern signed short int tmpl_Short_Abs(const signed short int n);
-extern signed int tmpl_Int_Abs(const signed int n);
-extern signed long int tmpl_Long_Abs(const signed long int n);
+TMPL_CONST_FUNC
+extern signed long int tmpl_Long_Abs(const signed long int n)
+TMPL_UNSEQUENCED;
 
 /*  Long long function if support is available.                               */
 #if TMPL_HAS_LONGLONG == 1
-extern signed long long int tmpl_LLong_Abs(const signed long long int);
-#endif
-/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+TMPL_CONST_FUNC
+extern signed long long int tmpl_LLong_Abs(const signed long long int n)
+TMPL_UNSEQUENCED;
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

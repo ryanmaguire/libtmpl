@@ -101,9 +101,9 @@ TMPL_UNSEQUENCED
     tmpl_ThreeVectorLongDouble midpoint;
 
     /*  Use the midpoint formula and return.                                  */
-    midpoint.dat[0] = (p->dat[0] + q->dat[0]) * 0.5F;
-    midpoint.dat[1] = (p->dat[1] + q->dat[1]) * 0.5F;
-    midpoint.dat[2] = (p->dat[2] + q->dat[2]) * 0.5F;
+    midpoint.dat[0] = (p->dat[0] + q->dat[0]) * 0.5L;
+    midpoint.dat[1] = (p->dat[1] + q->dat[1]) * 0.5L;
+    midpoint.dat[2] = (p->dat[2] + q->dat[2]) * 0.5L;
 
     return midpoint;
 }

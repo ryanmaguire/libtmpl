@@ -97,14 +97,14 @@
 /*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  Size of unsigned char here.                                               */
-#include <limits.h>
+/*  Size of unsigned char is here.                                            */
+#include <libtmpl/include/tmpl_limits.h>
 
-/*  This is the most likely candidate for char. 8-bits wide.                  */
-#if UCHAR_MAX == 0xFFU
+/*  The most likely candidate for char is 8 bits. Other sizes are possible.   */
+#if TMPL_UCHAR_BIT == 8 || TMPL_UCHAR_BIT == 16 || TMPL_UCHAR_BIT == 32
 
-/*  8-bit trailing-zeros function.                                            */
-int tmpl_Char_Trailing_Zeros(signed char n)
+/*  Signed char trailing-zeros function.                                      */
+int tmpl_Char_Trailing_Zeros(const signed char n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -112,196 +112,58 @@ int tmpl_Char_Trailing_Zeros(signed char n)
     /*  We want the largest value N such that n >> N (n bit-shift to the      *
      *  right N times) does not erase any non-zeros. To avoid sign issues,    *
      *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
+    signed char abs_n = tmpl_Char_Abs(n);
 
     /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
+    if (abs_n != 0)
     {
-        /*  Set the upper 4 bits to zero and see if the number ends up being  *
-         *  zero. If yes, there are at least 4 trailing zeros.                */
-        if (!(n & 0x0F))
-        {
-            bits += 4;
-            n >>= 4;
-        }
+        /*  Exceptionally rare, but not impossible, handle 32-bit char first. */
+#if TMPL_UCHAR_BIT == 32
 
-        /*  Next two bits.                                                    */
-        if (!(n & 0x03))
-        {
-            bits += 2;
-            n >>= 2;
-        }
-
-        /*  The last bit of n.                                                */
-        if (!(n & 0x01))
-            bits += 1;
-    }
-    return bits;
-}
-/*  End of tmpl_Char_Trailing_Zeros.                                          */
-
-/*  Not unheard of, but rare (some calculators use this). 16-bit char.        */
-#elif UCHAR_MAX == 0xFFFFU
-
-/*  16-bit trailing-zeros function.                                           */
-int tmpl_Char_Trailing_Zeros(signed char n)
-{
-    /*  Variable for the number of trailing zeros.                            */
-    int bits = 0U;
-
-    /*  We want the largest value N such that n >> N (n bit-shift to the      *
-     *  right N times) does not erase any non-zeros. To avoid sign issues,    *
-     *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
-
-    /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
-    {
-        /*  Set the upper 8 bits to zero and see if the number ends up being  *
-         *  zero. If yes, there are at least 8 trailing zeros.                */
-        if (!(n & 0xFF))
-        {
-            bits += 8;
-            n >>= 8;
-        }
-
-        /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
-        {
-            bits += 4;
-            n >>= 4;
-        }
-
-        /*  Next two bits.                                                    */
-        if (!(n & 0x03))
-        {
-            bits += 2;
-            n >>= 2;
-        }
-
-        /*  The last bit of n.                                                */
-        if (!(n & 0x01))
-            bits += 1;
-    }
-    return bits;
-}
-/*  End of tmpl_Char_Trailing_Zeros.                                          */
-
-/*  Essentially unheard of, 32-bit char.                                      */
-#elif UCHAR_MAX == 0xFFFFFFFFU
-
-/*  32-bit trailing-zeros function.                                           */
-int tmpl_Char_Trailing_Zeros(signed char n)
-{
-    /*  Variable for the number of trailing zeros.                            */
-    int bits = 0;
-
-    /*  We want the largest value N such that n >> N (n bit-shift to the      *
-     *  right N times) does not erase any non-zeros. To avoid sign issues,    *
-     *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
-
-    /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
-    {
         /*  Set the upper 16 bits to zero and see if the number ends up being *
          *  zero. If yes, there are at least 16 trailing zeros.               */
-        if (!(n & 0xFFFF))
+        if (!(abs_n & 0xFFFF))
         {
             bits += 16;
-            n >>= 16;
+            abs_n >>= 16;
         }
+#endif
+/*  End of #if TMPL_UCHAR_BIT == 32.                                          */
 
-        /*  The next 8 bits.                                                  */
-        if (!(n & 0xFF))
+        /*  Still quite uncommon, but not unheard of, next handle 16-bit      *
+         *  char. Some calculators use this size.                             */
+#if TMPL_UCHAR_BIT == 16 || TMPL_UCHAR_BIT == 32
+
+        /*  Set the next 8 bits to zero and see if the number ends up being   *
+         *  zero. If yes, there are at least 8 more trailing zeros.           */
+        if (!(abs_n & 0xFF))
         {
             bits += 8;
-            n >>= 8;
+            abs_n >>= 8;
         }
+#endif
+/*  End of #if TMPL_UCHAR_BIT == 16.                                          */
 
-        /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
+        /*  Set the upper 4 bits to zero and see if the number ends up being  *
+         *  zero. If yes, there are at least 4 trailing zeros.                */
+        if (!(abs_n & 0x0F))
         {
             bits += 4;
-            n >>= 4;
+            abs_n >>= 4;
         }
 
         /*  Next two bits.                                                    */
-        if (!(n & 0x03))
+        if (!(abs_n & 0x03))
         {
             bits += 2;
-            n >>= 2;
+            abs_n >>= 2;
         }
 
         /*  The last bit of n.                                                */
-        if (!(n & 0x01))
+        if (!(abs_n & 0x01))
             bits += 1;
     }
-    return bits;
-}
-/*  End of tmpl_Char_Trailing_Zeros.                                          */
 
-/*  I once read there's a calculator with char = short = int = long = 64-bit. */
-#elif UCHAR_MAX == 0xFFFFFFFFFFFFFFFFU
-
-/*  64-bit trailing-zeros function.                                           */
-int tmpl_Char_Trailing_Zeros(signed char n)
-{
-    /*  Variable for the number of trailing zeros.                            */
-    int bits = 0;
-
-    /*  We want the largest value N such that n >> N (n bit-shift to the      *
-     *  right N times) does not erase any non-zeros. To avoid sign issues,    *
-     *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
-
-    /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
-    {
-        /*  Set the upper 32 bits to zero and see if the number ends up being *
-         *  zero. If yes, there are at least 32 trailing zeros.               */
-        if (!(n & 0xFFFFFFFF))
-        {
-            bits += 32;
-            n >>= 32;
-        }
-
-        /*  The next 16-bits.                                                 */
-        if (!(n & 0xFFFF))
-        {
-            bits += 16;
-            n >>= 16;
-        }
-
-        /*  The next 8 bits.                                                  */
-        if (!(n & 0xFF))
-        {
-            bits += 8;
-            n >>= 8;
-        }
-
-        /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
-        {
-            bits += 4;
-            n >>= 4;
-        }
-
-        /*  Next two bits.                                                    */
-        if (!(n & 0x03))
-        {
-            bits += 2;
-            n >>= 2;
-        }
-
-        /*  The last bit of n.                                                */
-        if (!(n & 0x01))
-            bits += 1;
-    }
     return bits;
 }
 /*  End of tmpl_Char_Trailing_Zeros.                                          */
@@ -320,37 +182,37 @@ int tmpl_Char_Trailing_Zeros(signed char n)
     /*  We want the largest value N such that n >> N (n bit-shift to the      *
      *  right N times) does not erase any non-zeros. To avoid sign issues,    *
      *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
+    signed char abs_n = tmpl_Char_Abs(n);
 
     /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
+    if (abs_n != 0)
     {
         /*  Keep zeroing out the lower 8 bits and shifting the number.        */
-        while (!(n & 0xFF))
+        while (!(abs_n & 0xFF))
         {
             bits += 8;
-            n >>= 8;
+            abs_n >>= 8;
         }
 
         /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
+        if (!(abs_n & 0x0F))
         {
             bits += 4;
-            n >>= 4;
+            abs_n >>= 4;
         }
 
         /*  Next two bits.                                                    */
-        if (!(n & 0x03))
+        if (!(abs_n & 0x03))
         {
             bits += 2;
-            n >>= 2;
+            abs_n >>= 2;
         }
 
         /*  The last bit of n.                                                */
-        if (!(n & 0x01))
+        if (!(abs_n & 0x01))
             bits += 1;
     }
+
     return bits;
 }
 /*  End of tmpl_Char_Trailing_Zeros.                                          */
