@@ -37,6 +37,9 @@
 /*  TMPL_DOUBLE_ENDIANNESS macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  tmpl_UInt64 found here, used for type punning.                            */
+#include <libtmpl/include/tmpl_inttype.h>
+
 /******************************************************************************
  *                          Double Macros and Unions                          *
  ******************************************************************************/
@@ -104,7 +107,7 @@
 
 /*  64-bit union for an IEEE-754 double precision floating point number with  *
  *  big endianness. Found in MIPS, s390x, PowerPC, and SPARC architectures.   */
-typedef union tmpl_IEEE754_Double_Def {
+typedef union tmpl_IEEE754_Double_Type {
 
     /*  Struct for type-punning the components of a double.                   */
     struct {
@@ -135,6 +138,11 @@ typedef union tmpl_IEEE754_Double_Def {
         unsigned int man3 : 16;
     } bits;
 
+    /*  The integer value the 64 bits for the double represent.               */
+#if TMPL_HAS_FLOATINT64 == 1
+    tmpl_UInt64 n;
+#endif
+
     /*  The double precision number the above bits represent.                 */
     double r;
 } tmpl_IEEE754_Double;
@@ -144,7 +152,7 @@ typedef union tmpl_IEEE754_Double_Def {
 
 /*  64-bit union for an IEEE-754 double precision floating point number with  *
  *  little endianness. Found in x86, arm64, mipsel, and sh4 architectures.    */
-typedef union tmpl_IEEE754_Double_Def {
+typedef union tmpl_IEEE754_Double_Type {
 
     /*  Struct for type-punning the components of a double.                   */
     struct {
@@ -157,6 +165,11 @@ typedef union tmpl_IEEE754_Double_Def {
         unsigned int expo : 11;
         unsigned int sign : 1;
     } bits;
+
+    /*  The integer value the 64 bits for the double represent.               */
+#if TMPL_HAS_FLOATINT64 == 1
+    tmpl_UInt64 n;
+#endif
 
     /*  The double precision number the above bits represent.                 */
     double r;

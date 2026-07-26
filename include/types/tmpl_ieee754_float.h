@@ -37,6 +37,9 @@
 /*  TMPL_FLOAT_ENDIANNESS macro is provided here.                             */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  tmpl_UInt32 found here, used for type punning.                            */
+#include <libtmpl/include/tmpl_inttype.h>
+
 /******************************************************************************
  *                          Float Macros and Unions                           *
  ******************************************************************************/
@@ -113,7 +116,7 @@
  *  common in implementations of libm, the C mathematical library. The C99,   *
  *  C11, and C23 standards made type-punning using unions a well-defined      *
  *  notion. In C++ it is still technically undefined, but well supported.     */
-typedef union tmpl_IEEE754_Float_Def {
+typedef union tmpl_IEEE754_Float_Type {
 
     /*  Use a bit field for the binary representation of a float. A bit field *
      *  allows us to define variables with an exact number of bits (up to 16).*
@@ -138,6 +141,11 @@ typedef union tmpl_IEEE754_Float_Def {
         unsigned int man1 : 16;
     } bits;
 
+    /*  The integer value the 32 bits for the float represent.                */
+#if TMPL_HAS_FLOATINT32 == 1
+    tmpl_UInt32 n;
+#endif
+
     /*  The above struct holds 32 bits, which the IEEE-754 format specifies   *
      *  as the size of a single-precision float. This is "float" in C.        */
     float r;
@@ -149,13 +157,22 @@ typedef union tmpl_IEEE754_Float_Def {
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
  *  to swap the order of the bit fields in the union.                         */
-typedef union tmpl_IEEE754_Float_Def {
+typedef union tmpl_IEEE754_Float_Type {
+
+    /*  Same idea as with big endianness, only the order is reversed.         */
     struct {
         unsigned int man1 : 16;
         unsigned int man0 : 7;
         unsigned int expo : 8;
         unsigned int sign : 1;
     } bits;
+
+    /*  The integer value the 32 bits for the float represent.                */
+#if TMPL_HAS_FLOATINT32 == 1
+    tmpl_UInt32 n;
+#endif
+
+    /*  The single precision number the above bits represent.                 */
     float r;
 } tmpl_IEEE754_Float;
 
