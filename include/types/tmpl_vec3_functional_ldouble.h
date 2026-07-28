@@ -34,15 +34,13 @@
 #ifndef TMPL_TYPES_VEC3_FUNCTIONAL_LDOUBLE_H
 #define TMPL_TYPES_VEC3_FUNCTIONAL_LDOUBLE_H
 
-/*  Long double precision 3D vectors provided here.                           */
+/*  Long double-precision 3D vectors provided here.                           */
 #include "tmpl_vec3_ldouble.h"
 
-/*  Function pointer for long double precision 3D functionals.                */
+/*  Function pointer for long double-precision 3D functionals.                */
 typedef
 long double
-(*tmpl_ThreeVectorLongDoubleFunctional)(
-    const tmpl_ThreeVectorLongDouble * const
-);
+(*tmpl_ThreeFunctionalLongDouble)(const tmpl_ThreeVectorLongDouble * const);
 
 #endif
 /*  End of include guard.                                                     */

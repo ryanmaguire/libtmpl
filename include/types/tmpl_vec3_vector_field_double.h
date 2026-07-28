@@ -34,15 +34,13 @@
 #ifndef TMPL_TYPES_VEC3_VECTOR_FIELD_DOUBLE_H
 #define TMPL_TYPES_VEC3_VECTOR_FIELD_DOUBLE_H
 
-/*  Double precision 3D vectors provided here.                                */
+/*  Double-precision 3D vectors provided here.                                */
 #include "tmpl_vec3_double.h"
 
-/*  Function pointer for double precision 3D vector fields.                   */
+/*  Function pointer for double-precision 3D vector fields.                   */
 typedef
-double
-(*tmpl_ThreeVectorDoubleVectorField)(
-    const tmpl_ThreeVectorDouble * const
-);
+tmpl_ThreeVectorDouble
+(*tmpl_ThreeVectorFieldDouble)(const tmpl_ThreeVectorDouble * const);
 
 #endif
 /*  End of include guard.                                                     */

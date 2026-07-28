@@ -34,15 +34,13 @@
 #ifndef TMPL_TYPES_VEC3_VECTOR_FIELD_FLOAT_H
 #define TMPL_TYPES_VEC3_VECTOR_FIELD_FLOAT_H
 
-/*  Single precision 3D vectors provided here.                                */
+/*  Single-precision 3D vectors provided here.                                */
 #include "tmpl_vec3_float.h"
 
-/*  Function pointer for single precision 3D vector fields.                   */
+/*  Function pointer for single-precision 3D vector fields.                   */
 typedef
-float
-(*tmpl_ThreeVectorFloatVectorField)(
-    const tmpl_ThreeVectorFloat * const
-);
+tmpl_ThreeVectorFloat
+(*tmpl_ThreeVectorFieldFloat)(const tmpl_ThreeVectorFloat * const);
 
 #endif
 /*  End of include guard.                                                     */

@@ -34,15 +34,13 @@
 #ifndef TMPL_TYPES_VEC3_FUNCTIONAL_DOUBLE_H
 #define TMPL_TYPES_VEC3_FUNCTIONAL_DOUBLE_H
 
-/*  Double precision 3D vectors provided here.                                */
+/*  Double-precision 3D vectors provided here.                                */
 #include "tmpl_vec3_double.h"
 
-/*  Function pointer for double precision 3D functionals.                     */
+/*  Function pointer for double-precision 3D functionals.                     */
 typedef
 double
-(*tmpl_ThreeVectorDoubleFunctional)(
-    const tmpl_ThreeVectorDouble * const
-);
+(*tmpl_ThreeFunctionalDouble)(const tmpl_ThreeVectorDouble * const);
 
 #endif
 /*  End of include guard.                                                     */

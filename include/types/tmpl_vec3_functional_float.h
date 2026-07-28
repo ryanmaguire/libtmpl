@@ -34,15 +34,13 @@
 #ifndef TMPL_TYPES_VEC3_FUNCTIONAL_FLOAT_H
 #define TMPL_TYPES_VEC3_FUNCTIONAL_FLOAT_H
 
-/*  Single precision 3D vectors provided here.                                */
+/*  Single-precision 3D vectors provided here.                                */
 #include "tmpl_vec3_float.h"
 
-/*  Function pointer for single precision 3D functionals.                     */
+/*  Function pointer for single-precision 3D functionals.                     */
 typedef
 float
-(*tmpl_ThreeVectorFloatFunctional)(
-    const tmpl_ThreeVectorFloat * const
-);
+(*tmpl_ThreeFunctionalFloat)(const tmpl_ThreeVectorFloat * const);
 
 #endif
 /*  End of include guard.                                                     */
