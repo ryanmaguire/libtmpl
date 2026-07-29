@@ -157,7 +157,10 @@
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_two_sum.h>
 
-/*  Standard 2Sum algorithm at double precision.                              */
+/*  Double-double needs to be treated carefully since it is a split type.     */
+#if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
+
+/*  Standard 2Sum algorithm at long double-precision.                         */
 TMPL_ALWAYS_INLINE
 void
 tmpl_LDouble_Two_Sum(const long double x,
@@ -203,3 +206,43 @@ tmpl_LDouble_Two_Sum(const long double x,
     *err = err_sum;
 }
 /*  End of tmpl_Double_Two_Sum.                                               */
+
+#else
+/*  Else for #if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE.              */
+
+/*  tmpl_IEEE754_LDouble type is provided here.                               */
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+
+/*  2Sum algorithm for double-double inputs.                                  */
+TMPL_ALWAYS_INLINE
+void
+tmpl_LDouble_Two_Sum(const long double x,
+                     const long double y,
+                     long double * TMPL_RESTRICT const out,
+                     long double * TMPL_RESTRICT const err)
+{
+    tmpl_IEEE754_LDouble wx, wy, wout, werr;
+    double q, r, e0, e1, f0, f1, f2;
+
+    wx.r = x;
+    wy.r = y;
+
+    tmpl_Double_Two_Sum(wy.d[0], wx.d[1], &q, &e0);
+    tmpl_Double_Two_Sum(q, wx.d[0], &q, &e1);
+
+    tmpl_Double_Two_Sum(wy.d[1], e0, &r, &f0);
+    tmpl_Double_Two_Sum(r, e1, &r, &f1);
+    tmpl_Double_Two_Sum(r, q,  &r, &f2);
+
+    wout.d[0] = r;
+    wout.d[1] = f2;
+
+    werr.d[0] = f1;
+    werr.d[1] = f0;
+
+    *out = wout.r;
+    *err = werr.r;
+}
+
+#endif
+/*  End of #if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE.                */
