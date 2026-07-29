@@ -6,7 +6,7 @@ void
 tmpl_Void_Array_D2D(const void * const in,
                     void * const out,
                     size_t length,
-                    const tmpl_DoubleFunction func)
+                    const tmpl_FunctionDouble func)
 {
     size_t n;
     const double * const x = in;

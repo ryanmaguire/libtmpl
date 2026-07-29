@@ -6,7 +6,7 @@ void
 tmpl_Void_Array_L2D(const void * const in,
                     void * const out,
                     size_t length,
-                    const tmpl_DoubleFunction func)
+                    const tmpl_FunctionDouble func)
 {
     size_t n;
     const signed long int * const x = in;

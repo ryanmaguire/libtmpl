@@ -19,23 +19,23 @@
  *                            tmpl_function_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides a single precision complex data type.                        *
+ *      Provides a single-precision function type R -> R.                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 17, 2024                                              *
+ *  Date:       January 13, 2025                                              *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2025/01/13: Ryan Maguire                                                  *
- *      Moved this typedef to the types directory.                            *
+ *  2026/07/29: Ryan Maguire                                                  *
+ *      Updated typedef to be consistent with other types.                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_TYPES_FUNCTION_FLOAT_H
 #define TMPL_TYPES_FUNCTION_FLOAT_H
 
-/*  Function pointer for single precision real-valued functions.              */
-typedef float (*tmpl_FloatFunction)(float);
+/*  Function pointer for single-precision real-valued functions.              */
+typedef float (*tmpl_FunctionFloat)(float);
 
 #endif
 /*  End of include guard.                                                     */

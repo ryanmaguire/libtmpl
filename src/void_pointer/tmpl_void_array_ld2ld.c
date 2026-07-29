@@ -6,7 +6,7 @@ void
 tmpl_Void_Array_LD2LD(const void * const in,
                       void * const out,
                       size_t length,
-                      const tmpl_LongDoubleFunction func)
+                      const tmpl_FunctionLongDouble func)
 {
     size_t n;
     const long double * const x = in;

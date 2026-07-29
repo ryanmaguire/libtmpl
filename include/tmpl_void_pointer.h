@@ -31,7 +31,7 @@ extern void
 tmpl_Void_Array_L2D(const void * const in,
                     void * const out,
                     size_t length,
-                    const tmpl_DoubleFunction func);
+                    const tmpl_FunctionDouble func);
 
 extern void
 tmpl_Void_Array_L2CD(const void * const in,
@@ -43,19 +43,19 @@ extern void
 tmpl_Void_Array_F2F(const void * const in,
                     void * const out,
                     const size_t length,
-                    const tmpl_FloatFunction func);
+                    const tmpl_FunctionFloat func);
 
 extern void
 tmpl_Void_Array_D2D(const void * const in,
                     void * const out,
                     const size_t length,
-                    const tmpl_DoubleFunction func);
+                    const tmpl_FunctionDouble func);
 
 extern void
 tmpl_Void_Array_LD2LD(const void * const in,
                       void * const out,
                       const size_t length,
-                      const tmpl_LongDoubleFunction func);
+                      const tmpl_FunctionLongDouble func);
 
 extern void
 tmpl_Void_Array_F2CF(const void * const in,

@@ -19,23 +19,23 @@
  *                            tmpl_function_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides a double precision complex data type.                        *
+ *      Provides a double-precision function type R -> R.                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 17, 2024                                              *
+ *  Date:       January 13, 2025                                              *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2025/01/13: Ryan Maguire                                                  *
- *      Moved this typedef to the types directory.                            *
+ *  2026/07/29: Ryan Maguire                                                  *
+ *      Updated typedef to be consistent with other types.                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_TYPES_FUNCTION_DOUBLE_H
 #define TMPL_TYPES_FUNCTION_DOUBLE_H
 
-/*  Function pointer for double precision real-valued functions.              */
-typedef double (*tmpl_DoubleFunction)(double);
+/*  Function pointer for double-precision real-valued functions.              */
+typedef double (*tmpl_FunctionDouble)(double);
 
 #endif
 /*  End of include guard.                                                     */

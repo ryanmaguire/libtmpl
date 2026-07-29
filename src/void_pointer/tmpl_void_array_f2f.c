@@ -6,7 +6,7 @@ void
 tmpl_Void_Array_F2F(const void * const in,
                     void * const out,
                     size_t length,
-                    const tmpl_FloatFunction func)
+                    const tmpl_FunctionFloat func)
 {
     size_t n;
     const float * const x = in;
