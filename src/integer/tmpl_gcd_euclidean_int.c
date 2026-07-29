@@ -92,31 +92,12 @@
  *      Modified to avoid using swap. Small performance improvement.          *
  ******************************************************************************/
 
-/*  TMPL_USE_INLINE macro found here.                                         */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Forward declaration / function prototype.                                 */
-extern signed int
-tmpl_Int_GCD_Euclidean(const signed int m, const signed int n);
-
 /*  TMPL_MAX and TMPL_MIN macros found here.                                  */
 #include <libtmpl/include/helper/tmpl_max.h>
 #include <libtmpl/include/helper/tmpl_min.h>
 
-/*  The abs function is small enough to be inlined.                           */
-#if TMPL_USE_INLINE == 1
-
-/*  Location of the tmpl_Int_Abs function.                                    */
-#include <libtmpl/include/inline/integer/tmpl_abs_int.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the abs function.         */
-extern signed int tmpl_Int_Abs(const signed int n);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_integer.h>
 
 /*  Function for computing the GCD of two signed integers.                    */
 signed int tmpl_Int_GCD_Euclidean(const signed int m, const signed int n)

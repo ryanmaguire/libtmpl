@@ -100,32 +100,12 @@
 /*  Only compile this if long long support is available.                      */
 #if TMPL_HAS_LONGLONG == 1
 
-/*  TMPL_USE_INLINE macro found here.                                         */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Forward declaration / function prototype.                                 */
-extern signed long long int
-tmpl_LLong_GCD_Euclidean(const signed long long int m,
-                         const signed long long int n);
-
 /*  TMPL_MAX and TMPL_MIN macros found here.                                  */
 #include <libtmpl/include/helper/tmpl_max.h>
 #include <libtmpl/include/helper/tmpl_min.h>
 
-/*  The abs function is small enough to be inlined.                           */
-#if TMPL_USE_INLINE == 1
-
-/*  Location of the tmpl_LLong_Abs function.                                  */
-#include <libtmpl/include/inline/integer/tmpl_abs_llong.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, tell the compiler about the abs function.         */
-extern signed long long int tmpl_LLong_Abs(const signed long long int n);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_integer.h>
 
 /*  Function for computing the GCD of two signed integers.                    */
 signed long long int
