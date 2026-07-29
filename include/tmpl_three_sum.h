@@ -16,20 +16,20 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                tmpl_two_prod                               *
+ *                               tmpl_three_sum                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides 2Prod and other 2Prod-like algorithms.                       *
+ *      Provides 3Sum, Fast3Sum, and other 3Sum-like algorithms.              *
  *  Notes:                                                                    *
  *      1.) On compilers supporting the restrict keyword, the output          *
  *          variables are declared as restrict pointers. This requires that   *
  *          these variables point to different locations. To properly use the *
- *          various 2Prod functions, this should be true regardless of        *
- *          whether or not restrict is supported.                             *
+ *          various 3Sum functions, this should be true regardless of whether *
+ *          or not restrict is supported.                                     *
  *                                                                            *
- *      2.) None of the 2Prod functions check for NULL pointers.              *
+ *      2.) None of the 3Sum functions check for NULL pointers.               *
  *                                                                            *
- *      3.) None of the 2Prod functions check for NaN or infinity.            *
+ *      3.) None of the 3Sum functions check for NaN or infinity.             *
  *                                                                            *
  *      4.) Float, double, and long double versions are provided.             *
  ******************************************************************************
@@ -39,14 +39,14 @@
  *          Header file providing TMPL_RESTRICT and other macros.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 22, 2024                                             *
+ *  Date:       July 29, 2026                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TWO_PROD_H
-#define TMPL_TWO_PROD_H
+#ifndef TMPL_THREE_SUM_H
+#define TMPL_THREE_SUM_H
 
-/*  TMPL_USE_INLINE macro provided here, as is TMPL_RESTRICT.                 */
+/*  TMPL_RESTRICT macro found here.                                           */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  If using with C++ (and not C), wrap the entire header file in an extern   *
@@ -57,110 +57,88 @@ extern "C" {
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Two_Multiply_Add                                          *
+ *      tmpl_Double_Fast_Three_Sum                                            *
  *  Purpose:                                                                  *
- *      Provides the 2FMA algorithm which accurately computes x * y + z.      *
+ *      Performs the rounded 3Sum algorithm, rounding the sum to two doubles. *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
  *          A real number.                                                    *
  *      y (const double):                                                     *
  *          Another real number.                                              *
+ *      z (const double):                                                     *
+ *          A third real number.                                              *
  *      sum_high (double * TMPL_RESTRICT const):                              *
- *          The high part of x * y + z.                                       *
+ *          The high part of x + y + z.                                       *
  *      sum_low (double * TMPL_RESTRICT const):                               *
- *          The low part of x * y + z.                                        *
+ *          The low part of x + y + z.                                        *
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_Double_Two_Multiply_Add(const double x,
-                             const double y,
-                             const double z,
-                             double * TMPL_RESTRICT const sum_high,
-                             double * TMPL_RESTRICT const sum_low);
+tmpl_Double_Fast_Three_Sum(const double x,
+                           const double y,
+                           const double z,
+                           double * TMPL_RESTRICT const sum_high,
+                           double * TMPL_RESTRICT const sum_low);
 
 extern void
-tmpl_Float_Two_Multiply_Add(const float x,
-                            const float y,
-                            const float z,
-                            float * TMPL_RESTRICT const sum_high,
-                            float * TMPL_RESTRICT const sum_low);
+tmpl_Float_Fast_Three_Sum(const float x,
+                          const float y,
+                          const float z,
+                          float * TMPL_RESTRICT const sum_high,
+                          float * TMPL_RESTRICT const sum_low);
 
 extern void
-tmpl_LDouble_Two_Multiply_Add(const long double x,
-                              const long double y,
-                              const long double z,
-                              long double * TMPL_RESTRICT const sum_high,
-                              long double * TMPL_RESTRICT const sum_low);
+tmpl_LDouble_Fast_Three_Sum(const long double x,
+                            const long double y,
+                            const long double z,
+                            long double * TMPL_RESTRICT const sum_high,
+                            long double * TMPL_RESTRICT const sum_low);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Two_Prod                                                  *
+ *      tmpl_Double_Three_Sum                                                 *
  *  Purpose:                                                                  *
- *      Performs the 2Prod algorithm for floating-point multiplication.       *
+ *      Performs the 3Sum algorithm, perfectly adding three doubles.          *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
  *          A real number.                                                    *
  *      y (const double):                                                     *
  *          Another real number.                                              *
- *      out (double * const):                                                 *
- *          The floating-point product x * y is stored here.                  *
- *      err (double * const):                                                 *
- *          The error, prod(x, y) - (x * y), is stored here.                  *
+ *      z (const double):                                                     *
+ *          A third real number.                                              *
+ *      sum_high (double * TMPL_RESTRICT const):                              *
+ *          The high part of x + y + z.                                       *
+ *      sum_mid (double * TMPL_RESTRICT const):                               *
+ *          The middle part of x + y + z.                                     *
+ *      sum_low (double * TMPL_RESTRICT const):                               *
+ *          The low part of x + y + z.                                        *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
 extern void
-tmpl_Double_Two_Prod(const double x,
-                     const double y,
-                     double * const TMPL_RESTRICT out,
-                     double * const TMPL_RESTRICT err);
+tmpl_Double_Three_Sum(const double x,
+                      const double y,
+                      const double z,
+                      double * TMPL_RESTRICT const sum_high,
+                      double * TMPL_RESTRICT const sum_mid,
+                      double * TMPL_RESTRICT const sum_low);
 
 extern void
-tmpl_Float_Two_Prod(const float x,
-                    const float y,
-                    float * const TMPL_RESTRICT out,
-                    float * const TMPL_RESTRICT err);
+tmpl_Float_Three_Sum(const float x,
+                     const float y,
+                     const float z,
+                     float * TMPL_RESTRICT const sum_high,
+                     float * TMPL_RESTRICT const sum_mid,
+                     float * TMPL_RESTRICT const sum_low);
 
 extern void
-tmpl_LDouble_Two_Prod(const long double x,
-                      const long double y,
-                      long double * const TMPL_RESTRICT out,
-                      long double * const TMPL_RESTRICT err);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Two_Square                                                *
- *  Purpose:                                                                  *
- *      Performs the 2Square algorithm for floating-point multiplication.     *
- *  Arguments:                                                                *
- *      x (const double):                                                     *
- *          A real number.                                                    *
- *      out (double * const):                                                 *
- *          The floating-point product fl(x * x) is stored here.              *
- *      err (double * const):                                                 *
- *          The error, (x * y) - fl(x * y), is stored here.                   *
- *  Output:                                                                   *
- *      None (void).                                                          *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
- ******************************************************************************/
-extern void
-tmpl_Double_Two_Square(const double x,
-                       double * const TMPL_RESTRICT out,
-                       double * const TMPL_RESTRICT err);
-
-extern void
-tmpl_Float_Two_Square(const float x,
-                      float * const TMPL_RESTRICT out,
-                      float * const TMPL_RESTRICT err);
-
-extern void
-tmpl_LDouble_Two_Square(const long double x,
-                        long double * const TMPL_RESTRICT out,
-                        long double * const TMPL_RESTRICT err);
+tmpl_LDouble_Three_Sum(const long double x,
+                       const long double y,
+                       const long double z,
+                       long double * TMPL_RESTRICT const sum_high,
+                       long double * TMPL_RESTRICT const sum_mid,
+                       long double * TMPL_RESTRICT const sum_low);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
