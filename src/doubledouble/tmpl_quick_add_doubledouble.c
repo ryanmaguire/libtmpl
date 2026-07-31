@@ -164,7 +164,7 @@ TMPL_UNSEQUENCED
     /*  Under the assumption that x and y have the same sign, or |x| >> |y|,  *
      *  we may conclude with a Fast2Sum. The error bound for this is          *
      *                                                                        *
-     *      err < 4 eps^2 (|x| + |y|)                                         *
+     *      Err(x + y) < 4 eps^2 (|x| + |y|)                                  *
      *                                                                        *
      *  The absolute value signs here mean that the relative error may be     *
      *  very large, see Joldes et. al (2017) algorithm 5 for details. In the  *

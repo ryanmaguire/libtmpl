@@ -169,6 +169,34 @@ TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_DoubleDouble_Multiply_Scalar                                     *
+ *  Purpose:                                                                  *
+ *      Multiplies a double and a double-double.                              *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A double-precision floating-point number.                         *
+ *      y (const tmpl_DoubleDouble * const):                                  *
+ *          A double-double real number.                                      *
+ *  Output:                                                                   *
+ *      prod (tmpl_DoubleDouble):                                             *
+ *          The double-double product x * y.                                  *
+ *  Notes:                                                                    *
+ *      1.) long double-double version is also provided.                      *
+ ******************************************************************************/
+TMPL_PURE_FUNC
+tmpl_DoubleDouble
+tmpl_DoubleDouble_Multiply_Scalar(const double x,
+                                  const tmpl_DoubleDouble * const y)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+tmpl_LongDoubleDouble
+tmpl_LDoubleDouble_Multiply_Scalar(const long double x,
+                                   const tmpl_LongDoubleDouble * const y)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_DoubleDouble_Create                                              *
  *  Purpose:                                                                  *
  *      Creates a double-double from two doubles.                             *

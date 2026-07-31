@@ -16,55 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_quick_add_ldoubledouble                        *
+ *                         tmpl_multiply_ldoubledouble                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Performs (non-safe) addition for two double-word real numbers.        *
+ *      Performs multiplication for two double-word real numbers.             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDoubleDouble_Quick_Add                                          *
+ *      tmpl_LDoubleDouble_Multiply                                           *
  *  Purpose:                                                                  *
- *      Evaluates the Dekker-sum of two long-double-doubles.                  *
+ *      Evaluates the product of two double-doubles.                          *
  *  Arguments:                                                                *
  *      x (const tmpl_LongDoubleDouble * const):                              *
  *          A long-double-double real number.                                 *
  *      y (const tmpl_LongDoubleDouble * const):                              *
  *          Another long-double-double real number.                           *
  *  Output:                                                                   *
- *      x (tmpl_LongDoubleDouble):                                            *
- *          The long-double-double sum of x and y.                            *
+ *      product (tmpl_LongDoubleDouble):                                      *
+ *          The long-double-double product of x and y.                        *
  *  Called Functions:                                                         *
  *      src/two_sum/                                                          *
- *          tmpl_LDouble_Two_Sum:                                             *
- *              Performs the 2Sum of two numbers: (sum, error) = 2Sum(x, y).  *
  *          tmpl_LDouble_Fast_Two_Sum:                                        *
  *              Performs Fast2Sum: (sum, error) = Fast2Sum(x, y).             *
- *  Method:                                                                   *
- *      We perform the Dekker algorithm for adding double-doubles:            *
- *                                                                            *
- *          (sum_hi, sum_lo) = 2Sum(xhi, yhi)                                 *
- *                   comp_lo = xlo + ylo                                      *
- *                   comp_hi = sum_lo + comp_lo                               *
- *          (out_hi, out_lo) = Fast2Sum(sum_hi, comp_hi)                      *
- *                                                                            *
- *      This requires half the number of calls to 2Sum and Fast2Sum as the    *
- *      tmpl_LDoubleDouble_Add function.                                      *
- *  Notes:                                                                    *
- *      1.) This function calls libtmpl's 2Sum and Fast2Sum routines. Those   *
- *          routines use floating-point barriers to protect against           *
- *          optimizations like -ffast-math. On GCC and Clang this results in  *
- *          a no-op and the generated machine code is both correct and        *
- *          optimal. On other compilers these barriers may use the volatile   *
- *          keyword which significantly slows things down. Clang-like         *
- *          compilers such as ICX, Open XL, and AOCC are able to use the      *
- *          no-op barriers, as is MSVC. Compilers like TCC and PCC are not.   *
- *                                                                            *
- *      2.) If x and y have a different sign (one is negative and one is      *
- *          positive), this function is not safe to use since the relative    *
- *          error may be massive (greater than or equal to one). In this case *
- *          you should use tmpl_LDoubleDouble_Add.                            *
+ *      src/two_prod/                                                         *
+ *          tmpl_LDouble_Two_Prod:                                            *
+ *              Performs 2Prod for two numbers: (prod, error) = 2Prod(x, y).  *
  *  References:                                                               *
  *      1.) Joldes, M., Muller, J., Popescu, V. (October 2017).               *
  *          Tight and rigorous error bounds for basic                         *
@@ -118,16 +95,13 @@
  *          Provides (optional) C23 attributes for optimization.              *
  *  3.) tmpl_two_sum.h:                                                       *
  *          Provides 2Sum, Fast2Sum, and other 2Sum-like routines.            *
- *  4.) tmpl_doubledouble.h:                                                  *
+ *  4.) tmpl_two_prod.h:                                                      *
+ *          Provides the 2Prod function.                                      *
+ *  5.) tmpl_doubledouble.h:                                                  *
  *          Function prototype and double-double typedefs provided here.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 26, 2024                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2026/07/29: Ryan Maguire                                                  *
- *      Added C23 attributes, merged inline vs. non-inline.                   *
+ *  Date:       May 12, 2026                                                  *
  ******************************************************************************/
 
 /*  TMPL_ALWAYS_INLINE macro found here.                                      */
@@ -136,40 +110,59 @@
 /*  Optional C23 attributes for optimization provided here.                   */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  2Sum and Fast2Sum are needed for double-double addition.                  */
+/*  2Sum and 2Prod are needed for double-double multiplication.               */
 #include <libtmpl/include/tmpl_two_sum.h>
+#include <libtmpl/include/tmpl_two_prod.h>
 
 /*  Function prototytpe / forward declaration found here.                     */
 #include <libtmpl/include/tmpl_doubledouble.h>
 
-/*  Performs fast addition for two long-double-doubles.                       */
+/*  Performs multiplication for two long-double-doubles.                      */
 TMPL_PURE_FUNC
 TMPL_ALWAYS_INLINE
 tmpl_LongDoubleDouble
-tmpl_LDoubleDouble_Quick_Add(const tmpl_LongDoubleDouble * const x,
-                             const tmpl_LongDoubleDouble * const y)
+tmpl_LDoubleDouble_Multiply(const tmpl_LongDoubleDouble * const x,
+                            const tmpl_LongDoubleDouble * const y)
 TMPL_UNSEQUENCED
 {
+    /*  Declare necessary variables. C89 requires declerations at the top.    */
+    tmpl_LongDoubleDouble out;
 
-    /*  The output long-double-double word, the fast sum of x and y.          */
-    tmpl_LongDoubleDouble sum;
-
-    /*  The high order part of the sum is the floating-point sum of the high  *
-     *  parts of the inputs. The error can be tracked using 2Sum.             */
-    tmpl_LDouble_Two_Sum(x->dat[0], y->dat[0], &sum.dat[0], &sum.dat[1]);
-
-    /*  The low parts of the components contribute to the error in the sum.   */
-    sum.dat[1] += x->dat[1] + y->dat[1];
-
-    /*  Under the assumption that x and y have the same sign, or |x| >> |y|,  *
-     *  we may conclude with a Fast2Sum. The error bound for this is          *
+    /*  Given x = xhi + xlo and y = yhi + ylo, we have:                       *
      *                                                                        *
-     *      Err(x + y) < 4 eps^2 (|x| + |y|)                                  *
+     *      x * y = (xhi + xlo) * (yhi + ylo)                                 *
+     *            = xhi*yhi + xhi*ylo + xlo*yhi + xlo*ylo                     *
+     *           ~= xhi*yhi + xhi*ylo + xlo*yhi                               *
      *                                                                        *
-     *  The absolute value signs here mean that the relative error may be     *
-     *  very large, see Joldes et. al (2017) algorithm 5 for details. In the  *
-     *  case where sign(x) = sign(y) or |x| >> |y|, this error bound is fine. */
-    tmpl_LDouble_Fast_Two_Sum(sum.dat[0], sum.dat[1], &sum.dat[0], &sum.dat[1]);
-    return sum;
+     *  The xlo*ylo term will not effect the result and can be discarded. We  *
+     *  compute xhi*yhi exactly using 2Prod, and then add the middle part of  *
+     *  the sum, xhi*ylo + xlo*yhi, to the error term in 2Prod. A call to     *
+     *  Fast2Sum will then complete the computation. Declare the required     *
+     *  variables for this algorithm.                                         */
+    long double prod_hi, err_hi, compensation;
+    long double prod_hi_lo, prod_lo_hi, prod_mid;
+
+    /*  xhi * yhi, exact, stored in two doubles.                              */
+    tmpl_LDouble_Two_Prod(x->dat[0], y->dat[0], &prod_hi, &err_hi);
+
+    /*  xhi * ylo + xlo * yhi. These values won't effect the higher order     *
+     *  bits very much, but they will effect the low word of the output.      */
+    prod_hi_lo = x->dat[0] * y->dat[1];
+    prod_lo_hi = x->dat[1] * y->dat[0];
+
+    /*  The middle product, xhi*ylo + xlo*yhi, can be on the same order of    *
+     *  magnitude as the low word in the 2Prod performed above. The new       *
+     *  compensation term is then the sum of these values.                    */
+    prod_mid = prod_hi_lo + prod_lo_hi;
+    compensation = err_hi + prod_mid;
+
+    /*  prod_hi is large enough that we can do Fast2Sum with compensation,    *
+     *  instead of the full 2Sum. This saves us a few arithmetic operations   *
+     *  without losing precision.                                             */
+    tmpl_LDouble_Fast_Two_Sum(prod_hi, compensation, &out.dat[0], &out.dat[1]);
+
+    /*  The output is accurate to 7*eps^2, where eps is the epsilon value of  *
+     *  long double. For 80-bit extended, this is about 8x10^-38.             */
+    return out;
 }
-/*  End of tmpl_LDoubleDouble_Quick_Add.                                      */
+/*  End of tmpl_LDoubleDouble_Multiply.                                       */
