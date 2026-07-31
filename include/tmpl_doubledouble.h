@@ -23,10 +23,12 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_inttype.h:                                                       *
- *          Header file with the TMPL_HAS_LONGLONG macro.                     *
- *  2.) stddef.h:                                                             *
- *          Standard header file where size_t is declared.                    *
+ *  1.) tmpl_attributes.h:                                                    *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  2.) tmpl_doubledouble_double.h:                                           *
+ *          Contains the double-double typedef.                               *
+ *  3.) tmpl_doubledouble_ldouble.h:                                          *
+ *          Contains the long-double-double typedef.                          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 27, 2024                                                *
@@ -36,7 +38,10 @@
 #ifndef TMPL_DOUBLEDOUBLE_H
 #define TMPL_DOUBLEDOUBLE_H
 
-#include <libtmpl/include/tmpl_config.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  The double-double and long-double-double typedefs are found here.         */
 #include <libtmpl/include/types/tmpl_doubledouble_double.h>
 #include <libtmpl/include/types/tmpl_doubledouble_ldouble.h>
 
@@ -60,15 +65,47 @@ extern "C" {
  *      sum (tmpl_DoubleDouble):                                              *
  *          The double-double sum x + y.                                      *
  *  Notes:                                                                    *
- *      long double-double is also provided.                                  *
+ *      1.) long double-double version is also provided.                      *
  ******************************************************************************/
+TMPL_PURE_FUNC
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
-                      const tmpl_DoubleDouble * const y);
+                      const tmpl_DoubleDouble * const y)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
 extern tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
-                       const tmpl_LongDoubleDouble * const y);
+                       const tmpl_LongDoubleDouble * const y)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_DoubleDouble_Add_Scalar                                          *
+ *  Purpose:                                                                  *
+ *      Adds a double to a double-double.                                     *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A double-precision floating-point number.                         *
+ *      y (const tmpl_DoubleDouble * const):                                  *
+ *          A double-double real number.                                      *
+ *  Output:                                                                   *
+ *      sum (tmpl_DoubleDouble):                                              *
+ *          The double-double sum x + y.                                      *
+ *  Notes:                                                                    *
+ *      1.) long double-double version is also provided.                      *
+ ******************************************************************************/
+TMPL_PURE_FUNC
+extern tmpl_DoubleDouble
+tmpl_DoubleDouble_Add_Scalar(const double x,
+                             const tmpl_DoubleDouble * const y)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
+extern tmpl_LongDoubleDouble
+tmpl_LDoubleDouble_Add_Scalar(const long double x,
+                              const tmpl_LongDoubleDouble * const y)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -84,22 +121,23 @@ tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
  *      sum (tmpl_DoubleDouble):                                              *
  *          The double-double sum x + y.                                      *
  *  Notes:                                                                    *
- *      This algorithm works just as well as the safe add when x and y have   *
- *      the same sign. Problems arise if one is negative and one is positive. *
+ *      1.) This algorithm works just as well as the safe add when x and y    *
+ *          have the same sign. Problems arise if one is negative and one is  *
+ *          positive. You may also use this algorithm safely if |x| >> |y|.   *
+ *                                                                            *
+ *      2.) long double-double version is also provided.                      *
  ******************************************************************************/
-
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/doubledouble/tmpl_quick_add_doubledouble.h>
-#include <libtmpl/include/inline/doubledouble/tmpl_quick_add_ldoubledouble.h>
-#else
+TMPL_PURE_FUNC
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Quick_Add(const tmpl_DoubleDouble * const x,
-                            const tmpl_DoubleDouble * const y);
+                            const tmpl_DoubleDouble * const y)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
 extern tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Quick_Add(const tmpl_LongDoubleDouble * const x,
-                             const tmpl_LongDoubleDouble * const y);
-#endif
+                             const tmpl_LongDoubleDouble * const y)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -117,19 +155,17 @@ tmpl_LDoubleDouble_Quick_Add(const tmpl_LongDoubleDouble * const x,
  *  Notes:                                                                    *
  *      long double-double is also provided.                                  *
  ******************************************************************************/
-
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/doubledouble/tmpl_multiply_doubledouble.h>
-#include <libtmpl/include/inline/doubledouble/tmpl_multiply_ldoubledouble.h>
-#else
+TMPL_PURE_FUNC
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Multiply(const tmpl_DoubleDouble * const x,
-                           const tmpl_DoubleDouble * const y);
+                           const tmpl_DoubleDouble * const y)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
 extern tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Multiply(const tmpl_LongDoubleDouble * const x,
-                            const tmpl_LongDoubleDouble * const y);
-#endif
+                            const tmpl_LongDoubleDouble * const y)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
