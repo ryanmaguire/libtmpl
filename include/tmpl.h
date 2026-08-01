@@ -135,6 +135,7 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_matrix.h>
 #include <libtmpl/include/tmpl_nan.h>
+#include <libtmpl/include/tmpl_ode.h>
 #include <libtmpl/include/tmpl_optics.h>
 #include <libtmpl/include/tmpl_orthogonal_polynomial_real.h>
 #include <libtmpl/include/tmpl_pen.h>
