@@ -32,6 +32,27 @@ TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
 extern double
+tmpl_Double_Autonomous_Heun(const tmpl_FunctionDouble f,
+                            const double x,
+                            const double h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Autonomous_Heun(const tmpl_FunctionFloat f,
+                           const float x,
+                           const float h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Autonomous_Heun(const tmpl_FunctionLongDouble f,
+                             const long double x,
+                             const long double h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern double
 tmpl_Double_Autonomous_Midpoint(const tmpl_FunctionDouble f,
                                 const double x,
                                 const double h)
