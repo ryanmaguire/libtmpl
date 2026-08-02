@@ -142,7 +142,7 @@ TMPL_CONST_FUNC
 extern double
 tmpl_Double_Autonomous_Second_Order_Euler(const tmpl_FunctionDouble f,
                                           const double x,
-                                          const double v,
+                                          double * const v,
                                           const double h)
 TMPL_UNSEQUENCED;
 
@@ -150,7 +150,7 @@ TMPL_CONST_FUNC
 extern float
 tmpl_Float_Autonomous_Second_Order_Euler(const tmpl_FunctionFloat f,
                                          const float x,
-                                         const float v,
+                                         float * const v,
                                          const float h)
 TMPL_UNSEQUENCED;
 
@@ -158,7 +158,7 @@ TMPL_CONST_FUNC
 extern long double
 tmpl_LDouble_Autonomous_Second_Order_Euler(const tmpl_FunctionLongDouble f,
                                            const long double x,
-                                           const long double v,
+                                           long double * const v,
                                            const long double h)
 TMPL_UNSEQUENCED;
 
