@@ -15,28 +15,28 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *                        tmpl_quick_add_ldoubledouble                        *
- ******************************************************************************
- *  Purpose:                                                                  *
- *      FastDWAdd algorithm. For details, see                                 *
- *      include/doubledouble/tmpl_quick_add_ldoubledouble.h.                  *
- ******************************************************************************
- *  Author:     Ryan Maguire                                                  *
- *  Date:       November 29, 2024                                             *
  ******************************************************************************/
-
-/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only used if inline support is not available.                             */
-#if TMPL_USE_INLINE != 1
-
-/*  Function prototype given here.                                            */
+#include <libtmpl/include/tmpl_attributes.h>
+#include <libtmpl/include/tmpl_two_sum.h>
+#include <libtmpl/include/tmpl_two_prod.h>
 #include <libtmpl/include/tmpl_doubledouble.h>
 
-/*  Implemented in include/doubledouble/tmpl_quick_add_ldoubledouble.h.       */
-#include "../../include/inline/doubledouble/tmpl_quick_add_ldoubledouble.h"
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+tmpl_LongDoubleDouble
+tmpl_LDoubleDouble_Multiply_Scalar(const long double x,
+                                   const tmpl_LongDoubleDouble * const y)
+TMPL_UNSEQUENCED
+{
+    tmpl_LongDoubleDouble prod;
+    long double prod_hi, prod_mid, prod_lo;
+    long double sum_hi, sum_mid, sum_lo;
 
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+    tmpl_LDouble_Two_Prod(x, y->dat[0], &prod_hi, &prod_mid);
+    prod_lo = x * y->dat[1];
+    tmpl_LDouble_Fast_Two_Sum(prod_hi, prod_lo, &sum_hi, &sum_mid);
+    sum_lo = sum_mid + prod_mid;
+    tmpl_LDouble_Fast_Two_Sum(sum_hi, sum_lo, &prod.dat[0], &prod.dat[1]);
+    return prod;
+}

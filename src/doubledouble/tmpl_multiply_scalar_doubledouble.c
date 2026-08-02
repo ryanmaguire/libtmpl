@@ -15,32 +15,28 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *                         tmpl_multiply_doubledouble                         *
- ******************************************************************************
- *  Purpose:                                                                  *
- *      Double-word multiplication implementation.                            *
- ******************************************************************************
- *  Author:     Ryan Maguire                                                  *
- *  Date:       May 12, 2026                                                  *
  ******************************************************************************/
-
-/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
+#include <libtmpl/include/tmpl_attributes.h>
+#include <libtmpl/include/tmpl_two_sum.h>
+#include <libtmpl/include/tmpl_two_prod.h>
+#include <libtmpl/include/tmpl_doubledouble.h>
 
-/*  Only used if inline support is not available.                             */
-#if TMPL_USE_INLINE != 1
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+tmpl_DoubleDouble
+tmpl_DoubleDouble_Multiply_Scalar(const double x,
+                                  const tmpl_DoubleDouble * const y)
+TMPL_UNSEQUENCED
+{
+    tmpl_DoubleDouble prod;
+    double prod_hi, prod_mid, prod_lo;
+    double sum_hi, sum_mid, sum_lo;
 
-/*  tmpl_DoubleDouble typedef provided here.                                  */
-#include <libtmpl/include/types/tmpl_doubledouble_double.h>
-
-/*  Function prototype / forward declaration.                                 */
-extern tmpl_DoubleDouble
-tmpl_DoubleDouble_Multiply(const tmpl_DoubleDouble * const x,
-                           const tmpl_DoubleDouble * const y);
-
-/*  Implemented in include/doubledouble/tmpl_multiply_doubledouble.h.         */
-#include "../../include/inline/doubledouble/tmpl_multiply_doubledouble.h"
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+    tmpl_Double_Two_Prod(x, y->dat[0], &prod_hi, &prod_mid);
+    prod_lo = x * y->dat[1];
+    tmpl_Double_Fast_Two_Sum(prod_hi, prod_lo, &sum_hi, &sum_mid);
+    sum_lo = sum_mid + prod_mid;
+    tmpl_Double_Fast_Two_Sum(sum_hi, sum_lo, &prod.dat[0], &prod.dat[1]);
+    return prod;
+}
