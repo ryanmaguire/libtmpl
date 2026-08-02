@@ -114,4 +114,52 @@ tmpl_LDouble_Autonomous_RK4(const tmpl_FunctionLongDouble f,
                             const long double h)
 TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Autonomous_Second_Order_CD(const tmpl_FunctionDouble f,
+                                       const double x0,
+                                       const double x1,
+                                       const double h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Autonomous_Second_Order_CD(const tmpl_FunctionFloat f,
+                                      const float x0,
+                                      const float x1,
+                                      const float h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Autonomous_Second_Order_CD(const tmpl_FunctionLongDouble f,
+                                        const long double x0,
+                                        const long double x1,
+                                        const long double h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Autonomous_Second_Order_Euler(const tmpl_FunctionDouble f,
+                                          const double x,
+                                          const double v,
+                                          const double h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Autonomous_Second_Order_Euler(const tmpl_FunctionFloat f,
+                                         const float x,
+                                         const float v,
+                                         const float h)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Autonomous_Second_Order_Euler(const tmpl_FunctionLongDouble f,
+                                           const long double x,
+                                           const long double v,
+                                           const long double h)
+TMPL_UNSEQUENCED;
+
 #endif
