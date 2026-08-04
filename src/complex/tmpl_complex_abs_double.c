@@ -53,8 +53,8 @@
  *      imaginary parts to tmpl_Double_Hypot for the computation.             *
  *  Error:                                                                    *
  *      Based on 134,217,728 random samples:                                  *
- *          Max Relative Error: 2.220446e-16                                  *
- *          RMS Relative Error: 3.751642e-17                                  *
+ *          Max Relative Error: 2.220446E-16                                  *
+ *          RMS Relative Error: 3.751642E-17                                  *
  *      Values assume 100% accuracy of glibc. Actual error in glibc is        *
  *      less than 1 ULP (~2 x 10^-16).                                        *
  *  Notes:                                                                    *
@@ -78,7 +78,7 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_INLINE_DECL macro found here.                                *
- *  2.) tmpl_complex_double.h:                                                *
+ *  2.) tmpl_complex.h:                                                       *
  *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -120,28 +120,28 @@
  *      tmpl_complex.h is not needed (just tmpl_complex_double.h), and        *
  *      extern is provided for tmpl_Double_Hypot so that tmpl_math.h is not   *
  *      needed explicitly.                                                    *
+ *  2026/08/04: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_ABS_DOUBLE_H
-#define TMPL_COMPLEX_ABS_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Complex numbers provided here.                                            */
-#include <libtmpl/include/types/tmpl_complex_double.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  The hypot function does all of the heavy lifting.                         */
-extern double tmpl_Double_Hypot(const double x, const double y);
+/*  Hypotenuse function found here.                                           */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/tmpl_complex.h>
 
 /*  Function for computing the magnitude, or modulus, of a complex number.    */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 double tmpl_CDouble_Abs(const tmpl_ComplexDouble z)
+TMPL_UNSEQUENCED
 {
     return tmpl_Double_Hypot(z.dat[0], z.dat[1]);
 }
 /*  End of tmpl_CDouble_Abs.                                                  */
-
-#endif
-/*  End of include guard.                                                     */

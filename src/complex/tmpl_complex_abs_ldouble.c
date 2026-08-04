@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_complex_abs_float                           *
+ *                          tmpl_complex_abs_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex modulus (absolute value).        *
@@ -24,21 +24,21 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Abs                                                       *
+ *      tmpl_CLDouble_Abs                                                     *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
  *          |z| = |x + iy| = sqrt(x^2 + y^2)                                  *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (const tmpl_ComplexFloat):                                          *
+ *      z (const tmpl_ComplexLongDouble):                                     *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      abs_z (float):                                                        *
+ *      abs_z (long double):                                                  *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
- *          tmpl_Float_Hypot:                                                 *
+ *          tmpl_LDouble_Hypot:                                               *
  *              Function for computing the magnitude of the vector (x, y).    *
  *  Method:                                                                   *
  *      The absolute value of a complex number is the distance from the given *
@@ -50,26 +50,29 @@
  *                                                                            *
  *      The intermediate computation x^2 + y^2 may overflow for large inputs. *
  *      This is mitigated using the hypot function. We pass the real and      *
- *      imaginary parts to tmpl_Float_Hypot for the computation.              *
+ *      imaginary parts to tmpl_LDouble_Hypot for the computation.            *
  *  Error:                                                                    *
- *      Based on 268,435,456 random samples:                                  *
- *          Max Relative Error: 1.192092e-07                                  *
- *          RMS Relative Error: 3.451446e-08                                  *
- *      Values assume 100% accuracy of glibc. Actual error in glibc is        *
- *      less than 1 ULP (~1 x 10^-7).                                         *
+ *      Based on 67,108,864 random samples:                                   *
+ *          Max Relative Error: 1.084200e-19                                  *
+ *          RMS Relative Error: 2.553109e-20                                  *
+ *      Values assume 80-bit extended precision. For double, double-double,   *
+ *      and quadruple implementations of long double the peak error is also   *
+ *      1 ULP.                                                                *
  *  Notes:                                                                    *
  *      1.) This function properly handles very small and very large inputs.  *
  *          This comes at the cost of speed. The alternative function,        *
- *          tmpl_CFloat_Quick_Abs, uses the faster and more naive method but  *
+ *          tmpl_CLDouble_Quick_Abs, uses the faster, more naive method, but  *
  *          it is susceptible to overflow and underflow. Nevertheless, most   *
  *          real applications do not deal with very large or very small       *
  *          numbers and the performance boost may be desirable. This boost    *
  *          largely depends on the compiler and architecture, and may vary    *
- *          from a small boost (a few percent) to being 1.5x faster. On       *
+ *          from a small boost (a few percent) to being 2x faster. On         *
  *          Debian 13 GNU/Linux x86_64 with GCC (and optimizations enabled)   *
- *          the "quick-abs" function is about 1.4x faster and produces the    *
+ *          the "quick-abs" function is about 1.65x faster and produces the   *
  *          same result for "ordinary" inputs (that is, having components     *
- *          that are zero, or greater than 10^-20 and less than 10^20).       *
+ *          that are zero, or greater than 10^-2000 and less than 10^2000).   *
+ *          Long double is implemented using 80-bit extended precision on     *
+ *          that platform.                                                    *
  *                                                                            *
  *      2.) There are no checks for NaN or infinity. NaN inputs will produce  *
  *          NaN, and infinity (positive or negative) will output infinity.    *
@@ -78,46 +81,70 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_INLINE_DECL macro found here.                                *
- *  2.) tmpl_complex_float.h:                                                 *
- *          Header providing single precision complex numbers.                *
+ *  2.) tmpl_complex_ldouble.h:                                               *
+ *          Header providing long double precision complex numbers.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
+ *  2020/11/30: Ryan Maguire                                                  *
+ *      Created file (Wellesley college for librssringoccs).                  *
+ *  2020/12/01: Ryan Maguire                                                  *
+ *      Added abs squared functions.                                          *
+ *  2020/12/02: Ryan Maguire                                                  *
+ *      Moved abs squared functions to their own file.                        *
+ *      Frozen for rss_ringoccs v1.3.                                         *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Copied from librssringoccs to libtmpl.                                *
+ *      Edited code, made it compatibile with the rest of libtmpl. Removed    *
+ *      "C99" mode. Removed complex.h as a dependency.                        *
+ *      Soft freeze for alpha version of libtmpl.                             *
+ *  2021/03/03: Ryan Maguire                                                  *
+ *      Edited license.                                                       *
+ *  2021/05/11: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
+ *  2021/10/19: Ryan Maguire                                                  *
+ *      Changed the algorithm to prevent certain numbers from overflowing.    *
+ *      Complex numbers with a magnitude greater than sqrt(LDBL_MAX) will     *
+ *      overflow, even though they shouldn't for a proper implementation.     *
+ *      This has been fixed, albeit at the expense of speed.                  *
+ *  2022/04/28: Ryan Maguire                                                  *
+ *      Changed algorithm to incorporate IEEE-754 tricks. 1.4x speed up.      *
  *  2022/12/30: Ryan Maguire                                                  *
- *      Moved main algorithm to tmpl_hypot_float.c Function now passes the    *
- *      the real and imaginary parts to tmpl_Float_Hypot.                     *
+ *      Moved main algorithm to tmpl_hypot_ldouble.c Function now passes the  *
+ *      the real and imaginary parts to tmpl_LDouble_Hypot.                   *
  *  2023/07/06: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_abs_float.c to include this file.    *
+ *      Changed src/complex/tmpl_complex_abs_ldouble.c to include this file.  *
  *  2024/09/18: Ryan Maguire                                                  *
  *      Made inline method consistent with other inline routines.             *
- *      tmpl_complex.h is not needed (just tmpl_complex_float.h), and         *
- *      extern is provided for tmpl_Float_Hypot so that tmpl_math.h is not    *
+ *      tmpl_complex.h is not needed (just tmpl_complex_ldouble.h), and       *
+ *      extern is provided for tmpl_LDouble_Hypot so that tmpl_math.h is not  *
  *      needed explicitly.                                                    *
+ *  2026/08/04: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_ABS_FLOAT_H
-#define TMPL_COMPLEX_ABS_FLOAT_H
-
-/*  The TMPL_INLINE_DECL macro is found here.                                 */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Complex numbers provided here.                                            */
-#include <libtmpl/include/types/tmpl_complex_float.h>
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  The hypot function does all of the heavy lifting.                         */
-extern float tmpl_Float_Hypot(const float x, const float y);
+/*  Hypotenuse function found here.                                           */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/tmpl_complex.h>
 
 /*  Function for computing the magnitude, or modulus, of a complex number.    */
-TMPL_INLINE_DECL
-float tmpl_CFloat_Abs(const tmpl_ComplexFloat z)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+long double tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z)
+TMPL_UNSEQUENCED
 {
-    return tmpl_Float_Hypot(z.dat[0], z.dat[1]);
+    return tmpl_LDouble_Hypot(z.dat[0], z.dat[1]);
 }
-/*  End of tmpl_CFloat_Abs.                                                   */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_CLDouble_Abs.                                                 */

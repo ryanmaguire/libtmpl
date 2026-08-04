@@ -73,6 +73,9 @@
 /*  The macro TMPL_USE_INLINE is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Optional C23 attributes for optimization provided here.                   */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
 
@@ -152,19 +155,17 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
  *          The absolute value of z, computed by the Pythagorean formula. If  *
  *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
  ******************************************************************************/
-#if TMPL_USE_INLINE == 1
+TMPL_CONST_FUNC
+double tmpl_CDouble_Abs(const tmpl_ComplexDouble z)
+TMPL_UNSEQUENCED;
 
-#include TMPL_INLINE_FILE(tmpl_complex_abs_double.h)
-#include TMPL_INLINE_FILE(tmpl_complex_abs_float.h)
-#include TMPL_INLINE_FILE(tmpl_complex_abs_ldouble.h)
+TMPL_CONST_FUNC
+float tmpl_CFloat_Abs(const tmpl_ComplexFloat z)
+TMPL_UNSEQUENCED;
 
-#else
-
-extern float tmpl_CFloat_Abs(const tmpl_ComplexFloat z);
-extern double tmpl_CDouble_Abs(const tmpl_ComplexDouble z);
-extern long double tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z);
-
-#endif
+TMPL_CONST_FUNC
+long double tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
