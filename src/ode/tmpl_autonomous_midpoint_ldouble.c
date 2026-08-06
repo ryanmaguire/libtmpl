@@ -13,7 +13,7 @@ TMPL_UNSEQUENCED
     const long double dx0 = f(x);
 
     /*  Compute the midpoint and the slope at the midpoint.                   */
-    const long double x1 = x + 0.5 * h * dx0;
+    const long double x1 = x + 0.5L * h * dx0;
     const long double dx1 = f(x1);
 
     /*  Use the midpoint slope to update.                                     */

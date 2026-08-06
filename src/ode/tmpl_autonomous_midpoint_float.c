@@ -13,7 +13,7 @@ TMPL_UNSEQUENCED
     const float dx0 = f(x);
 
     /*  Compute the midpoint and the slope at the midpoint.                   */
-    const float x1 = x + 0.5 * h * dx0;
+    const float x1 = x + 0.5F * h * dx0;
     const float dx1 = f(x1);
 
     /*  Use the midpoint slope to update.                                     */
