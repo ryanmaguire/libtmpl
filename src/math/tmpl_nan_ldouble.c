@@ -24,26 +24,39 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
- *  2.) tmpl_ieee754_ldouble.h:                                               *
- *          Provides tmpl_IEEE754_LDouble, used for type punning.             *
+ *          Header file containing TMPL_ALWAYS_INLINE and other config macros.*
+ *  2.) tmpl_attribues.h:                                                     *
+ *          Provides (optional) C23 attributes for optimization.              *
+ *  3.) tmpl_ieee754_ldouble.h:                                               *
+ *          Contains the typedef for the IEEE-754 union.                      *
+ *  4.) tmpl_math.h:                                                          *
+ *          Function prototype / forward declaration contained here.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/03/23: Ryan Maguire                                                  *
+ *      Migrated NaN functions to their own directory. Added inline support.  *
+ *  2026/08/07: Ryan Maguire                                                  *
+ *      Merged inline an non-inline versions, added C23 attributes.           *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_NOT_A_NUMBER_LDOUBLE_H
-#define TMPL_INLINE_NOT_A_NUMBER_LDOUBLE_H
-
-/*  TMPL_INLINE_DECL and other helper macros found here.                      */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  C23 attributes (for optimization) provided here.                          */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  tmpl_IEEE754_LDouble typedef found here.                                  */
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+
+/*  Function prototype found here.                                            */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  With IEEE-754 support we can set the value of NaN bit-by-bit.             */
 #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN
-
-/*  tmpl_IEEE754_LDouble type provided here.                                  */
-#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  64-bit long double is implemented the same as 64-bit double.              */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
@@ -53,8 +66,10 @@
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
@@ -84,8 +99,10 @@ long double tmpl_LDouble_NaN(void)
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
@@ -113,8 +130,10 @@ long double tmpl_LDouble_NaN(void)
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  Union used for type-punning a long double with the bits it represents.*/
     tmpl_IEEE754_LDouble x;
@@ -143,8 +162,10 @@ long double tmpl_LDouble_NaN(void)
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables.                                          */
     tmpl_IEEE754_LDouble x;
@@ -174,8 +195,10 @@ long double tmpl_LDouble_NaN(void)
  ******************************************************************************/
 
 /*  Long double precision Not-A-Number.                                       */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double tmpl_LDouble_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  glibc sets the following when IEEE-754 support is unavailable. This   *
      *  may result in compiler warnings, and may also result in undefined     *
@@ -187,6 +210,3 @@ long double tmpl_LDouble_NaN(void)
 
 #endif
 /*  End of #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN.               */
-
-#endif
-/*  End of include guard.                                                     */

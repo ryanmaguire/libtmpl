@@ -121,11 +121,11 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  TMPL_NAN macro found here which provides double-precision NaN.            */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
+/*  Both pi and pi / 2 are needed for the implementation.                     */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/*  Pi / 2 is used for the endpoints of the domain. asin(+/- 1) = +/- pi / 2. */
-extern const double tmpl_double_pi_by_two;
+/*  TMPL_NAN macro found here which provides double-precision NaN.            */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator of the rational Remez approximation.       */
 #define A00 (+1.6666666666666675172610409335401762495970069423667E-01)

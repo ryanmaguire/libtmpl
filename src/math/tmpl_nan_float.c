@@ -24,13 +24,13 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL and other helper macros.  *
- *  2.) tmpl_floatint_float.h:                                                *
- *          Provides the tmpl_FloatInt32 type. Used for type punning.         *
- *          Only included if 32-bit unsigned integers are available.          *
+ *          Header file containing TMPL_ALWAYS_INLINE and other config macros.*
+ *  2.) tmpl_attribues.h:                                                     *
+ *          Provides (optional) C23 attributes for optimization.              *
  *  3.) tmpl_ieee754_float.h:                                                 *
- *          Provides tmpl_IEEE754_Float. Also used for type punning. Used if  *
- *          IEEE-754 support is available, but 32-bit integers are not.       *
+ *          Contains the typedef for the IEEE-754 union.                      *
+ *  4.) tmpl_math.h:                                                          *
+ *          Function prototype / forward declaration contained here.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
@@ -39,14 +39,21 @@
  ******************************************************************************
  *  2025/03/23: Ryan Maguire                                                  *
  *      Migrated NaN functions to their own directory. Added inline support.  *
+ *  2026/08/07: Ryan Maguire                                                  *
+ *      Merged inline an non-inline versions, added C23 attributes.           *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_INLINE_NOT_A_NUMBER_FLOAT_H
-#define TMPL_INLINE_NOT_A_NUMBER_FLOAT_H
-
-/*  Function prototype and IEEE-754 data types defined here.                  */
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  C23 attributes (for optimization) provided here.                          */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  tmpl_IEEE754_Float typedef found here.                                    */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
+
+/*  Function prototype found here.                                            */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Simplest method uses 32-bit integers for type punning. Check for support. */
 #if TMPL_HAS_FLOATINT32 == 1
@@ -55,15 +62,14 @@
  *                   IEEE-754 Version with 32-Bit Integers                    *
  ******************************************************************************/
 
-/*  Union providing type-punning for 32-bit floats with 32-bit integers.      */
-#include <libtmpl/include/types/tmpl_floatint_float.h>
-
 /*  Function for producing a single precision NaN (Not-a-Number).             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 float tmpl_Float_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  Union of a float and a 32-bit unsigned integer.                       */
-    tmpl_FloatInt32 u;
+    tmpl_IEEE754_Float w;
 
     /*  NaN is given by a zero in the sign bit, all ones in the exponent bits,*
      *  and a one in the least and most significant mantissa bits (zero for   *
@@ -71,10 +77,10 @@ float tmpl_Float_NaN(void)
      *      0 11111111 10000000000000000000001                                *
      *  This number is 2143289345 in decimal, or  0x7FC00001 in hexadecimal.  *
      *  Set the integer part of the union to this value.                      */
-    u.n = TMPL_UINT32_LITERAL(0x7FC00001);
+    w.n = TMPL_UINT32_LITERAL(0x7FC00001);
 
     /*  Return the float part of the word. This is now a NaN.                 */
-    return u.f;
+    return w.r;
 }
 /*  End of tmpl_Float_NaN.                                                    */
 
@@ -86,12 +92,11 @@ float tmpl_Float_NaN(void)
  *                  IEEE-754 Version without 32-Bit Integers                  *
  ******************************************************************************/
 
-/*  Union used for type-punning floats using a bit-field found here.          */
-#include <libtmpl/include/types/tmpl_ieee754_float.h>
-
 /*  Function for producing a single precision NaN (Not-a-Number).             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 float tmpl_Float_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  Union used for type-punning a float with the bits it represents.      */
     tmpl_IEEE754_Float x;
@@ -119,19 +124,18 @@ float tmpl_Float_NaN(void)
  ******************************************************************************/
 
 /*  Function for producing a single precision NaN (Not-a-Number).             */
-TMPL_INLINE_DECL
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 float tmpl_Float_NaN(void)
+TMPL_UNSEQUENCED
 {
     /*  glibc sets the following when IEEE-754 support is unavailable. This   *
      *  may result in compiler warnings, and may also result in undefined     *
      *  behavior, but often works in practice.                                */
-    volatile const float x = 0.0F;
+    const float x = 0.0F;
     return x / x;
 }
 /*  End of tmpl_Float_NaN.                                                    */
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT21 == 1.                                      */
-
-#endif
-/*  End of include guard.                                                     */

@@ -84,21 +84,14 @@
 /*  The TMPL_USE_INLINE macro is provided here.                               */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Two-vector typedef found here.                                            */
-#include <libtmpl/include/types/tmpl_vec2_double.h>
-
 /*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
 
-/*  TMPL_NAN macro found here which provides double precision NaN.            */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
+/*  The hypot and NaN functions are found here.                               */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  Prototype / forward declaration for the function.                         */
-extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P);
-
-/*  Tell the compiler about the hypotenuse function.                          */
-extern double tmpl_Double_Hypot(const double x, const double y);
+/*  Two-vector typedef and the function prototype provided here.              */
+#include <libtmpl/include/tmpl_vec2.h>
 
 /*  We can safely handle denormal numbers if IEEE-754 support is available.   */
 #if TMPL_HAS_IEEE754_DOUBLE == 1

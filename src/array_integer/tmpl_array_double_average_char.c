@@ -83,7 +83,7 @@
  ******************************************************************************/
 
 /*  TMPL_NAN macro provided here.                                             */
-#include <libtmpl/include/nan/tmpl_nan_double.h>
+#include <libtmpl/include/tmpl_math.h>
 
 /*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
 #include <libtmpl/include/compat/tmpl_cast.h>

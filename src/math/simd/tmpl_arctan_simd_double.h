@@ -131,6 +131,9 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  Both pi and pi / 2 are needed for the implementation.                     */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  Function prototype and the absolute value function provided here.         */
 #include <libtmpl/include/tmpl_math.h>
 

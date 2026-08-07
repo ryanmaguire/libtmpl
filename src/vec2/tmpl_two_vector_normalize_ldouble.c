@@ -90,15 +90,11 @@
 /*  TMPL_HAS_IEEE754_LDOUBLE macro and tmpl_IEEE754_LDouble type given here.  */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
-/*  TMPL_NANL macro found here which provides long double precision NaN.      */
-#include <libtmpl/include/nan/tmpl_nan_ldouble.h>
+/*  The hypot and NaN functions are found here.                               */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  Prototype / forward declaration for the function.                         */
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P);
-
-/*  Tell the compiler about the hypotenuse function.                          */
-extern long double tmpl_LDouble_Hypot(long double x, long double y);
+/*  Two-vector typedef and the function prototype provided here.              */
+#include <libtmpl/include/tmpl_vec2.h>
 
 /*  We can safely handle denormal numbers if IEEE-754 support is available.   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1

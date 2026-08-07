@@ -443,9 +443,6 @@ extern const long double tmpl_Min_LDouble_Base_E;
 /*  Commonly used constants (pi, e, etc.) found here.                         */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/*  Float, double, and long double precision NaN found here.                  */
-#include <libtmpl/include/tmpl_nan.h>
-
 /******************************************************************************
  *                              Tables and Data                               *
  ******************************************************************************/
@@ -1348,6 +1345,41 @@ TMPL_UNSEQUENCED;
 #define TMPL_INFINITYF (tmpl_Float_Infinity())
 #define TMPL_INFINITY (tmpl_Double_Infinity())
 #define TMPL_INFINITYL (tmpl_LDouble_Infinity())
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_NaN                                                       *
+ *  Purpose:                                                                  *
+ *      Returns Not-a-Number.                                                 *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      nan (double):                                                         *
+ *          Not-a-Number.                                                     *
+ *  Notes:                                                                    *
+ *      1.) Float and long double equivalents are also provided.              *
+ *                                                                            *
+ *      2.) If IEEE-754 support is available, this code creates NaN using     *
+ *          the format. If not, the function mimics glibc's method, returning *
+ *          the expression 0.0 / 0.0 which should be NaN. This works in       *
+ *          practice, but it is technically undefined behavior.               *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double tmpl_Double_NaN(void)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float tmpl_Float_NaN(void)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double tmpl_LDouble_NaN(void)
+TMPL_UNSEQUENCED;
+
+/*  Macros for positive infinity                                              */
+#define TMPL_NAN (tmpl_Double_NaN())
+#define TMPL_NANF (tmpl_Float_NaN())
+#define TMPL_NANL (tmpl_LDouble_NaN())
 
 /******************************************************************************
  *  Function:                                                                 *

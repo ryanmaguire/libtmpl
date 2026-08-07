@@ -90,15 +90,11 @@
 /*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
 #include <libtmpl/include/types/tmpl_ieee754_float.h>
 
-/*  TMPL_NANF macro found here which provides single precision NaN.           */
-#include <libtmpl/include/nan/tmpl_nan_float.h>
+/*  The hypot and NaN functions are found here.                               */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  Prototype / forward declaration for the function.                         */
-extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat * const P);
-
-/*  Tell the compiler about the hypotenuse function.                          */
-extern float tmpl_Float_Hypot(float x, float y);
+/*  Two-vector typedef and the function prototype provided here.              */
+#include <libtmpl/include/tmpl_vec2.h>
 
 /*  We can safely handle denormal numbers if IEEE-754 support is available.   */
 #if TMPL_HAS_IEEE754_FLOAT == 1
