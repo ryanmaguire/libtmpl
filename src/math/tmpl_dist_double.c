@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_dist_float                               *
+ *                              tmpl_dist_double                              *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the distance from x to y on the number line.                 *
@@ -24,16 +24,16 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Dist                                                       *
+ *      tmpl_Double_Dist                                                      *
  *  Purpose:                                                                  *
  *      Computes the Euclidean distance d(x, y) = |x - y|.                    *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
- *      y (float):                                                            *
+ *      y (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      dist (float):                                                         *
+ *      dist (double):                                                        *
  *          The distance |x - y|.                                             *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
@@ -41,7 +41,7 @@
  *      Method:                                                               *
  *          Computes x - y and then sets the sign bit to zero.                *
  *      Error:                                                                *
- *          Based on 3,372,245,197 samples with -100 < x, y < 100.            *
+ *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -52,7 +52,7 @@
  *      Method:                                                               *
  *          Compute y - x if x < y and x - y otherwise.                       *
  *      Error:                                                                *
- *          Based on 3,372,245,197 samples with -100 < x, y < 100.            *
+ *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -61,8 +61,12 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
+ *          Header file containing TMPL_ALWAYS_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_ieee754_double.h:                                                *
+ *          Header file providing the TMPL_HAS_IEEE754_DOUBLE macro.          *
+ *  4.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -73,54 +77,62 @@
  *  2022/10/24: Ryan Maguire                                                  *
  *      Added license.                                                        *
  *  2023/06/13: Ryan Maguire                                                  *
- *      Changed src/math/tmpl_dist_float.c to include this file.              *
+ *      Changed src/math/tmpl_dist_double.c to include this file.             *
+ *  2026/08/06: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_DIST_FLOAT_H
-#define TMPL_DIST_FLOAT_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
-#include <libtmpl/include/types/tmpl_ieee754_float.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
-#if TMPL_HAS_IEEE754_FLOAT == 1
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Single precision 1-D distance function.                                   */
-TMPL_INLINE_DECL
-float tmpl_Float_Dist(float x, float y)
+/*  Double precision 1-D distance function.                                   */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+double tmpl_Double_Dist(const double x, const double y)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_Float w;
+    tmpl_IEEE754_Double w;
 
-    /*  Set the float part of the word to the signed distance x - y.          */
+    /*  Set the double part of the word to the signed distance x - y.         */
     w.r = x - y;
 
     /*  Set the sign bit to zero to compute the absolute value.               */
     w.bits.sign = 0x00U;
 
-    /*  Return the float part of the union.                                   */
+    /*  Return the double part of the union.                                  */
     return w.r;
 }
-/*  End of tmpl_Float_Dist.                                                   */
+/*  End of tmpl_Double_Dist.                                                  */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
-TMPL_INLINE_DECL
-float tmpl_Float_Dist(float x, float y)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+double tmpl_Double_Dist(const double x, const double y)
+TMPL_UNSEQUENCED
 {
     /*  If x < y we have |x - y| = y - x. Compute this.                       */
     if (x < y)
@@ -129,10 +141,7 @@ float tmpl_Float_Dist(float x, float y)
     /*  Otherwise |x - y| = x - y. Compute this and return.                   */
     return x - y;
 }
-/*  End of tmpl_Float_Dist.                                                   */
+/*  End of tmpl_Double_Dist.                                                  */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

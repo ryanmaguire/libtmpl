@@ -107,8 +107,8 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
-#include <libtmpl/include/types/tmpl_ieee754_double.h>
+/*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math.h>

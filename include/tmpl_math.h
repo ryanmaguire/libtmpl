@@ -1968,25 +1968,17 @@ TMPL_UNSEQUENCED;
  *      double dist:                                                          *
  *          The distance |x - y|.                                             *
  ******************************************************************************/
+TMPL_CONST_FUNC
+double tmpl_Double_Dist(const double x, const double y)
+TMPL_UNSEQUENCED;
 
-/*  These functions should be inlined.                                        */
-#if TMPL_USE_INLINE == 1
+TMPL_CONST_FUNC
+float tmpl_Float_Dist(const float x, const float y)
+TMPL_UNSEQUENCED;
 
-/*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/inline/math/tmpl_dist_double.h>
-#include <libtmpl/include/inline/math/tmpl_dist_float.h>
-#include <libtmpl/include/inline/math/tmpl_dist_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  No inline support requested.                                              */
-extern float tmpl_Float_Dist(float x, float y);
-extern double tmpl_Double_Dist(double x, double y);
-extern long double tmpl_LDouble_Dist(long double x, long double y);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+TMPL_CONST_FUNC
+long double tmpl_LDouble_Dist(const long double x, const long double y)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
