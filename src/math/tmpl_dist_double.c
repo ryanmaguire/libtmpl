@@ -16,37 +16,30 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_copysign_double                            *
+ *                              tmpl_dist_double                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x, y) = |x|*sgn(y), where sgn is the sign function.        *
+ *      Computes the distance from x to y on the number line.                 *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Copysign                                                  *
+ *      tmpl_Double_Dist                                                      *
  *  Purpose:                                                                  *
- *      Copies the sign of y into x.                                          *
+ *      Computes the Euclidean distance d(x, y) = |x - y|.                    *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *      y (double):                                                           *
- *          A real number, the sign of which will be copied to x.             *
+ *          A real number.                                                    *
  *  Output:                                                                   *
- *      cpysgn (double):                                                      *
- *          The value |x|*sgn(y).                                             *
+ *      dist (double):                                                        *
+ *          The distance |x - y|.                                             *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Copy the sign bit of y into x. A 64-bit double is represented by: *
- *                                                                            *
- *          s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*
- *          - ----------- ----------------------------------------------------*
- *         sign exponent                mantissa                              *
- *                                                                            *
- *          Copysign(x, y) can be computing by setting the sign bit of x      *
- *          equal to the sign bit of y.                                       *
+ *          Computes x - y and then sets the sign bit to zero.                *
  *      Error:                                                                *
  *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
@@ -55,26 +48,25 @@
  *              rms absolute error: 0.0                                       *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_math.h:                                                      *
- *              tmpl_Double_Abs:                                              *
- *                  Computes the absolute value of a real number.             *
+ *          None.                                                             *
  *      Method:                                                               *
- *          Use an if-then statement to check the sign of y.                  *
+ *          Compute y - x if x < y and x - y otherwise.                       *
  *      Error:                                                                *
  *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
- *  Notes:                                                                    *
- *      If IEEE-754 is not supported and y is zero, x is returned as is.      *
- *      IEEE-754 has signed zeros, other float representations may not.       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
+ *          Header file containing TMPL_ALWAYS_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_ieee754_double.h:                                                *
+ *          Header file providing the TMPL_HAS_IEEE754_DOUBLE macro.          *
+ *  4.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -84,19 +76,23 @@
  ******************************************************************************
  *  2022/10/24: Ryan Maguire                                                  *
  *      Added license.                                                        *
- *  2023/06/12: Ryan Maguire                                                  *
- *      Changed src/math/tmpl_copysign_double.c to include this file.         *
+ *  2023/06/13: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_dist_double.c to include this file.             *
+ *  2026/08/06: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COPYSIGN_DOUBLE_H
-#define TMPL_COPYSIGN_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -105,24 +101,25 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Double precision copysign function (copysign equivalent).                 */
-TMPL_INLINE_DECL
-double tmpl_Double_Copysign(double x, double y)
+/*  Double precision 1-D distance function.                                   */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+double tmpl_Double_Dist(const double x, const double y)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_Double wx, wy;
+    tmpl_IEEE754_Double w;
 
-    /*  Set the double part of the words to the inputs.                       */
-    wx.r = x;
-    wy.r = y;
+    /*  Set the double part of the word to the signed distance x - y.         */
+    w.r = x - y;
 
-    /*  Set the sign bit of x to the sign bit of y.                           */
-    wx.bits.sign = wy.bits.sign;
+    /*  Set the sign bit to zero to compute the absolute value.               */
+    w.bits.sign = 0x00U;
 
     /*  Return the double part of the union.                                  */
-    return wx.r;
+    return w.r;
 }
-/*  End of tmpl_Double_Copysign.                                              */
+/*  End of tmpl_Double_Dist.                                                  */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
@@ -132,24 +129,19 @@ double tmpl_Double_Copysign(double x, double y)
  ******************************************************************************/
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
-TMPL_INLINE_DECL
-double tmpl_Double_Copysign(double x, double y)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+double tmpl_Double_Dist(const double x, const double y)
+TMPL_UNSEQUENCED
 {
-    /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0)
-        return -tmpl_Double_Abs(x);
+    /*  If x < y we have |x - y| = y - x. Compute this.                       */
+    if (x < y)
+        return y - x;
 
-    /*  If y is positive, compute |x|.                                        */
-    else if (0.0 < y)
-        return tmpl_Double_Abs(x);
-
-    /*  And lastly, if y is zero, return x.                                   */
-    return x;
+    /*  Otherwise |x - y| = x - y. Compute this and return.                   */
+    return x - y;
 }
-/*  End of tmpl_Double_Copysign.                                              */
+/*  End of tmpl_Double_Dist.                                                  */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
-
-#endif
-/*  End of include guard.                                                     */
