@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_copysign_ldouble                           *
+ *                             tmpl_copysign_float                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x, y) = |x|*sgn(y), where sgn is the sign function.        *
@@ -24,35 +24,31 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Copysign                                                 *
+ *      tmpl_Float_Copysign                                                   *
  *  Purpose:                                                                  *
  *      Copies the sign of y into x.                                          *
  *  Arguments:                                                                *
- *      x (long double):                                                      *
+ *      x (float):                                                            *
  *          A real number.                                                    *
- *      y (long double):                                                      *
+ *      y (float):                                                            *
  *          A real number, the sign of which will be copied to x.             *
  *  Output:                                                                   *
- *      cpysgn (long double):                                                 *
+ *      cpysgn (float):                                                       *
  *          The value |x|*sgn(y).                                             *
- *  64-bit double / 80-bit extended / 128-bit quadruple:                      *
+ *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Copy the sign bit of y into x.                                    *
+ *          Copy the sign bit of y into x. A 32-bit float is represented by:  *
+ *                                                                            *
+ *              s eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                            *
+ *              - -------- -----------------------                            *
+ *           sign exponent        mantissa                                    *
+ *                                                                            *
+ *          Copysign(x, y) can be computing by setting the sign bit of x      *
+ *          equal to the sign bit of y.                                       *
  *      Error:                                                                *
- *          Based on 843,061,299 samples with -100 < x, y < 100.              *
- *              max relative error: 0.0                                       *
- *              rms relative error: 0.0                                       *
- *              max absolute error: 0.0                                       *
- *              rms absolute error: 0.0                                       *
- *  128-bit double-double:                                                    *
- *      Called Functions:                                                     *
- *          None.                                                             *
- *      Method:                                                               *
- *          Compare the signs of the high word, negating x if needed.         *
- *      Error:                                                                *
- *          Based on 10,000,000 samples with -100 < x < 100.                  *
+ *          Based on 3,372,245,196 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -60,12 +56,12 @@
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_math.h:                                                      *
- *              tmpl_LDouble_Abs:                                             *
+ *              tmpl_Float_Abs:                                               *
  *                  Computes the absolute value of a real number.             *
  *      Method:                                                               *
  *          Use an if-then statement to check the sign of y.                  *
  *      Error:                                                                *
- *          Based on 843,061,299 samples with -100 < x, y < 100.              *
+ *          Based on 3,372,245,196 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -77,8 +73,12 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
+ *          Header file containing TMPL_ALWAYS_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_ieee754_float.h:                                                 *
+ *          Header file providing the TMPL_HAS_IEEE754_FLOAT macro.           *
+ *  4.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -89,107 +89,82 @@
  *  2022/10/24: Ryan Maguire                                                  *
  *      Added license.                                                        *
  *  2023/06/12: Ryan Maguire                                                  *
- *      Changed src/math/tmpl_copysign_ldouble.c to include this file.        *
+ *      Changed src/math/tmpl_copysign_float.c to include this file.          *
+ *  2026/08/06: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COPYSIGN_LDOUBLE_H
-#define TMPL_COPYSIGN_LDOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
-#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
+/*  Only used if libtmpl algorithms are requested.                            */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
-#if TMPL_HAS_IEEE754_LDOUBLE == 1
-
-/*  64-bit double, 80-bit extended, and 128-bit quadruple implementations     *
- *  of long double use the same idea: Copy the sign bit of y to x. The        *
- *  double-double implementation of long double needs to be more careful.     */
-#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN && \
-    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 /******************************************************************************
- *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
+ *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Long double precision copysign function (copysignl equivalent).           */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Copysign(long double x, long double y)
+/*  Single precision copysign function (copysignf equivalent).                */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+float tmpl_Float_Copysign(const float x, const float y)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_LDouble wx, wy;
+    tmpl_IEEE754_Float wx, wy;
 
-    /*  Set the long double part of the words to the inputs.                  */
+    /*  Set the float part of the words to the inputs.                        */
     wx.r = x;
     wy.r = y;
 
     /*  Set the sign bit of x to the sign bit of y.                           */
     wx.bits.sign = wy.bits.sign;
 
-    /*  Return the long double part of the union.                             */
+    /*  Return the float part of the union.                                   */
     return wx.r;
 }
-/*  End of tmpl_LDouble_Copysign.                                             */
+/*  End of tmpl_Float_Copysign.                                               */
 
 #else
-/*  Else for 64-bit double / 80-bit extended / 128-bit quadruple versions.    */
-
-/******************************************************************************
- *                       128-bit Double-Double Version                        *
- ******************************************************************************/
-
-/*  Long double precision copysign function (copysignl equivalent).           */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Copysign(long double x, long double y)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_LDouble wx, wy;
-
-    /*  Set the long double part of the words to the inputs.                  */
-    wx.r = x;
-    wy.r = y;
-
-    /*  Compare the sign bits, negating if needed.                            */
-    if (wx.bits.sign != wy.bits.sign)
-        return -wx.r;
-
-    /*  Return the long double part of the union.                             */
-    return wx.r;
-}
-/*  End of tmpl_LDouble_Copysign.                                             */
-
-#endif
-/*  End of 128-bit double-double version.                                     */
-
-#else
-/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Copysign(long double x, long double y)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+float tmpl_Float_Copysign(const float x, const float y)
+TMPL_UNSEQUENCED
 {
     /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0L)
-        return -tmpl_LDouble_Abs(x);
+    if (y < 0.0F)
+        return -tmpl_Float_Abs(x);
 
     /*  If y is positive, compute |x|.                                        */
-    else if (0.0L < y)
-        return tmpl_LDouble_Abs(x);
+    if (0.0F < y)
+        return tmpl_Float_Abs(x);
 
     /*  And lastly, if y is zero, return x.                                   */
     return x;
 }
-/*  End of tmpl_LDouble_Copysign.                                             */
+/*  End of tmpl_Float_Copysign.                                               */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 #endif
-/*  End of include guard.                                                     */
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

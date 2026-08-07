@@ -1932,31 +1932,27 @@ TMPL_UNSEQUENCED;
  *      double z:                                                             *
  *          The value sgn(y) * |x|.                                           *
  ******************************************************************************/
-
-/*  Alias functions to copysign if libtmpl algorithms not requested.          */
 #if TMPL_USE_MATH_ALGORITHMS != 1
+
 #define tmpl_Float_Copysign copysignf
 #define tmpl_Double_Copysign copysign
 #define tmpl_LDouble_Copysign copysignl
 
-/*  These functions are small enough that it's worth-while inlining them.     */
-#elif TMPL_USE_INLINE == 1
-
-/*  Inline support to copysign found here.                                    */
-#include <libtmpl/include/inline/math/tmpl_copysign_double.h>
-#include <libtmpl/include/inline/math/tmpl_copysign_float.h>
-#include <libtmpl/include/inline/math/tmpl_copysign_ldouble.h>
-
 #else
-/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
-/*  No inline support requested.                                              */
-extern float tmpl_Float_Copysign(float x, float y);
-extern double tmpl_Double_Copysign(double x, double y);
-extern long double tmpl_LDouble_Copysign(long double x, long double y);
+TMPL_CONST_FUNC
+double tmpl_Double_Copysign(const double x, const double y)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+float tmpl_Float_Copysign(const float x, const float y)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+long double tmpl_LDouble_Copysign(const long double x, const long double y)
+TMPL_UNSEQUENCED;
 
 #endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *

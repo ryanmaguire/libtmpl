@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Copies the sign of y into x.                                          *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          A real number, the sign of which will be copied to x.             *
  *  Output:                                                                   *
  *      cpysgn (double):                                                      *
@@ -73,8 +73,12 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
+ *          Header file containing TMPL_ALWAYS_INLINE macro.                  *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_ieee754_double.h:                                                *
+ *          Header file providing the TMPL_HAS_IEEE754_DOUBLE macro.          *
+ *  4.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -86,17 +90,24 @@
  *      Added license.                                                        *
  *  2023/06/12: Ryan Maguire                                                  *
  *      Changed src/math/tmpl_copysign_double.c to include this file.         *
+ *  2026/08/06: Ryan Maguire                                                  *
+ *      Added C23 attributes, merged inline and non-inline versions.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COPYSIGN_DOUBLE_H
-#define TMPL_COPYSIGN_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Only used if libtmpl algorithms are requested.                            */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
 #include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -106,8 +117,10 @@
  ******************************************************************************/
 
 /*  Double precision copysign function (copysign equivalent).                 */
-TMPL_INLINE_DECL
-double tmpl_Double_Copysign(double x, double y)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+double tmpl_Double_Copysign(const double x, const double y)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_Double wx, wy;
@@ -132,15 +145,17 @@ double tmpl_Double_Copysign(double x, double y)
  ******************************************************************************/
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
-TMPL_INLINE_DECL
-double tmpl_Double_Copysign(double x, double y)
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+double tmpl_Double_Copysign(const double x, const double y)
+TMPL_UNSEQUENCED
 {
     /*  If y is negative, compute -|x|.                                       */
     if (y < 0.0)
         return -tmpl_Double_Abs(x);
 
     /*  If y is positive, compute |x|.                                        */
-    else if (0.0 < y)
+    if (0.0 < y)
         return tmpl_Double_Abs(x);
 
     /*  And lastly, if y is zero, return x.                                   */
@@ -152,4 +167,4 @@ double tmpl_Double_Copysign(double x, double y)
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 #endif
-/*  End of include guard.                                                     */
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
