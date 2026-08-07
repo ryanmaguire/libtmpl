@@ -692,8 +692,6 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
  *          tmpl_arctan_double.c                                              *
  *          tmpl_arctan_ldouble.c                                             *
  ******************************************************************************/
-
-/*  Alias functions to atan from math.h if libtmpl algorithms not requested.  */
 #if TMPL_USE_MATH_ALGORITHMS != 1
 
 #define tmpl_Float_Arctan atanf
@@ -701,12 +699,18 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
 #define tmpl_LDouble_Arctan atanl
 
 #else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
 
-/*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Arctan(float x);
-extern double tmpl_Double_Arctan(double x);
-extern long double tmpl_LDouble_Arctan(long double x);
+TMPL_SIMD_DECL
+TMPL_CONST_FUNC
+extern double tmpl_Double_Arctan(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_SIMD_DECL
+TMPL_CONST_FUNC
+extern float tmpl_Float_Arctan(const float x)
+TMPL_UNSEQUENCED;
+
+extern long double tmpl_LDouble_Arctan(const long double x);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */

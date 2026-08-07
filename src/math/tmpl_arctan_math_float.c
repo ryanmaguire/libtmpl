@@ -152,8 +152,17 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype found here.                                            */
+/*  Function prototype / forward, absolute value, and NaN found here.         */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
+
+/*  pi / 2 is needed for the implementation.                                  */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -168,13 +177,6 @@
 /*  Asymptotic expansion for arctan. Good for large positive inputs.          */
 #include "auxiliary/tmpl_arctan_asymptotic_float.h"
 
-/******************************************************************************
- *                              Constant Values                               *
- ******************************************************************************/
-
-/*  The angles north-east, north-west, south-west, and south-east use these.  */
-#define TMPL_PI_BY_TWO (+1.570796326794896619231321691639751442099E+00F)
-
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
@@ -182,11 +184,25 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
+/*  The atan function can be made branchless, which allows the routines to be *
+ *  vectorized when SIMD support is available. The cost is 2-4 ULP relative   *
+ *  error, and the speedup on systems supporting AVX2 or AVX-512 is 2-4x      *
+ *  when used in a simple for-loop. Check if the user requested this.         */
+#if TMPL_USE_SIMD_FAST_MATH == 1
+
+/*  SIMD branchless implementation found here.                                */
+#include "simd/tmpl_arctan_simd_float.h"
+
+#else
+/*  Else for #if TMPL_USE_SIMD_FAST_MATH == 1.                                */
+
 /*  Single precision inverse tangent (atanf equivalent).                      */
-float tmpl_Float_Arctan(float x)
+TMPL_CONST_FUNC
+float tmpl_Float_Arctan(const float x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Float w, tmp;
+    tmpl_IEEE754_Float w;
     float arg, out, v, atan_v;
     unsigned int ind;
 
@@ -201,34 +217,33 @@ float tmpl_Float_Arctan(float x)
             return x;
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
-        if (w.bits.sign)
-            return -TMPL_PI_BY_TWO;
+        if (TMPL_FLOAT_IS_NEGATIVE(w))
+            return -tmpl_float_pi_by_two;
 
-        return TMPL_PI_BY_TWO;
+        return tmpl_float_pi_by_two;
     }
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
-    else if (w.bits.expo < TMPL_FLOAT_UBIAS - 4U)
+    else if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 4U)
     {
         /*  For very very small, avoid underflow. Return the first term of    *
          *  the Maclaurin series.                                             */
-        if (w.bits.expo < TMPL_FLOAT_UBIAS - 12U)
+        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 12U)
             return x;
 
         return tmpl_Float_Arctan_Very_Small(x);
     }
 
-    /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
-    tmp.bits.sign = w.bits.sign;
-    w.bits.sign = 0x00U;
+    /*  The arctan function is odd. Work with |x|.                            */
+    w.r = tmpl_Float_Abs(w.r);
 
     /*  For |x| > 16, use the asymptotic expansion.                           */
-    if (w.bits.expo > TMPL_FLOAT_UBIAS + 3U)
+    if (TMPL_FLOAT_EXPO_BITS(w) > TMPL_FLOAT_UBIAS + 3U)
     {
         out = tmpl_Float_Arctan_Asymptotic(w.r);
 
         /*  Use the fact that atan is odd to complete the computation.        */
-        if (tmp.bits.sign)
+        if (x < 0.0F)
             return -out;
 
         return out;
@@ -239,7 +254,7 @@ float tmpl_Float_Arctan(float x)
      *  the exponent plus four (since the lowest value is 1/16 = 2^-4, we     *
      *  need to shift up by 4). The exponent has a bias, per the IEEE-754     *
      *  format, so we must subtract this off to get the correct index.        */
-    ind = (w.bits.expo + 4U) - TMPL_FLOAT_UBIAS;
+    ind = (TMPL_FLOAT_EXPO_BITS(w) + 4U) - TMPL_FLOAT_UBIAS;
     v = tmpl_float_atan_v[ind];
     atan_v = tmpl_float_atan_of_v[ind];
 
@@ -248,12 +263,15 @@ float tmpl_Float_Arctan(float x)
     out = atan_v + tmpl_Float_Arctan_Maclaurin(arg);
 
     /*  Use the fact that atan is an odd function to complete the computation.*/
-    if (tmp.bits.sign)
+    if (x < 0.0F)
         return -out;
 
     return out;
 }
 /*  End of tmpl_Float_Arctan.                                                 */
+
+#endif
+/*  End of #if TMPL_USE_SIMD_FAST_MATH == 1.                                  */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
@@ -277,9 +295,9 @@ float tmpl_Float_Arctan(float x)
     {
         /*  The limit as x -> inf is pi/2 and -pi/2 as x -> -inf.             */
         if (x < 0.0F)
-            return -TMPL_PI_BY_TWO;
+            return -tmpl_float_pi_by_two;
 
-        return TMPL_PI_BY_TWO;
+        return tmpl_float_pi_by_two;
     }
 
     /*  The inverse tangent function is odd. Reduce x to non-negative.        */
@@ -337,9 +355,6 @@ float tmpl_Float_Arctan(float x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
-
-/*  Undefine everything in case someone wants to #include this file.          */
-#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
