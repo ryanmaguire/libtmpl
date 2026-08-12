@@ -2257,11 +2257,11 @@ extern long double tmpl_LDouble_Quick_Hypot(long double x, long double y);
  *  Purpose:                                                                  *
  *      Computes the length of a vector in space.                             *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          The x component of the vector.                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          The y component of the vector.                                    *
- *      z (double):                                                           *
+ *      z (const double):                                                     *
  *          The z component of the vector.                                    *
  *  Output:                                                                   *
  *      mag (double):                                                         *
@@ -2271,17 +2271,26 @@ extern long double tmpl_LDouble_Quick_Hypot(long double x, long double y);
  *      This function does not prevent overflow or underflow. If very large   *
  *      or very small inputs, use tmpl_Double_Hypot3.                         *
  ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/math/tmpl_quick_hypot3_float.h>
-#include <libtmpl/include/inline/math/tmpl_quick_hypot3_double.h>
-#include <libtmpl/include/inline/math/tmpl_quick_hypot3_ldouble.h>
-#else
-extern double tmpl_Double_Quick_Hypot3(double x, double y, double z);
-extern float tmpl_Float_Quick_Hypot3(float x, float y, float z);
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Quick_Hypot3(const double x,
+                         const double y,
+                         const double z)
+TMPL_UNSEQUENCED;
 
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Quick_Hypot3(const float x,
+                        const float y,
+                        const float z)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
 extern long double
-tmpl_LDouble_Quick_Hypot3(long double x, long double y, long double z);
-#endif
+tmpl_LDouble_Quick_Hypot3(const long double x,
+                          const long double y,
+                          const long double z)
+TMPL_UNSEQUENCED;
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus

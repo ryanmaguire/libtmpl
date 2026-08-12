@@ -16,70 +16,78 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_quick_hypot3_double                          *
+ *                          tmpl_quick_hypot3_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes sqrt(x^2 + y^2 + z^2) at double precision.                   *
+ *      Computes sqrt(x^2 + y^2 + z^2) at single precision.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Quick_Hypot3                                              *
+ *      tmpl_Float_Quick_Hypot3                                               *
  *  Purpose:                                                                  *
  *      Computes the magnitude of the vector (x, y, z) in space.              *
  *  Arguments:                                                                *
- *      x (double):                                                           *
- *          The x component of the point.                                     *
- *      y (double):                                                           *
- *          The y component of the point.                                     *
- *      z (double):                                                           *
- *          The z component of the point.                                     *
+ *      x (const float):                                                      *
+ *          The x-component of the point.                                     *
+ *      y (const float):                                                      *
+ *          The y-component of the point.                                     *
+ *      z (const float):                                                      *
+ *          The z-component of the point.                                     *
  *  Output:                                                                   *
- *      mag (double):                                                         *
- *          The magnitude of (x, y, z) in space.                              *
+ *      mag (float):                                                          *
+ *          The magnitude of the vector (x, y, z) in 3-space.                 *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_Double_Sqrt:                                                 *
+ *      src/math/                                                             *
+ *          tmpl_Float_Sqrt:                                                  *
  *              Computes the square root of a real number.                    *
  *  Method:                                                                   *
- *      Use the Pythagorean formula. Given P = (x, y, z), we have:            *
+ *      Use the Pythagorean formula. Given p = (x, y, z), we have:            *
  *                                                                            *
- *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
+ *          || p || = sqrt(x^2 + y^2 + z^2)                                   *
  *                                                                            *
  *  Notes:                                                                    *
  *      The intermediate computation, x^2 + y^2 + z^2, will overflow if any   *
  *      input is too big, and underflow if too small. For most reasonable     *
  *      inputs this is not an issue. If you are working with very large       *
- *      (10^150) or very small (10^-150) numbers, use tmpl_Double_Hypot3.     *
+ *      (10^19) or very small (10^-19) numbers, use tmpl_Float_Hypot3.        *
  *      That function is slightly slower, but safely handles such inputs.     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_math.h:                                                          *
+ *          Header file providing the forward declaration and sqrt.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 10, 2024                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/08/11: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE use.  *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_QUICK_HYPOT3_DOUBLE_H
-#define TMPL_QUICK_HYPOT3_DOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Let the compiler know about the square root function.                     */
-extern double tmpl_Double_Sqrt(double x);
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  Double precision 3D hypotenuse function.                                  */
-TMPL_INLINE_DECL
-double tmpl_Double_Quick_Hypot3(double x, double y, double z)
+/*  Function prototype / forward declaration and square root found here.      */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Single-precision 3D hypotenuse function.                                  */
+TMPL_ALWAYS_INLINE
+TMPL_CONST_FUNC
+float
+tmpl_Float_Quick_Hypot3(const float x, const float y, const float z)
+TMPL_UNSEQUENCED
 {
     /*  Use the Pythagorean formula and return.                               */
-    return tmpl_Double_Sqrt(x*x + y*y + z*z);
+    return tmpl_Float_Sqrt(x * x + y * y + z * z);
 }
-/*  End of tmpl_Double_Quick_Hypot3.                                          */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_Float_Quick_Hypot3.                                           */
