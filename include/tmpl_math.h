@@ -2229,9 +2229,9 @@ tmpl_LDouble_Positive_Difference(long double x, long double y);
  *  Purpose:                                                                  *
  *      Computes the length of a vector in the plane.                         *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          The x component of the vector.                                    *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          The y component of the vector.                                    *
  *  Output:                                                                   *
  *      mag (double):                                                         *
@@ -2241,15 +2241,20 @@ tmpl_LDouble_Positive_Difference(long double x, long double y);
  *      This function does not prevent overflow or underflow. If very large   *
  *      or very small inputs, use tmpl_Double_Hypot.                          *
  ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/math/tmpl_quick_hypot_float.h>
-#include <libtmpl/include/inline/math/tmpl_quick_hypot_double.h>
-#include <libtmpl/include/inline/math/tmpl_quick_hypot_ldouble.h>
-#else
-extern double tmpl_Double_Quick_Hypot(double x, double y);
-extern float tmpl_Float_Quick_Hypot(float x, float y);
-extern long double tmpl_LDouble_Quick_Hypot(long double x, long double y);
-#endif
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Quick_Hypot(const double x, const double y)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Quick_Hypot(const float x, const float y)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Quick_Hypot(const long double x, const long double y)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
