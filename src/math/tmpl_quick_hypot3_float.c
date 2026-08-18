@@ -81,8 +81,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Single-precision 3D hypotenuse function.                                  */
-TMPL_ALWAYS_INLINE
 TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 float
 tmpl_Float_Quick_Hypot3(const float x, const float y, const float z)
 TMPL_UNSEQUENCED

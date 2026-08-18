@@ -79,8 +79,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Single-precision hypotenuse function.                                     */
-TMPL_ALWAYS_INLINE
 TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 float
 tmpl_Float_Quick_Hypot(const float x, const float y)
 TMPL_UNSEQUENCED

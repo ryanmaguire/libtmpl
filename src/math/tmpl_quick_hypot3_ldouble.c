@@ -81,8 +81,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Long double-precision 3D hypotenuse function.                             */
-TMPL_ALWAYS_INLINE
 TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 long double
 tmpl_LDouble_Quick_Hypot3(const long double x,
                           const long double y,
