@@ -227,11 +227,22 @@ CC = cc
 # Archiver to be used. Only needed if a static build is made.
 AR = ar
 
+# The architecture libtmpl is being built on.
+ARCH = $(shell uname -m)
+
 # The user is allowed to specify their own flags.
 EXTRA_FLAGS =
 
-# The architecture libtmpl is being built on.
-ARCH = $(shell uname -m)
+# Warnings for the build. The bash script has nearly every warning for
+# GCC enabled, and if clang is being used the -Weverything warning is set,
+# which literally enables every warning. This helps check for standards
+# compliance. This Makefile has far fewer warnings enabled.
+CWARN = -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
+
+# Config flags and exclude flags depends on the architecture.
+# We'll set these later when we examine the ARCH variable.
+CONFIG_FLAGS = $(EXTRA_FLAGS)
+EXCLUDE =
 
 # Default C flags. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
 ifdef DEBUG_BUILD
@@ -240,9 +251,11 @@ LFLAGS = -fPIC -g -shared
 else ifdef SUNCC
 CFLAGS = -I../ -xO5 -xipo -KPIC -DNDEBUG -c
 LFLAGS = -xO5 -xipo -KPIC -G
+CONFIG_FLAGS += -xO5 -KPIC
 else
 CFLAGS = -I../ -O3 -flto -fPIC -DNDEBUG -c
 LFLAGS = -O3 -fPIC -flto -DNDEBUG -shared
+CONFIG_FLAGS += -O3 -fPIC
 endif
 
 # NVIDIA's C compiler (nvc) does not support the -flto flag.
@@ -272,17 +285,6 @@ endif
 ifdef NO_MATH
 LFLAGS += -lm
 endif
-
-# Warnings for the build. The bash script has nearly every warning for
-# GCC enabled, and if clang is being used the -Weverything warning is set,
-# which literally enables every warning. This helps check for standards
-# compliance. This Makefile has far fewer warnings enabled.
-CWARN = -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
-
-# Config flags and exclude flags depends on the architecture.
-# We'll set these later when we examine the ARCH variable.
-CONFIG_FLAGS = $(EXTRA_FLAGS)
-EXCLUDE =
 
 # A common trick in numerical analysis with floating-point number is to
 # "split" a double, or long double, into two parts to preserve accuracy.
@@ -387,7 +389,8 @@ endif
 ifdef SIMD_FAST_MATH
 CFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
 LFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
-CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE -std=c23
+CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE
+CONFIG_FLAGS += -ffast-math -march=native -std=c23
 endif
 
 FASM_SRCS =
