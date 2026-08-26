@@ -303,12 +303,6 @@ if [ $USEVOLATILE == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_USE_VOLATILE"
 fi
 
-if [ $USECAUTIOUSSPLIT == 1 ]; then
-    ExtraArgs="$ExtraArgs -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT"
-elif [ $USEVOLATILESPLIT == 1 ]; then
-    ExtraArgs="$ExtraArgs -DTMPL_USE_VOLATILE_DOUBLE_SPLIT"
-fi
-
 # Name of the created Shared Object file (.so).
 SONAME="libtmpl.so"
 

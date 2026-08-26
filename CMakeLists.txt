@@ -90,11 +90,6 @@ option(USE_MEMCPY "Use memcpy instead of for-loops" OFF)
 # does not implement the C23 [[gnu::optimize(...)]] attribute.
 option(USE_VOLATILE "Set the TMPL_VOLATILE macro to volatile" OFF)
 
-# Options for carefully and correctly performing the double-double split.
-option(VOLATILE_SPLIT "Force volatile keyword for double splitting" OFF)
-option(CAUTIOUS_SPLIT "Force cautious (multi-volatile) double splitting" OFF)
-option(NO_VOLATILE_SPLIT "Disable volatile splitting (Not Recommended)" OFF)
-
 # Enable very aggressive optimizations and use OpenMP to create SIMD versions of
 # several of libtmpl's functions. Only supported by a few compilers (GCC 15+).
 # It enables -ffast-math, -march=native, and -fopenmp-simd, and requires C23
@@ -142,26 +137,6 @@ message(STATUS "libtmpl detected architecture: ${TMPL_ARCH}")
 file(GLOB_RECURSE SOURCES "src/*.c")
 
 set(CONFIG_FLAGS "")
-
-# Several architectures require the volatile keyword for the double split
-# to be performed correctly. Check for these architectures.
-set (NEEDS_VOLATILE_SPLIT FALSE)
-if (TMPL_ARCH MATCHES "aarch64|arm64|armv7l|ppc|ppc64|ppc64le|riscv64")
-    set(NEEDS_VOLATILE_SPLIT TRUE)
-endif()
-
-# Check if we need to enable volatile flags.
-if (NOT NO_VOLATILE_SPLIT)
-
-    # i386 needs several volatile flags (one for each arithmetic step).
-    if (CAUTIOUS_SPLIT OR (TMPL_ARCH STREQUAL "i386"))
-        list(APPEND CONFIG_FLAGS TMPL_USE_CAUTIOUS_DOUBLE_SPLIT)
-
-    # The other architectures only need one.
-    elseif (VOLATILE_SPLIT OR NEEDS_VOLATILE_SPLIT)
-        list(APPEND CONFIG_FLAGS TMPL_USE_VOLATILE_DOUBLE_SPLIT)
-    endif()
-endif()
 
 # Remove libm files if the user does not want libtmpl's implementation.
 if (NO_MATH)

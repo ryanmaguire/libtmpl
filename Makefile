@@ -163,43 +163,6 @@
 #           the "no-associative-math" and "fp-contract=off" options to prevent
 #           aggressive optimizations from ruining them. Enable with:
 #               make USE_VOLATILE=1 [other-options]
-#       VOLATILE_SPLIT:
-#           Force the double splitting method to use the volatile keyword.
-#           Several architectures (aarch64, ppc64) require the volatile keyword
-#           for the splitting method to work properly. The splitting method
-#           is needed to preserve accuracy in functions like cos, sin, the
-#           Fresnel integrals, and more. This Makefile has a list of known
-#           architectures that require the volatile keyword to make the split
-#           work. Thus far they are:
-#               aarch64
-#               arm64
-#               armv7l
-#               ppc
-#               ppc64
-#               ppc64le
-#               riscv64
-#           If your architecture is on here, no action is needed. If it is not,
-#           and you are getting inaccurate results, set VOLATILE_SPLIT=1 when
-#           building libtmpl. Enable with:
-#               make VOLATILE_SPLIT=1 [other-options]
-#       CAUTIOUS_SPLIT:
-#           Force the double splitting method to use several volatile keywords.
-#           This could also be called the "paranoid" method. Only one
-#           architecture tested so far needs this, the i386 / x86 arch. Note
-#           that x86_64 / amd64 does NOT need this. If you are getting
-#           inaccurate results for cos, sin, the Fresnel integrals, or any
-#           other function making use of the splitting technique, and if
-#           VOLATILE_SPLIT isn't doing the trick, enable this option. Each step
-#           of the split is declared volatile, which should force the compiler
-#           to cooperate. This results in a slight reduction of performance,
-#           but produces accurate results. Enable with:
-#               make CAUTIOUS_SPLIT=1 [other-options]
-#       NO_VOLATILE_SPLIT:
-#           Disable the volatile keyword for the splitting technique, even if
-#           you are on an architecture that requires it. This is for
-#           experimenting only and should not be used in actual builds.
-#           Enable with:
-#               make NO_VOLATILE_SPLIT=1 [other-options]
 #       EXTRA_FLAGS:
 #           Any extra flags you wish to pass to the C compiler.
 #           For example, with clang you can enable -Weverything via:
@@ -285,56 +248,6 @@ endif
 ifdef NO_MATH
 LFLAGS += -lm
 endif
-
-# A common trick in numerical analysis with floating-point number is to
-# "split" a double, or long double, into two parts to preserve accuracy.
-# Some architectures need the volatile keyword to prevent optimizing the split
-# away, and some architectures (i386) need several volatile keywords used.
-# Below is a non-exhaustive list of architectures that require the keyword.
-# If you would like to force enabling of volatile, set VOLATILE_SPLIT=1.
-# If you would like to force enabling of several volatile keywords, set
-# CAUTIOUS_SPLIT=1. If you want to experiment and disable volatile (which is
-# not recommended), set NO_VOLATILE_SPLIT=1.
-ifndef NO_VOLATILE_SPLIT
-
-# Architectures known to need the volatile keyword for splitting.
-VOLATILE_SPLIT_ARCHS = aarch64 arm64 armv7l ppc ppc64 ppc64le riscv64
-CAUTIOUS_SPLIT_ARCHS = i386 x86
-
-# The user can force the volatile split flag to be enabled.
-ifdef VOLATILE_SPLIT
-VOLATILE_SPLIT_ARCHS += $(ARCH)
-endif
-
-# The user can also force the cautious splitting flag to be enabled.
-ifdef CAUTIOUS_SPLIT
-CAUTIOUS_SPLIT_ARCHS += $(ARCH)
-endif
-
-else
-# Else for ifndef NO_VOLATILE_SPLIT.
-
-# If the user requested no volatile flags at all, even if they are
-# recommended, set these variables to be blank. This should be for
-# experimenting only and is not recommended for actual use of libtmpl.
-VOLATILE_SPLIT_ARCHS =
-CAUTIOUS_SPLIT_ARCHS =
-
-endif
-# End of ifndef NO_VOLATILE_SPLIT.
-
-# Enable splitting flags if requested, or if required. Cautious split
-# gets precedence over volatile split.
-ifeq ($(ARCH), $(filter $(ARCH), $(CAUTIOUS_SPLIT_ARCHS)))
-
-CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
-
-else ifeq ($(ARCH), $(filter $(ARCH), $(VOLATILE_SPLIT_ARCHS)))
-
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
-
-endif
-# End of splitting flags.
 
 # libtmpl will check if long long is available in config.c. If you do not want
 # long long functions compiled (for example, you're on a GNU/Linux machine where
@@ -645,17 +558,6 @@ help:
 	@echo "\033[0;96m\t\tfloating-point arithmetic (GCC, Clang, MSVC), but"
 	@echo "\033[0;96m\t\tit is necessary on other compilers (ICC)."
 	@echo "\033[0;96m\t\tExample: make USE_VOLATILE=1"
-	@echo "\033[0;96m\tVOLATILE_SPLIT:"
-	@echo "\033[0;96m\t\tForce double splits to use the volatile keyword."
-	@echo "\033[0;96m\t\tExample: make VOLATILE_SPLIT=1"
-	@echo "\033[0;96m\tCAUTIOUS_SPLIT:"
-	@echo "\033[0;96m\t\tForce double splits to use several volatiles,"
-	@echo "\033[0;96m\t\tbreaking the computation into separate lines."
-	@echo "\033[0;96m\t\tExample: make CAUTIOUS_SPLIT=1"
-	@echo "\033[0;96m\tNO_VOLATILE_SPLIT:"
-	@echo "\033[0;96m\t\tForce double splits to never use volatile"
-	@echo "\033[0;96m\t\t(NOT RECOMMENDED)."
-	@echo "\033[0;96m\t\tExample: make NO_VOLATILE_SPLIT=1"
 	@echo "\033[0;96m\tEXTRA_FLAGS:"
 	@echo "\033[0;96m\t\tAdd extra flags for the C compiler."
 	@echo "\033[0;96m\t\tExample: make EXTRA_FLAGS=\"-Wno-float-equal\""
