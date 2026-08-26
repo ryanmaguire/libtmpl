@@ -106,6 +106,7 @@
 #include <libtmpl/include/helper/tmpl_min.h>
 #include <libtmpl/include/helper/tmpl_relative_error.h>
 #include <libtmpl/include/helper/tmpl_swap.h>
+#include <libtmpl/include/helper/tmpl_to_string.h>
 #include <libtmpl/include/tmpl_affine.h>
 #include <libtmpl/include/tmpl_array_integer.h>
 #include <libtmpl/include/tmpl_astro.h>
