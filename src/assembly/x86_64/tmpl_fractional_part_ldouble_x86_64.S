@@ -94,9 +94,9 @@ ASM_BEGIN(tmpl_LDouble_Fractional_Part)
     fld %st(0)
 
     /*  The rest of the algorithm mimics the GNU / Linux, FreeBSD, and macOS  *
-     *  Save the original control word so we can restore it later. -10 bytes  *
-     *  back is not reserved for scratch, like it is on other systems, so we  *
-     *  store the word 14 bytes forward.                                      */
+     *  version provided below. We save the original control word so we can   *
+     *  restore it later. -10 bytes back is not reserved for scratch, like it *
+     *  is on other systems, so we store the word 14 bytes forward.           */
     fnstcw 14(%rsp)
 
     /*  rcx is a pointer to the output. Move this into rax. rax must equal    *
