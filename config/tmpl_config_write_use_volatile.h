@@ -58,24 +58,6 @@
 /*  Function for writing the TMPL_VOLATILE macro to a file.                   */
 static void tmpl_write_use_volatile(FILE *fp)
 {
-#if defined(TMPL_USE_VOLATILE_DOUBLE_SPLIT)
-    fputs("#define TMPL_DOUBLE_VOLATILE_SPLIT\n", fp);
-#elif defined(TMPL_USE_CAUTIOUS_DOUBLE_SPLIT)
-    fputs("#define TMPL_DOUBLE_CAUTIOUS_SPLIT\n", fp);
-#endif
-
-#if defined(TMPL_USE_VOLATILE_FLOAT_SPLIT)
-    fputs("#define TMPL_FLOAT_VOLATILE_SPLIT\n", fp);
-#elif defined(TMPL_USE_CAUTIOUS_FLOAT_SPLIT)
-    fputs("#define TMPL_FLOAT_CAUTIOUS_SPLIT\n", fp);
-#endif
-
-#if defined(TMPL_USE_VOLATILE_LDOUBLE_SPLIT)
-    fputs("#define TMPL_LDOUBLE_VOLATILE_SPLIT\n", fp);
-#elif defined(TMPL_USE_CAUTIOUS_LDOUBLE_SPLIT)
-    fputs("#define TMPL_LDOUBLE_CAUTIOUS_SPLIT\n", fp);
-#endif
-
 #if defined(TMPL_USE_VOLATILE)
     fputs("#define TMPL_VOLATILE volatile\n\n", fp);
 #else
