@@ -65,6 +65,7 @@
 #include "tmpl_config_write_has_floatint32.h"
 #include "tmpl_config_write_has_floatint64.h"
 #include "tmpl_config_write_has_floatint_ldouble.h"
+#include "tmpl_config_write_has_hardware_fma.h"
 #include "tmpl_config_write_license.h"
 #include "tmpl_config_write_gcd_algorithm.h"
 #include "tmpl_config_write_float_type.h"
@@ -126,6 +127,9 @@ static int make_config_h(void)
     tmpl_write_use_math(fp);
     tmpl_write_use_volatile(fp);
     tmpl_write_use_restrict(fp);
+
+    /*  Macro for using hardware FMA vs. software FMA.                        */
+    tmpl_write_has_hardware_fma(fp);
 
     /*  Macro for enabling SIMD support (needs OpenMP support).               */
     tmpl_write_use_simd_fast_math(fp);
