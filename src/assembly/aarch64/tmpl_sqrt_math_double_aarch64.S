@@ -53,7 +53,7 @@ ASM_BEGIN(tmpl_Double_Sqrt)
      *  registers are for double-precision floating-point numbers.            */
     fsqrt d0, d0
 
-    /*  return y;                                                             */
+    /*  Return y.                                                             */
     ret
 
 ASM_END(tmpl_Double_Sqrt)

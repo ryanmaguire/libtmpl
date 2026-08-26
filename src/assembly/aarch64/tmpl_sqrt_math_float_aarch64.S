@@ -53,7 +53,7 @@ ASM_BEGIN(tmpl_Float_Sqrt)
      *  registers are for single-precision floating-point numbers.            */
     fsqrt s0, s0
 
-    /*  return y;                                                             */
+    /*  Return y.                                                             */
     ret
 
 ASM_END(tmpl_Float_Sqrt)

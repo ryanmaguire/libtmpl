@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_trunc_float                              *
+ *                             tmpl_truncate_float                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for computing truncation at single precision.           *
@@ -52,7 +52,7 @@ ASM_BEGIN(tmpl_Float_Truncate)
     /*  frintz is Round-to-Zero (truncation). Compute y = trunc(x).           */
     frintz s0, s0
 
-    /*  return y;                                                             */
+    /*  Return y.                                                             */
     ret
 
 ASM_END(tmpl_Float_Truncate)

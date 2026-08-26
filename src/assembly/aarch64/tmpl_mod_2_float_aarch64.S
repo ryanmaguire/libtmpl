@@ -19,7 +19,7 @@
  *                              tmpl_mod_2_float                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing remainder after divison by 2.             *
+ *      Contains code for computing remainder after division by 2.            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -41,7 +41,7 @@
  *      frintz:                                                               *
  *          Truncates a real number, or "rounds to zero."                     *
  *      fmsub:                                                                *
- *          Fused multipy-subtract operation, computes c - a * b.             *                                           *
+ *          Fused multiply-subtract operation, computes c - a * b.            *
  *  Method:                                                                   *
  *      Compute x - 2 * trunc(x / 2). trunc(x) is computed with frintz.       *
  ******************************************************************************
@@ -70,7 +70,7 @@ ASM_BEGIN(tmpl_Float_Mod_2)
     /*  y = x - 2.0 * trunc(0.5 * x);                                         */
     fmsub s0, s31, s30, s0
 
-    /* return y;                                                              */
+    /*  Return y.                                                             */
     ret
 
 ASM_END(tmpl_Float_Mod_2)
