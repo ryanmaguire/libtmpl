@@ -170,4 +170,4 @@ tmpl_LDouble_High_Split(const long double x, const long double splitter)
 /*  End of tmpl_LDouble_High_Split.                                           */
 
 #endif
-/*  End of #if defined(TMPL_LDOUBLE_CAUTIOUS_SPLIT).                          */
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
