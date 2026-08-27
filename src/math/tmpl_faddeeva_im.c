@@ -93,6 +93,9 @@
  *   man 3 im_w_of_x
  */
 
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  Header file which contains aliases for the function in the standard C     *
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
