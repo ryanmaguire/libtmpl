@@ -41,6 +41,9 @@
  *      Frozen for v1.3.                                                      *
  ******************************************************************************/
 
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  atan2 function provided here. Used for computing angles.                  */
 #include <libtmpl/include/tmpl_math.h>
 
