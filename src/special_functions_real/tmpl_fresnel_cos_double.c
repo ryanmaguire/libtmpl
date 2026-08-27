@@ -60,6 +60,9 @@
  *  Date:       August 30, 2019                                               *
  ******************************************************************************/
 
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  The C standard library header math.h is included here, as are aliases for *
  *  various functions, the macros INFINITY and NAN, as well as the max legal  *
  *  values for the exponential function which don't return INFINITY.          */

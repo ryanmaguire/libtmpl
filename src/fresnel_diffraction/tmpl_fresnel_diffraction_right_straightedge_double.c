@@ -42,6 +42,9 @@
  *      Frozen for v1.3.                                                      *
  ******************************************************************************/
 
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  Constants involving pi found here.                                        */
 #include <libtmpl/include/tmpl_math.h>
 

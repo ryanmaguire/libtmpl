@@ -7,6 +7,10 @@
 
 #include <stdio.h>
 #include <string.h>
+
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_ppm.h>

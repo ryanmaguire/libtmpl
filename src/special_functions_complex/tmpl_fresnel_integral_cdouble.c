@@ -1,3 +1,6 @@
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  The C Standard Library header for math functions.                         */
 #include <libtmpl/include/tmpl_math.h>
 

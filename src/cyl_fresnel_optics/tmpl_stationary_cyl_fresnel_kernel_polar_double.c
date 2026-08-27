@@ -28,6 +28,9 @@
 /*  TMPL_RESTRICT mcaro provided here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  The cylindrical Fresnel geometry struct.                                  */
 #include <libtmpl/include/types/tmpl_cyl_fresnel_geometry_double.h>
 

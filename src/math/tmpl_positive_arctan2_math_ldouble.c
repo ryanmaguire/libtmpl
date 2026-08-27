@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_positive_arctan2_ldouble                        *
+ *                        tmpl_positive_arctan2_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Compute the positive angle the point (x, y) makes with the x axis.    *
@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Computes the positive angle the point (x, y) makes with the x axis.   *
  *  Arguments:                                                                *
- *      y (long double):                                                      *
+ *      y (const long double):                                                *
  *          A real number, the vertical component of the point.               *
- *      x (long double):                                                      *
+ *      x (const long double):                                                *
  *          A real number, the horizontal component of the point.             *
  *  Output:                                                                   *
  *      theta (long double):                                                  *
@@ -43,35 +43,44 @@
  *              between -pi and pi.                                           *
  *  Method:                                                                   *
  *      Call the tmpl_LDouble_Arctan2 function and shift the result by        *
- *      2*pi if the output is negative.                                       *
+ *      2 * pi if the output is negative.                                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math_constants.h:                                                *
- *          Header file providing math constants like 2 pi.                   *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  3.) tmpl_math.h:                                                          *
+ *          Header file providing the forward declaration and arctan2.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 6, 2025                                                   *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/08/12: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE use.  *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_POSITIVE_ARCTAN2_LDOUBLE_H
-#define TMPL_POSITIVE_ARCTAN2_LDOUBLE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  tmpl_ldouble_two_pi provided here.                                        */
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  2 pi, and other math constants, found here.                               */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/*  Tell the compiler about the main Arctan2 function.                        */
-extern long double tmpl_LDouble_Arctan2(long double y, long double x);
+/*  Function prototype / forward declaration and arctan2 found here.          */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  Long double precision positive angle function.                            */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Positive_Arctan2(long double y, long double x)
+/*  Long double-precision positive angle function.                            */
+TMPL_ALWAYS_INLINE
+TMPL_CONST_FUNC
+long double
+tmpl_LDouble_Positive_Arctan2(const long double y, const long double x)
+TMPL_UNSEQUENCED
 {
     /*  Most of the work is handled by the Arctan2 routine.                   */
     const long double angle = tmpl_LDouble_Arctan2(y, x);
@@ -80,7 +89,7 @@ long double tmpl_LDouble_Positive_Arctan2(long double y, long double x)
      *  mod two pi, this does not change the true angle. The Arctan2 function *
      *  always returns a value between -pi and pi, so shifting by two pi      *
      *  guarantees the output is non-negative. Note, if "angle" is NaN, the   *
-     *  output will also be NaN since comparing a NaN using "==" always       *
+     *  output will also be NaN since comparing a NaN using "<" always        *
      *  returns False. Hence there are no checks for NaNs here.               */
     if (angle < 0.0L)
         return angle + tmpl_ldouble_two_pi;
@@ -89,6 +98,3 @@ long double tmpl_LDouble_Positive_Arctan2(long double y, long double x)
     return angle;
 }
 /*  End of tmpl_LDouble_Positive_Arctan2.                                     */
-
-#endif
-/*  End of include guard.                                                     */
