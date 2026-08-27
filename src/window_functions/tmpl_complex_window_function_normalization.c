@@ -1,3 +1,6 @@
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
