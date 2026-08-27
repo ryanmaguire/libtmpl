@@ -440,9 +440,6 @@ extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
 extern const long double tmpl_Min_LDouble_Base_E;
 
-/*  Commonly used constants (pi, e, etc.) found here.                         */
-#include <libtmpl/include/constants/tmpl_math_constants.h>
-
 /******************************************************************************
  *                              Tables and Data                               *
  ******************************************************************************/
@@ -2157,27 +2154,28 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
  *  Purpose:                                                                  *
  *      Computes the positive angle the point (y, x) makes with the x axis.   *
  *  Arguments:                                                                *
- *      y (double):                                                           *
+ *      y (const double):                                                     *
  *          A real number.                                                    *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          Another real number.                                              *
  *  Output:                                                                   *
  *      angle (double):                                                       *
  *          The positive angle the point (x, y) makes with the x axis.        *
  ******************************************************************************/
-#if TMPL_USE_INLINE == 1
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Positive_Arctan2(const double y, const double x)
+TMPL_UNSEQUENCED;
 
-#include <libtmpl/include/inline/math/tmpl_positive_arctan2_float.h>
-#include <libtmpl/include/inline/math/tmpl_positive_arctan2_double.h>
-#include <libtmpl/include/inline/math/tmpl_positive_arctan2_ldouble.h>
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Positive_Arctan2(const float y, const float x)
+TMPL_UNSEQUENCED;
 
-#else
-
-extern float tmpl_Float_Positive_Arctan2(float y, float x);
-extern double tmpl_Double_Positive_Arctan2(double y, double x);
-extern long double tmpl_LDouble_Positive_Arctan2(long double y, long double x);
-
-#endif
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Positive_Arctan2(const long double y, const long double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
