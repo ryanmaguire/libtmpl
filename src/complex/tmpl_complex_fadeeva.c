@@ -146,9 +146,22 @@
  *   w_of_z(3)
  */
 
-#include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_complex.h>
+/*
+ *  TODO:
+ *      Reimplemement totally in-house, no external code.
+ */
+
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
+/*  Limits for floating-point types found here.                               */
 #include <float.h>
+
+/*  Absolute value and exponential function provided here.                    */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/tmpl_complex.h>
 
 /******************************************************************************
  *  Precomputed table of expa2n2[n-1] = exp(-a2*n*n)                          *
