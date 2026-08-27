@@ -325,6 +325,7 @@ if (NOT MSVC)
     # Check if we can enable -march=native.
     if(COMPILER_SUPPORTS_MARCH_NATIVE)
         target_compile_options(tmpl PRIVATE -march=native)
+        target_compile_options(tmpl_config_generate PRIVATE -march=native)
     endif()
 
     # If libtmpl's implementation of libm is not used, we need to link to libm.
@@ -386,10 +387,17 @@ if (SIMD_FAST_MATH)
 
         # MSVC equivalent of -ffast-math and -fopenmp-simd.
         target_compile_options(tmpl PRIVATE /fp:fast /openmp:experimental)
+        target_compile_options(tmpl_config_generate PRIVATE /fp:fast)
+
+        # Use the conforming preprocessor to avoid legacy warnings.
+        target_compile_options(
+            tmpl PRIVATE $<$<COMPILE_LANGUAGE:C>:/Zc:preprocessor>
+        )
     else()
 
         # Fast math.
         tmpl_add_supported_flag(tmpl -ffast-math)
+        tmpl_add_supported_flag(tmpl_config_generate -ffast-math)
 
         # Tune for the build machine. GCC uses use -march=native for some
         # architectures and -mcpu=native for others.
@@ -398,8 +406,11 @@ if (SIMD_FAST_MATH)
         if (TMPL_CC_HAS_MARCH_NATIVE)
             target_compile_options(tmpl PRIVATE -march=native)
             target_link_options(tmpl PRIVATE -march=native)
+            target_compile_options(tmpl_config_generate PRIVATE -march=native)
+            target_link_options(tmpl_config_generate PRIVATE -march=native)
         else()
             tmpl_add_supported_flag(tmpl -mcpu=native)
+            tmpl_add_supported_flag(tmpl_config_generate -mcpu=native)
         endif()
 
         # OpenMP SIMD vectorizer only, the full OpemMP runtime is not needed.
