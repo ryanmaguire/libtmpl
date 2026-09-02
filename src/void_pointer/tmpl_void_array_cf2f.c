@@ -7,7 +7,7 @@ void
 tmpl_Void_Array_CF2F(const void * const in,
                      void * const out,
                      size_t length,
-                     const tmpl_ComplexFloatFunctional func)
+                     const tmpl_ComplexFunctionalFloat func)
 {
     size_t n;
     const tmpl_ComplexFloat * const z = in;

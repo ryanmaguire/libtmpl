@@ -38,7 +38,7 @@
 #include "tmpl_complex_float.h"
 
 /*  Function pointer for single precision complex functionals.                */
-typedef float (*tmpl_ComplexFloatFunctional)(tmpl_ComplexFloat);
+typedef float (*tmpl_ComplexFunctionalFloat)(tmpl_ComplexFloat);
 
 #endif
 /*  End of include guard.                                                     */

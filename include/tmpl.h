@@ -26,13 +26,13 @@
 #include <libtmpl/include/types/tmpl_cayley_table_uint.h>
 #include <libtmpl/include/types/tmpl_complex_double.h>
 #include <libtmpl/include/types/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 #include <libtmpl/include/types/tmpl_complex_function_double.h>
 #include <libtmpl/include/types/tmpl_complex_function_float.h>
 #include <libtmpl/include/types/tmpl_complex_function_ldouble.h>
 #include <libtmpl/include/types/tmpl_complex_functional_double.h>
 #include <libtmpl/include/types/tmpl_complex_functional_float.h>
 #include <libtmpl/include/types/tmpl_complex_functional_ldouble.h>
-#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 #include <libtmpl/include/types/tmpl_complex_path_double.h>
 #include <libtmpl/include/types/tmpl_complex_path_float.h>
 #include <libtmpl/include/types/tmpl_complex_path_ldouble.h>

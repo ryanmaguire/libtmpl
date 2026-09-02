@@ -38,7 +38,7 @@
 #include "tmpl_complex_ldouble.h"
 
 /*  Function pointer for long double precision complex paths.                 */
-typedef tmpl_ComplexLongDouble (*tmpl_ComplexLongDoublePath)(long double);
+typedef tmpl_ComplexLongDouble (*tmpl_ComplexPathLongDouble)(long double);
 
 #endif
 /*  End of include guard.                                                     */

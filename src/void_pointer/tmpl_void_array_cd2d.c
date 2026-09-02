@@ -7,7 +7,7 @@ void
 tmpl_Void_Array_CD2D(const void * const in,
                      void * const out,
                      size_t length,
-                     const tmpl_ComplexDoubleFunctional func)
+                     const tmpl_ComplexFunctionalDouble func)
 {
     size_t n;
     const tmpl_ComplexDouble * const z = in;

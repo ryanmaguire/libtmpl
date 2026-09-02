@@ -38,7 +38,7 @@
 #include "tmpl_complex_double.h"
 
 /*  Function pointer for double precision complex functionals.                */
-typedef double (*tmpl_ComplexDoubleFunctional)(tmpl_ComplexDouble);
+typedef double (*tmpl_ComplexFunctionalDouble)(tmpl_ComplexDouble);
 
 #endif
 /*  End of include guard.                                                     */

@@ -37,7 +37,7 @@ extern void
 tmpl_Void_Array_L2CD(const void * const in,
                      void * const out,
                      size_t length,
-                     const tmpl_ComplexDoublePath func);
+                     const tmpl_ComplexPathDouble func);
 
 extern void
 tmpl_Void_Array_F2F(const void * const in,
@@ -61,54 +61,54 @@ extern void
 tmpl_Void_Array_F2CF(const void * const in,
                      void * const out,
                      const size_t length,
-                     const tmpl_ComplexFloatPath func);
+                     const tmpl_ComplexPathFloat func);
 
 extern void
 tmpl_Void_Array_D2CD(const void * const in,
                      void * const out,
                      const size_t length,
-                     const tmpl_ComplexDoublePath func);
+                     const tmpl_ComplexPathDouble func);
 
 extern void
 tmpl_Void_Array_LD2CLD(const void * const in,
                        void * const out,
                        const size_t length,
-                       const tmpl_ComplexLongDoublePath func);
+                       const tmpl_ComplexPathLongDouble func);
 
 extern void
 tmpl_Void_Array_CF2CF(const void * const in,
                       void * const out,
                       const size_t length,
-                      const tmpl_ComplexFloatFunction func);
+                      const tmpl_ComplexFunctionFloat func);
 
 extern void
 tmpl_Void_Array_CD2CD(const void * const in,
                       void * const out,
                       const size_t length,
-                      const tmpl_ComplexDoubleFunction func);
+                      const tmpl_ComplexFunctionDouble func);
 
 extern void
 tmpl_Void_Array_CLD2CLD(const void * const in,
                         void * const out,
                         const size_t length,
-                        const tmpl_ComplexLongDoubleFunction func);
+                        const tmpl_ComplexFunctionLongDouble func);
 
 extern void
 tmpl_Void_Array_CF2F(const void * const in,
                      void * const out,
                      const size_t length,
-                     const tmpl_ComplexFloatFunctional func);
+                     const tmpl_ComplexFunctionalFloat func);
 
 extern void
 tmpl_Void_Array_CD2D(const void * const in,
                      void * const out,
                      const size_t length,
-                     const tmpl_ComplexDoubleFunctional func);
+                     const tmpl_ComplexFunctionalDouble func);
 
 extern void
 tmpl_Void_Array_CLD2LD(const void * const in,
                        void * const out,
                        const size_t length,
-                       const tmpl_ComplexLongDoubleFunctional func);
+                       const tmpl_ComplexFunctionalLongDouble func);
 
 #endif

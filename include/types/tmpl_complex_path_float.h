@@ -38,7 +38,7 @@
 #include "tmpl_complex_float.h"
 
 /*  Function pointer for single precision complex paths.                      */
-typedef tmpl_ComplexFloat (*tmpl_ComplexFloatPath)(float);
+typedef tmpl_ComplexFloat (*tmpl_ComplexPathFloat)(float);
 
 #endif
 /*  End of include guard.                                                     */

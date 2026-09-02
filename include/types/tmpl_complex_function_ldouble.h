@@ -39,7 +39,7 @@
 
 /*  Function pointer for long double precision complex-valued functions.      */
 typedef tmpl_ComplexLongDouble
-(*tmpl_ComplexLongDoubleFunction)(tmpl_ComplexLongDouble);
+(*tmpl_ComplexFunctionLongDouble)(tmpl_ComplexLongDouble);
 
 #endif
 /*  End of include guard.                                                     */

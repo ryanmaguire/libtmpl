@@ -7,7 +7,7 @@ void
 tmpl_Void_Array_D2CD(const void * const in,
                      void * const out,
                      size_t length,
-                     const tmpl_ComplexDoublePath func)
+                     const tmpl_ComplexPathDouble func)
 {
     size_t n;
     const double * const x = in;

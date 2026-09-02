@@ -7,7 +7,7 @@ void
 tmpl_Void_Array_CLD2LD(const void * const in,
                        void * const out,
                        size_t length,
-                       const tmpl_ComplexLongDoubleFunctional func)
+                       const tmpl_ComplexFunctionalLongDouble func)
 {
     size_t n;
     const tmpl_ComplexLongDouble * const z = in;
