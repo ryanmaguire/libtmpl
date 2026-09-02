@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_vec2_positive_polar_angle_float                    *
+ *                   tmpl_vec2_positive_polar_angle_double                    *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the positive angle a vector makes with the positive x axis.  *
@@ -24,72 +24,71 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_2DFloat_Positive_Polar_Angle                                     *
+ *      tmpl_2DDouble_Positive_Polar_Angle                                    *
  *  Purpose:                                                                  *
- *      Computes the angle the point P = (a, b) makes with (1, 0) in radians. *
+ *      Computes the angle the point p = (a, b) makes with (1, 0) in radians. *
  *  Arguments:                                                                *
- *      P (const tmpl_TwoVectorFloat * const):                                *
+ *      p (const tmpl_TwoVectorDouble * const):                               *
  *          A pointer to a point in the Euclidean plane.                      *
  *  Output:                                                                   *
- *      angle (float):                                                        *
- *          The positive angle, in radians, the point P makes with the x axis.*
+ *      angle (double):                                                       *
+ *          The positive angle, in radians, the point p makes with the x axis.*
  *  Called Functions:                                                         *
  *      src/math/                                                             *
- *          tmpl_Float_Positive_Arctan2:                                      *
- *              Computes the angle made by the point (x, y).                  *
+ *          tmpl_Double_Positive_Arctan2:                                     *
+ *              Computes the positive angle made by the point (x, y).         *
  *  Method:                                                                   *
- *      The atan2 function computes angles. Given P = (a, b), we return       *
+ *      The atan2 function computes angles. Given p = (a, b), we return       *
  *      atan2(b, a).                                                          *
  *  Notes:                                                                    *
- *      1.) There are no checks for NULL pointers. It is assumed P is a valid *
- *          pointer to a 2D vector.                                           *
- *      2.) The returned angle is in radians and lies between 0 and 2*pi.     *
- *      3.) There is a jump discontinuity, or "branch cut", along the         *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
+ *                                                                            *
+ *      3.) The returned angle is in radians and lies between 0 and 2 pi.     *
+ *                                                                            *
+ *      4.) There is a jump discontinuity, or "branch cut", along the         *
  *          negative x axis.                                                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Location of the TMPL_INLINE_DECL macro.                           *
- *  2.) tmpl_vec2_float.h:                                                    *
- *          The tmpl_TwoVectorFloat typedef is provided here.                 *
+ *          Location of the TMPL_ALWAYS_INLINE macro.                         *
+ *  2.) tmpl_attributes.h:                                                    *
+ *          Provides C23 attributes for optimization.                         *
+ *  2.) tmpl_math.h:                                                          *
+ *          Provides the atan2 function.                                      *
+ *  3.) tmpl_vec2.h:                                                          *
+ *          Header containing vector types and the function prototype.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 9, 2025                                                   *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2026/09/02: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added C23 attributes.          *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC2_POSITIVE_POLAR_ANGLE_FLOAT_H
-#define TMPL_VEC2_POSITIVE_POLAR_ANGLE_FLOAT_H
-
-/*  The TMPL_INLINE_DECL macro is provided here.                              */
+/*  The TMPL_ALWAYS_INLINE macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Two-vector typedef found here.                                            */
-#include <libtmpl/include/types/tmpl_vec2_float.h>
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
 
-/*  The positive arctan2 is inlined by default. Check if inline is available. */
-#if TMPL_USE_INLINE == 1
+/*  Positive atan2 function provided here.                                    */
+#include <libtmpl/include/tmpl_math.h>
 
-/*  Implemented here.                                                         */
-#include <libtmpl/include/inline/math/tmpl_positive_arctan2_float.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, the compiler about the positive atan2 function.                */
-extern float tmpl_Float_Positive_Arctan2(float y, float x);
-
-#endif
-/*  End for #if TMPL_USE_INLINE == 1.                                         */
+/*  Two-vector typedef and function prototype given here.                     */
+#include <libtmpl/include/tmpl_vec2.h>
 
 /*  Function for computing the positive angle a vector makes with the x axis. */
-TMPL_INLINE_DECL
-float tmpl_2DFloat_Positive_Polar_Angle(const tmpl_TwoVectorFloat * const P)
+TMPL_PURE_FUNC
+TMPL_ALWAYS_INLINE
+double
+tmpl_2DDouble_Positive_Polar_Angle(const tmpl_TwoVectorDouble * const p)
+TMPL_UNSEQUENCED
 {
-    return tmpl_Float_Positive_Arctan2(P->dat[1], P->dat[0]);
+    return tmpl_Double_Positive_Arctan2(p->dat[1], p->dat[0]);
 }
-/*  End of tmpl_2DFloat_Positive_Polar_Angle.                                 */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of tmpl_2DDouble_Positive_Polar_Angle.                                */

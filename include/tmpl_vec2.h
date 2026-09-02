@@ -60,6 +60,7 @@
 #include <libtmpl/include/tmpl_bool.h>
 
 #include <libtmpl/include/tmpl_config.h>
+#include <libtmpl/include/tmpl_attributes.h>
 
 /*  Typedefs for 2D vectors at various precisions.                            */
 #include <libtmpl/include/types/tmpl_vec2_double.h>
@@ -671,24 +672,20 @@ tmpl_2DLDouble_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
  *      angle (double):                                                       *
  *          The positive angle made by P and the x axis.                      *
  ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-
-#include TMPL_INLINE_FILE(tmpl_vec2_positive_polar_angle_double.h)
-#include TMPL_INLINE_FILE(tmpl_vec2_positive_polar_angle_float.h)
-#include TMPL_INLINE_FILE(tmpl_vec2_positive_polar_angle_ldouble.h)
-
-#else
-
-extern float
-tmpl_2DFloat_Positive_Polar_Angle(const tmpl_TwoVectorFloat * const P);
-
+TMPL_PURE_FUNC
 extern double
-tmpl_2DDouble_Positive_Polar_Angle(const tmpl_TwoVectorDouble * const P);
+tmpl_2DDouble_Positive_Polar_Angle(const tmpl_TwoVectorDouble * const p)
+TMPL_UNSEQUENCED;
 
+TMPL_PURE_FUNC
+extern float
+tmpl_2DFloat_Positive_Polar_Angle(const tmpl_TwoVectorFloat * const p)
+TMPL_UNSEQUENCED;
+
+TMPL_PURE_FUNC
 extern long double
-tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
-
-#endif
+tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const p)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
