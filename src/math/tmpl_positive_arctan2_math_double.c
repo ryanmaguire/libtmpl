@@ -76,8 +76,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Double-precision positive angle function.                                 */
-TMPL_ALWAYS_INLINE
 TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
 double
 tmpl_Double_Positive_Arctan2(const double y, const double x)
 TMPL_UNSEQUENCED
