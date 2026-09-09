@@ -581,54 +581,42 @@ tmpl_3DLDouble_Multiply(const tmpl_ThreeVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_MultiplyBy                                               *
+ *      tmpl_3DDouble_MultiplyBy                                              *
  *  Purpose:                                                                  *
  *      Computes the Hadamard (component-wise) product of two vectors in R^3. *
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat * const):                               *
+ *      target (tmpl_ThreeVectorDouble * const):                              *
  *          A pointer to a vector. The product is stored here.                *
- *      source (const tmpl_ThreeVectorFloat * const):                         *
+ *      source (const tmpl_ThreeVectorDouble * const):                        *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      prod (tmpl_ThreeVectorFloat):                                         *
- *          The Hadamard product of P and Q.                                  *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_multiply_by_no_inline_float.c                           *
- *          tmpl_vec3_multiply_by_no_inline_double.c                          *
- *          tmpl_vec3_multiply_by_no_inline_ldouble.c                         *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_multiply_by_float.h                                     *
- *          tmpl_vec3_multiply_by_double.h                                    *
- *          tmpl_vec3_multiply_by_ldouble.h                                   *
+ *      prod (tmpl_ThreeVectorDouble):                                        *
+ *          The Hadamard product of target and source.                        *
+ *  Notes:                                                                    *
+ *      1.) No checks for Infs or NaNs are performed.                         *
+ *                                                                            *
+ *      2.) No checks for Null pointers are performed.                        *
+ *                                                                            *
+ *      3.) This function acts as a *= operator for vectors. It is much       *
+ *          faster to do tmpl_3DDouble_MultiplyBy(&p, &q) instead of          *
+ *          p = tmpl_3DDouble_Multiply(&p, &q).                               *
  ******************************************************************************/
-
-/*  Arithmetic functions are very small and can be inlined.                   */
-#if TMPL_USE_INLINE == 1
-
-/*  Include versions found here.                                              */
-#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_by_float.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_by_double.h>
-#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_by_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Otherwise, use the versions found in src/vec3/.                           */
+TMPL_SIMD_DECL
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DFloat_MultiplyBy(tmpl_ThreeVectorFloat * const target,
                         const tmpl_ThreeVectorFloat * const source);
 
+TMPL_SIMD_DECL
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DDouble_MultiplyBy(tmpl_ThreeVectorDouble * const target,
                          const tmpl_ThreeVectorDouble * const source);
 
+TMPL_LEAF_FUNC
 extern void
 tmpl_3DLDouble_MultiplyBy(tmpl_ThreeVectorLongDouble * const target,
                           const tmpl_ThreeVectorLongDouble * const source);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
