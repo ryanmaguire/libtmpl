@@ -176,7 +176,7 @@
 #if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
- *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
+ *        64-Bit Double / 80-Bit Extended / 128-Bit Quadruple Versions        *
  ******************************************************************************/
 
 /*  Long-double-precision absolute value function (fabsl equivalent).         */
@@ -204,7 +204,7 @@ TMPL_UNSEQUENCED
 /*  Else for 64-bit double / 80-bit extended / 128-bit quadruple versions.    */
 
 /******************************************************************************
- *                       128-bit Double-Double Version                        *
+ *                       128-Bit Double-Double Version                        *
  ******************************************************************************/
 
 /*  Long-double-precision absolute value function (fabsl equivalent).         */
@@ -217,7 +217,7 @@ TMPL_UNSEQUENCED
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_LDouble w;
 
-    /*  Set the long double part of w to the input.                           */
+    /*  Set the long double part of the word to the input x.                  */
     w.r = x;
 
     /*  For double-double we have x = x_hi + x_lo. Define                     *
