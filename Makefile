@@ -111,6 +111,10 @@
 #           must support C23 attributes if you want to use this.
 #           Enable with:
 #               make ALWAYS_INLINE=1 [other-options]
+#       NATIVE:
+#           Enable native CPU instructions if the compiler supports them.
+#           Enable with:
+#               make NATIVE=1 [other-options]
 #       NO_IEEE:
 #           Many functions use unions to take advantage of the IEEE-754
 #           format for floating-point numbers. This behavior is implementation
@@ -298,12 +302,34 @@ ifdef USE_VOLATILE
 CONFIG_FLAGS += -DTMPL_USE_VOLATILE
 endif
 
+# Compilers like GCC and Clang support native CPU tuning. This is usually
+# enabled via -march=native or -mcpu=native. The exact flag depends on the
+# architecture being used.
+NATIVE_FLAGS := $(shell                                                        \
+    if $(CC) -march=native -E -x c - </dev/null >/dev/null 2>&1; then          \
+        echo "-march=native";                                                  \
+    elif $(CC) -mcpu=native -E -x c - </dev/null >/dev/null 2>&1; then         \
+        echo "-mcpu=native";                                                   \
+    fi                                                                         \
+)
+
 # Some math routines can be vectorized. Required SIMD instructions and OpenMP.
+# Currently only GCC and Clang are supported when using this option.
+# Other compilers may work with this option, so long as they support
+# -ffast-math, -march / -mcpu, and -fopenmp-simd.
 ifdef SIMD_FAST_MATH
-CFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
-LFLAGS += -ffast-math -march=native -fopenmp-simd -std=c23
+
+CFLAGS += $(NATIVE_FLAGS) -ffast-math -fopenmp-simd
+LFLAGS += $(NATIVE_FLAGS) -ffast-math -fopenmp-simd
 CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE
-CONFIG_FLAGS += -ffast-math -march=native -std=c23
+CONFIG_FLAGS += $(NATIVE_FLAGS) -ffast-math
+
+# The user may want to use native instructions without
+# enabling SIMD vectorization.
+else ifdef NATIVE
+CFLAGS += $(NATIVE_FLAGS)
+LFLAGS += $(NATIVE_FLAGS)
+CONFIG_FLAGS += $(NATIVE_FLAGS)
 endif
 
 FASM_SRCS =
