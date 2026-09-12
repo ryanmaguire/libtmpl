@@ -150,10 +150,11 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Double precision absolute value function (fabs equivalent).               */
+/*  Double-precision absolute value function (fabs equivalent).               */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
-double tmpl_Double_Abs(const double x)
+double
+tmpl_Double_Abs(const double x)
 TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -182,7 +183,8 @@ TMPL_UNSEQUENCED
 /*  Double precision absolute value function (fabs equivalent).               */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
-double tmpl_Double_Abs(const double x)
+double
+tmpl_Double_Abs(const double x)
 TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */

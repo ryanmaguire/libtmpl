@@ -60,22 +60,22 @@
  *                                                                            *
  *          we compute:                                                       *
  *                                                                            *
- *              abs_x = abs_xhi + abs_xlo                                     *
+ *              abs_x = abs_x_hi + abs_x_lo                                   *
  *                                                                            *
  *          as follows. If x_hi and x_lo have the same sign, then:            *
  *                                                                            *
  *              |x_hi + x_lo| = |x_hi| + |x_lo|                               *
  *                                                                            *
- *          so abs_xhi = |x_hi| and abs_xlo = |x_lo|. If x_hi and x_lo have   *
+ *          so abs_x_hi = |x_hi| and abs_x_lo = |x_lo|. If x_hi and x_lo have *
  *          different signs, then:                                            *
  *                                                                            *
  *              |x_hi + x_lo| = |x_hi| - |x_lo|                               *
  *                                                                            *
- *          So abs_xhi = |x_hi| and abs_xlo = -|x_lo|. In both cases,         *
- *          abs_xhi = |x_hi|. To compute this we just set the sign bit of     *
- *          x_hi to zero. abs_xlo depends on whether x_hi and x_lo have the   *
+ *          So abs_x_hi = |x_hi| and abs_x_lo = -|x_lo|. In both cases,       *
+ *          abs_x_hi = |x_hi|. To compute this we just set the sign bit of    *
+ *          x_hi to zero. abs_x_lo depends on whether x_hi and x_lo have the  *
  *          same sign. This can be computed via the exclusive or, or XOR.     *
- *          The sign of abs_xlo is the exclusive or of the signs of x_hi      *
+ *          The sign of abs_x_lo is the exclusive or of the signs of x_hi     *
  *          and x_lo.                                                         *
  *      Error:                                                                *
  *          Based on 10,000,000 samples with -10^6 < x < 10^6.                *
@@ -179,19 +179,20 @@
  *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
  ******************************************************************************/
 
-/*  Long double precision absolute value function (fabsl equivalent).         */
+/*  Long-double-precision absolute value function (fabsl equivalent).         */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
-long double tmpl_LDouble_Abs(const long double x)
+long double
+tmpl_LDouble_Abs(const long double x)
 TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_LDouble w;
 
-    /*  Set the long double part of w to the input.                           */
+    /*  Set the long double part of the word to the input x.                  */
     w.r = x;
 
-    /*  Set the sign bit to 0, indicating positive.                           */
+    /*  Set the sign bit to zero, indicating positive.                        */
     w.bits.sign = 0x0U;
 
     /*  Return the long double part of the union.                             */
@@ -206,10 +207,11 @@ TMPL_UNSEQUENCED
  *                       128-bit Double-Double Version                        *
  ******************************************************************************/
 
-/*  Long double precision absolute value function (fabsl equivalent).         */
+/*  Long-double-precision absolute value function (fabsl equivalent).         */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
-long double tmpl_LDouble_Abs(const long double x)
+long double
+tmpl_LDouble_Abs(const long double x)
 TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -218,14 +220,25 @@ TMPL_UNSEQUENCED
     /*  Set the long double part of w to the input.                           */
     w.r = x;
 
-    /*  For double-double we have x = xhi + xlo. Define                       *
-     *  abs_x = |x| = abs_xhi + abs_xlo. If xhi and xlo have the same sign,   *
-     *  |x| = |xhi| + |xlo| and so abs_xhi = |xhi| and abs_xlo = |xlo|. If    *
-     *  xhi and xlo have different signs, |x| = |xhi| - |xlo| so              *
-     *  abs_xhi = |xhi| and abs_xlo = -|xlo|. In both cases abs_xhi = |xhi|.  *
-     *  The sign of abs_xlo depends on the signs of xhi and xlo. That is,     *
-     *  whether or not they are the same. Indeed, the sign of abs_xlo is the  *
-     *  exclusive or, also called XOR, of the signs of xhi and xlo. Use this. */
+    /*  For double-double we have x = x_hi + x_lo. Define                     *
+     *                                                                        *
+     *      abs_x = |x|                                                       *
+     *            = abs_x_hi + abs_x_lo.                                      *
+     *                                                                        *
+     *  If x_hi and x_lo have the same sign, then                             *
+     *                                                                        *
+     *      |x| = |x_hi| + |x_lo|,                                            *
+     *                                                                        *
+     *  and so abs_x_hi = |x_hi| and abs_x_lo = |x_lo|. If x_hi and x_lo have *
+     *  different signs, then                                                 *
+     *                                                                        *
+     *      |x| = |x_hi| - |x_lo|,                                            *
+     *                                                                        *
+     *  which means abs_x_hi = |x_hi| and abs_x_lo = -|x_lo|. In both cases   *
+     *  abs_x_hi = |x_hi|. The sign of abs_x_lo depends on the signs of x_hi  *
+     *  and x_lo. That is, whether or not they are the same. Indeed, the sign *
+     *  of abs_x_lo is the exclusive or, also called XOR, of the signs of     *
+     *  x_hi and x_lo. Use this.                                              */
     w.bits.signl = w.bits.sign ^ w.bits.signl;
     w.bits.sign = 0x0U;
 
@@ -246,10 +259,11 @@ TMPL_UNSEQUENCED
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
-/*  Long double precision absolute value function (fabsl equivalent).         */
+/*  Long-double-precision absolute value function (fabsl equivalent).         */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
-long double tmpl_LDouble_Abs(const long double x)
+long double
+tmpl_LDouble_Abs(const long double x)
 TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */

@@ -147,10 +147,11 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Single precision absolute value function (fabsf equivalent).              */
+/*  Single-precision absolute value function (fabsf equivalent).              */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
-float tmpl_Float_Abs(const float x)
+float
+tmpl_Float_Abs(const float x)
 TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -176,10 +177,11 @@ TMPL_UNSEQUENCED
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
-/*  Single precision absolute value function (fabsf equivalent).              */
+/*  Single-precision absolute value function (fabsf equivalent).              */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
-float tmpl_Float_Abs(const float x)
+float
+tmpl_Float_Abs(const float x)
 TMPL_UNSEQUENCED
 {
     /*  For negative inputs, flip the sign and make it positive.              */
