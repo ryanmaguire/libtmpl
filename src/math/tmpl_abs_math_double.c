@@ -69,7 +69,7 @@
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
  *  Notes:                                                                    *
- *      1.) If IEEE-754 is not supported and if the input is NaN one may get  *
+ *      1.) If IEEE-754 is not supported and if the input is NaN, one may get *
  *          +/- NaN (which is still NaN). This is because NaN always          *
  *          produces false when used in a comparison (other than !=).         *
  *                                                                            *

@@ -96,9 +96,13 @@
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
  *  Notes:                                                                    *
- *      1.) If IEEE-754 is not supported and if the input is NaN one may get  *
+ *      1.) If IEEE-754 is not supported and if the input is NaN, one may get *
  *          +/- NaN (which is still NaN). This is because NaN always          *
  *          produces false when used in a comparison (other than !=).         *
+ *                                                                            *
+ *      2.) The portable method is unable to detect signed zeros. For the     *
+ *          IEEE-754 method we have |-0| = +0, but the portable method will   *
+ *          produce |-0| = -0.                                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -108,6 +112,8 @@
  *          Header file containing the IEEE data type.                        *
  *  3.) tmpl_attributes.h:                                                    *
  *          Provides optional C23 attributes for optimization.                *
+ *  4.) tmpl_math.h:                                                          *
+ *          Header file providing the forward declaration.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -142,6 +148,8 @@
  *      Added C23 attributes to improve optimization on modern compilers.     *
  *  2026/06/10: Ryan Maguire                                                  *
  *      Changed filename to include _impl_ to be consistent with other files. *
+ *  2026/07/09: Ryan Maguire                                                  *
+ *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE use.  *
  ******************************************************************************/
 
 /*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
@@ -150,14 +158,14 @@
 /*  Only used if libtmpl algorithms are requested.                            */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype / forward declaration found here.                      */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
