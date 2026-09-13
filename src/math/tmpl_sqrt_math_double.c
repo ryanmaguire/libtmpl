@@ -131,18 +131,33 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file containing the function prototype.                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
+ *  2.) tmpl_ieee754_double.h:                                                *
+ *          Header file containing the IEEE data type.                        *
+ *  3.) tmpl_attributes.h:                                                    *
+ *          Provides optional C23 attributes for optimization.                *
+ *  4.) tmpl_math.h:                                                          *
+ *          Header file providing the forward declaration.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 22, 2022                                             *
  ******************************************************************************/
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_USE_MATH_ALGORITHMS macro.                           */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Only implement this if the user requested libtmpl algorithms.             */
+/*  Only used if libtmpl algorithms are requested.                            */
 #if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
+
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values 2^{0} and 2^{1/2}, used for scaling the end result.            */
 static const double tmpl_double_sqrt_data[2] = {
@@ -163,7 +178,10 @@ static const double tmpl_double_sqrt_data[2] = {
 #include "auxiliary/tmpl_sqrt_remez_double.h"
 
 /*  Function for computing square roots at double precision.                  */
-double tmpl_Double_Sqrt(double x)
+TMPL_CONST_FUNC
+double
+tmpl_Double_Sqrt(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Union of a double and the bits representing a double.                 */
     tmpl_IEEE754_Double w;
@@ -309,7 +327,7 @@ double tmpl_Double_Sqrt(double x)
     /*  Compute the Remez minimax approximation for sqrt. Peak error 10^-9.   */
     w.r = tmpl_Double_Sqrt_Remez(w.r);
 
-    /*  Get the correctly rounded down integer exponent/2.                    */
+    /*  Get the correctly rounded down integer exponent / 2.                  */
     w.bits.expo = exponent & 0x7FFU;
 
     /*  If the exponent is odd, expo/2 is not an integer. Writing expo = 2k+1 *
@@ -317,10 +335,10 @@ double tmpl_Double_Sqrt(double x)
      *  which is equal to sqrt(2) * 2^{k}. We need to multiply the result by  *
      *  sqrt(2) in the case that exponent is odd. Also, multiply the result   *
      *  sqrt(u/t) by sqrt(t) using the table, giving us sqrt(u).              */
-    w.r *= tmpl_double_sqrt_data[parity]*tmpl_double_sqrt_table[ind];
+    w.r *= tmpl_double_sqrt_data[parity] * tmpl_double_sqrt_table[ind];
 
     /*  Apply 1 iteration of Newton's method and return.                      */
-    return 0.5*(w.r + x/w.r);
+    return 0.5 * (w.r + x / w.r);
 }
 /*  End of tmpl_Double_Sqrt.                                                  */
 
@@ -335,7 +353,10 @@ double tmpl_Double_Sqrt(double x)
 #include "auxiliary/tmpl_sqrt_rat_remez_double.h"
 
 /*  Function for computing square roots at double precision.                  */
-double tmpl_Double_Sqrt(double x)
+TMPL_CONST_FUNC
+double
+tmpl_Double_Sqrt(const double x)
+TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     signed int expo, parity;
