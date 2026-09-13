@@ -1795,9 +1795,20 @@ TMPL_UNSEQUENCED;
  *      double sqrt_x:                                                        *
  *          The square root of x.                                             *
  ******************************************************************************/
-extern float tmpl_Float_Sqrt(float x);
-extern double tmpl_Double_Sqrt(double x);
-extern long double tmpl_LDouble_Sqrt(long double x);
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Sqrt(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Sqrt(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Sqrt(const long double x)
+TMPL_UNSEQUENCED;
 
 /******************************************************************************
  *  Function:                                                                 *
