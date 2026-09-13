@@ -1795,6 +1795,7 @@ TMPL_UNSEQUENCED;
  *      double sqrt_x:                                                        *
  *          The square root of x.                                             *
  ******************************************************************************/
+TMPL_SIMD_DECL
 TMPL_CONST_FUNC
 extern double
 tmpl_Double_Sqrt(const double x)
