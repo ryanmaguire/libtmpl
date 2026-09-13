@@ -362,7 +362,6 @@ EXCLUDE += $(patsubst %_x86_64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 ifdef SIMD_FAST_MATH
 SIMD_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.S)
-ASM_SRCS += SIMD_ASM_SRCS
 endif
 
 endif
@@ -407,6 +406,9 @@ endif
 C_SRCS = $(shell find $(SRC_DIR) $(EXCLUDE) -name "*.c")
 C_OBJS = $(C_SRCS:%=$(BUILD_DIR)/%.o)
 ASM_OBJS = $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
+ifdef SIMD_FAST_MATH
+ASM_OBJS += $(SIMD_ASM_SRCS:%=$(BUILD_DIR)/%.o)
+endif
 FASM_OBJS = $(FASM_SRCS:%=$(BUILD_DIR)/%.o)
 OBJS = $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
 
