@@ -153,11 +153,46 @@
 #else
 /*  Else for #ifdef TMPL_ATTRIBUTES_SUPPORTED.                                */
 
-/*  For compilers lacking C23 support, or when using older C++ compilers, set *
- *  these macros to be empty.                                                 */
+/*  Some of these attributes are available with GCC and Clang with or without *
+ *  C23 support. Check if these compilers are being used.                     */
+#if defined(__clang__)
+
+#if (__clang_major__ >= 3)
+#define TMPL_CONST_FUNC __attribute__((const))
+#define TMPL_PURE_FUNC __attribute__((pure))
+#else
+#define TMPL_CONST_FUNC
+#define TMPL_PURE_FUNC
+#endif
+
+#if (__clang_major__ >= 12)
+#define TMPL_LEAF_FUNC __attribute__((leaf))
+#else
+#define TMPL_LEAF_FUNC
+#endif
+
+#elif defined(__GNUC__)
+
+#if (__GNUC__ >= 3)
+#define TMPL_CONST_FUNC __attribute__((const))
+#define TMPL_PURE_FUNC __attribute__((pure))
+#else
+#define TMPL_CONST_FUNC
+#define TMPL_PURE_FUNC
+#endif
+
+#if (__GNUC__ >= 5)
+#define TMPL_LEAF_FUNC __attribute__((leaf))
+#else
+#define TMPL_LEAF_FUNC
+#endif
+
+#else
 #define TMPL_CONST_FUNC
 #define TMPL_PURE_FUNC
 #define TMPL_LEAF_FUNC
+#endif
+
 #define TMPL_REPRODUCIBLE
 #define TMPL_UNSEQUENCED
 #define TMPL_NO_ASSOCIATIVE_MATH
