@@ -360,6 +360,11 @@ else
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.S)
 EXCLUDE += $(patsubst %_x86_64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
+ifdef SIMD_FAST_MATH
+SIMD_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.S)
+ASM_SRCS += SIMD_ASM_SRCS
+endif
+
 endif
 # End of ifdef FASM.
 
