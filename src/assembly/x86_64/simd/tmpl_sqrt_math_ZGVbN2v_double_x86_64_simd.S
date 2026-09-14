@@ -24,16 +24,16 @@ ASM_BEGIN(_ZGVbN2v_tmpl_Double_Sqrt)
     movaps %xmm0, -40(%rsp)
     movl $2, %edx
     xorl %eax, %eax
-    jmp .L4
-.L5:
+    jmp .L1
+.L0:
     movl $1, %edx
-.L4:
+.L1:
     movsd -40(%rsp, %rax, 8), %xmm0
     sqrtsd %xmm0, %xmm0
     movsd %xmm0, -24(%rsp, %rax, 8)
     movl $1, %eax
     cmpl $1, %edx
-    jne .L5
+    jne .L0
     movapd -24(%rsp), %xmm0
     ret
 ASM_END(_ZGVbN2v_tmpl_Double_Sqrt)
