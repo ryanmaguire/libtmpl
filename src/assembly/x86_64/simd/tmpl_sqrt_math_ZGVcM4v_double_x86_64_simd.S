@@ -21,6 +21,19 @@
 #include "../tmpl_x86_64_asm.h"
 
 ASM_BEGIN(_ZGVcM4v_tmpl_Double_Sqrt)
+
+    /*  AVX2 and AVX-512 need fewer instructions than AVX.                    */
+#if defined(__AVX512F__) || defined(__AVX2__)
+    pushq %rbp
+    vsqrtpd %ymm0, %ymm0
+    vpxor %xmm2, %xmm2, %xmm2
+    vpcmpeqq %ymm1, %ymm2, %ymm2
+    movq %rsp, %rbp
+    andq $-32, %rsp
+    vblendvpd %ymm2, -32(%rsp), %ymm0, %ymm0
+
+    /*  AVX version below.                                                    */
+#else
     pushq %rbp
     vpxor %xmm4, %xmm4, %xmm4
     vsqrtpd %xmm0, %xmm2
@@ -36,6 +49,11 @@ ASM_BEGIN(_ZGVcM4v_tmpl_Double_Sqrt)
     vmovapd %xmm2, -32(%rsp)
     vmovapd %xmm0, -16(%rsp)
     vmovupd -32(%rsp), %ymm0
+
+#endif
+/*  End of #if defined(__AVX512F__) || defined(__AVX2__).                     */
+
     leave
     ret
+
 ASM_END(_ZGVcM4v_tmpl_Double_Sqrt)
