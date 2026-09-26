@@ -206,6 +206,10 @@
 #define TMPL_FLOAT_LOG_E_TEN (+2.302585092994045684017991454684364207601E+00F)
 #define TMPL_LDOUBLE_LOG_E_TEN (+2.302585092994045684017991454684364207601E+00L)
 
+#define TMPL_DOUBLE_RCPR_LOG_E_TWO (+1.44269504088896340735992468100189213743)
+#define TMPL_FLOAT_RCPR_LOG_E_TWO (+1.44269504088896340735992468100189213743F)
+#define TMPL_LDOUBLE_RCPR_LOG_E_TWO (+1.44269504088896340735992468100189213743L)
+
 /******************************************************************************
  *                              Multiples of Pi                               *
  ******************************************************************************/
@@ -380,5 +384,9 @@ extern const long double tmpl_ldouble_log_e_two;
 extern const float tmpl_float_log_e_ten;
 extern const double tmpl_double_log_e_ten;
 extern const long double tmpl_ldouble_log_e_ten;
+
+extern const float tmpl_float_rcpr_log_e_two;
+extern const double tmpl_double_rcpr_log_e_two;
+extern const long double tmpl_ldouble_rcpr_log_e_two;
 
 #endif

@@ -217,6 +217,10 @@ const float tmpl_float_log_e_ten = TMPL_FLOAT_LOG_E_TEN;
 const double tmpl_double_log_e_ten = TMPL_DOUBLE_LOG_E_TEN;
 const long double tmpl_ldouble_log_e_ten = TMPL_LDOUBLE_LOG_E_TEN;
 
+const float tmpl_float_rcpr_log_e_two = TMPL_FLOAT_RCPR_LOG_E_TWO;
+const double tmpl_double_rcpr_log_e_two = TMPL_DOUBLE_RCPR_LOG_E_TWO;
+const long double tmpl_ldouble_rcpr_log_e_two = TMPL_LDOUBLE_RCPR_LOG_E_TWO;
+
 #if TMPL_HAS_IEEE754_FLOAT == 1
 const float tmpl_Min_Float_Base_E = -85.1956484408F;
 const float tmpl_Max_Float_Base_E = 87.4982335338F;
@@ -226,8 +230,8 @@ const float tmpl_Max_Float_Base_E = FLT_MAX_10_EXP * 2.302585093F;
 #endif
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
-const double tmpl_Min_Double_Base_E = -706.893623549172024993;
-const double tmpl_Max_Double_Base_E = 709.196208642166070678;
+const double tmpl_Min_Double_Base_E = -744.4400719213812;
+const double tmpl_Max_Double_Base_E = 709.782712893384;
 #else
 const double tmpl_Min_Double_Base_E = DBL_MIN_10_EXP * 2.30258509299404568;
 const double tmpl_Max_Double_Base_E = DBL_MAX_10_EXP * 2.30258509299404568;
