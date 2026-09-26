@@ -433,8 +433,8 @@ TMPL_UNSEQUENCED
 
     sx = tmpl_double_sinpi_table[ind];
     cx = tmpl_double_cospi_table[ind];
-    sdx = tmpl_Double_SinPi_Maclaurin(dx);
-    cdx = tmpl_Double_CosPi_Maclaurin(dx);
+    sdx = tmpl_Double_SinPi_Remez_Small(dx);
+    cdx = tmpl_Double_CosPi_Remez_Small(dx);
     return sgn_x * (cdx*sx + cx*sdx);
 }
 /*  End of tmpl_Double_SinPi.                                                 */
