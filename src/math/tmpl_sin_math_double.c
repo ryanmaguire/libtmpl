@@ -74,6 +74,7 @@ double tmpl_Double_Sin(double x)
 
 #include "auxiliary/tmpl_cospi_maclaurin_double.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_double.h"
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 double tmpl_Double_Sin(double x)
 {
