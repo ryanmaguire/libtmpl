@@ -78,6 +78,7 @@ TMPL_UNSEQUENCED
 
 #include "auxiliary/tmpl_cospi_maclaurin_double.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_double.h"
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 TMPL_CONST_FUNC
 double tmpl_Double_Cos(const double x)

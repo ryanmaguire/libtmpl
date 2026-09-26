@@ -35,6 +35,7 @@ float tmpl_Float_Cos(float x)
 
 #include "auxiliary/tmpl_cospi_maclaurin_float.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_float.h"
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 float tmpl_Float_Cos(float x)
 {
