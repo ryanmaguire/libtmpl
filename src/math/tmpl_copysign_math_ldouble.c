@@ -119,7 +119,7 @@
 /*  64-bit double, 80-bit extended, and 128-bit quadruple implementations     *
  *  of long double use the same idea: Copy the sign bit of y to x. The        *
  *  double-double implementation of long double needs to be more careful.     */
-#if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE
+#if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
  *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
