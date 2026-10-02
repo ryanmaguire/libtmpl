@@ -6,6 +6,9 @@
 #include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
 
+/*  The exp kernel function is found here.                                    */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
+
 /*  Coefficients for the Remez polynomial.                                    */
 #define A00 (+4.0217650944500821213345877056034485040688754842144E-01)
 #define A01 (+3.3605519836687503444921512798262155305664707154015E-03)
