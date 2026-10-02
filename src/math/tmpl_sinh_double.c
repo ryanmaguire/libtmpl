@@ -80,6 +80,9 @@
 /*  TMPL_USE_MATH_ALGORITHMS macro provided here.                             */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  The exp kernel function is found here.                                    */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
+
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
