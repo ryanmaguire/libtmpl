@@ -198,17 +198,17 @@
 /******************************************************************************
  *                              Common Logarithms                             *
  ******************************************************************************/
-#define TMPL_DOUBLE_LOG_E_TWO (+6.931471805599453094172321214581765680755E-01)
-#define TMPL_FLOAT_LOG_E_TWO (+6.931471805599453094172321214581765680755E-01F)
-#define TMPL_LDOUBLE_LOG_E_TWO (+6.931471805599453094172321214581765680755E-01L)
+#define TMPL_DOUBLE_LOG_E_OF_TWO (+6.931471805599453094172321214581765681E-01)
+#define TMPL_FLOAT_LOG_E_OF_TWO (+6.931471805599453094172321214581765681E-01F)
+#define TMPL_LDOUBLE_LOG_E_OF_TWO (+6.931471805599453094172321214581765681E-01L)
 
-#define TMPL_DOUBLE_LOG_E_TEN (+2.302585092994045684017991454684364207601E+00)
-#define TMPL_FLOAT_LOG_E_TEN (+2.302585092994045684017991454684364207601E+00F)
-#define TMPL_LDOUBLE_LOG_E_TEN (+2.302585092994045684017991454684364207601E+00L)
+#define TMPL_DOUBLE_LOG_E_OF_TEN (+2.302585092994045684017991454684364207601)
+#define TMPL_FLOAT_LOG_E_OF_TEN (+2.302585092994045684017991454684364207601F)
+#define TMPL_LDOUBLE_LOG_E_OF_TEN (+2.302585092994045684017991454684364207601L)
 
-#define TMPL_DOUBLE_RCPR_LOG_E_TWO (+1.44269504088896340735992468100189213743)
-#define TMPL_FLOAT_RCPR_LOG_E_TWO (+1.44269504088896340735992468100189213743F)
-#define TMPL_LDOUBLE_RCPR_LOG_E_TWO (+1.44269504088896340735992468100189213743L)
+#define TMPL_DOUBLE_RCPR_LOG_E_OF_TWO (1.44269504088896340735992468100189213743)
+#define TMPL_FLOAT_RCPR_LOG_E_OF_TWO (1.44269504088896340735992468100189213743F)
+#define TMPL_LDOUBLE_RCPR_LOG_E_OF_TWO (1.442695040888963407359924681001892137L)
 
 /******************************************************************************
  *                              Multiples of Pi                               *
@@ -377,16 +377,16 @@ extern const long double tmpl_ldouble_rcpr_euler_e;
 /******************************************************************************
  *                              Common Logarithms                             *
  ******************************************************************************/
-extern const float tmpl_float_log_e_two;
-extern const double tmpl_double_log_e_two;
-extern const long double tmpl_ldouble_log_e_two;
+extern const float tmpl_float_log_e_of_two;
+extern const double tmpl_double_log_e_of_two;
+extern const long double tmpl_ldouble_log_e_of_two;
 
-extern const float tmpl_float_log_e_ten;
-extern const double tmpl_double_log_e_ten;
-extern const long double tmpl_ldouble_log_e_ten;
+extern const float tmpl_float_log_e_of_ten;
+extern const double tmpl_double_log_e_of_ten;
+extern const long double tmpl_ldouble_log_e_of_ten;
 
-extern const float tmpl_float_rcpr_log_e_two;
-extern const double tmpl_double_rcpr_log_e_two;
-extern const long double tmpl_ldouble_rcpr_log_e_two;
+extern const float tmpl_float_rcpr_log_e_of_two;
+extern const double tmpl_double_rcpr_log_e_of_two;
+extern const long double tmpl_ldouble_rcpr_log_e_of_two;
 
 #endif
