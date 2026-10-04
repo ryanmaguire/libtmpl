@@ -457,93 +457,45 @@ tmpl_Double_Exp_Kernel(const double x,
                        const double scale)
 TMPL_UNSEQUENCED
 {
-    /*  The ln(2) factors, and the shift and scale factors are the same as    *
-     *  the ones in the previous method.                                      */
+    /*  The ln(2) factors are the same as the ones in the previous methods.   */
     const double ln_2_hi = +6.93147182464599609375000000000000000000000000E-01;
     const double ln_2_lo = -1.90465429995776787854182343192449986563974475E-09;
 
     /*  We use exp(x) = 2^(x / ln(x)). Compute z = x / ln(x).                 */
     const double z = tmpl_double_rcpr_log_e_of_two * x;
 
-    /*  Variables for shifting and round z, computing powers of 2, and        *
-     *  computing exp(x) using Remez polynomials.                             */
-    double z_round, z_scaled_hi, z_scaled_lo, r, expm1_r;
-    double two_pow, two_pow_hi, two_pow_lo, two_pow_tail, small;
-    signed int z_scaled, index, exponent;
+    /*  |128 * z| < 128 * 1100 = 140800 for all allowed x. Adding this bias   *
+     *  makes the argument of the cast positive, so the truncating cast is a  *
+     *  floor and n = round(128 z) + bias >= 0. All of the integer operations *
+     *  below act on non-negative values. For portability with 16-bit int,    *
+     *  which is allowed by the C standard, we use long int since 140,800 is  *
+     *  larger than 2^16. long int is required to be at least 32 bits, which  *
+     *  is large enough to fit this value.                                    */
+    const signed long int bias = 140800L;
+    const signed long int n = TMPL_CAST(128.0 * z + 140800.5, signed long int);
 
-    /*  The portable method does not use the shift or scale inputs. Note,     *
-     *  this means the portable method does not attempt to prevent underflow  *
-     *  or overflow. If double is not implemented using the IEEE-754 format,  *
-     *  then there is no attempt to try to detect such issues.                */
-    (void)shift;
-    (void)scale;
+    /*  Lower 7 bits: z_round_lo = index / 128. Upper bits: z_round_hi, which *
+     *  is floor(round7(z)). The shift is applied to the exponent, as in the  *
+     *  IEEE-754 versions, so 2^(shift + z_round_hi) is normal and finite.    */
+    const signed long int index = n & 0x7FL;
+    const signed long int expo = (n >> 7) - 1100L + TMPL_CAST(shift, long);
+    const double two_pow_hi = tmpl_Double_Pow2(TMPL_CAST(expo, signed int));
+    const double two_pow = two_pow_hi * tmpl_double_pow_2_hi_table[index];
+    const double two_pow_tail = tmpl_double_pow_2_lo_table[index];
 
-    /*  We want the 7 bits of z past the binary point in order to use this    *
-     *  for the lookup table. To avoid using right-shift and bit-wise and     *
-     *  with negative integers, we split the computation into two cases: z is *
-     *  positive or z is negative.                                            */
-    if (z > 0.0)
-    {
-        /*  For positive z, we simply round 128 * z to an integer and then    *
-         *  extract the lower 7 bits. This is the index for the tables.       */
-        z_scaled = TMPL_CAST(128.0 * z + 0.5, signed int);
-        index = z_scaled & 0x7F;
+    /*  round7(z) = (n - bias) / 128 exactly, and r = x - ln(2) * round7(z).  */
+    const double z_round = TMPL_CAST(n - bias, double) / 128.0;
+    const double z_scaled_hi = z_round * ln_2_hi;
+    const double z_scaled_lo = z_round * ln_2_lo;
+    const double r_tmp = tmpl_Double_Guarded_Subtract(x, z_scaled_hi);
+    const double r = tmpl_Double_Guarded_Subtract(r_tmp, z_scaled_lo);
+    const double expm1_r = tmpl_Double_Expm1_Remez_Small(r);
 
-        /*  The exponent for the power of two is given by the higher bits.    */
-        exponent = z_scaled >> 7;
-        z_round = TMPL_CAST(z_scaled, double) / 128.0;
-        two_pow_hi = tmpl_Double_Pow2(exponent);
-        two_pow_lo = tmpl_double_pow_2_hi_table[index];
-
-        /*  For positive z we have                                            *
-         *                                                                    *
-         *      2^(z_round_hi + z_round_lo) = 2^z_round_hi * z_round_lo       *
-         *                                                                    *
-         *  Compute the product.                                              */
-        two_pow = two_pow_hi * two_pow_lo;
-    }
-
-    else
-    {
-        /*  For negative z we flip the sign first and then extract the bits.  */
-        z_scaled = TMPL_CAST(-128.0 * z + 0.5, signed int);
-        index = z_scaled & 0x7F;
-        exponent = -(z_scaled >> 7);
-        z_round = -TMPL_CAST(z_scaled, double) / 128.0;
-        two_pow_hi = tmpl_Double_Pow2(exponent);
-        two_pow_lo = tmpl_double_pow_2_hi_table[index];
-
-        /*  For negative z we have                                            *
-         *                                                                    *
-         *      2^(z_round_hi - z_round_lo) = 2^z_round_hi / z_round_lo       *
-         *                                                                    *
-         *  Compute the quotient.                                             */
-        two_pow = two_pow_hi / two_pow_lo;
-    }
-
-    /*  2^z_round_lo is computed with extra precision by writing              *
-     *  2^z_round_hi = 2^hi * (1 + lo). 2^hi has already been computed, the   *
-     *  lo factor is also given by a table.                                   */
-    two_pow_tail = tmpl_double_pow_2_lo_table[index];
-
-    /*  Revert back to computing use exp directly via                         *
-     *                                                                        *
-     *      2^(z - round7(z)) = exp(x - ln(2) * round7(z))                    *
-     *                                                                        *
-     *  Compute r = x - ln(2) * round7(z).                                    */
-    z_scaled_hi = z_round * ln_2_hi;
-    z_scaled_lo = z_round * ln_2_lo;
-    r = tmpl_Double_Guarded_Subtract(x, z_scaled_hi);
-    r = tmpl_Double_Guarded_Subtract(r, z_scaled_lo);
-
-    /*  Compute exp(r) - 1 using a Remez polynomial.                          */
-    expm1_r = tmpl_Double_Expm1_Remez_Small(r);
-
-    /*  Combine everything to obtain exp(x).                                  */
-    small = two_pow_tail + expm1_r;
-    return two_pow + two_pow * small;
+    /*  Combine everything and undo the shift. The scale factor provided is   *
+     *  required to be 2^(-shift). Multiplying by this will undo the shift.   */
+    const double small = two_pow_tail + expm1_r;
+    return scale * (two_pow + two_pow * small);
 }
-/*  End of tmpl_Double_Exp_Kernel.                                            */
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
