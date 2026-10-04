@@ -39,6 +39,60 @@
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Exp_Remez                                                 *
+ *  Purpose:                                                                  *
+ *      Computes exp(x) using a Remez polynomial for |x| < 1 / 8.             *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [-1 / 8, 1 / 8].                    *
+ *  Output:                                                                   *
+ *      exp_x (double):                                                       *
+ *          exp(x) to double precision.                                       *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+double
+tmpl_Double_Exp_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+float
+tmpl_Float_Exp_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+long double
+tmpl_LDouble_Exp_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Exp_Rat_Remez                                             *
+ *  Purpose:                                                                  *
+ *      Computes exp(x) using a rational Remez approximation for |x| < 1.     *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [-1, 1].                            *
+ *  Output:                                                                   *
+ *      exp_x (double):                                                       *
+ *          exp(x) to double precision.                                       *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+double
+tmpl_Double_Exp_Rat_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+float
+tmpl_Float_Exp_Rat_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+long double
+tmpl_LDouble_Exp_Rat_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Exp_Kernel                                                *
  *  Purpose:                                                                  *
  *      Computes exp(x) for |x| > 1.                                          *
@@ -91,6 +145,7 @@ double
 tmpl_Double_Exp_Neg_Kernel(const double x)
 TMPL_UNSEQUENCED;
 
+#if 0
 TMPL_CONST_FUNC
 float
 tmpl_Float_Exp_Neg_Kernel(const float x)
@@ -100,6 +155,7 @@ TMPL_CONST_FUNC
 long double
 tmpl_LDouble_Exp_Neg_Kernel(const long double x)
 TMPL_UNSEQUENCED;
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -118,6 +174,7 @@ double
 tmpl_Double_Exp_Pos_Kernel(const double x)
 TMPL_UNSEQUENCED;
 
+#if 0
 TMPL_CONST_FUNC
 float
 tmpl_Float_Exp_Pos_Kernel(const float x)
@@ -127,6 +184,7 @@ TMPL_CONST_FUNC
 long double
 tmpl_LDouble_Exp_Pos_Kernel(const long double x)
 TMPL_UNSEQUENCED;
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

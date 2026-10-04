@@ -469,19 +469,6 @@ extern const long double tmpl_ldouble_atan_of_v[8];
 extern const double tmpl_double_sincos_table[440];
 extern const float tmpl_float_sincos_table[440];
 
-/*  If type-punning is available, use a table of 64-bit ints representing     *
- *  various values of exp(x). This speeds up the computation considerably.    */
-#if TMPL_HAS_FLOATINT64 == 1
-extern const tmpl_UInt64 tmpl_double_exp_table[256];
-
-/*  Lacking this, fall back to the original algorithm. Provide a table of the *
- *  values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.               */
-#else
-extern const double tmpl_double_exp_table[179];
-
-#endif
-/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
-
 /*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
 extern const float tmpl_float_exp_table[179];
 extern const long double tmpl_ldouble_exp_table[179];
@@ -493,6 +480,17 @@ extern const long double tmpl_ldouble_log_table[128];
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
+
+/*  Two tables, hi and lo, so that 2^(k / 128) = hi * (1 + lo). The hi table  *
+ *  is 2^(k / 128) rounded to the respective precision, and the lo table      *
+ *  contains the error that stems from floating-point round off.              */
+extern const double tmpl_double_pow_2_hi_table[128];
+extern const float tmpl_float_pow_2_hi_table[128];
+extern const long double tmpl_ldouble_pow_2_hi_table[128];
+
+extern const double tmpl_double_pow_2_lo_table[128];
+extern const float tmpl_float_pow_2_lo_table[128];
+extern const long double tmpl_ldouble_pow_2_lo_table[128];
 
 /*  Factorial tables.                                                         */
 extern const float tmpl_float_factorial_table[34];
@@ -1135,25 +1133,13 @@ extern long double tmpl_LDouble_Exp(long double x);
  *      double exp_x:                                                         *
  *          The exponential function of x, exp(x).                            *
  ******************************************************************************/
-
-/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
 #if TMPL_USE_INLINE == 1
-
-/*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/inline/math/tmpl_exp_pos_kernel_double.h>
 #include <libtmpl/include/inline/math/tmpl_exp_pos_kernel_float.h>
 #include <libtmpl/include/inline/math/tmpl_exp_pos_kernel_ldouble.h>
-
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  No inline support requested.                                              */
 extern float tmpl_Float_Exp_Pos_Kernel(float x);
-extern double tmpl_Double_Exp_Pos_Kernel(double x);
 extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
-
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1167,25 +1153,13 @@ extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
  *      double exp_x:                                                         *
  *          The exponential function of x, exp(x).                            *
  ******************************************************************************/
-
-/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
 #if TMPL_USE_INLINE == 1
-
-/*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/inline/math/tmpl_exp_neg_kernel_double.h>
 #include <libtmpl/include/inline/math/tmpl_exp_neg_kernel_float.h>
 #include <libtmpl/include/inline/math/tmpl_exp_neg_kernel_ldouble.h>
-
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  No inline support requested.                                              */
-extern double tmpl_Double_Exp_Neg_Kernel(double x);
 extern float tmpl_Float_Exp_Neg_Kernel(float x);
 extern long double tmpl_LDouble_Exp_Neg_Kernel(long double x);
-
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
