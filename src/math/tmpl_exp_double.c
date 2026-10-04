@@ -180,7 +180,7 @@ double tmpl_Double_Exp(double x)
         {
             /*  Avoid underflow. The exponential function is 1 + O(x), for    *
              *  very small inputs we can simply return 1.                     */
-            if (TMPL_DOUBLE_EXPO_BITS(w) < 57)
+            if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 57)
                 return 1.0;
 
             /*  Otherwise use the Remez polynomial on [-1 / 8, 1 / 8].        */

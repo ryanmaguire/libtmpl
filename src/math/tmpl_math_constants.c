@@ -231,7 +231,7 @@ const float tmpl_Max_Float_Base_E = FLT_MAX_10_EXP * 2.302585093F;
 #endif
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
-const double tmpl_Min_Double_Base_E = -744.4400719213812;
+const double tmpl_Min_Double_Base_E = -745.1332191019411;
 const double tmpl_Max_Double_Base_E = 709.782712893384;
 #else
 const double tmpl_Min_Double_Base_E = DBL_MIN_10_EXP * 2.30258509299404568;
