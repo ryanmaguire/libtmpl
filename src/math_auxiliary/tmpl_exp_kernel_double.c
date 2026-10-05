@@ -496,6 +496,7 @@ TMPL_UNSEQUENCED
     const double small = two_pow_tail + expm1_r;
     return scale * (two_pow + two_pow * small);
 }
+/*  End of tmpl_Double_Exp_Kernel.                                            */
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
