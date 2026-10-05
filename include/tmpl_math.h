@@ -1960,15 +1960,18 @@ TMPL_UNSEQUENCED;
 #else
 
 TMPL_CONST_FUNC
-double tmpl_Double_Copysign(const double x, const double y)
+extern double
+tmpl_Double_Copysign(const double x, const double y)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-float tmpl_Float_Copysign(const float x, const float y)
+extern float
+tmpl_Float_Copysign(const float x, const float y)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-long double tmpl_LDouble_Copysign(const long double x, const long double y)
+extern long double
+tmpl_LDouble_Copysign(const long double x, const long double y)
 TMPL_UNSEQUENCED;
 
 #endif
@@ -1988,15 +1991,18 @@ TMPL_UNSEQUENCED;
  *          The distance |x - y|.                                             *
  ******************************************************************************/
 TMPL_CONST_FUNC
-double tmpl_Double_Dist(const double x, const double y)
+extern double
+tmpl_Double_Dist(const double x, const double y)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-float tmpl_Float_Dist(const float x, const float y)
+extern float
+tmpl_Float_Dist(const float x, const float y)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-long double tmpl_LDouble_Dist(const long double x, const long double y)
+extern long double
+tmpl_LDouble_Dist(const long double x, const long double y)
 TMPL_UNSEQUENCED;
 
 /******************************************************************************
