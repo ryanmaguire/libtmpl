@@ -34,23 +34,19 @@
  *      asin_x (double):                                                      *
  *          asin(x) to double precision.                                      *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/math_auxiliary/                                                   *
+ *          tmpl_Double_Arcsin_Aux_Remez:                                     *
+ *              Computes a degree 12 Remez polynomial for (asin(x) - x) / x.  *
  *  Method:                                                                   *
- *      The function                                                          *
+ *      The auxiliary helper function computes a degree 12 Remez polynomial   *
+ *      for the function                                                      *
  *                                                                            *
  *                 asin(x) - x                                                *
  *          f(x) = -----------                                                *
- *                       3                                                    *
  *                      x                                                     *
  *                                                                            *
- *      is even, so the degree 10 Remez polynomial for f(x) on [-1/8, 1/8]    *
- *      only requires 5 + 1 = 6 non-zero terms. asin(x) is then computed by   *
- *                                                                            *
- *                         3                                                  *
- *          asin(x) = x + x  p(x)                                             *
- *                                                                            *
- *      where p is the Remez polynomial for f. p(x) is evaluated using        *
- *      Horner's method.                                                      *
+ *      asin(x) can be computed using asin(x) = x + x * p(x) where p is the   *
+ *      Remez polynomial for f.                                               *
  *  Notes:                                                                    *
  *      1.) Accurate to double precision for |x| < 1/8. There are no checks   *
  *          that the input falls within this interval.                        *
@@ -92,33 +88,18 @@
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  Coefficients for the Remez polynomial.                                    */
-#define A00 (+1.6666666666666656293481345275688480130071045466573E-01)
-#define A01 (+7.5000000000477049774617709946013607390518865927319E-02)
-#define A02 (+4.4642856787430947600823955193235375582518886056675E-02)
-#define A03 (+3.0382041227401833288830911184935457270396756757083E-02)
-#define A04 (+2.2360264850884186132567530659511508895783907274177E-02)
-#define A05 (+1.8023799292951331941625122396560343869425939766530E-02)
-
-/*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
-A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
-
-/*  Computes a degree 13 Remez polynomial for asin(x).                        */
+/*  Computes a degree 13 Remez polynomial for asin(x) on [-1/8, 1/8].         */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
 double
 tmpl_Double_Arcsin_Remez(const double x)
 TMPL_UNSEQUENCED
 {
-    /*  The Remez polynomial for (asin(x) - x) / x^3 is even. Compute x^2.    */
-    const double x2 = x * x;
+    /*  Compute a degree 12 Remez polynomial for (asin(x) - x) / x.           */
+    const double poly = tmpl_Double_Arcsin_Aux_Remez(x);
 
-    /*  Evaluate the Remez polynomial using Horner's method.                  */
-    const double poly = TMPL_POLY_EVAL(x2);
-
-    /*  asin(x) = x + x^3 * p(x), where p is the Remez polynomial.            */
-    return x + x * (x2 * poly);
+    /*  asin(x) = x + x * p(x), where p is the Remez polynomial.              */
+    return x + x * poly;
 }
 /*  End of tmpl_Double_Arcsin_Remez.                                          */
 
