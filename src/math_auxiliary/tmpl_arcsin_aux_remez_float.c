@@ -25,7 +25,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Arcsin_Remez                                               *
+ *      tmpl_Float_Arcsin_Aux_Remez                                           *
  *  Purpose:                                                                  *
  *      Computes a degree 4 Remez polynomial for (asin(x) - x) / x            *
  *      with |x| < 1/8.                                                       *
