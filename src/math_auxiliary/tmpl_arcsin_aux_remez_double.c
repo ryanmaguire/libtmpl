@@ -19,7 +19,7 @@
  *                          tmpl_arcsin_remez_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes a degree 10 Remez polynomial for (asin(x) - x) / x at        *
+ *      Computes a degree 12 Remez polynomial for (asin(x) - x) / x at        *
  *      double precision.                                                     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
@@ -27,7 +27,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Arcsin_Remez                                              *
  *  Purpose:                                                                  *
- *      Computes a degree 10 Remez polynomial for (asin(x) - x) / x           *
+ *      Computes a degree 12 Remez polynomial for (asin(x) - x) / x           *
  *      with |x| < 1/8.                                                       *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
@@ -102,7 +102,7 @@
 #define TMPL_POLY_EVAL(z) \
 A00 + z * (A01 + z * (A02 + z * (A03 + z * (A04 + z * A05))))
 
-/*  Computes a degree 10 Remez polynomial for (asin(x) - x) / x.              */
+/*  Computes a degree 12 Remez polynomial for (asin(x) - x) / x.              */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
 double
