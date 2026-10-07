@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_arcsin_remez_double                          *
+ *                        tmpl_arcsin_aux_remez_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes a degree 12 Remez polynomial for (asin(x) - x) / x at        *
