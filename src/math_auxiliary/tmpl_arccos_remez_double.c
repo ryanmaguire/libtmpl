@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Arcsin_Remez                                              *
  *  Purpose:                                                                  *
- *      Computes the degree 13 Remez polynomial for acos(x) with |x| < 1/8.   *
+ *      Computes a degree 13 Remez polynomial for acos(x) with |x| < 1/8.     *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
  *          A real number in the interval [-1/8, 1/8].                        *
