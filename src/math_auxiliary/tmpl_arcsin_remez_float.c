@@ -34,23 +34,19 @@
  *      asin_x (float):                                                       *
  *          asin(x) to single precision.                                      *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/math_auxiliary/                                                   *
+ *          tmpl_Float_Arcsin_Aux_Remez:                                      *
+ *              Computes a degree 4 Remez polynomial for (asin(x) - x) / x.   *
  *  Method:                                                                   *
- *      The function                                                          *
+ *      The auxiliary helper function computes a degree 4 Remez polynomial    *
+ *      for the function                                                      *
  *                                                                            *
  *                 asin(x) - x                                                *
  *          f(x) = -----------                                                *
- *                       3                                                    *
  *                      x                                                     *
  *                                                                            *
- *      is even, so the degree 2 Remez polynomial for f(x) on [-1/8, 1/8]     *
- *      requires 1 + 1 = 2 non-zero terms. asin(x) is then computed by        *
- *                                                                            *
- *                         3                                                  *
- *          asin(x) = x + x  p(x)                                             *
- *                                                                            *
- *      where p is the Remez polynomial for f. p(x) is evaluated using        *
- *      Horner's method.                                                      *
+ *      asin(x) can be computed using asin(x) = x + x * p(x) where p is the   *
+ *      Remez polynomial for f.                                               *
  *  Notes:                                                                    *
  *      1.) Accurate to single precision for |x| < 1/8. There are no checks   *
  *          that the input falls within this interval.                        *
@@ -92,28 +88,18 @@
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  Coefficients for the Remez polynomial.                                    */
-#define A00 (+1.6666528409891831422883947932200527995630642732026E-01F)
-#define A01 (+7.5704573090386026083598767097110806696653559217707E-02F)
-
-/*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) A00 + z * A01
-
-/*  Computes a degree 13 Remez polynomial for asin(x).                        */
+/*  Computes a degree 5 Remez polynomial for asin(x) on [-1/8, 1/8].          */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
 float
 tmpl_Float_Arcsin_Remez(const float x)
 TMPL_UNSEQUENCED
 {
-    /*  The Remez polynomial for (asin(x) - x) / x^3 is even. Compute x^2.    */
-    const float x2 = x * x;
+    /*  Compute a degree 4 Remez polynomial for (asin(x) - x) / x.            */
+    const float poly = tmpl_Double_Arcsin_Aux_Remez(x);
 
-    /*  Evaluate the Remez polynomial using Horner's method.                  */
-    const float poly = TMPL_POLY_EVAL(x2);
-
-    /*  asin(x) = x + x^3 * p(x), where p is the Remez polynomial.            */
-    return x + x * (x2 * poly);
+    /*  asin(x) = x + x * p(x), where p is the Remez polynomial.              */
+    return x + x * poly;
 }
 /*  End of tmpl_Float_Arcsin_Remez.                                           */
 
