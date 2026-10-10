@@ -48,7 +48,6 @@
  *      acos(x) can then be computed using                                    *
  *                                                                            *
  *          acos(x) = pi / 2 - asin(x)                                        *
- *                                                                            *
  *                  = pi / 2 - (x + x * p(x))                                 *
  *                                                                            *
  *      where p is the Remez polynomial for f. For extra accuracy we split    *
@@ -113,6 +112,3 @@ TMPL_UNSEQUENCED
     return tmpl_double_pi_by_two_hi - (x - low_bits);
 }
 /*  End of tmpl_Double_Arccos_Remez.                                          */
-
-/*  Undefine everything to avoid collisions with other macros.                */
-#include <libtmpl/include/tmpl_math_undef.h>
