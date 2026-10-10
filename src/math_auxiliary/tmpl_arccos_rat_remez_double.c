@@ -19,38 +19,48 @@
  *                        tmpl_arccos_rat_remez_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (8, 8) rational minimax approximation of acos(x)         *
- *      centered about the origin at double precision.                        *
+ *      Computes a degree (11, 8) rational Remez approximation of acos(x)     *
+ *      for |x| < 1/2 at double precision.                                    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Double_Arccos_Rat_Remez                                          *
  *  Purpose:                                                                  *
- *      Computes the (8, 8) rational minimax approximation for arccos.        *
+ *      Computes a degree (11, 8) rational minimax approximation for arccos   *
+ *      across the interval [-1/2, 1/2].                                      *
  *  Arguments:                                                                *
  *      x (const double):                                                     *
- *          A real number.                                                    *
+ *          A real number in the interval [-1/2, 1/2].                        *
  *  Output:                                                                   *
  *      acos_x (double):                                                      *
- *          The rational minimax approximation of acos(x).                    *
+ *          acos(x) to double precision.                                      *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/math_auxiliary/                                                   *
+ *          tmpl_Double_Arcsin_Aux_Rat_Remez:                                 *
+ *              Computes a degree (10, 8) rational Remez approximation for    *
+ *              (asin(x) - x) / x.                                            *
  *  Method:                                                                   *
- *      The function f(x) = -(acos(x) + x - pi/2) / x^3 is even. Pre-compute  *
- *      the coefficients for the rational minimax function R(x) of degree     *
- *      (8, 8) for f(x). The odd terms have zero coefficients. We may thus    *
- *      compute the minimax approximation via:                                *
+ *      The auxiliary helper function computes a degree (10, 8) rational      *
+ *      Remez approximation for the function                                  *
  *                                                                            *
- *                                   a0 + a2 x^2 + ... + a8 x^8               *
- *          acos(x) = pi/2 - x - x^3 --------------------------               *
- *                                   b0 + b2 x^2 + ... + b8 x^8               *
+ *                 asin(x) - x                                                *
+ *          f(x) = -----------                                                *
+ *                      x                                                     *
  *                                                                            *
- *      Where the coefficients a_n and b_n are for the rational minimax       *
- *      approximation for f(x). These were pre-computed by the rational       *
- *      Remez exchange algorithm.                                             *
+ *      acos(x) can then be computed using                                    *
+ *                                                                            *
+ *          acos(x) = pi / 2 - asin(x)                                        *
+ *                  = pi / 2 - (x + x * r(x))                                 *
+ *                                                                            *
+ *      where r is the rational Remez approximation for f. For extra accuracy *
+ *      we split pi into pi_hi + pi_lo and compute                            *
+ *                                                                            *
+ *          acos(x) = pi_hi / 2 - (x - (pi_lo / 2 - x * r(x)))                *
+ *                                                                            *
  *  Notes:                                                                    *
- *      Accurate for |x| < 0.5.                                               *
+ *      1.) Accurate to double precision for |x| < 1/2. There are no checks   *
+ *          that the input falls within this interval.                        *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -70,7 +80,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *          Header file containing TMPL_ALWAYS_INLINE macro.                  *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
  ******************************************************************************
@@ -98,61 +108,46 @@
  *      ULP of other libm implementations. Slight performance boost.          *
  *  2025/02/13: Ryan Maguire                                                  *
  *      Added references.                                                     *
+ *  2026/10/10: Ryan Maguire                                                  *
+ *      Rewrote to use the new auxiliary function. Moved to math_auxiliary    *
+ *      directory and replaced TMPL_STATIC_INLINE with TMPL_ALWAYS_INLINE.    *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ARCCOS_RAT_REMEZ_DOUBLE_H
-#define TMPL_ARCCOS_RAT_REMEZ_DOUBLE_H
-
-/*  Location of the TMPL_STATIC_INLINE macro.                                 */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  The constant Pi / 2.                                                      */
-extern const double tmpl_double_pi_by_two;
+/*  Common math constants like pi / 2 found here.                             */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/*  Coefficients for the numerator of the rational Remez approximation.       */
-#define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
-#define A01 (-2.9647442738212244852684254810912673101657174481766E-01)
-#define A02 (+1.6001969221867813049084016184632874497094695883901E-01)
-#define A03 (-2.5510481570872249173776491491771394448907125511346E-02)
-#define A04 (+2.6066097969323856113412749790103952111930280796716E-04)
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  Coefficients for the denominator of the rational Remez approximation.     */
-#define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
-#define B01 (-2.2288465642924490579275829949790393075345284377974E+00)
-#define B02 (+1.6952419643599424152439428142515867324057155650851E+00)
-#define B03 (-5.0120096652328631713045487959099718175996563925832E-01)
-#define B04 (+4.5088915315077310386265964807853660211534733521946E-02)
-
-/*  Helper macros for evaluating polynomials using Horner's method.           */
-#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
-#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
-
-/*  Function for computing the (8, 8) minimax approximation for acos(x).      */
+/*  Function for computing a rational Remez approximation for acos(x).        */
 TMPL_CONST_FUNC
-TMPL_STATIC_INLINE
-double tmpl_Double_Arccos_Rat_Remez(const double x)
+TMPL_ALWAYS_INLINE
+double
+tmpl_Double_Arccos_Rat_Remez(const double x)
 TMPL_UNSEQUENCED
 {
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const double x2 = x * x;
+    /*  Compute a degree (10, 8) Remez approximation for (asin(x) - x) / x.  */
+    const double rat = tmpl_Double_Arcsin_Aux_Rat_Remez(x);
 
-    /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = TMPL_NUM_EVAL(x2);
-    const double q = TMPL_DEN_EVAL(x2);
-    const double r = x2 * p / q;
-
-    /*  p/q is the rational Remez approximation for -(acos(x) - pi/2 + x)/x^3.*
-     *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
-    return tmpl_double_pi_by_two - (x + x * r);
+    /*  From this we can compute acos(x) using                                *
+     *                                                                        *
+     *      acos(x) = pi / 2 - asin(x)                                        *
+     *              = pi / 2 - (x + x * r(x))                                 *
+     *                                                                        *
+     *  where r is the Remez approximation for (asin(x) - x) / x. To improve  *
+     *  accuracy, we split pi into pi_hi + pi_lo using two doubles:           *
+     *                                                                        *
+     *      acos(x) = pi / 2 - (x + x * r(x))                                 *
+     *              = pi_hi / 2 - (x - (pi_lo / 2 - x * r(x)))                *
+     *                                                                        *
+     *  This final expression is returned.                                    */
+    const double low_bits = tmpl_double_pi_by_two_lo - x * rat;
+    return tmpl_double_pi_by_two_hi - (x - low_bits);
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
-
-/*  Undefine everything to avoid collisions with other macros.                */
-#include "tmpl_math_undef.h"
-
-#endif
-/*  End of include guard.                                                     */
