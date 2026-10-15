@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_arcsin_remez_double                          *
+ *                          tmpl_arcsin_remez_ldouble                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes a Remez polynomial for asin(x) at double precision.          *
+ *      Computes a Remez polynomial for asin(x) at long double precision.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Arcsin_Remez                                              *
+ *      tmpl_LDouble_Arcsin_Remez                                             *
  *  Purpose:                                                                  *
  *      Computes a Remez polynomial for asin(x) with |x| < 1/8.               *
  *  Arguments:                                                                *
- *      x (const double):                                                     *
+ *      x (const long double):                                                *
  *          A real number in the interval [-1/8, 1/8].                        *
  *  Output:                                                                   *
- *      asin_x (double):                                                      *
- *          asin(x) to double precision.                                      *
+ *      asin_x (long double):                                                 *
+ *          asin(x) to long double precision.                                 *
  *  Called Functions:                                                         *
  *      src/math_auxiliary/                                                   *
  *          tmpl_LDouble_Arcsin_Aux_Remez:                                    *
@@ -54,9 +54,9 @@
  *          tmpld                                                             *
  *          https://github.com/ryanmaguire/libtmpl_data                       *
  *                                                                            *
- *          Python library providing an implementation of the rational        *
- *          Remez exchange algorithm. The coefficients for the                *
- *          approximation used by this function were computed using this.     *
+ *          Python library providing an implementation of the Remez exchange  *
+ *          algorithm. The coefficients for the approximation used by this    *
+ *          function were computed using this.                                *
  *                                                                            *
  *      2.) Tasissa, Abiy (2019)                                              *
  *          Function Approximation and the Remez Exchange Algorithm.          *
@@ -101,6 +101,3 @@ TMPL_UNSEQUENCED
     return x + x * poly;
 }
 /*  End of tmpl_LDouble_Arcsin_Remez.                                         */
-
-/*  Undefine everything to avoid collisions with other macros.                */
-#include <libtmpl/include/tmpl_math_undef.h>
