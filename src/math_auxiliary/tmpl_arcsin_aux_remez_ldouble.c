@@ -29,10 +29,10 @@
  *  Purpose:                                                                  *
  *      Computes a Remez polynomial for (asin(x) - x) / x with |x| < 1/8.     *
  *  Arguments:                                                                *
- *      x (const double):                                                     *
+ *      x (const long double):                                                *
  *          A real number in the interval [-1/8, 1/8].                        *
  *  Output:                                                                   *
- *      asin_aux_x (double):                                                  *
+ *      asin_aux_x (long double):                                             *
  *          (asin(x) - x) / x to long double precision.                       *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -65,9 +65,9 @@
  *          tmpld                                                             *
  *          https://github.com/ryanmaguire/libtmpl_data                       *
  *                                                                            *
- *          Python library providing an implementation of the rational        *
- *          Remez exchange algorithm. The coefficients for the                *
- *          approximation used by this function were computed using this.     *
+ *          Python library providing an implementation of the Remez exchange  *
+ *          algorithm. The coefficients for the approximation used by this    *
+ *          function were computed using this.                                *
  *                                                                            *
  *      2.) Tasissa, Abiy (2019)                                              *
  *          Function Approximation and the Remez Exchange Algorithm.          *

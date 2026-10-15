@@ -57,9 +57,9 @@
  *          tmpld                                                             *
  *          https://github.com/ryanmaguire/libtmpl_data                       *
  *                                                                            *
- *          Python library providing an implementation of the rational        *
- *          Remez exchange algorithm. The coefficients for the                *
- *          approximation used by this function were computed using this.     *
+ *          Python library providing an implementation of the Remez exchange  *
+ *          algorithm. The coefficients for the approximation used by this    *
+ *          function were computed using this.                                *
  *                                                                            *
  *      2.) Tasissa, Abiy (2019)                                              *
  *          Function Approximation and the Remez Exchange Algorithm.          *
