@@ -58,6 +58,21 @@
  *  Notes:                                                                    *
  *      1.) Accurate to double precision for |x| < 1/8. There are no checks   *
  *          that the input falls within this interval.                        *
+ *  References:                                                               *
+ *      1.) Maguire, Ryan (2024)                                              *
+ *          tmpld                                                             *
+ *          https://github.com/ryanmaguire/libtmpl_data                       *
+ *                                                                            *
+ *          Python library providing an implementation of the Remez exchange  *
+ *          algorithm. The coefficients for the approximation used by this    *
+ *          function were computed using this.                                *
+ *                                                                            *
+ *      2.) Tasissa, Abiy (2019)                                              *
+ *          Function Approximation and the Remez Exchange Algorithm.          *
+ *          https://sites.tufts.edu/atasissa/files/2019/09/remez.pdf          *
+ *                                                                            *
+ *          Survey of the Remez polynomial and Remez exchange algorithm.      *
+ *          The implementation in tmpld is based on these notes.              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -96,7 +111,7 @@ TMPL_UNSEQUENCED
     /*  Compute a degree 12 Remez polynomial for (asin(x) - x) / x.           */
     const double poly = tmpl_Double_Arcsin_Aux_Remez(x);
 
-    /*  Next, use                                                             *
+    /*  From this we can compute acos(x) using                                *
      *                                                                        *
      *      acos(x) = pi / 2 - asin(x)                                        *
      *              = pi / 2 - (x + x * p(x))                                 *

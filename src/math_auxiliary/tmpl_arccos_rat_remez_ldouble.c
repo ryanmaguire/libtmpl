@@ -79,9 +79,13 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_ALWAYS_INLINE macro.                  *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_math_constants.h:                                                *
+ *          Provides common math constants like pi and e.                     *
+ *  4.) tmpl_math_auxiliary.h:                                                *
+ *          Function prototype / forward declaration found here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -120,7 +124,7 @@
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  Function for computing a rational Remez approximation for acos(x).        */
+/*  Computes a rational Remez approximation for acos(x) on [-1/2, 1/2].       */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
 long double

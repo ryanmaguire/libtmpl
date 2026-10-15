@@ -19,7 +19,7 @@
  *                        tmpl_arccos_rat_remez_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes a degree (11, 8) rational Remez approximation of acos(x)     *
+ *      Computes a degree (7, 2) rational Remez approximation of acos(x)      *
  *      for |x| < 1/2 at single precision.                                    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
@@ -27,7 +27,7 @@
  *  Function Name:                                                            *
  *      tmpl_Float_Arccos_Rat_Remez                                           *
  *  Purpose:                                                                  *
- *      Computes a degree (11, 8) rational minimax approximation for arccos   *
+ *      Computes a degree (7, 2) rational minimax approximation for arccos    *
  *      across the interval [-1/2, 1/2].                                      *
  *  Arguments:                                                                *
  *      x (const float):                                                      *
@@ -80,9 +80,13 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_ALWAYS_INLINE macro.                  *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_math_constants.h:                                                *
+ *          Provides common math constants like pi and e.                     *
+ *  4.) tmpl_math_auxiliary.h:                                                *
+ *          Function prototype / forward declaration found here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -118,7 +122,7 @@
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  Function for computing a rational Remez approximation for acos(x).        */
+/*  Computes a degree (7, 2) Remez approximation for acos(x) on [-1/2, 1/2].  */
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
 float
