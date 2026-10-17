@@ -314,7 +314,7 @@ TMPL_UNSEQUENCED
 
     /*  For |x| < 1 use the formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).      */
     if (abs_x < 1.0)
-        return tmpl_Double_Arcsin_Tail_End(abs_x);
+        return tmpl_Double_Arcsin_Tail_End(x);
 
     /*  Since sin(-pi / 2) = -1, we have asin(-1) = -pi / 2.                  */
     if (x == -1.0)
