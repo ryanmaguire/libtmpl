@@ -176,9 +176,6 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype / forward, absolute value, and NaN found here.         */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
@@ -188,25 +185,11 @@
 /*  pi / 2 is needed for the implementation.                                  */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/******************************************************************************
- *                         Static / Inlined Functions                         *
- ******************************************************************************/
+/*  Helper functions found here.                                              */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  The helper functions are only needed for the normal scalar version. The   *
- *  SIMD branchless implementation does not need these included.              */
-#if TMPL_USE_SIMD_FAST_MATH != 1
-
-/*  Maclaurin expansion provided here.                                        */
-#include "auxiliary/tmpl_arcsin_maclaurin_double.h"
-
-/*  Rational Remez minimax approximation for arcsin.                          */
-#include "auxiliary/tmpl_arcsin_rat_remez_double.h"
-
-/*  Tail-end arcsin function that uses the reflection formula with arccos.    */
-#include "auxiliary/tmpl_arcsin_tail_end_double.h"
-
-#endif
-/*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
+/*  Function prototype / forward, absolute value, and NaN found here.         */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -247,31 +230,27 @@ TMPL_UNSEQUENCED
     /*  Set the double part of the word to the input.                         */
     w.r = x;
 
-    /*  Small inputs, |x| < 0.5.                                              */
+    /*  Small inputs, |x| < 1/2.                                              */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 1U)
     {
-        /*  For |x| < 2^-27, asin(x) = x to double precision.                 */
-        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 27U)
-            return x;
-
-        /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
+        /*  For small x, |x| < 2^-3, a small Remez polynomial is sufficient.  */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 3U)
-            return tmpl_Double_Arcsin_Maclaurin(x);
+        {
+            /*  asin(x) = x + O(x^3), for |x| < 2^-27 we have asin(x) = x to  *
+             *  double precision. Avoid potential underflow, simply return x. */
+            if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 27U)
+                return x;
 
-        /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
+            return tmpl_Double_Arcsin_Remez(x);
+        }
+
+        /*  For 1/8 <= |x| < 1/2 use the minimax approximation.               */
         return tmpl_Double_Arcsin_Rat_Remez(x);
     }
 
-    /*  For |x| < 1 use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2). */
+    /*  For 1/2 <= |x| < 1 use asin(x) = pi/2 - 2asin(sqrt(1 - x) / 2).       */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
-    {
-        /*  For negative inputs use the formula asin(x) = -asin(-x).          */
-        if (w.bits.sign)
-            return -tmpl_Double_Arcsin_Tail_End(-x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Double_Arcsin_Tail_End(x);
-    }
 
     /*  Special case, handle NaN and infinity. The fast-math optimization     *
      *  means the compiler can assume the input is finite. To properly handle *
@@ -319,28 +298,23 @@ TMPL_UNSEQUENCED
     /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5)
     {
-        /*  For very small inputs return x, asin(x) = x + O(x^3).             */
-        if (abs_x < 6.938893903907228E-18)
-            return x;
-
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
-        else if (abs_x < 0.125)
-            return tmpl_Double_Arcsin_Maclaurin(x);
+        if (abs_x < 0.125)
+        {
+            /*  For very small inputs return x, asin(x) = x + O(x^3).         */
+            if (abs_x < 6.938893903907228E-18)
+                return x;
+
+            return tmpl_Double_Arcsin_Remez(x);
+        }
 
         /*  Otherwise use the Remez rational minimax function.                */
         return tmpl_Double_Arcsin_Rat_Remez(x);
     }
 
     /*  For |x| < 1 use the formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).      */
-    else if (abs_x < 1.0)
-    {
-        /*  For negative inputs use the formula asin(x) = -asin(-x).          */
-        if (x < 0.0)
-            return -tmpl_Double_Arcsin_Tail_End(abs_x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
+    if (abs_x < 1.0)
         return tmpl_Double_Arcsin_Tail_End(abs_x);
-    }
 
     /*  Since sin(-pi / 2) = -1, we have asin(-1) = -pi / 2.                  */
     if (x == -1.0)
@@ -357,9 +331,6 @@ TMPL_UNSEQUENCED
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
-
-/*  Undefine everything in case someone wants to #include this file.          */
-#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
