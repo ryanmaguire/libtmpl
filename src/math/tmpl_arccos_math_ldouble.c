@@ -273,9 +273,6 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype / forward, absolute value, and NaN found here.         */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
@@ -285,18 +282,11 @@
 /*  Both pi and pi / 2 are needed for the implementation.                     */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/******************************************************************************
- *                         Static / Inlined Functions                         *
- ******************************************************************************/
+/*  Helper functions found here.                                              */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  Maclaurin expansion provided here.                                        */
-#include "auxiliary/tmpl_arccos_maclaurin_ldouble.h"
-
-/*  Rational Remez minimax approximation for arccos.                          */
-#include "auxiliary/tmpl_arccos_rat_remez_ldouble.h"
-
-/*  Tail-end arccos function that uses the reflection formula with arcsin.    */
-#include "auxiliary/tmpl_arccos_tail_end_ldouble.h"
+/*  Function prototype / forward, absolute value, and NaN found here.         */
+#include <libtmpl/include/tmpl_math.h>
 
 /******************************************************************************
  *                              Constant Values                               *
@@ -371,13 +361,15 @@ TMPL_UNSEQUENCED
     /*  Small inputs, |x| < 0.5.                                              */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 1U)
     {
-        /*  For very small x, acos(x) = pi / 2 to long double precision.      */
-        if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_TINY_EXPONENT)
-            return tmpl_ldouble_pi_by_two;
-
-        /*  For small x the Maclaurin series is sufficient.                   */
+        /*  For small x the Remez polynomial is sufficient.                   */
         if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_SMALL_EXPONENT)
-            return tmpl_LDouble_Arccos_Maclaurin(x);
+        {
+            /*  For very small x, acos(x) = pi / 2 to long double precision.  */
+            if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_TINY_EXPONENT)
+                return tmpl_ldouble_pi_by_two;
+
+            return tmpl_LDouble_Arccos_Remez(x);
+        }
 
         /*  For all other x with |x| < 0.5 use the minimax approximation.     */
         return tmpl_LDouble_Arccos_Rat_Remez(x);
@@ -385,14 +377,7 @@ TMPL_UNSEQUENCED
 
     /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
-    {
-        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
-        if (TMPL_LDOUBLE_IS_NEGATIVE(w))
-            return tmpl_ldouble_pi - tmpl_LDouble_Arccos_Tail_End(-x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_LDouble_Arccos_Tail_End(x);
-    }
 
     /*  Special case, handle NaN and infinity. The fast-math optimization     *
      *  means the compiler can assume the input is finite. To properly handle *
@@ -441,13 +426,15 @@ TMPL_UNSEQUENCED
     /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5L)
     {
-        /*  For very small inputs return pi / 2.                              */
-        if (abs_x < 2.710505431213761085018632002174854278564453125E-20L)
-            return tmpl_ldouble_pi_by_two;
-
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
         if (abs_x < 0.125L)
-            return tmpl_LDouble_Arccos_Maclaurin(x);
+        {
+            /*  For very small inputs return pi / 2.                          */
+            if (abs_x < 2.710505431213761085018632002174854278564453125E-20L)
+                return tmpl_ldouble_pi_by_two;
+
+            return tmpl_LDouble_Arccos_Remez(x);
+        }
 
         /*  Otherwise use the Remez rational minimax function.                */
         return tmpl_LDouble_Arccos_Rat_Remez(x);
@@ -455,14 +442,7 @@ TMPL_UNSEQUENCED
 
     /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (abs_x < 1.0L)
-    {
-        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
-        if (x < 0.0L)
-            return tmpl_ldouble_pi - tmpl_LDouble_Arccos_Tail_End(abs_x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        return tmpl_LDouble_Arccos_Tail_End(abs_x);
-    }
+        return tmpl_LDouble_Arccos_Tail_End(x);
 
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0L)
@@ -479,9 +459,6 @@ TMPL_UNSEQUENCED
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
-
-/*  Undefine everything in case someone wants to #include this file.          */
-#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

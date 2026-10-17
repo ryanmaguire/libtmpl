@@ -212,9 +212,6 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype / forward, absolute value, and NaN found here.         */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
@@ -223,25 +220,12 @@
 
 /*  Both pi and pi / 2 are needed for the implementation.                     */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
-/******************************************************************************
- *                         Static / Inlined Functions                         *
- ******************************************************************************/
 
-/*  The helper functions are only needed for the normal scalar version. The   *
- *  SIMD branchless implementation does not need these included.              */
-#if TMPL_USE_SIMD_FAST_MATH != 1
+/*  Helper functions found here.                                              */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  Maclaurin expansion provided here.                                        */
-#include "auxiliary/tmpl_arccos_maclaurin_float.h"
-
-/*  Rational Remez minimax approximation for arccos.                          */
-#include "auxiliary/tmpl_arccos_rat_remez_float.h"
-
-/*  Tail-end arccos function that uses the reflection formula with arcsin.    */
-#include "auxiliary/tmpl_arccos_tail_end_float.h"
-
-#endif
-/*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
+/*  Function prototype / forward, absolute value, and NaN found here.         */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -280,28 +264,23 @@ TMPL_UNSEQUENCED
     /*  Small inputs, |x| < 0.5.                                              */
     if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 1U)
     {
-        /*  For |x| < 2^-26, acos(x) = pi / 2 to single precision.            */
-        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 26U)
-            return tmpl_float_pi_by_two;
+        /*  For small x, |x| < 2^-3, a short Remez polynomial is sufficient.  */
+        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 3U)
+        {
+            /*  For |x| < 2^-26, acos(x) = pi / 2 to single precision.        */
+            if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 26U)
+                return tmpl_float_pi_by_two;
 
-        /*  For small x, |x| < 2^-2, the Maclaurin series is sufficient.      */
-        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 2U)
-            return tmpl_Float_Arccos_Maclaurin(x);
+            return tmpl_Float_Arccos_Remez(x);
+        }
 
-        /*  For 0.25 <= |x| < 0.5 use the minimax approximation.              */
+        /*  For 1/8 < |x| < 1/2, a rational Remez approximation is used.      */
         return tmpl_Float_Arccos_Rat_Remez(x);
     }
 
     /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS)
-    {
-        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
-        if (TMPL_FLOAT_IS_NEGATIVE(w))
-            return tmpl_float_pi - tmpl_Float_Arccos_Tail_End(-x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Float_Arccos_Tail_End(x);
-    }
 
     /*  Special case, handle NaN and infinity. The fast-math optimization     *
      *  means the compiler can assume the input is finite. To properly handle *
@@ -349,13 +328,15 @@ TMPL_UNSEQUENCED
     /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5F)
     {
-        /*  For very small inputs return pi / 2.                              */
-        if (abs_x < 1.4901161193847656E-08F)
-            return tmpl_float_pi_by_two;
-
         /*  Small inputs, |x| < 0.25, use the Maclaurin series.               */
         if (abs_x < 0.25F)
-            return tmpl_Float_Arccos_Maclaurin(x);
+        {
+            /*  For very small inputs return pi / 2.                          */
+            if (abs_x < 1.4901161193847656E-08F)
+                return tmpl_float_pi_by_two;
+
+            return tmpl_Float_Arccos_Remez(x);
+        }
 
         /*  Otherwise use the Remez rational minimax function.                */
         return tmpl_Float_Arccos_Rat_Remez(x);
@@ -363,14 +344,7 @@ TMPL_UNSEQUENCED
 
     /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (abs_x < 1.0F)
-    {
-        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
-        if (x < 0.0F)
-            return tmpl_float_pi - tmpl_Float_Arccos_Tail_End(abs_x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        return tmpl_Float_Arccos_Tail_End(abs_x);
-    }
+        return tmpl_Float_Arccos_Tail_End(x);
 
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0F)

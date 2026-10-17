@@ -36,8 +36,8 @@
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          src/math/auxiliary/                                               *
- *              tmpl_Double_Arccos_Maclaurin:                                 *
- *                  Computes acos via a Maclaurin series for |x| < 0.125.     *
+ *              tmpl_Double_Arccos_Remez:                                     *
+ *                  Computes acos via a Remez polynomial for |x| < 0.125.     *
  *              tmpl_Double_Arccos_Rat_Remez:                                 *
  *                  Computes acos via a minimax approximation for |x| < 0.5.  *
  *              tmpl_Double_Arccos_Tail_End:                                  *
@@ -47,7 +47,7 @@
  *              Return pi / 2. The error is O(x). This avoids unnecessary     *
  *              underflow in the computation.                                 *
  *          2^-57 <= |x| < 2^-3:                                              *
- *              Use a degree 15 Maclaurin series. Only 8 non-zero terms are   *
+ *              Use a degree 13 Remez polynomial. Only 6 non-zero terms are   *
  *              needed for the expansion. This is faster than the rational    *
  *              Remez approximation since it requires fewer terms and avoids  *
  *              using floating-point division.                                *
@@ -114,8 +114,8 @@
  *              tmpl_Double_Abs:                                              *
  *                  Computes the absolute value of a real number.             *
  *          src/math/auxiliary/                                               *
- *              tmpl_Double_Arccos_Maclaurin:                                 *
- *                  Computes acos via a Maclaurin series for |x| < 0.125.     *
+ *              tmpl_Double_Arccos_Remez:                                     *
+ *                  Computes acos via a Remez polynomial for |x| < 0.125.     *
  *              tmpl_Double_Arccos_Rat_Remez:                                 *
  *                  Computes acos via a minimax approximation for |x| < 0.5.  *
  *              tmpl_Double_Arccos_Tail_End:                                  *
@@ -214,9 +214,6 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype / forward, absolute value, and NaN found here.         */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
@@ -226,25 +223,11 @@
 /*  Both pi and pi / 2 are needed for the implementation.                     */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/******************************************************************************
- *                         Static / Inlined Functions                         *
- ******************************************************************************/
+/*  Helper functions found here.                                              */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
 
-/*  The helper functions are only needed for the normal scalar version. The   *
- *  SIMD branchless implementation does not need these included.              */
-#if TMPL_USE_SIMD_FAST_MATH != 1
-
-/*  Maclaurin expansion provided here.                                        */
-#include "auxiliary/tmpl_arccos_maclaurin_double.h"
-
-/*  Rational Remez minimax approximation for arccos.                          */
-#include "auxiliary/tmpl_arccos_rat_remez_double.h"
-
-/*  Tail-end arccos function that uses the reflection formula with arcsin.    */
-#include "auxiliary/tmpl_arccos_tail_end_double.h"
-
-#endif
-/*  End of #if TMPL_USE_SIMD_FAST_MATH != 1.                                  */
+/*  Function prototype / forward, absolute value, and NaN found here.         */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -276,7 +259,8 @@
 
 /*  Double-precision inverse cosine (acos equivalent).                        */
 TMPL_CONST_FUNC
-double tmpl_Double_Arccos(const double x)
+double
+tmpl_Double_Arccos(const double x)
 TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -285,31 +269,27 @@ TMPL_UNSEQUENCED
     /*  Set the double part of the word to the input.                         */
     w.r = x;
 
-    /*  Small inputs, |x| < 0.5.                                              */
+    /*  Small inputs, |x| < 1/2.                                              */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 1U)
     {
-        /*  For |x| < 2^-57, acos(x) = pi / 2 to double precision.            */
-        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 57U)
-            return tmpl_double_pi_by_two;
-
-        /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
+        /*  For small x, |x| < 2^-3, a small Remez polynomial is sufficient.  */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 3U)
-            return tmpl_Double_Arccos_Maclaurin(x);
+        {
+            /*  For |x| < 2^-57, acos(x) = pi / 2 to double precision. Avoid  *
+             *  potential underflow, simply return pi / 2.                    */
+            if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 57U)
+                return tmpl_double_pi_by_two;
 
-        /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
+            return tmpl_Double_Arccos_Remez(x);
+        }
+
+        /*  For 1/8 < |x| < 1/2, a rational Remez approximation is used.      */
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
     /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
-    {
-        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
-        if (TMPL_DOUBLE_IS_NEGATIVE(w))
-            return tmpl_double_pi - tmpl_Double_Arccos_Tail_End(-x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Double_Arccos_Tail_End(x);
-    }
 
     /*  Special case, handle NaN and infinity. The fast-math optimization     *
      *  means the compiler can assume the input is finite. To properly handle *
@@ -348,7 +328,8 @@ TMPL_UNSEQUENCED
 
 /*  Double-precision inverse cosine (acos equivalent).                        */
 TMPL_CONST_FUNC
-double tmpl_Double_Arccos(const double x)
+double
+tmpl_Double_Arccos(const double x)
 TMPL_UNSEQUENCED
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -357,28 +338,23 @@ TMPL_UNSEQUENCED
     /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5)
     {
-        /*  For very small inputs return pi / 2.                              */
-        if (abs_x < 6.938893903907228E-18)
-            return tmpl_double_pi_by_two;
-
-        /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
+        /*  Small inputs, |x| < 0.125, use the Remez polynomial.              */
         if (abs_x < 0.125)
-            return tmpl_Double_Arccos_Maclaurin(x);
+        {
+            /*  For very small inputs return pi / 2.                          */
+            if (abs_x < 6.938893903907228E-18)
+                return tmpl_double_pi_by_two;
 
-        /*  Otherwise use the Remez rational minimax function.                */
+            return tmpl_Double_Arccos_Remez(x);
+        }
+
+        /*  Otherwise use the rational Remez approximation.                   */
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
     /*  For 0.5 <= |x| < 1 use acos(x) = 2 * asin(sqrt((1 - x) / 2)).         */
     if (abs_x < 1.0)
-    {
-        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
-        if (x < 0.0)
-            return tmpl_double_pi - tmpl_Double_Arccos_Tail_End(abs_x);
-
-        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        return tmpl_Double_Arccos_Tail_End(abs_x);
-    }
+        return tmpl_Double_Arccos_Tail_End(x);
 
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0)

@@ -39,6 +39,250 @@
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Arccos_Rat_Remez                                          *
+ *  Purpose:                                                                  *
+ *      Computes acos(x) using a rational Remez approximation for |x| < 1/2.  *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [-1/2, 1/2].                        *
+ *  Output:                                                                   *
+ *      acos_x (double):                                                      *
+ *          acos(x) to double precision.                                      *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arccos_Rat_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arccos_Rat_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arccos_Rat_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arccos_Remez                                              *
+ *  Purpose:                                                                  *
+ *      Computes acos(x) using a Remez polynomial for small x.                *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A small real number in the interval [-1/8, 1/8].                  *
+ *  Output:                                                                   *
+ *      acos_x (double):                                                      *
+ *          acos(x) to double precision.                                      *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arccos_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arccos_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arccos_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arccos_Tail_End                                           *
+ *  Purpose:                                                                  *
+ *      Computes acos(x) using a rational Remez approximation for positive x. *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [1/2, 1].                           *
+ *  Output:                                                                   *
+ *      acos_x (double):                                                      *
+ *          acos(x) to double precision.                                      *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arccos_Tail_End(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arccos_Tail_End(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arccos_Tail_End(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Aux_Remez                                          *
+ *  Purpose:                                                                  *
+ *      Computes (asin(x) - x) / x using a Remez approximation for |x| < 1/8. *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [-1/8, 1/8].                        *
+ *  Output:                                                                   *
+ *      asin_aux_x (double):                                                  *
+ *          (asin(x) - x) / x to double precision.                            *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arcsin_Aux_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arcsin_Aux_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arcsin_Aux_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Aux_Rat_Remez                                      *
+ *  Purpose:                                                                  *
+ *      Computes (asin(x) - x) / x using a Remez approximation for |x| < 1/2. *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [-1/2, 1/2].                        *
+ *  Output:                                                                   *
+ *      asin_aux_x (double):                                                  *
+ *          (asin(x) - x) / x to double precision.                            *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arcsin_Aux_Rat_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arcsin_Aux_Rat_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arcsin_Aux_Rat_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Aux_Shifted_Rat_Remez                              *
+ *  Purpose:                                                                  *
+ *      Computes (asin(x) - x) / x for 1/2 < x < 3/4 using a translation and  *
+ *      rational Remez approximation.                                         *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [1/2, 3/4].                         *
+ *  Output:                                                                   *
+ *      asin_aux_x (double):                                                  *
+ *          (asin(x) - x) / x to double precision.                            *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arcsin_Aux_Shifted_Rat_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arcsin_Aux_Shifted_Rat_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arcsin_Aux_Shifted_Rat_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Rat_Remez                                          *
+ *  Purpose:                                                                  *
+ *      Computes asin(x) using a rational Remez approximation for |x| < 1/2.  *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [-1/2, 1/2].                        *
+ *  Output:                                                                   *
+ *      asin_x (double):                                                      *
+ *          asin(x) to double precision.                                      *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arcsin_Rat_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arcsin_Rat_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arcsin_Rat_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Remez                                              *
+ *  Purpose:                                                                  *
+ *      Computes asin(x) using a Remez polynomial for small x.                *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A small real number in the interval [-1/8, 1/8].                  *
+ *  Output:                                                                   *
+ *      asin_x (double):                                                      *
+ *          asin(x) to double precision.                                      *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arcsin_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arcsin_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arcsin_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Tail_End                                           *
+ *  Purpose:                                                                  *
+ *      Computes asin(x) using a rational Remez approximation for positive x. *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [1/2, 1].                           *
+ *  Output:                                                                   *
+ *      asin_x (double):                                                      *
+ *          asin(x) to double precision.                                      *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Arcsin_Tail_End(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Arcsin_Tail_End(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Arcsin_Tail_End(const long double x)
+TMPL_UNSEQUENCED;
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Exp_Remez                                                 *
  *  Purpose:                                                                  *
  *      Computes exp(x) using a Remez polynomial for |x| < 1 / 8.             *

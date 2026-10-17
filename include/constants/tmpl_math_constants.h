@@ -389,4 +389,35 @@ extern const float tmpl_float_rcpr_log_e_of_two;
 extern const double tmpl_double_rcpr_log_e_of_two;
 extern const long double tmpl_ldouble_rcpr_log_e_of_two;
 
+/******************************************************************************
+ *                          Extra Precision Constants                         *
+ ******************************************************************************/
+extern const float tmpl_float_pi_hi;
+extern const float tmpl_float_pi_lo;
+extern const double tmpl_double_pi_hi;
+extern const double tmpl_double_pi_lo;
+extern const long double tmpl_ldouble_pi_hi;
+extern const long double tmpl_ldouble_pi_lo;
+
+extern const float tmpl_float_pi_by_two_hi;
+extern const float tmpl_float_pi_by_two_lo;
+extern const double tmpl_double_pi_by_two_hi;
+extern const double tmpl_double_pi_by_two_lo;
+extern const long double tmpl_ldouble_pi_by_two_hi;
+extern const long double tmpl_ldouble_pi_by_two_lo;
+
+extern const float tmpl_float_pi_by_four_hi;
+extern const float tmpl_float_pi_by_four_lo;
+extern const double tmpl_double_pi_by_four_hi;
+extern const double tmpl_double_pi_by_four_lo;
+extern const long double tmpl_ldouble_pi_by_four_hi;
+extern const long double tmpl_ldouble_pi_by_four_lo;
+
+extern const float tmpl_float_ln_2_hi;
+extern const float tmpl_float_ln_2_lo;
+extern const double tmpl_double_ln_2_hi;
+extern const double tmpl_double_ln_2_lo;
+extern const long double tmpl_ldouble_ln_2_hi;
+extern const long double tmpl_ldouble_ln_2_lo;
+
 #endif
