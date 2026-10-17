@@ -19,22 +19,28 @@
  *                         tmpl_arccos_tail_end_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes acos(x) for 0.5 <= x < 1 at single precision.                *
+ *      Computes acos(x) for 1/2 <= |x| < 1 at single precision.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Float_Arccos_Tail_End                                            *
  *  Purpose:                                                                  *
- *      Computes arccos for 0.5 <= x < 1.0.                                   *
+ *      Computes arccos for 1/2 <= |x| < 1.                                   *
  *  Arguments:                                                                *
  *      x (const float):                                                      *
- *          A real number.                                                    *
+ *          A real number with 1/2 <= |x| < 1.                                *
  *  Output:                                                                   *
  *      acos_x (float):                                                       *
- *          The inverse cosine of x.                                          *
+ *          acos(x) to single precision.                                      *
  *  Called Functions:                                                         *
+ *      src/math_auxiliary/                                                   *
+ *          tmpl_Float_Arcsin_Aux_Rat_Remez:                                  *
+ *              Computes a degree (6, 2) rational Remez approximation for     *
+ *              (asin(x) - x) / x.                                            *
  *      src/math/                                                             *
+ *          tmpl_Float_Abs:                                                   *
+ *              Computes the absolute value of a real number.                 *
  *          tmpl_Float_Sqrt:                                                  *
  *              Computes the square root of a number.                         *
  *  Method:                                                                   *
@@ -42,21 +48,31 @@
  *                                                                            *
  *          acos(x) = 2 * asin(sqrt((1 - x) / 2))                             *
  *                                                                            *
- *      The function f(z) = (asin(z) - z) / z^3 is even, meaning the degree   *
- *      (4, 2) rational Remez approximation R(z) requires 3 non-zero terms in *
- *      the numerator and 2 non-zero terms in the denominator, 5 non-zero     *
- *      terms total. asin(z) is computed via:                                 *
+ *      The auxiliary helper function computes a degree (6, 2) rational       *
+ *      Remez approximation for the function                                  *
  *                                                                            *
- *          asin(z) = z + z^3 * P(z) / Q(z)                                   *
+ *                 asin(x) - x                                                *
+ *          f(x) = -----------                                                *
+ *                      x                                                     *
  *                                                                            *
- *      where P(z) is the numerator and Q(z) is the denominator of R(z),      *
- *      respectively. acos(x) is then computed by:                            *
+ *      For positive x, acos(x) can then be computed using                    *
  *                                                                            *
- *          acos(x) = 2 * asin(z)                                             *
+ *          acos(x) = 2 * (z + z * r(z))                                      *
  *                                                                            *
- *      with z = sqrt((1 - x) / 2).                                           *
+ *      where z = sqrt((1 - x) / 2) and r is the rational Remez approximation *
+ *      for f. For negative x, we use                                         *
+ *                                                                            *
+ *          acos(x) = pi - 2 * (z + z * r(z))                                 *
+ *                                                                            *
+ *      where z = sqrt((1 + x) / 2). For improved accuracy, we split pi into  *
+ *      two parts pi = pi_hi + pi_lo and compute                              *
+ *                                                                            *
+ *          acos(x) = pi_hi - 2 * (z + (z * r(z) - pi_lo / 2))                *
+ *                                                                            *
+ *      This final expression is returned.                                    *
  *  Notes:                                                                    *
- *      Accurate for 0.5 <= x < 1.0.                                          *
+ *      1.) Accurate to single precision for |x| < 1/2. There are no checks   *
+ *          that the input falls within this interval.                        *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -76,9 +92,15 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_STATIC_INLINE macro.                  *
+ *          Header file containing the TMPL_ALWAYS_INLINE macro.              *
  *  2.) tmpl_attributes.h:                                                    *
  *          Header with macros for C23 attributes on supported compilers.     *
+ *  3.) tmpl_math_constants.h:                                                *
+ *          Provides common math constants like pi and e.                     *
+ *  4.) tmpl_math.h:                                                          *
+ *          Square root and absolute value functions are declared here.       *
+ *  5.) tmpl_math_auxiliary.h:                                                *
+ *          Function prototype / forward declaration found here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -90,63 +112,50 @@
  *  2024/11/08: Ryan Maguire                                                  *
  *      Changed coefficients to be the exact output of the Python scripts in  *
  *      libtmpl_data. This is to improve reproducibility of the results.      *
- *  2026/06/12: Ryan Maguire                                                  *
- *      Added references.                                                     *
+ *  2026/10/17: Ryan Maguire                                                  *
+ *      Rewrote to use the new auxiliary function. Moved to math_auxiliary    *
+ *      directory and replaced TMPL_STATIC_INLINE with TMPL_ALWAYS_INLINE.    *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ARCCOS_TAIL_END_FLOAT_H
-#define TMPL_ARCCOS_TAIL_END_FLOAT_H
-
-/*  Location of the TMPL_STATIC_INLINE macro.                                 */
+/*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
-/*  The compiler needs to know about the sqrt function.                       */
+/*  Common math constants like pi / 2 found here.                             */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
+/*  The square root and absolute value functions are provided here.           */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Function prototype / forward declaration found here.                      */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
+
+/*  Function for computing acos(x) for 1/2 <= |x| < 1.                        */
 TMPL_CONST_FUNC
-extern float tmpl_Float_Sqrt(const float x)
-TMPL_UNSEQUENCED;
-
-/*  Coefficients for the numerator of the Remez rational approximation.       */
-#define A00 (+1.6666657332654782511630744878585859634321997276656E-01F)
-#define A01 (-4.2035660448040502977938914900697450640872894337286E-02F)
-#define A02 (-8.2125492968317658201629446415138054874693066700587E-03F)
-
-/*  Coefficients for the denominator of the Remez rational approximation.     */
-#define B00 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define B01 (-7.0227698493007347430817019567204548858969498944150E-01F)
-
-/*  Helper macros for evaluating polynomials using Horner's method.           */
-#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * A02)
-#define TMPL_DEN_EVAL(z) B00 + z * B01
-
-/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
-TMPL_CONST_FUNC
-TMPL_STATIC_INLINE
-float tmpl_Float_Arccos_Tail_End(const float x)
+TMPL_ALWAYS_INLINE
+float
+tmpl_Float_Arccos_Tail_End(const float x)
 TMPL_UNSEQUENCED
 {
-    /*  Rational function is computed in terms of (1 - x)/2.                  */
-    const float z = 0.5F * (1.0F - x);
+    /*  The rational function is computed in terms of sqrt((1 - |x|) / 2).    */
+    const float abs_x = tmpl_Float_Abs(x);
+    const float z_squared = 0.5F * (1.0F - abs_x);
+    const float z = tmpl_Float_Sqrt(z_squared);
 
-    /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = TMPL_NUM_EVAL(z);
-    const float q = TMPL_DEN_EVAL(z);
+    /*  Compute a degree (10, 8) Remez approximation for (asin(z) - z) / z.   */
+    const float rat = tmpl_Float_Arcsin_Aux_Rat_Remez(z);
 
-    /*  p(z) / q(z) is the rational minimax approximant for                   *
-     *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
-    const float sqrt_z = tmpl_Float_Sqrt(z);
-    const float t = sqrt_z * z * p / q;
+    /*  For negative x, use acos(x) = pi - acos(-x).                          */
+    if (x < 0.0F)
+    {
+        const float low_bits = z * rat - tmpl_float_pi_by_two_lo;
+	    return tmpl_float_pi_hi - 2.0F * (z + low_bits);
+    }
 
-    /*  We now have t = asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).     */
-    return 2.0F * (sqrt_z + t);
+    /*  For positive x, we now have (asin(z) - z) / z and need 2 * asin(z).   *
+     *  Compute this and return.                                              */
+    return 2.0F * (z + z * rat);
 }
 /*  End of tmpl_Float_Arccos_Tail_End.                                        */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#include "tmpl_math_undef.h"
-
-#endif
-/*  End of include guard.                                                     */
