@@ -39,8 +39,6 @@
  *              Computes a degree (10, 8) rational Remez approximation for    *
  *              (asin(x) - x) / x.                                            *
  *      src/math/                                                             *
- *          tmpl_Double_Abs:                                                  *
- *              Computes the absolute value of a real number.                 *
  *          tmpl_Double_Sqrt:                                                 *
  *              Computes the square root of a number.                         *
  *  Method:                                                                   *
@@ -71,8 +69,8 @@
  *                                                                            *
  *      This final expression is returned.                                    *
  *  Notes:                                                                    *
- *      1.) Accurate to double precision for |x| < 1/2. There are no checks   *
- *          that the input falls within this interval.                        *
+ *      1.) Accurate to double precision for 1/2 <= |x| <= 1. There are no    *
+ *          checks that the input falls within these intervals.               *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -98,7 +96,7 @@
  *  3.) tmpl_math_constants.h:                                                *
  *          Provides common math constants like pi and e.                     *
  *  4.) tmpl_math.h:                                                          *
- *          Square root and absolute value functions are declared here.       *
+ *          Square root function declared here.                               *
  *  5.) tmpl_math_auxiliary.h:                                                *
  *          Function prototype / forward declaration found here.              *
  ******************************************************************************
@@ -127,7 +125,7 @@
 /*  Common math constants like pi / 2 found here.                             */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
-/*  The square root and absolute value functions are provided here.           */
+/*  The square root function is provided here.                                */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function prototype / forward declaration found here.                      */
@@ -140,23 +138,34 @@ double
 tmpl_Double_Arccos_Tail_End(const double x)
 TMPL_UNSEQUENCED
 {
-    /*  The rational function is computed in terms of sqrt((1 - |x|) / 2).    */
-    const double abs_x = tmpl_Double_Abs(x);
-    const double z_squared = 0.5 * (1.0 - abs_x);
-    const double z = tmpl_Double_Sqrt(z_squared);
-
-    /*  Compute a degree (10, 8) Remez approximation for (asin(z) - z) / z.   */
-    const double rat = tmpl_Double_Arcsin_Aux_Rat_Remez(z);
-
     /*  For negative x, use acos(x) = pi - acos(-x).                          */
     if (x < 0.0)
     {
+        /*  For negative x we have (1 - |x|) / 2 = (1 + x) / 2. We then use   *
+         *  acos(x) = pi - 2 * asin(z) where z = sqrt((1 + x) / 2). The       *
+         *  auxiliary helper function first computes (asin(z) - z) / z. Note, *
+         *  this function takes in the square of z, not z.                    */
+        const double z_sq = 0.5 * (1.0 + x);
+        const double z = tmpl_Double_Sqrt(z_sq);
+        const double rat = tmpl_Double_Arcsin_Aux_Rat_Remez(z_sq);
+
+        /*  Subtract off the lower bits of pi / 2 to increase accuracy.       */
         const double low_bits = z * rat - tmpl_double_pi_by_two_lo;
+
+        /*  Finish using the reflection formula, acos(x) = pi - 2 * asin(z).  */
 	    return tmpl_double_pi_hi - 2.0 * (z + low_bits);
     }
 
-    /*  For positive x, we now have (asin(z) - z) / z and need 2 * asin(z).   *
-     *  Compute this and return.                                              */
-    return 2.0 * (z + z * rat);
+    /*  For positive x, use acos(x) = 2 * asin(sqrt((1 - x) / 2)).            */
+    else
+    {
+        /*  Compute (asin(z) - z) / z using a Remez approximation.            */
+        const double z_sq = 0.5 * (1.0 - x);
+        const double z = tmpl_Double_Sqrt(z_sq);
+        const double rat = tmpl_Double_Arcsin_Aux_Rat_Remez(z_sq);
+
+        /*  From this, compute 2 * asin(z) and return.                        */
+        return 2.0 * (z + z * rat);
+    }
 }
 /*  End of tmpl_Double_Arccos_Tail_End.                                       */
