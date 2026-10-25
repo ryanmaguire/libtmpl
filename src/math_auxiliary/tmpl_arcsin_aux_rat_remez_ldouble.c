@@ -30,8 +30,8 @@
  *      Computes a rational Remez approximation for (asin(x) - x) / x at long *
  *      double precision with |x| < 1/2.                                      *
  *  Arguments:                                                                *
- *      x (const long double):                                                *
- *          A real number in the interval [-1/2, 1/2].                        *
+ *      x_sq (const long double):                                             *
+ *          The square of a real number in the interval [-1/2, 1/2].          *
  *  Output:                                                                   *
  *      asin_aux_x (long double):                                             *
  *          (asin(x) - x) / x to long double precision.                       *
@@ -62,6 +62,15 @@
  *  Notes:                                                                    *
  *      1.) Accurate to long double precision for |x| < 1/2. There are no     *
  *          checks that the input falls within this interval.                 *
+ *                                                                            *
+ *      2.) This function takes in the square of x, not x. This is to avoid   *
+ *          precision loss when used in the tail-end acos and asin functions  *
+ *          since these use z = sqrt((1 - |x|) / 2). It is more accurate      *
+ *          (and less redundant) to evaluate using (1 - |x|) / 2 directly,    *
+ *          rather than accepting z as an input and then using z * z for the  *
+ *          rational Remez approximation. Because of floating-point round-off *
+ *          it is possible that z * z and (1 - |x|) / 2 are not identical.    *
+ *          Accepting the square of the input as the argument avoids this.    *
  *  References:                                                               *
  *      1.) Maguire, Ryan (2024)                                              *
  *          tmpld                                                             *
@@ -304,19 +313,16 @@ B00 + z * (B01 + z * (B02 + z * (B03 + z * (B04 + z * B05))))
 TMPL_CONST_FUNC
 TMPL_ALWAYS_INLINE
 long double
-tmpl_LDouble_Arcsin_Aux_Rat_Remez(const long double x)
+tmpl_LDouble_Arcsin_Aux_Rat_Remez(const long double x_sq)
 TMPL_UNSEQUENCED
 {
-    /*  The Remez approximation for (asin(x) - x) / x^3 is even. Compute x^2. */
-    const long double x2 = x * x;
-
     /*  Evaluate the rational Remez approximation using Horner's method.      */
-    const long double num = TMPL_NUM_EVAL(x2);
-    const long double den = TMPL_DEN_EVAL(x2);
+    const long double num = TMPL_NUM_EVAL(x_sq);
+    const long double den = TMPL_DEN_EVAL(x_sq);
     const long double rat = num / den;
 
     /*  (asin(x) - x) / x is given by scaling the rational function by x^2.   */
-    return x2 * rat;
+    return x_sq * rat;
 }
 /*  End of tmpl_LDouble_Arcsin_Aux_Rat_Remez.                                 */
 
