@@ -131,8 +131,9 @@ long double
 tmpl_LDouble_Arccos_Rat_Remez(const long double x)
 TMPL_UNSEQUENCED
 {
-    /*  Compute a rational Remez approximation for (asin(x) - x) / x.         */
-    const long double rat = tmpl_LDouble_Arcsin_Aux_Rat_Remez(x);
+    /*  Compute a rational Remez approximation for (asin(x) - x) / x.         *
+     *  Note, this function takes the square of the argument as the input.    */
+    const long double rat = tmpl_LDouble_Arcsin_Aux_Rat_Remez(x * x);
 
     /*  From this we can compute acos(x) using                                *
      *                                                                        *

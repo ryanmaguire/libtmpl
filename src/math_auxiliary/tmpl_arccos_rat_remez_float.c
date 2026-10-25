@@ -129,8 +129,9 @@ float
 tmpl_Float_Arccos_Rat_Remez(const float x)
 TMPL_UNSEQUENCED
 {
-    /*  Compute a degree (6, 2) Remez approximation for (asin(x) - x) / x.    */
-    const float rat = tmpl_Float_Arcsin_Aux_Rat_Remez(x);
+    /*  Compute a degree (6, 2) Remez approximation for (asin(x) - x) / x.    *
+     *  Note, this function takes the square of the argument as the input.    */
+    const float rat = tmpl_Float_Arcsin_Aux_Rat_Remez(x * x);
 
     /*  From this we can compute acos(x) using                                *
      *                                                                        *
