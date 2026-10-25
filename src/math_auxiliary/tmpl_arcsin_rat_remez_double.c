@@ -113,7 +113,7 @@ tmpl_Double_Arcsin_Rat_Remez(const double x)
 TMPL_UNSEQUENCED
 {
     /*  Compute a degree (10, 8) Remez approximation for (asin(x) - x) / x.   */
-    const double rat = tmpl_Double_Arcsin_Aux_Rat_Remez(x);
+    const double rat = tmpl_Double_Arcsin_Aux_Rat_Remez(x * x);
 
     /*  Compute asin(x) from this.                                            */
     return x + x * rat;

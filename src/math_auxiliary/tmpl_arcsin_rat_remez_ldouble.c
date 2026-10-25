@@ -108,7 +108,7 @@ tmpl_LDouble_Arcsin_Rat_Remez(const long double x)
 TMPL_UNSEQUENCED
 {
     /*  Compute a rational Remez approximation for (asin(x) - x) / x.         */
-    const long double rat = tmpl_LDouble_Arcsin_Aux_Rat_Remez(x);
+    const long double rat = tmpl_LDouble_Arcsin_Aux_Rat_Remez(x * x);
 
     /*  Compute asin(x) from this.                                            */
     return x + x * rat;
