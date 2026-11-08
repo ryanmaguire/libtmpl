@@ -121,7 +121,7 @@ TMPL_UNSEQUENCED
 
     /*  The Remez approximation is evaluated on the interval [-1/8, +1/8].    *
      *  The input lies in the interval [1/2, 3/4], shift by 5/8.              */
-    const float x_shift = x - 0.625;
+    const float x_shift = x - 0.625F;
 
     /*  Evaluate the rational Remez approximation using Horner's method.      */
     const float p = TMPL_NUM_EVAL(x_shift);
