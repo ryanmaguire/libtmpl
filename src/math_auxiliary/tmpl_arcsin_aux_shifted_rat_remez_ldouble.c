@@ -218,12 +218,21 @@ long double
 tmpl_LDouble_Arcsin_Aux_Shifted_Rat_Remez(const long double x)
 TMPL_UNSEQUENCED
 {
+    /*  asin(5/8) to extra precision using two long doubles.                  */
     const long double asin_three_eigths_hi = ASIN_3_8_HI;
     const long double asin_three_eigths_lo = ASIN_3_8_LO;
+
+    /*  The Remez approximation is evaluated on the interval [-1/8, +1/8].    *
+     *  The input lies in the interval [1/2, 3/4], shift by 5/8.              */
     const long double x_shift = x - 0.625L;
+
+    /*  Evaluate the rational Remez approximation using Horner's method.      */
     const long double p = TMPL_NUM_EVAL(x_shift);
     const long double q = TMPL_DEN_EVAL(x_shift);
     const long double rat = p / q;
+
+    /*  The approximation is for (asin(x) - asin(5/8)) / (x - 5/8). Compute   *
+     *  asin(x) from this.                                                    */
     const long double low_bits = asin_three_eigths_lo + x_shift * rat;
     return asin_three_eigths_hi + low_bits;
 }

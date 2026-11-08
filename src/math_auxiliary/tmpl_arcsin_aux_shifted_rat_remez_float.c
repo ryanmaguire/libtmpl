@@ -120,7 +120,7 @@ TMPL_UNSEQUENCED
     const float asin_three_eigths_lo = -2.64349165949784437347056119857958E-08F;
 
     /*  The Remez approximation is evaluated on the interval [-1/8, +1/8].    *
-     *  The input lies in the interval [1/2, 3/4], shift by 1/8.              */
+     *  The input lies in the interval [1/2, 3/4], shift by 5/8.              */
     const float x_shift = x - 0.625;
 
     /*  Evaluate the rational Remez approximation using Horner's method.      */
