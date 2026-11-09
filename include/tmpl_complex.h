@@ -156,15 +156,18 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
  *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
  ******************************************************************************/
 TMPL_CONST_FUNC
-double tmpl_CDouble_Abs(const tmpl_ComplexDouble z)
+extern double
+tmpl_CDouble_Abs(const tmpl_ComplexDouble z)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-float tmpl_CFloat_Abs(const tmpl_ComplexFloat z)
+extern float
+tmpl_CFloat_Abs(const tmpl_ComplexFloat z)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-long double tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z)
+extern long double
+tmpl_CLDouble_Abs(const tmpl_ComplexLongDouble z)
 TMPL_UNSEQUENCED;
 
 /******************************************************************************

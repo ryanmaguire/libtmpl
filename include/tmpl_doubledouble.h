@@ -184,13 +184,13 @@ TMPL_UNSEQUENCED;
  *      1.) long double-double version is also provided.                      *
  ******************************************************************************/
 TMPL_PURE_FUNC
-tmpl_DoubleDouble
+extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Multiply_Scalar(const double x,
                                   const tmpl_DoubleDouble * const y)
 TMPL_UNSEQUENCED;
 
 TMPL_PURE_FUNC
-tmpl_LongDoubleDouble
+extern tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Multiply_Scalar(const long double x,
                                    const tmpl_LongDoubleDouble * const y)
 TMPL_UNSEQUENCED;
