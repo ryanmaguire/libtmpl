@@ -123,6 +123,9 @@
  *      Changed filename to include _impl_ to be consistent with other files. *
  *  2026/07/09: Ryan Maguire                                                  *
  *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE use.  *
+ *  2026/11/09: Ryan Maguire                                                  *
+ *      Added 32-bit unsigned integer type punning method to improve the      *
+ *      performance when using MSVC (GCC / Clang performance is the same).    *
  ******************************************************************************/
 
 /*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
@@ -140,11 +143,45 @@
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Check for IEEE-754 support.                                               */
-#if TMPL_HAS_IEEE754_FLOAT == 1
+/*  Check for 32-bit integer type-punning support.                            */
+#if TMPL_HAS_FLOATINT32 == 1
 
 /******************************************************************************
- *                              IEEE-754 Version                              *
+ *                    IEEE-754 Version with 32-Bit Integers                   *
+ ******************************************************************************/
+
+/*  GCC and Clang produce identical code for both type punning methods, but   *
+ *  MSVC seems unable to optimize the method that does not use 32-bit         *
+ *  unsigned integers. The resulting code is nearly 2x slower. Using bit-wise *
+ *  AND with 32-bit integers to compute the absolute value produces optimal   *
+ *  code on all three compilers.                                              */
+
+/*  Single-precision absolute value function (fabsf equivalent).              */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+float
+tmpl_Float_Abs(const float x)
+TMPL_UNSEQUENCED
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEEE754_Float w;
+
+    /*  Set the float part of the word to the input x.                        */
+    w.r = x;
+
+    /*  Set the sign bit to zero, indicating positive.                        */
+    w.n &= 0x7FFFFFFFU;
+
+    /*  Return the float part of the union.                                   */
+    return w.r;
+}
+/*  End of tmpl_Float_Abs.                                                    */
+
+/*  Check for IEEE-754 support.                                               */
+#elif TMPL_HAS_IEEE754_FLOAT == 1
+
+/******************************************************************************
+ *                  IEEE-754 Version without 32-Bit Integers                  *
  ******************************************************************************/
 
 /*  Single-precision absolute value function (fabsf equivalent).              */
