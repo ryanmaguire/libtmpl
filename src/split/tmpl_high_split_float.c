@@ -89,8 +89,10 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Function for splitting a float into two parts.                            */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
-float tmpl_Float_High_Split(const float x, const float splitter)
+float
+tmpl_Float_High_Split(const float x, const float splitter)
 {
     /*  For compilers / architectures where the barrier macro has no effect,  *
      *  the product variable needs to be declared volatile to correctly       *
@@ -127,4 +129,5 @@ float tmpl_Float_High_Split(const float x, const float splitter)
     TMPL_FLOAT_BARRIER(result);
     return result;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Float_High_Split.                                             */

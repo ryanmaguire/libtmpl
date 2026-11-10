@@ -108,6 +108,7 @@
 #include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Kahan summation algorithm for accurately evaluating sum += summand.       */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 void
 tmpl_LDouble_Kahan_Two_Sum(const long double summand,
@@ -162,4 +163,5 @@ tmpl_LDouble_Kahan_Two_Sum(const long double summand,
     *sum = add;
     *err = error;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Kahan_Two_Sum.                                         */

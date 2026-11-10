@@ -136,6 +136,7 @@
 #include <libtmpl/include/tmpl_two_diff.h>
 
 /*  Standard Fast2Diff algorithm at double precision.                         */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 void
 tmpl_Double_Fast_Two_Diff(const double x,
@@ -171,4 +172,5 @@ tmpl_Double_Fast_Two_Diff(const double x,
     *out = diff;
     *err = error;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Fast_Two_Diff.                                         */

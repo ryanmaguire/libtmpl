@@ -88,8 +88,10 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Function for subtracting two doubles with compiler barriers.              */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
-double tmpl_Double_Guarded_Subtract(const double a, const double b)
+double
+tmpl_Double_Guarded_Subtract(const double a, const double b)
 {
     /*  Declare variables for the intermediate steps.                         */
     double a_val, b_val, diff;
@@ -113,4 +115,5 @@ double tmpl_Double_Guarded_Subtract(const double a, const double b)
     TMPL_DOUBLE_BARRIER(diff);
     return diff;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Guarded_Subtract.                                      */

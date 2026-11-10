@@ -69,6 +69,7 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Function for performing floating-point subtraction without reordering.    */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 long double
 tmpl_LDouble_Right_Difference(const long double a,
@@ -99,4 +100,5 @@ tmpl_LDouble_Right_Difference(const long double a,
     TMPL_LDOUBLE_BARRIER(result);
     return result;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_LDouble_Right_Difference.                                     */

@@ -120,7 +120,8 @@
 
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_ALWAYS_INLINE
-long double tmpl_LDouble_Even_High_Split(const long double x)
+long double
+tmpl_LDouble_Even_High_Split(const long double x)
 {
     /*  We just need to cast to double since double-double is already split.  */
     const double x_double = TMPL_CAST(x, double);
@@ -132,8 +133,10 @@ long double tmpl_LDouble_Even_High_Split(const long double x)
 #else
 
 /*  Function for splitting a long double evenly down the middle.              */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
-long double tmpl_LDouble_Even_High_Split(const long double x)
+long double
+tmpl_LDouble_Even_High_Split(const long double x)
 {
     /*  For compilers / architectures where the barrier macro has no effect,  *
      *  the product variable needs to be declared volatile to correctly       *
@@ -173,6 +176,7 @@ long double tmpl_LDouble_Even_High_Split(const long double x)
     TMPL_LDOUBLE_BARRIER(result);
     return result;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Even_High_Split.                                       */
 
 #endif

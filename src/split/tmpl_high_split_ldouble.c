@@ -128,6 +128,7 @@ tmpl_LDouble_High_Split(const long double x, const double splitter)
 #else
 
 /*  Function for splitting a long double into two parts.                      */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 long double
 tmpl_LDouble_High_Split(const long double x, const long double splitter)
@@ -167,6 +168,7 @@ tmpl_LDouble_High_Split(const long double x, const long double splitter)
     TMPL_LDOUBLE_BARRIER(result);
     return result;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_LDouble_High_Split.                                           */
 
 #endif

@@ -128,6 +128,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Neumaier summation algorithm for accurately evaluating sum += summand.    */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 void
 tmpl_Double_Neumaier_Two_Sum(const double summand,
@@ -174,5 +175,5 @@ tmpl_Double_Neumaier_Two_Sum(const double summand,
     *sum = add;
     *err += error;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Neumaier_Two_Sum.                                      */
-
