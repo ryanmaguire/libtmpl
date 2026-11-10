@@ -21,6 +21,24 @@
  *  Purpose:                                                                  *
  *      Provides macros for protecting against aggressive optimizations.      *
  ******************************************************************************
+ *                                   NOTES                                    *
+ ******************************************************************************
+ *  1.) On GCC, Clang, Solaris Developer Studio, and LLVM clones (like icx),  *
+ *      the barriers produce a no-op on many architectures like x86-64,       *
+ *      arm64, riscv64, and many others. -ffast-math, -march=native, and      *
+ *      similar aggressive compiler optimizations may be used without         *
+ *      compromising functions. On some architectures (i386 without SSE) the  *
+ *      barriers do not produce no-ops, but still protect against aggressive  *
+ *      optimizations.                                                        *
+ *                                                                            *
+ *  2.) MSVC does not (to my knowledge) provide GNU-like controls that can be *
+ *      used to create optimization barriers. Instead we use a function level *
+ *      barrier that disables aggressive optimizations using a pragma.        *
+ *                                                                            *
+ *  3.) Do NOT use function level pragmas to disable optimizations when       *
+ *      using GCC or Clang. If link time optimization is enabled, then these  *
+ *      pragmas will be ignored and you will end up with junk functions.      *
+ ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
@@ -59,11 +77,21 @@
  *  double-double arithmetic. A barrier is needed, or a volatile specifier.   */
 #elif defined(__i386__)
 
-/*  Use generic registers. This is not guaranteed to be a no-op, this may     *
- *  produce a move. Nevertheless, it is still faster than declaring variables *
- *  volatile, which produces many moves.                                      */
+/*  If SSE or SSE2 extensions are available, then we may use the "x" register *
+ *  which produces a no-op. With x87 arithmetic, use generic registers. This  *
+ *  is not guaranteed to be a no-op and may produce a move, but this will     *
+ *  guard the variable against aggressive compiler optimizations.             */
+#if defined(__SSE_MATH__)
+#define TMPL_FLOAT_BARRIER(x) __asm__ __volatile__("" : "+x"(x))
+#else
 #define TMPL_FLOAT_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
+#endif
+
+#if defined(__SSE2_MATH__)
+#define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+x"(x))
+#else
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+r"(x))
+#endif
 
 /*  aarch64 provides FMA, and GCC and Clang will use it when optimizations    *
  *  are enabled. A barrier is faster than volatile on this architecture.      */
@@ -154,7 +182,7 @@
 /*  RISC-V is a bit more subtle, we need to examine other macros as well.     */
 #elif defined(__riscv)
 
-/*  RISC-V defined the __riscv_flen macro for floating-point support.         */
+/*  RISC-V defines the __riscv_flen macro for floating-point support.         */
 #if defined(__riscv_flen)
 
 /*  If __riscv_flen is at least 32, then we have single-precision floats.     *
@@ -211,8 +239,16 @@
 #define TMPL_FLOAT_BARRIER(x) __asm__ __volatile__("" : "+g"(x))
 #define TMPL_DOUBLE_BARRIER(x) __asm__ __volatile__("" : "+g"(x))
 
+/*  Microsoft's C compiler MSVC does not provide barriers for individual      *
+ *  expressions. Instead we must use a barrier at the function level. For     *
+ *  MSVC the floating-point barriers expand to no-op C expressions.           */
+#elif defined(_MSC_VER)
+
+#define TMPL_FLOAT_BARRIER(x) ((void)0)
+#define TMPL_DOUBLE_BARRIER(x) ((void)0)
+
 #else
-/*  Else for GCC vs. Clang vs. Solaris.                                       */
+/*  Else for GCC vs. Clang vs. Solaris vs. MSVC.                              */
 
 #define TMPL_FLOAT_BARRIER(x)                                       \
     do {                                                            \
@@ -227,7 +263,7 @@
     } while (0)
 
 #endif
-/*  End of GCC vs. Clang vs. Solaris.                                         */
+/*  End of GCC vs. Clang vs. Solaris vs. MSVC.                                */
 
 /******************************************************************************
  *                            Long Double Barrier                             *
@@ -240,7 +276,7 @@
 /*  Double-double can use the double barriers twice.                          */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
-/*  tmptmpl_IEEE754_LDouble type found here.                                  */
+/*  tmpl_IEEE754_LDouble type found here.                                     */
 #include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Barrier for the IBM-style 128-bit double-double.                          */
@@ -273,6 +309,9 @@
 #elif defined(__riscv) && defined(__riscv_flen) && (__riscv_flen >= 128)
 #define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+f"(x))
 
+#else
+#define TMPL_LDOUBLE_BARRIER(x) __asm__ __volatile__("" : "+m"(x))
+
 #endif
 /*  End of aarch64 vs. RISC-V.                                                */
 
@@ -297,6 +336,54 @@
 #endif
 
 #endif
+
+/******************************************************************************
+ *                        MSVC Floating-Point Barriers                        *
+ ******************************************************************************/
+
+/*  MSVC barriers work at the function level, guarding the entire function.   *
+ *  Exclude GCC and Clang since the barriers above work better.               */
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__GNUC__)
+
+/*  Save the current optimizations and disable /fp:fast and FMA contractions. */
+#define TMPL_FLOATING_POINT_GUARD_BEGIN                                        \
+__pragma(float_control(precise, on, push))                                     \
+__pragma(fp_contract(off))
+
+/*  With recent versions of MSVC we can simply pop the previous pragma off.   */
+#if _MSC_VER >= 1930
+#define TMPL_FLOATING_POINT_GUARD_END                                          \
+__pragma(float_control(pop))
+
+/*  For older versions we need to restore the FMA contraction manually. This  *
+ *  is only disabled when /fp:strict is used. Check for this.                 */
+#elif defined(_M_FP_STRICT)
+
+#define TMPL_FLOATING_POINT_GUARD_END                                          \
+__pragma(float_control(pop))                                                   \
+__pragma(fp_contract(off))
+
+/*  /fp:precise and /fp:fast both use FMA contraction when the instruction is *
+ *  available. Turn fp_contract back on.                                      */
+#else
+
+#define TMPL_FLOATING_POINT_GUARD_END                                          \
+__pragma(float_control(pop))                                                   \
+__pragma(fp_contract(on))
+
+#endif
+/*  End of #if _MSC_VER >= 1930.                                              */
+
+#else
+/*  Else for MSVC vs. other compilers.                                        */
+
+/*  For all other compilers, the statement-by-statement barriers are used.    *
+ *  Set these macros to be empty.                                             */
+#define TMPL_FLOATING_POINT_GUARD_BEGIN
+#define TMPL_FLOATING_POINT_GUARD_END
+
+#endif
+/*  End of #if defined(_MSC_VER) && !defined(__clang__) && !defined(__GNUC__).*/
 
 #endif
 /*  End of include guard.                                                     */
