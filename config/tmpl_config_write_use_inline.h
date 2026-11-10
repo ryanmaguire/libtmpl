@@ -19,14 +19,14 @@
  *                        tmpl_config_write_use_inline                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Writes the TMPL_INLINE macro to a file.                               *
+ *      Writes the TMPL_USE_INLINE and TMPL_ALWAYS_INLINE macros to a file.   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_write_use_inline                                                 *
  *  Purpose:                                                                  *
- *      Writes the TMPL_INLINE macro to a file.                               *
+ *      Writes the inline macros to a file.                                   *
  *  Arguments:                                                                *
  *      fp (FILE *):                                                          *
  *          File pointer for the file being written to.                       *
@@ -36,13 +36,17 @@
  *      stdio.h:                                                              *
  *          fputs:                                                            *
  *              Writes a string to a file.                                    *
+ *          puts:                                                             *
+ *              Prints an error message if fp is NULL.                        *
  *  Method:                                                                   *
- *      Check the TMPL_SET_INLINE_TRUE macro and C99 support, then call fputs.*
+ *      Check if the C compiler supports inline and force-inline, and then    *
+ *      check the TMPL_SET_INLINE_TRUE and TMPL_SET_ALWAYS_INLINE_TRUE build  *
+ *      options. Write the result with fputs.                                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) stdio.h:                                                              *
- *          Standard library header file providing FILE and fputs.            *
+ *          Standard library header file providing FILE, fputs, and puts.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 27, 2025                                              *
@@ -52,199 +56,152 @@
 #ifndef TMPL_CONFIG_WRITE_USE_INLINE_H
 #define TMPL_CONFIG_WRITE_USE_INLINE_H
 
-/*  FILE type and fputs provided here.                                        */
+/*  FILE type, fputs, and puts provided here.                                 */
 #include <stdio.h>
 
-#define TMPL_TO_STRING(x) #x
-#define TMPL_STRINGIFY(x) TMPL_TO_STRING(x)
+/******************************************************************************
+ *                              Language Support                              *
+ ******************************************************************************/
 
-/*  Probe to see if the compiler supports some version of always inline.      */
-#if !defined(__STDC_VERSION__)
+/*  C introduced the inline keyword starting with C99. Check for support.     */
+#ifdef __STDC_VERSION__
 
-/*  The inline keyword was not defined at all in C89.                         */
-#define TMPL_HAS_ATTRIBUTE(x) 0
-
-/*  Attribute syntax was introduced in C23, older versions do not support.    */
-#elif __STDC_VERSION__ < 202311L
-#define TMPL_HAS_ATTRIBUTE(x) 0
-
-/*  The __has_c_attribute is the standard way of testing for C23 attributes,  *
- *  but C compilers may not implement it. Check first.                        */
-#elif !defined(__has_c_attribute)
-#define TMPL_HAS_ATTRIBUTE(x) 0
-
-/*  With the __has_c_attribute available macro we can check for always_inline *
- *  in a standard compliant manner. Use this for the macro.                   */
+/*  C99, C11, C18, and C23 (and likely later revisions) all support inline.   */
+#if __STDC_VERSION__ >= 199901L
+#define TMPL_CONFIG_HAS_INLINE 1
 #else
-#define TMPL_HAS_ATTRIBUTE(x) __has_c_attribute(x)
-
+#define TMPL_CONFIG_HAS_INLINE 0
 #endif
-/*  End of #if !defined(__STDC_VERSION__).                                    */
+/*  End of #if __STDC_VERSION__ >= 199901L.                                   */
 
-/*  GCC has provided always_inline since the 1990s.                           */
-#if defined(__GNUC__)
-
-/*  GCC 15+ set __STDC_VERSION__ to indicate C23 support. C23 attribute       *
- *  syntax is allowed.                                                        */
-#if TMPL_HAS_ATTRIBUTE(gnu::always_inline)
-
-#define TMPL_FORCE_EXTERN_INLINE [[gnu::always_inline]] inline
-#define TMPL_FORCE_STATIC_INLINE [[gnu::always_inline]] static inline
-
-/*  Older versions of GCC may use the __attribute__ syntax.                   */
+/*  C23 standardized attribute syntax and allows vendor-specific attributes   *
+ *  like [[gnu::always_inline]] or [[msvc::forceinline]]. Check for support.  */
+#if __STDC_VERSION__ >= 202311L && defined(__has_c_attribute)
+#define TMPL_CONFIG_HAS_C23_ATTRIBUTE(x) __has_c_attribute(x)
 #else
-
-#define TMPL_FORCE_EXTERN_INLINE inline __attribute__((always_inline))
-#define TMPL_FORCE_STATIC_INLINE static inline __attribute__((always_inline))
-
+#define TMPL_CONFIG_HAS_C23_ATTRIBUTE(x) 0
 #endif
-/*  End of #if TMPL_HAS_ATTRIBUTE(gnu::always_inline).                        */
+/*  End of #if __STDC_VERSION__ >= 202311L && defined(__has_c_attribute).     */
 
-/*  LLVM's Clang has supported always_inline since at least the late 2000's.  */
+/*  C++ compilers also provide the inline keyword. MSVC supports inlining     *
+ *  functions but does not define the __STDC_VERSION__ macro by default.      */
+#elif defined(__cplusplus) || defined(_MSC_VER)
+#define TMPL_CONFIG_HAS_INLINE 1
+
+/*  C89/C90 compilers are not required to support the inline keyword.         */
+#else
+#define TMPL_CONFIG_HAS_INLINE 0
+#endif
+/*  End of #ifdef __STDC_VERSION__.                                           */
+
+/*  C89 compilers and MSVC without the /std flag will not have this macro     *
+ *  defined, nor will they support C23 attributes.                            */
+#ifndef TMPL_CONFIG_HAS_C23_ATTRIBUTE
+#define TMPL_CONFIG_HAS_C23_ATTRIBUTE(x) 0
+#endif
+
+/******************************************************************************
+ *                            Force Inline Support                            *
+ ******************************************************************************/
+
+/*  C89 does not have the inline keyword, so there is nothing to do here.     */
+#if TMPL_CONFIG_HAS_INLINE == 0
+
+#define TMPL_CONFIG_FORCE_INLINE ""
+#define TMPL_CONFIG_FORCE_STATIC "static"
+
+/*  GCC, and compilers that claim GCC compatibility.                          */
+#elif defined(__GNUC__)
+
+#if TMPL_CONFIG_HAS_C23_ATTRIBUTE(gnu::always_inline)
+#define TMPL_CONFIG_FORCE_INLINE "[[gnu::always_inline]] inline"
+#define TMPL_CONFIG_FORCE_STATIC "[[gnu::always_inline]] static inline"
+#else
+#define TMPL_CONFIG_FORCE_INLINE "__attribute__((always_inline)) inline"
+#define TMPL_CONFIG_FORCE_STATIC "__attribute__((always_inline)) static inline"
+#endif
+/*  End of #if TMPL_CONFIG_HAS_C23_ATTRIBUTE(gnu::always_inline).             */
+
+/*  Clang supports GNU-style attributes, and recent versions of clang support *
+ *  C23 attributes. Note, clang defines __GNUC__ by default meaning the       *
+ *  previous branch will likely be used with clang instead.                   */
 #elif defined(__clang__)
 
-/*  Clang 22+ set __STDC_VERSION__ to indicate C23 support. C23 attributes    *
- *  are supported with these versions.                                        */
-#if TMPL_HAS_ATTRIBUTE(clang::always_inline)
-
-#define TMPL_FORCE_EXTERN_INLINE [[clang::always_inline]] inline
-#define TMPL_FORCE_STATIC_INLINE [[clang::always_inline]] static inline
-
-/*  Older versions of Clang still support the GCC __attribute__ syntax.       */
+#if TMPL_CONFIG_HAS_C23_ATTRIBUTE(clang::always_inline)
+#define TMPL_CONFIG_FORCE_INLINE "[[clang::always_inline]] inline"
+#define TMPL_CONFIG_FORCE_STATIC "[[clang::always_inline]] static inline"
 #else
-
-#define TMPL_FORCE_EXTERN_INLINE inline __attribute__((always_inline))
-#define TMPL_FORCE_STATIC_INLINE static inline __attribute__((always_inline))
-
+#define TMPL_CONFIG_FORCE_INLINE "__attribute__((always_inline)) inline"
+#define TMPL_CONFIG_FORCE_STATIC "__attribute__((always_inline)) static inline"
 #endif
-/*  End of #if TMPL_HAS_ATTRIBUTE(clang::always_inline).                      */
+/*  End of #if TMPL_CONFIG_HAS_C23_ATTRIBUTE(clang::always_inline).           */
 
-/*  Solaris Developer Studio C compiler supports __attribute__.               */
-#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-
-#define TMPL_FORCE_EXTERN_INLINE inline __attribute__((always_inline))
-#define TMPL_FORCE_STATIC_INLINE static inline __attribute__((always_inline))
-
-/*  Microsoft's C compiler MSVC supports forceinline, which produces an       *
- *  effect similar to GCC and Clang's always_inline.                          */
+/*  Microsoft's MSVC. forceinline already implies inline.                     */
 #elif defined(_MSC_VER)
 
-/*  MSVC supports the C++11 attribute [[msvc::forceinline]], but C23 support  *
- *  is lacking in MSVC < 19. Check for C23 support.                           */
-#if TMPL_HAS_ATTRIBUTE(msvc::forceinline)
+#if TMPL_CONFIG_HAS_C23_ATTRIBUTE(msvc::forceinline)
+#define TMPL_CONFIG_FORCE_INLINE "[[msvc::forceinline]]"
+#define TMPL_CONFIG_FORCE_STATIC "[[msvc::forceinline]] static"
+#else
+#define TMPL_CONFIG_FORCE_INLINE "__forceinline"
+#define TMPL_CONFIG_FORCE_STATIC "static __forceinline"
+#endif
+/*  End of #if TMPL_CONFIG_HAS_C23_ATTRIBUTE(msvc::forceinline).              */
 
-#define TMPL_FORCE_EXTERN_INLINE [[msvc::forceinline]]
-#define TMPL_FORCE_STATIC_INLINE [[msvc::forceinline]] static
+/*  Solaris Developer Studio supports the GNU always_inline attribute.        */
+#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 
-/*  Lacking C23 attributes, MSVC supports the __forceinline specifier.        */
+#define TMPL_CONFIG_FORCE_INLINE "inline __attribute__((always_inline))"
+#define TMPL_CONFIG_FORCE_STATIC "static inline __attribute__((always_inline))"
+
+/*  Any other C99 (or later) compiler. Use the plain inline keyword.          */
 #else
 
-#define TMPL_FORCE_EXTERN_INLINE __forceinline
-#define TMPL_FORCE_STATIC_INLINE __forceinline static
+#define TMPL_CONFIG_FORCE_INLINE "inline"
+#define TMPL_CONFIG_FORCE_STATIC "static inline"
 
 #endif
-/*  End of #if TMPL_HAS_ATTRIBUTE(msvc::forceinline).                         */
+/*  End of #if TMPL_CONFIG_HAS_INLINE == 0.                                   */
 
+/******************************************************************************
+ *                               Build Options                                *
+ ******************************************************************************/
+
+/*  Check for an incompatible configuration.                                  */
+#if defined(TMPL_SET_INLINE_TRUE) && TMPL_CONFIG_HAS_INLINE == 0
+#error "libtmpl: inline requested but not supported."
+#endif
+
+/*  Check if inline support has been requested.                               */
+#if defined(TMPL_SET_INLINE_TRUE)
+
+#define TMPL_CONFIG_USE_INLINE "1"
+
+/*  Users may also request inline functions be forced inline. This option     *
+ *  only has an effect when inline is enabled.                                */
+#if defined(TMPL_SET_ALWAYS_INLINE_TRUE)
+#define TMPL_CONFIG_INLINE_DECL TMPL_CONFIG_FORCE_STATIC
+#define TMPL_CONFIG_ALWAYS_INLINE TMPL_CONFIG_FORCE_INLINE
 #else
-/*  Else for #if defined(__GNUC__).                                           */
-
-/*  The C99 standard (and higher) support the usual inline keyword.           */
-#define TMPL_FORCE_EXTERN_INLINE inline
-#define TMPL_FORCE_STATIC_INLINE static inline
-
+#define TMPL_CONFIG_INLINE_DECL "static inline"
+#define TMPL_CONFIG_ALWAYS_INLINE ""
 #endif
-/*  End of #if defined(__GNUC__).                                             */
+/*  End of #if defined(TMPL_SET_ALWAYS_INLINE_TRUE).                          */
 
-/*  By default we assume inline is not allowed. We'll reset this later.       */
-#define TMPL_USE_INLINE 0
-#define TMPL_HAS_INLINE 0
-
-/*  The inline keyword was only introduced with the C99 standard. Check.      */
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
-    (defined(__cplusplus)) || \
-    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
-
-#undef TMPL_HAS_INLINE
-#define TMPL_HAS_INLINE 1
-
-/*  Users may optionally request libtmpl not use inline at all. Check.        */
-#ifdef TMPL_SET_INLINE_TRUE
-
-/*  inline is supported and requested. Reset the macro to 1.                  */
-#undef TMPL_USE_INLINE
-#define TMPL_USE_INLINE 1
-
-#endif
-/*  End of #ifdef TMPL_SET_INLINE_TRUE.                                       */
-
-#endif
-/*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
-
-/*  The TMPL_STATIC_INLINE macro does not require the TMPL_SET_INLINE_TRUE    *
- *  macro to be set since it is reserved exclusively for helper and auxiliary *
- *  functions that the user does not have direct access to. Hence the macro   *
- *  only depends on what the compiler can support.                            */
-#if TMPL_HAS_INLINE == 1
-
-/*  static inline is the standard declaration for inlining functions, but the *
- *  compiler does not need to actually inline anything. Functions declared    *
- *  with the TMPL_STATIC_INLINE macro are helper functions that are only used *
- *  in one specific library function (for example, tmpl_Double_Arccos calls   *
- *  the tmpl_Double_Arccos_Tail_End function for some arguments). Because of  *
- *  this, it is beneficial to require the compiler to inline the function.    *
- *  This can be achieved with compilers that implement the always_inline      *
- *  attribute or forceinline attribute.                                       */
-#define TMPL_STATIC_INLINE_ARG TMPL_FORCE_STATIC_INLINE
-
-/*  Lacking inline support, we can simply use the static keyword.             */
+/*  If inline has been disabled, the macros are set to their zero values.     */
 #else
 
-/*  Functions declared with the TMPL_STATIC_INLINE macro are compiled in at   *
- *  most one translation unit at build time, and are not exposed to the user. *
- *  Declaring such functions with the static storage class specifier is the   *
- *  standard practice.                                                        */
-#define TMPL_STATIC_INLINE_ARG static
+#define TMPL_CONFIG_USE_INLINE "0"
+#define TMPL_CONFIG_INLINE_DECL ""
+#define TMPL_CONFIG_ALWAYS_INLINE ""
 
 #endif
-/*  End of #if TMPL_HAS_INLINE == 1.                                          */
+/*  End of #if defined(TMPL_SET_INLINE_TRUE).                                 */
 
-/*  The TMPL_INLINE_DECL macro depends on whether the user wants small        *
- *  library functions to be inlined or not. Check.                            */
-#if TMPL_USE_INLINE == 1
-
-/*  By default, TMPL_INLINE_DECL expands to static inline when inline is      *
- *  supported, and nothing otherwise since the function is then compiled and  *
- *  linked into the libtmpl.so file (or .a, .dll, .lib, etc.). The user can   *
- *  request the inline functions be declared with the always_inline attribute *
- *  on compilers that support this. Check for this.                           */
-#ifdef TMPL_SET_ALWAYS_INLINE_TRUE
-
-/*  The TMPL_FORCE_..._INLINE macros already contain the correct expansions.  */
-#define TMPL_INLINE_ARG TMPL_FORCE_STATIC_INLINE
-#define TMPL_ALWAYS_INLINE_ARG TMPL_FORCE_EXTERN_INLINE
-
-#else
-/*  Else for #ifdef TMPL_SET_ALWAYS_INLINE_TRUE.                              */
-
-/*  If the user did not request always_inline, but normal inline support was  *
- *  requested, simply use the static inline specifier.                        */
-#define TMPL_INLINE_ARG static inline
-#define TMPL_ALWAYS_INLINE_ARG
-
-#endif
-/*  End of #ifdef TMPL_SET_ALWAYS_INLINE_TRUE.                                */
-
-#else
-/*  Else for #if TMPL_HAS_INLINE == 1.                                        */
-
-/*  If inline support was not requested, or not available, then the           *
- *  *_no_inline.c files will be compiled. These files expect TMPL_INLINE_DECL *
- *  to expand to nothing.                                                     */
-#define TMPL_INLINE_ARG
-#define TMPL_ALWAYS_INLINE_ARG
-
-#endif
-/*  End of #if TMPL_HAS_INLINE == 1.                                          */
+/*  TMPL_STATIC_INLINE is used for helper functions that are not visible to   *
+ *  the user. These are inlined whenever possible regardless of build options.*
+ *  For compilers lacking inline, these functions are declared static.        */
+#define TMPL_CONFIG_STATIC_INLINE TMPL_CONFIG_FORCE_STATIC
 
 /*  Function for writing the TMPL_USE_INLINE and related macros to a file.    */
 static void tmpl_write_use_inline(FILE *fp)
@@ -262,27 +219,24 @@ static void tmpl_write_use_inline(FILE *fp)
     }
 
     fputs(
-        "#define TMPL_USE_INLINE "
-        TMPL_STRINGIFY(TMPL_USE_INLINE) "\n"
-        "#define TMPL_INLINE_DECL "
-        TMPL_STRINGIFY(TMPL_INLINE_ARG) "\n"
-        "#define TMPL_STATIC_INLINE "
-        TMPL_STRINGIFY(TMPL_STATIC_INLINE_ARG) "\n"
-        "#define TMPL_ALWAYS_INLINE "
-        TMPL_STRINGIFY(TMPL_ALWAYS_INLINE_ARG) "\n\n",
+        "#define TMPL_USE_INLINE " TMPL_CONFIG_USE_INLINE "\n"
+        "#define TMPL_INLINE_DECL " TMPL_CONFIG_INLINE_DECL "\n"
+        "#define TMPL_STATIC_INLINE " TMPL_CONFIG_STATIC_INLINE "\n"
+        "#define TMPL_ALWAYS_INLINE " TMPL_CONFIG_ALWAYS_INLINE "\n\n",
         fp
     );
 }
 /*  End of tmpl_write_use_inline.                                             */
 
 /*  Undefine everything to avoid conflicts.                                   */
-#undef TMPL_HAS_INLINE
-#undef TMPL_USE_INLINE
-#undef TMPL_INLINE_ARG
-#undef TMPL_STATIC_INLINE_ARG
-#undef TMPL_ALWAYS_INLINE_ARG
-#undef TMPL_FORCE_EXTERN_INLINE
-#undef TMPL_FORCE_STATIC_INLINE
+#undef TMPL_CONFIG_HAS_INLINE
+#undef TMPL_CONFIG_HAS_C23_ATTRIBUTE
+#undef TMPL_CONFIG_FORCE_INLINE
+#undef TMPL_CONFIG_FORCE_STATIC
+#undef TMPL_CONFIG_USE_INLINE
+#undef TMPL_CONFIG_INLINE_DECL
+#undef TMPL_CONFIG_ALWAYS_INLINE
+#undef TMPL_CONFIG_STATIC_INLINE
 
 #endif
 /*  End of include guard.                                                     */
