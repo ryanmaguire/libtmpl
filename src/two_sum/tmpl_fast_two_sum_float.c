@@ -145,6 +145,7 @@
 #include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Standard Fast2Sum algorithm at single precision.                          */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 void
 tmpl_Float_Fast_Two_Sum(const float x,
@@ -180,4 +181,5 @@ tmpl_Float_Fast_Two_Sum(const float x,
     *out = sum;
     *err = diff;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Float_Fast_Two_Sum.                                           */

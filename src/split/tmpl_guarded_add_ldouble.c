@@ -89,6 +89,7 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Function for adding two long doubles with compiler barriers.              */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 long double
 tmpl_LDouble_Guarded_Add(const long double a, const long double b)
@@ -115,4 +116,5 @@ tmpl_LDouble_Guarded_Add(const long double a, const long double b)
     TMPL_LDOUBLE_BARRIER(sum);
     return sum;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_LDouble_Guarded_Add.                                          */

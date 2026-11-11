@@ -386,12 +386,12 @@ extern long int tmpl_Long_GCD(long int m, long int n);
  *          The greatest common denominator of m and n.                       *
  ******************************************************************************/
 TMPL_CONST_FUNC
-unsigned int
+extern unsigned int
 tmpl_UInt_GCD(const unsigned int m, const unsigned int n)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-unsigned long int
+extern unsigned long int
 tmpl_ULong_GCD(const unsigned long int m, const unsigned long int n)
 TMPL_UNSEQUENCED;
 

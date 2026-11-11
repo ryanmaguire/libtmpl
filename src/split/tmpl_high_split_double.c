@@ -89,8 +89,10 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Function for splitting a double into two parts.                           */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
-double tmpl_Double_High_Split(const double x, const double splitter)
+double
+tmpl_Double_High_Split(const double x, const double splitter)
 {
     /*  For compilers / architectures where the barrier macro has no effect,  *
      *  the product variable needs to be declared volatile to correctly       *
@@ -127,4 +129,5 @@ double tmpl_Double_High_Split(const double x, const double splitter)
     TMPL_DOUBLE_BARRIER(result);
     return result;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_High_Split.                                            */

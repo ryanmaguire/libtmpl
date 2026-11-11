@@ -163,6 +163,7 @@
 #include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Standard 2Sum algorithm at double precision.                              */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 void
 tmpl_Double_Two_Sum(const double x,
@@ -207,4 +208,5 @@ tmpl_Double_Two_Sum(const double x,
     *out = sum;
     *err = err_sum;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Two_Sum.                                               */

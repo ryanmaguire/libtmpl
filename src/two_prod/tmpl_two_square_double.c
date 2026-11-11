@@ -33,6 +33,7 @@
 #include <libtmpl/include/tmpl_two_prod.h>
 
 /*  Standard 2Prod algorithm for squaring at double precision.                */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 void
 tmpl_Double_Two_Square(const double x,
@@ -84,4 +85,5 @@ tmpl_Double_Two_Square(const double x,
     *out = prod;
     *err = error;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Two_Square.                                            */

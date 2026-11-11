@@ -102,8 +102,10 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Function for splitting a double evenly down the middle.                   */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
-double tmpl_Double_Even_High_Split(const double x)
+double
+tmpl_Double_Even_High_Split(const double x)
 {
     /*  For compilers / architectures where the barrier macro has no effect,  *
      *  the product variable needs to be declared volatile to correctly       *
@@ -156,4 +158,5 @@ double tmpl_Double_Even_High_Split(const double x)
     TMPL_DOUBLE_BARRIER(result);
     return result;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Even_High_Split.                                       */

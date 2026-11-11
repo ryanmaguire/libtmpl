@@ -161,6 +161,7 @@
 #if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  Standard 2Sum algorithm at long double-precision.                         */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
 void
 tmpl_LDouble_Two_Sum(const long double x,
@@ -205,6 +206,7 @@ tmpl_LDouble_Two_Sum(const long double x,
     *out = sum;
     *err = err_sum;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Double_Two_Sum.                                               */
 
 #else

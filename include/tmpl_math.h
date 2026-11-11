@@ -1463,8 +1463,8 @@ extern long double tmpl_LDouble_Mod_360(long double x);
  ******************************************************************************/
 extern float
 tmpl_Float_Poly_Eval(const float * const coeffs, size_t degree, float x);
-extern double
 
+extern double
 tmpl_Double_Poly_Eval(const double * const coeffs, size_t degree, double x);
 
 extern long double
@@ -1496,8 +1496,8 @@ tmpl_LDouble_Poly_Eval(const long double * const coeffs,
 extern float
 tmpl_Float_Poly_First_Deriv_Eval(const float * const coeffs,
                                  size_t degree, float x);
-extern double
 
+extern double
 tmpl_Double_Poly_First_Deriv_Eval(const double * const coeffs,
                                   size_t degree, double x);
 
@@ -1855,15 +1855,18 @@ extern long double tmpl_LDouble_Truncate(long double x);
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
 TMPL_CONST_FUNC
-double tmpl_Double_Abs(const double x)
+extern double
+tmpl_Double_Abs(const double x)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-float tmpl_Float_Abs(const float x)
+extern float
+tmpl_Float_Abs(const float x)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-long double tmpl_LDouble_Abs(const long double x)
+extern long double
+tmpl_LDouble_Abs(const long double x)
 TMPL_UNSEQUENCED;
 
 /******************************************************************************
@@ -1925,15 +1928,18 @@ TMPL_UNSEQUENCED;
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
 TMPL_CONST_FUNC
-extern double tmpl_Double_Unit_Clamp(const double x)
+extern double
+tmpl_Double_Unit_Clamp(const double x)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-extern float tmpl_Float_Unit_Clamp(const float x)
+extern float
+tmpl_Float_Unit_Clamp(const float x)
 TMPL_UNSEQUENCED;
 
 TMPL_CONST_FUNC
-extern long double tmpl_LDouble_Unit_Clamp(const long double x)
+extern long double
+tmpl_LDouble_Unit_Clamp(const long double x)
 TMPL_UNSEQUENCED;
 
 /******************************************************************************

@@ -126,6 +126,9 @@
  *      Changed filename to include _impl_ to be consistent with other files. *
  *  2026/07/09: Ryan Maguire                                                  *
  *      Merged inline and non-inline versions, added TMPL_ALWAYS_INLINE use.  *
+ *  2026/11/09: Ryan Maguire                                                  *
+ *      Added 64-bit unsigned integer type punning method to improve the      *
+ *      performance when using MSVC (GCC / Clang performance is the same).    *
  ******************************************************************************/
 
 /*  Location of the TMPL_ALWAYS_INLINE macro.                                 */
@@ -143,11 +146,45 @@
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Check for IEEE-754 support.                                               */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+/*  Check for 64-bit integer type-punning support.                            */
+#if TMPL_HAS_FLOATINT64 == 1
 
 /******************************************************************************
- *                              IEEE-754 Version                              *
+ *                    IEEE-754 Version with 64-Bit Integers                   *
+ ******************************************************************************/
+
+/*  GCC and Clang produce identical code for both type punning methods, but   *
+ *  MSVC seems unable to optimize the method that does not use 64-bit         *
+ *  unsigned integers. The resulting code is nearly 3x slower. Using bit-wise *
+ *  AND with 64-bit integers to compute the absolute value produces optimal   *
+ *  code on all three compilers.                                              */
+
+/*  Double-precision absolute value function (fabs equivalent).               */
+TMPL_CONST_FUNC
+TMPL_ALWAYS_INLINE
+double
+tmpl_Double_Abs(const double x)
+TMPL_UNSEQUENCED
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEEE754_Double w;
+
+    /*  Set the double part of the word to the input x.                       */
+    w.r = x;
+
+    /*  Set the sign bit to zero, indicating positive.                        */
+    w.n &= 0x7FFFFFFFFFFFFFFFU;
+
+    /*  Return the double part of the union.                                  */
+    return w.r;
+}
+/*  End of tmpl_Double_Abs.                                                   */
+
+/*  Check for IEEE-754 support.                                               */
+#elif TMPL_HAS_IEEE754_DOUBLE == 1
+
+/******************************************************************************
+ *                  IEEE-754 Version without 64-Bit Integers                  *
  ******************************************************************************/
 
 /*  Double-precision absolute value function (fabs equivalent).               */

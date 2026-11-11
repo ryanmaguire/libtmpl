@@ -88,8 +88,10 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Function for adding two floats with compiler barriers.                    */
+TMPL_FLOATING_POINT_GUARD_BEGIN
 TMPL_ALWAYS_INLINE
-float tmpl_Float_Guarded_Add(const float a, const float b)
+float
+tmpl_Float_Guarded_Add(const float a, const float b)
 {
     /*  Declare variables for the intermediate steps.                         */
     float a_val, b_val, sum;
@@ -113,4 +115,5 @@ float tmpl_Float_Guarded_Add(const float a, const float b)
     TMPL_FLOAT_BARRIER(sum);
     return sum;
 }
+TMPL_FLOATING_POINT_GUARD_END
 /*  End of tmpl_Float_Guarded_Add.                                            */
