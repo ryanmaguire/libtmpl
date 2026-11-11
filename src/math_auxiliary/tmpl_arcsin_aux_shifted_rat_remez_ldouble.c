@@ -327,6 +327,9 @@ B00 + z*(\
     )\
 )
 
+#define ASIN_3_8_HI (+6.75131532937031647209056265294388044913961920185316E-01L)
+#define ASIN_3_8_LO (-3.07097765689356367826215801509544226398766044411917E-35L)
+
 #else
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
