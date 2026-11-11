@@ -62,6 +62,9 @@
 #ifndef TMPL_CONFIG_EPSILON_LDOUBLE_H
 #define TMPL_CONFIG_EPSILON_LDOUBLE_H
 
+#include "tmpl_config_globals.h"
+#include "tmpl_config_check_ldouble_type.h"
+
 /*  Compute long double precision epsilon.                                    */
 static long double tmpl_ldouble_epsilon(void)
 {
@@ -81,6 +84,37 @@ static long double tmpl_ldouble_epsilon(void)
 
     /*  Dummy variable for looping.                                           */
     unsigned int n;
+
+    /*  If long double is one of the usual types, we can use a pre-computed   *
+     *  value. Determine how long double is implemented.                      */
+    if (!tmpl_ldouble_type_has_been_checked)
+        tmpl_check_ldouble_type();
+
+    /*  For 64-bit double, 80-bit extended, 128-bit double-double, and        *
+     *  128-bit quadruple we use pre-computed values.                         */
+    switch (tmpl_ldouble_rep)
+    {
+        case tmpl_ldouble_64_bit_little_endian:
+        case tmpl_ldouble_64_bit_big_endian:
+            return 2.220446049250313080847263336181640625E-16L;
+
+        case tmpl_ldouble_96_bit_extended_little_endian:
+        case tmpl_ldouble_96_bit_extended_big_endian:
+        case tmpl_ldouble_128_bit_extended_little_endian:
+        case tmpl_ldouble_128_bit_extended_big_endian:
+            return 1.08420217248550443400745280086994171142578125E-19L;
+
+        case tmpl_ldouble_128_bit_doubledouble_little_endian:
+        case tmpl_ldouble_128_bit_doubledouble_big_endian:
+            return 4.93038065763132378382330353301741393545754021943139378E-32L;
+
+        case tmpl_ldouble_128_bit_quadruple_little_endian:
+        case tmpl_ldouble_128_bit_quadruple_big_endian:
+            return 1.92592994438723585305597794258492731853810164821538820E-34L;
+
+        default:
+            break;
+    }
 
     /*  Loop through powers of two and find long double precision epsilon.    */
     for (n = 0U; n < max_iterations; ++n)

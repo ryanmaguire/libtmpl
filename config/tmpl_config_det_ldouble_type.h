@@ -73,6 +73,9 @@
 /*  Globals for the config file are all found here.                           */
 #include "tmpl_config_globals.h"
 
+/*  Width checking routine found here.                                        */
+#include "tmpl_config_check_widths.h"
+
 /*  tmpl_det_uchar_width function provided here.                              */
 #include "tmpl_config_det_uchar_width.h"
 
