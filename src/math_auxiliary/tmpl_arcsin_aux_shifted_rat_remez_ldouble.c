@@ -147,8 +147,8 @@ B00 + z * (\
     )\
 )
 
-#define ASIN_3_8_HI (+6.75131532937031653140991238615243E-01L)
-#define ASIN_3_8_LO (-5.93193497332085475014956678498079E-18L)
+#define ASIN_5_8_HI (+6.75131532937031653140991238615243E-01L)
+#define ASIN_5_8_LO (-5.93193497332085475014956678498079E-18L)
 
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
@@ -234,8 +234,8 @@ B00 + z*(\
     )\
 )
 
-#define ASIN_3_8_HI (+6.75131532937031647209056265294393919000292301254667E-01L)
-#define ASIN_3_8_LO (-5.90479610695000498778262158015095439734389108052690E-33L)
+#define ASIN_5_8_HI (+6.75131532937031647209056265294393919000292301254667E-01L)
+#define ASIN_5_8_LO (-5.90479610695000498778262158015095439734389108052690E-33L)
 
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
@@ -327,8 +327,8 @@ B00 + z*(\
     )\
 )
 
-#define ASIN_3_8_HI (+6.75131532937031647209056265294388044913961920185316E-01L)
-#define ASIN_3_8_LO (-3.07097765689356367826215801509544226398766044411917E-35L)
+#define ASIN_5_8_HI (+6.75131532937031647209056265294388044913961920185316E-01L)
+#define ASIN_5_8_LO (-3.07097765689356367826215801509544226398766044411917E-35L)
 
 #else
 
@@ -386,8 +386,8 @@ B00 + z * (\
     )\
 )
 
-#define ASIN_3_8_HI (+6.75131532937031647232089398569243599013134371489286E-01L)
-#define ASIN_3_8_LO (-2.30331332748555848089490202396072053510723384544148E-20L)
+#define ASIN_5_8_HI (+6.75131532937031647232089398569243599013134371489286E-01L)
+#define ASIN_5_8_LO (-2.30331332748555848089490202396072053510723384544148E-20L)
 
 #endif
 
@@ -399,8 +399,8 @@ tmpl_LDouble_Arcsin_Aux_Shifted_Rat_Remez(const long double x)
 TMPL_UNSEQUENCED
 {
     /*  asin(5/8) to extra precision using two long doubles.                  */
-    const long double asin_three_eigths_hi = ASIN_3_8_HI;
-    const long double asin_three_eigths_lo = ASIN_3_8_LO;
+    const long double asin_three_eigths_hi = ASIN_5_8_HI;
+    const long double asin_three_eigths_lo = ASIN_5_8_LO;
 
     /*  The Remez approximation is evaluated on the interval [-1/8, +1/8].    *
      *  The input lies in the interval [1/2, 3/4], shift by 5/8.              */
@@ -421,5 +421,5 @@ TMPL_UNSEQUENCED
 /*  Undefine everything to avoid collisions with other macros.                */
 #include <libtmpl/include/tmpl_math_undef.h>
 
-#undef ASIN_3_8_HI
-#undef ASIN_3_8_LO
+#undef ASIN_5_8_HI
+#undef ASIN_5_8_LO
