@@ -142,6 +142,15 @@ TMPL_UNSEQUENCED
     /*  For negative x, use acos(x) = pi - acos(-x).                          */
     if (x < 0.0L)
     {
+        if (x > -0.75L)
+        {
+            const long double
+                asin_x = -tmpl_LDouble_Arcsin_Aux_Shifted_Rat_Remez(-x);
+
+            return tmpl_ldouble_pi_by_two_hi -
+                   (asin_x - tmpl_ldouble_pi_by_two_lo);
+        }
+
         /*  For negative x we have (1 - |x|) / 2 = (1 + x) / 2. We then use   *
          *  acos(x) = pi - 2 * asin(z) where z = sqrt((1 + x) / 2). The       *
          *  auxiliary helper function first computes (asin(z) - z) / z. Note, *
@@ -160,6 +169,15 @@ TMPL_UNSEQUENCED
     /*  For positive x, use acos(x) = 2 * asin(sqrt((1 - x) / 2)).            */
     else
     {
+        if (x < 0.75L)
+        {
+            const long double
+                asin_x = tmpl_LDouble_Arcsin_Aux_Shifted_Rat_Remez(x);
+
+            return tmpl_ldouble_pi_by_two_hi -
+                   (asin_x - tmpl_ldouble_pi_by_two_lo);
+        }
+
         /*  Compute (asin(z) - z) / z using a Remez approximation.            */
         const long double z_sq = 0.5L * (1.0L - x);
         const long double z = tmpl_LDouble_Sqrt(z_sq);
