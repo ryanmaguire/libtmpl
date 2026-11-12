@@ -19,7 +19,7 @@
 ;                               tmpl_ceil_float                                ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the ceiling function at single precision.                     ;
+;       Computes the ceiling function at single precision.                     ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 22, 2026                                                   ;

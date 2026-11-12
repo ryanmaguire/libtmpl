@@ -153,7 +153,7 @@ TMPL_UNSEQUENCED
         const double low_bits = z * rat - tmpl_double_pi_by_two_lo;
 
         /*  Finish using the reflection formula, acos(x) = pi - 2 * asin(z).  */
-	    return tmpl_double_pi_hi - 2.0 * (z + low_bits);
+        return tmpl_double_pi_hi - 2.0 * (z + low_bits);
     }
 
     /*  For positive x, use acos(x) = 2 * asin(sqrt((1 - x) / 2)).            */

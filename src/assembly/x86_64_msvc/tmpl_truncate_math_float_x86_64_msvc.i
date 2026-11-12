@@ -19,7 +19,7 @@
 ;                             tmpl_truncate_float                              ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the truncate function at single precision.                    ;
+;       Computes the truncate function at single precision.                    ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 30, 2026                                                   ;

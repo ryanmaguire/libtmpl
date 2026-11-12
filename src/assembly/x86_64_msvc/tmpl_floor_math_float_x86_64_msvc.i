@@ -19,7 +19,7 @@
 ;                               tmpl_ceil_float                                ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the floor function at single precision.                       ;
+;       Computes the floor function at single precision.                       ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 30, 2026                                                   ;

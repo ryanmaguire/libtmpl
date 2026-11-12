@@ -19,7 +19,7 @@
 ;                             tmpl_truncate_ldouble                            ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the truncate function at long double precision.               ;
+;       Computes the truncate function at long double precision.               ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 30, 2026                                                   ;

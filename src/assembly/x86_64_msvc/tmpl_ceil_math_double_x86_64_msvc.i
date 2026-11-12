@@ -19,7 +19,7 @@
 ;                               tmpl_ceil_double                               ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the ceiling function at double precision.                     ;
+;       Computes the ceiling function at double precision.                     ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 22, 2026                                                   ;

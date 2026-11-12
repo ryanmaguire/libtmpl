@@ -19,7 +19,7 @@
 ;                               tmpl_ceil_ldouble                              ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the ceiling function at long double precision.                ;
+;       Computes the ceiling function at long double precision.                ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 30, 2026                                                   ;

@@ -19,7 +19,7 @@
 ;                              tmpl_floor_ldouble                              ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the floor function at long double precision.                  ;
+;       Computes the floor function at long double precision.                  ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 30, 2026                                                   ;

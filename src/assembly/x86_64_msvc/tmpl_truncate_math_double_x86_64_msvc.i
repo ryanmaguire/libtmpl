@@ -19,7 +19,7 @@
 ;                             tmpl_truncate_double                             ;
 ;------------------------------------------------------------------------------;
 ;   Purpose:                                                                   ;
-;     	Computes the truncate function at double precision.                    ;
+;       Computes the truncate function at double precision.                    ;
 ;------------------------------------------------------------------------------;
 ;   Author:     Ryan Maguire                                                   ;
 ;   Date:       May 30, 2026                                                   ;
