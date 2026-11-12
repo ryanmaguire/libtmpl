@@ -127,23 +127,8 @@
 /*  TMPL_NAN macro found here which provides double-precision NaN.            */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the numerator of the rational Remez approximation.       */
-#define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
-#define A01 (-2.9647442738212244852684254810912673101657174481766E-01)
-#define A02 (+1.6001969221867813049084016184632874497094695883901E-01)
-#define A03 (-2.5510481570872249173776491491771394448907125511346E-02)
-#define A04 (+2.6066097969323856113412749790103952111930280796716E-04)
-
-/*  Coefficients for the denominator of the rational Remez approximation.     */
-#define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
-#define B01 (-2.2288465642924490579275829949790393075345284377974E+00)
-#define B02 (+1.6952419643599424152439428142515867324057155650851E+00)
-#define B03 (-5.0120096652328631713045487959099718175996563925832E-01)
-#define B04 (+4.5088915315077310386265964807853660211534733521946E-02)
-
-/*  Helper macros for evaluating polynomials using Horner's method.           */
-#define TMPL_NUM_EVAL(z) A00 + z * (A01 + z * (A02 + z * (A03 + z * A04)))
-#define TMPL_DEN_EVAL(z) B00 + z * (B01 + z * (B02 + z * (B03 + z * B04)))
+/*  Auxiliary helper function for computing (asin(x) - x) / x found here.     */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
 
 /*  Near-branchless double-precision inverse cosine (acos equivalent).        */
 TMPL_SIMD_DECL
@@ -154,7 +139,7 @@ TMPL_UNSEQUENCED
     /*  The absolute value of the input. Modern compilers will produce a      *
      *  branchless instruction (for example by using a bit-mask or by using   *
      *  an fmax / fmin operation).                                            */
-    const double abs_x = (x < 0.0 ? -x : x);
+    const double abs_x = tmpl_Double_Abs(x);
 
     /*  Arguments for the rational Remez expansion. For |x| < 0.5 we use x^2, *
      *  and for 0.5 <= |x| <= 1, we use (1 - |x|) / 2.                        */
@@ -165,14 +150,9 @@ TMPL_UNSEQUENCED
      *  make this branchless by using a blend operation, or similar.          */
     const double u = (abs_x >= 0.5 ? u_tail : u_small);
 
-    /*  Use Horner's method to compute the numerator and denominator of the   *
-     *  rational Remez expansion in terms of u.                               */
-    const double p = TMPL_NUM_EVAL(u);
-    const double q = TMPL_DEN_EVAL(u);
-
     /*  Both the small-value expansion and the tail-end formula are in terms  *
      *  of 1 + u * P(u) / Q(u). Compute this.                                 */
-    const double s = 1.0 + u * (p / q);
+    const double s = 1.0 + tmpl_Double_Arcsin_Aux_Rat_Remez(u);
 
     /*  For |x| < 0.5, the rational Remez approximation is for the function   *
      *  f(x) = -(arccos(x) + x - pi / 2) / x^3. Since f(x) ~= P(x^2) / Q(x^2) *
@@ -183,10 +163,10 @@ TMPL_UNSEQUENCED
      *  and the tail-end one. The tail-end formula uses the expression        *
      *  2 * asin(sqrt((1 - x) / 2)), which needs the square root function.    *
      *  GCC, Clang, and MSVC provide this as a compiler intrinsic.            */
-#ifdef _MSC_VER
-    const double sqrt_u = sqrt(u);
-#else
+#ifdef __GNUC__
     const double sqrt_u = __builtin_sqrt(u);
+#else
+    const double sqrt_u = tmpl_Double_Sqrt(x);
 #endif
 
     /*  The rest of the tail-end formula can be computed from the variables   *
@@ -213,9 +193,6 @@ TMPL_UNSEQUENCED
     return (abs_x > 1.0 ? TMPL_NAN : out);
 }
 /*  End of tmpl_Double_Arccos.                                                */
-
-/*  Undefine everything to avoid collisions with other macros.                */
-#include "../auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */
