@@ -309,8 +309,8 @@ TMPL_UNSEQUENCED
 /*  End of tmpl_LDouble_Arcsin.                                               */
 
 /*  Undefine everything to avoid collisions with other files.                 */
-#undef TMPL_ARCCOS_TINY_EXPONENT
-#undef TMPL_ARCCOS_SMALL_EXPONENT
+#undef TMPL_ARCSIN_TINY_EXPONENT
+#undef TMPL_ARCSIN_SMALL_EXPONENT
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
