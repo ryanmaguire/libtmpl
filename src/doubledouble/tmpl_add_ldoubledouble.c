@@ -181,7 +181,7 @@ TMPL_UNSEQUENCED
     /*  We cannot attain perfect precision here. To sum together two 256-bit  *
      *  long-double-doubles may require 512 bits, which we do not have.       *
      *  We'll lose a bit of precision, but the the error is on the order of   *
-     *  eps^2, where eps is epsilon for long double. For 80-bit exteneded,    *
+     *  eps^2, where eps is epsilon for long double. For 80-bit extended,     *
      *  this means the error is about 10^-38.                                 *
      *                                                                        *
      *  sum_hi + sum_lo is not the most accurate value for x + y. Compute     *
