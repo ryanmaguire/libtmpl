@@ -92,22 +92,22 @@
 #include <libtmpl/include/tmpl_math_auxiliary.h>
 
 /*  Coefficients for the numerator of the rational Remez approximation.       */
-#define A00 (+1.2810252304406972486120109535816568934847264625400E+00)
-#define A01 (-4.0484052648574630462581331912608769396074592922513E+00)
-#define A02 (-4.7972532776743966087173847292196857298797697019924E+00)
-#define A03 (+2.4424574932939250732516808901118164990997677343368E+01)
-#define A04 (-1.6804320822570014076769180928327851026907536501678E+01)
-#define A05 (-3.3311938222189006681631968216993613706183079115091E+00)
-#define A06 (+2.3300469518272892996538826310339664734701331835423E+00)
+#define A00 (+1.3344436835559487348879135985582150040851448769023E-01)
+#define A01 (+1.5850939460118861753591253554779128424296717122239E-01)
+#define A02 (-3.4790105454763919490052872718956943507568538724053E+00)
+#define A03 (-9.5282886310808523032328658836945258814661045992240E+00)
+#define A04 (-2.7006880781573085081467861751393518552136158294742E+00)
+#define A05 (+5.2980266507821478008609558491657694598239515554822E+00)
+#define A06 (+2.4082762004951195142121460286855491545618532260509E-01)
+#define A07 (-1.8158698171024473479509877346031357114353500823549E-01)
 
 /*  Coefficients for the denominator of the rational Remez approximation.     */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
-#define B01 (-3.6731058597880585471659357686838038961868829899774E+00)
-#define B02 (-2.6606846391928424735802870740486381412339686695071E+00)
-#define B03 (+2.2061950193310168293427078933270091574344541746879E+01)
-#define B04 (-1.9974282302319488739647035513096559624368403266214E+01)
-#define B05 (-2.4025119038699931555070688372327351814284720795078E+00)
-#define B06 (+4.5414368669168018480544500989011482168218305220203E+00)
+#define B01 (+8.8862317583292433340168770413977011829374945999071E+00)
+#define B02 (+2.6238110506827359465626951188932136194423073185919E+01)
+#define B03 (+2.6414492435708310281248923902571653364992722983936E+01)
+#define B04 (-1.0145185203393713450355580878493330719365504477551E+00)
+#define B05 (-8.4842995242438348748321092852306806413581401753003E+00)
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
 #define TMPL_NUM_EVAL(z) \
@@ -116,7 +116,9 @@ A00 + z * (\
         A02 + z * (\
             A03 + z * (\
                 A04 + z * (\
-                    A05 + z * A06\
+                    A05 + z * (\
+                        A06 + z * A07\
+                    )\
                 )\
             )\
         )\
@@ -129,9 +131,7 @@ B00 + z * (\
     B01 + z * (\
         B02 + z * (\
             B03 + z * (\
-                B04 + z * (\
-                    B05 + z * B06\
-                )\
+                B04 + z * B05\
             )\
         )\
     )\
@@ -148,19 +148,22 @@ TMPL_UNSEQUENCED
     const double asin_five_eigths_hi = +6.75131532937031653140991238615243E-01;
     const double asin_five_eigths_lo = -5.93193497332085475014956678498079E-18;
 
-    /*  The Remez approximation is evaluated on the interval [-1/8, +1/8].    *
-     *  The input lies in the interval [1/2, 3/4], shift by 5/8.              */
-    const double x_shift = x - 0.625;
+    /*  The Remez approximation is evaluated on the interval [0, 1/4], the    *
+     *  The input lies in the interval [1/2, 3/4], shift by 3/4.              */
+    const double x_shift = 0.75 - x;
+
+    /*  The approximation is centered about 5/8, compute the shift.           */
+    const double h = x - 0.625;
 
     /*  Evaluate the rational Remez approximation using Horner's method.      */
-    const double p = TMPL_NUM_EVAL(x_shift);
-    const double q = TMPL_DEN_EVAL(x_shift);
-    const double rat = p / q;
+    const double num = TMPL_NUM_EVAL(x_shift);
+    const double den = TMPL_DEN_EVAL(x_shift);
+    const double rat = num / den;
 
     /*  The approximation is for (asin(x) - asin(5/8)) / (x - 5/8). Compute   *
      *  asin(x) from this.                                                    */
-    const double low_bits = asin_five_eigths_lo + x_shift * rat;
-    return asin_five_eigths_hi + low_bits;
+    const double low_bits = asin_five_eigths_lo + h * rat;
+    return asin_five_eigths_hi + (1.25 * h + low_bits);
 }
 /*  End of tmpl_Double_Arcsin_Aux_Shifted_Rat_Remez.                          */
 
