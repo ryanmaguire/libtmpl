@@ -34,8 +34,7 @@ func:
 .size func,.-func;    \
 .section .note.GNU-stack, "", %progbits
 #else
-#define ASM_END(func) ELF_SIZE(func) \
-.size func, . - func
+#define ASM_END(func) .size func, . - func
 #endif
 
 #endif
