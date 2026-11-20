@@ -457,5 +457,32 @@ extern long double
 tmpl_LDouble_Expm1_Remez_Small(const long double x)
 TMPL_UNSEQUENCED;
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sqrt_Remez                                                *
+ *  Purpose:                                                                  *
+ *      Computes sqrt(x) using a Remez approximation on [1, 1 + 1/256].       *
+ *  Arguments:                                                                *
+ *      x (const double):                                                     *
+ *          A real number in the interval [1, 1 + 1/256].                     *
+ *  Output:                                                                   *
+ *      sqrt_x (double):                                                      *
+ *          sqrt(x) to double precision.                                      *
+ ******************************************************************************/
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Sqrt_Remez(const double x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Sqrt_Remez(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_CONST_FUNC
+extern long double
+tmpl_LDouble_Sqrt_Remez(const long double x)
+TMPL_UNSEQUENCED;
+
 #endif
 /*  End of include guard.                                                     */
