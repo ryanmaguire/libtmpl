@@ -21,12 +21,12 @@
 #ifndef TMPL_S390X_ASM_H
 #define TMPL_S390X_ASM_H
 
-#define ASM_BEGIN(func)          \
-.text;                           \
-.align 8;                        \
-.globl func;                     \
-.type func, @function            \
-func:
+#define ASM_BEGIN(func)         \
+    .section .text;             \
+    .align 8;                   \
+    .globl func;                \
+    .type func, @function       \
+    func:
 
 #if defined(__ELF__)
 #define ASM_END(func)                   \
