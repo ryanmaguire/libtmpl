@@ -43,7 +43,7 @@
  *  Date:       November 19, 2026                                             *
  ******************************************************************************/
 
-/*  Helper macros found here.                                                 */
+/*  Helper macros for s390x assembly found here.                              */
 #include "tmpl_s390x_asm.h"
 
 ASM_BEGIN(tmpl_Float_Sqrt)
