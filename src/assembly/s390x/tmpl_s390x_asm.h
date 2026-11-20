@@ -22,10 +22,8 @@
 #define TMPL_S390X_ASM_H
 
 #define ASM_BEGIN(func)         \
-    .section .text;             \
     .align 8;                   \
     .globl func;                \
-    .type func, @function       \
     func:
 
 #if defined(__ELF__)
