@@ -391,11 +391,17 @@ else ifeq ($(ARCH), $(filter $(ARCH), ppc64))
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.S)
 EXCLUDE += $(patsubst %_ppc64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
-# Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
+# PowerPC 64-bit little endian. Some assembly functions are provided.
 else ifeq ($(ARCH), $(filter $(ARCH), ppc64le))
 
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64le/*.S)
 EXCLUDE += $(patsubst %_ppc64le.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
+
+# Big-endian IBM s390x architecture.
+else ifeq ($(ARCH), $(filter $(ARCH), s390x))
+
+ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/s390x/*.S)
+EXCLUDE += $(patsubst %_s390x.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 endif
 # End of ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
