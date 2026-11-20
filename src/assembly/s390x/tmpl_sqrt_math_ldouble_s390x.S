@@ -48,7 +48,7 @@
 
 ASM_BEGIN(tmpl_LDouble_Sqrt)
 
-#ifdef __VEC__
+#ifdef __LONG_DOUBLE_VX__
     vl %v0, 0(%r3), 3
     wfsqxb %v2, %v0
     vst %v2, 0(%r2), 3
