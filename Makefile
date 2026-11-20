@@ -211,6 +211,13 @@ CWARN = -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
 CONFIG_FLAGS = $(EXTRA_FLAGS)
 EXCLUDE =
 
+# If the compiler supports GNU inline assembly, then various .S files in
+# src/assembly/ will be replaced by their .c counterparts. This allows
+# cross-translation unit inlining when link time optimization (LTO) is enabled.
+# By default we do not assume GNU inline assembly is supported. This will be
+# checked later in the Makefile.
+EXCLUDE += ! -path "$(SRC_DIR)/assembly/*"
+
 # Default C flags. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
 ifdef DEBUG_BUILD
 CFLAGS = -I../ -g -fPIC -c
@@ -302,6 +309,10 @@ ifdef USE_VOLATILE
 CONFIG_FLAGS += -DTMPL_USE_VOLATILE
 endif
 
+# Commands for compiling a small test program to check for GNU inline assembly.
+INLINE_ASM_FILE = ./config/tmpl_config_determine_inline_assembly_support.c
+DET_INLINE_ASM_CMD = $(CC) -c -o /dev/null $(INLINE_ASM_FILE) >/dev/null 2>&1
+
 # Compilers like GCC and Clang support native CPU tuning. This is usually
 # enabled via -march=native or -mcpu=native. The exact flag depends on the
 # architecture being used.
@@ -334,6 +345,7 @@ endif
 
 FASM_SRCS =
 ASM_SRCS =
+INLINE_ASM_SRCS =
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
@@ -360,8 +372,21 @@ else
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.S)
 EXCLUDE += $(patsubst %_x86_64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
+# If SIMD clones are being generated, add the relevant assembly files.
 ifdef SIMD_FAST_MATH
 SIMD_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.S)
+endif
+
+# If GNU-style inline assembly is supported, and if link-time optimization is
+# enabled, then it is better to use the C files found in src/assembly/ instead
+# of the plain asm files. Check if inline assembly is supported.
+HAVE_GNU_ASM := $(shell $(DET_INLINE_ASM_CMD) && echo yes)
+
+# Remove the corresponding .S files if the .c files are being used instead.
+ifeq ($(HAVE_GNU_ASM), yes)
+INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.c)
+EXCLUDE += $(patsubst %_x86_64.c, ! -name "*%.c", $(notdir $(INLINE_ASM_SRCS)))
+ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
 endif
 
 endif
@@ -409,7 +434,7 @@ endif
 endif
 # End of ifndef NO_ASM.
 
-C_SRCS = $(shell find $(SRC_DIR) $(EXCLUDE) -name "*.c")
+C_SRCS = $(shell find $(SRC_DIR) $(EXCLUDE) -name "*.c") $(INLINE_ASM_SRCS)
 C_OBJS = $(C_SRCS:%=$(BUILD_DIR)/%.o)
 ASM_OBJS = $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
 ifdef SIMD_FAST_MATH
