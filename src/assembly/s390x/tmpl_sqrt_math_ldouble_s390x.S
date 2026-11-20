@@ -47,10 +47,19 @@
 #include "tmpl_s390x_asm.h"
 
 ASM_BEGIN(tmpl_LDouble_Sqrt)
+
+#ifdef __VEC__
+    vl %v0, 0(%r3), 3
+    wfsqxb %v2, %v0
+    vst %v2, 0(%r2), 3
+#else
     ld %f0, 0(%r3)
     ld %f2, 8(%r3)
     sqxbr %f0, %f0
     std %f0, 0(%r2)
     std %f2, 8(%r2)
+#endif
+
     br %r14
+
 ASM_END(tmpl_LDouble_Sqrt)
