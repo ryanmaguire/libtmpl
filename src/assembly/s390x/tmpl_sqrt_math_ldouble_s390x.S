@@ -44,7 +44,7 @@
  ******************************************************************************/
 
 /*  Helper macros for s390x assembly found here.                              */
-#include "tmpl_ppc64_asm.h"
+#include "tmpl_s390x_asm.h"
 
 ASM_BEGIN(tmpl_LDouble_Sqrt)
     ld %f0, 0(%r3)

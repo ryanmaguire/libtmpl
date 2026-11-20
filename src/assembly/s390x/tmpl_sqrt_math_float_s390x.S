@@ -44,7 +44,7 @@
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
-#include "tmpl_x86_64_asm.h"
+#include "tmpl_s390x_asm.h"
 
 ASM_BEGIN(tmpl_Float_Sqrt)
     sqebr %f0, %f0
