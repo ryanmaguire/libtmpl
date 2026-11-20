@@ -125,6 +125,9 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
+/*  Macros providing C23 attributes (for optimization) are found here.        */
+#include <libtmpl/include/tmpl_attributes.h>
+
 /*  128-bit double-double stores the data table with doubles.                 */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
@@ -160,164 +163,20 @@ static const long double tmpl_ldouble_sqrt_data[2] = {
  *                           64-Bit Double Version                            *
  ******************************************************************************/
 
+/*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
 /*  Function for computing square roots at long double precision.             */
-long double tmpl_LDouble_Sqrt(long double x)
+TMPL_ALWAYS_INLINE
+TMPL_CONST_FUNC
+long double
+tmpl_LDouble_Sqrt(const long double x)
+TMPL_UNSEQUENCED
 {
-    /*  Union of a long double and the bits representing a long double.       */
-    tmpl_IEEE754_LDouble w;
-
-    /*  Integer for indexing the pre-computed square root array.              */
-    unsigned int ind;
-
-    /*  The exponent part of the output.                                      */
-    unsigned int exponent;
-
-    /*  Variable for storing the exponent mod 2.                              */
-    unsigned int parity;
-
-    /*  Set the long double part of the union to the input.                   */
-    w.r = x;
-
-    /*  Special cases. sqrt(negative) is undefined. sqrt(0) = 0,              *
-     *  sqrt(inf) = inf, and sqrt(Not-a-Number) = Not-a-Number.               */
-    if (TMPL_LDOUBLE_IS_NEGATIVE(w))
-    {
-        /*  Minus zero (-0) should be treated the same as zero. In this case, *
-         *  return sqrt(-0) = -0. To preserve the sign, return the input.     */
-        if (x == 0.0L)
-            return x;
-
-        /*  For all x < 0, return Not-a-Number.                               */
-        return TMPL_NANL;
-    }
-
-    /*  NaN or positive infinity. Simply return the input.                    */
-    if (TMPL_LDOUBLE_IS_NAN_OR_INF(w))
-        return x;
-
-    /*  Subnormal number or zero.                                             */
-    if (TMPL_LDOUBLE_EXPO_BITS(w) == 0x00U)
-    {
-        /*  sqrt(0) = 0.0.                                                    */
-        if (w.r == 0.0L)
-            return x;
-
-        /*  Non-zero subnormal number, normalize to a normal number.          */
-        w.r *= TMPL_LDOUBLE_NORMALIZE;
-
-        /*  Compute the exponent. Since we normalized by a power of two we    *
-         *  need to subtract this from the value. To compute the correctly    *
-         *  rounded exponent after division by 2, subtract 1 more before      *
-         *  dividing, so subtract by 52 + 1 = 53. Finally, shift by the bias. *
-         *  In total, we have:                                                *
-         *                                                                    *
-         *      exponent = 1023 - ((1023 - expo) + 53) / 2                    *
-         *               = 485 + (n + 1) / 2                                  *
-         *                                                                    *
-         *  Where division, "/", means integer division. Using bit-wise shift *
-         *  this is equivalent to:                                            *
-         *                                                                    *
-         *      exponent = 0x1E5 + ((n + 1) >> 1)                             *
-         *                                                                    *
-         *  where 0x1E5 is 485 in hexadecimal. Compute this.                  */
-        exponent = 0x1E5U + ((w.bits.expo + 0x01U) >> 1U);
-    }
-
-    /*  Normal number. Compute the exponent. This is the exponent of the      *
-     *  original number divided by 2 since we are taking the square root. A   *
-     *  little care is needed to account for the bias. The exponent is:       *
-     *                                                                        *
-     *      e = E - B                                                         *
-     *                                                                        *
-     *  where B is the bias and E is the number stored in w.bits.expo. We     *
-     *  want to solve for the exponent of the new number. We want:            *
-     *                                                                        *
-     *      e / 2 = E' - B = (E - B) / 2                                      *
-     *                                                                        *
-     *  where E' is the resulting number stored in the expo bits of the       *
-     *  output. We compute:                                                   *
-     *                                                                        *
-     *      E' = (E + B) / 2                                                  *
-     *                                                                        *
-     *  The bias for 64-bit double is 1023, which is not even. However, 1024  *
-     *  is, so we write:                                                      *
-     *                                                                        *
-     *      E' = (E + B) / 2                                                  *
-     *         = ((E - 1) + (B + 1)) / 2                                      *
-     *         = ((E - 1) + 1024) / 2                                         *
-     *         = (E - 1) / 2 + 512                                            *
-     *                                                                        *
-     *  Note that we've already checked that E != 0, so E - 1 will not        *
-     *  wrap around. That is, E - 1 >= 0. The number 512 is 0x200 in hex.     */
-    else
-        exponent = ((TMPL_LDOUBLE_EXPO_BITS(w) - 1U) >> 1U) + 0x200U;
-
-    /*  The parity determines if we scale the final result by sqrt(2) or not. *
-     *  This can be determined by the whether or not the exponent is odd.     *
-     *  Note that the bias is odd, so exponent - bias changes the parity of   *
-     *  the true exponent. That is, if the exponent is 1, which is odd, then  *
-     *  the number stored in w.bits.expo is 1024 since 1024 - 1023 = 1. To    *
-     *  determine if the exponent is odd, we check if 1 + w.bits.expo is odd. */
-    parity = (TMPL_LDOUBLE_EXPO_BITS(w) + 1U) & 1U;
-
-    /*  Reset the exponent to the bias. Since x = 1.m * 2^(expo - bias), by   *
-     *  setting expo = bias we have x = 1.m, so 1 <= x < 2.                   */
-    w.bits.expo = TMPL_LDOUBLE_BIAS;
-
-    /*  We compute sqrt(x) via:                                               *
-     *                                                                        *
-     *      sqrt(x) = sqrt(1.m * 2^b)                                         *
-     *              = sqrt(1.m) * sqrt(2^b)                                   *
-     *              = sqrt(1.m) * 2^(b/2)                                     *
-     *                                                                        *
-     *  We then let u = 1.m and write u = u * t / t where t is the greatest   *
-     *  value t = 1 + k/128 such that t <= u. Precompute sqrt(t) in a table   *
-     *  and then have:                                                        *
-     *                                                                        *
-     *      sqrt(x) = sqrt(u) * 2^(b/2)                                       *
-     *              = sqrt(ut/t) * 2^(b/2)                                    *
-     *              = sqrt(u/t) * sqrt(t) * 2^(b/2)                           *
-     *                                                                        *
-     *  The value u/t is between 1 and 1 + 1/128. We compute sqrt(u/t) via a  *
-     *  Remez polynomial in the variable 1 + (u/t - 1).                       *
-     *                                                                        *
-     *  We compute the value t = 1 + k/128 by computing k. The value k can be *
-     *  obtained from the mantissa of the input. We have:                     *
-     *                                                                        *
-     *           0.5 0.25 0.125 0.0625 0.03125 0.015625 0.0078125             *
-     *            |   |    |     |      |       |        |                    *
-     *            V   V    V     V      V       V        V                    *
-     *      u = 1.a   b    c     d      e       f        g        ....        *
-     *                                                                        *
-     *  If we treat abcdefg as an integer in binary, this is the number k     *
-     *  such that t = 1 + k/128. So we simply need to read off this value     *
-     *  from the mantissa. The value 1 / (1 + k/128) is stored in the rcpr    *
-     *  array. man0 is 4 bits wide, so we need this and the first 3 bits of   *
-     *  man1, the next part of the mantissa.                                  */
-    ind = w.bits.man0;
-
-    /*  Obtain the last 3 bits of man1 by shifting down 13 bits. man1 is 16   *
-     *  bits wide.                                                            */
-    ind = (ind << 3U) + (w.bits.man1 >> 13U);
-
-    /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
-    w.r *= tmpl_ldouble_rcpr_table[ind];
-
-    /*  Compute the Remez minimax approximation for sqrt. Peak error 10^-9.   */
-    w.r = tmpl_LDouble_Sqrt_Remez(w.r);
-
-    /*  Get the correctly rounded down integer exponent/2.                    */
-    w.bits.expo = exponent & 0x7FFU;
-
-    /*  If the exponent is odd, expo/2 is not an integer. Writing expo = 2k+1 *
-     *  we have expo/2 = k + 1/2, so 2^{expo/2} = 2^{k+1/2} = 2^{k} * 2^{1/2} *
-     *  which is equal to sqrt(2) * 2^{k}. We need to multiply the result by  *
-     *  sqrt(2) in the case that exponent is odd. Also, multiply the result   *
-     *  sqrt(u/t) by sqrt(t) using the table, giving us sqrt(u).              */
-    w.r *= tmpl_ldouble_sqrt_data[parity] * tmpl_ldouble_sqrt_table[ind];
-
-    /*  Apply 1 iteration of Newton's method and return.                      */
-    return 0.5L * (w.r + x / w.r);
+    /*  Cast to double and call the corresponding function.                   */
+    const double x_as_double = TMPL_CAST(x, double);
+    const double sqrt_x_as_double = tmpl_Double_Sqrt(x_as_double);
+    return TMPL_CAST(sqrt_x_as_double, long double);
 }
 /*  End of tmpl_LDouble_Sqrt.                                                 */
 
@@ -488,7 +347,7 @@ long double tmpl_LDouble_Sqrt(long double x)
     w.r *= tmpl_ldouble_sqrt_data[parity] * tmpl_ldouble_sqrt_table[ind];
 
     /*  Apply 1 iteration of Newton's method and return.                      */
-    return 0.5L * (w.r + x / w.r);
+    return w.r + 0.5L * (x - w.r * w.r) / w.r;
 }
 /*  End of tmpl_LDouble_Sqrt.                                                 */
 
