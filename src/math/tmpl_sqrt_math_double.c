@@ -19,7 +19,7 @@
  *                              tmpl_sqrt_double                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing square roots at double precision.         *
+ *      Computes the square root of a number at double precision.             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -29,19 +29,19 @@
  *      Computes y = sqrt(x), the unique non-negative number y such that for  *
  *      non-negative x we have x = y^2.                                       *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      sqrt_x (double):                                                      *
  *          The square root of x at double precision.                         *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          src/math/auxiliary/                                               *
+ *          src/math_auxiliary/                                               *
  *              tmpl_Double_Sqrt_Remez:                                       *
  *                  Computes sqrt(x) near x = 1 using a Remez polynomial.     *
  *      Method:                                                               *
  *          Use a combination of square root rules, Remez polynomials, and    *
- *          Newton's method. That is, sqrt(x) is computed as follows:         *
+ *          Halley's method. That is, sqrt(x) is computed as follows:         *
  *                                                                            *
  *              If x < 0:                                                     *
  *                  return Not-a-Number.                                      *
@@ -65,29 +65,31 @@
  *                                                                            *
  *              y = sqrt(u/t)                                                 *
  *                = sqrt(1 + s)             with s = u/t - 1.                 *
- *                ~ 1 + 0.5x - 0.125x^2                                       *
+ *                ~ 1 + s * p(s)                                              *
  *                                                                            *
- *          y is now accurate to at least 8 decimals. Accuracy can be         *
- *          improved to 9 decimals by using a Remez polynomial instead:       *
+ *          where p(s) is the degree 1 Remez polynomial for the function      *
  *                                                                            *
- *              y = a + bs + cs^2                                             *
+ *                     sqrt(s + 1) - 1                                        *
+ *              f(s) = ---------------                                        *
+ *                            s                                               *
  *                                                                            *
- *          Where a, b, and c are the coefficients from the Remez exchange    *
- *          algorithm for sqrt(1+s) on the interval [0, 1/128]. We improve    *
- *          the precision further by applying Newton's method. That is:       *
+ *          on the interval [0, 1 / 128]. y is now accurate to sqrt(x) to     *
+ *          about 9 or 10 decimals. We improve this to double precision,      *
+ *          correctly rounded if hardware FMA is available, by applying 1     *
+ *          iteration of Halley's method. That is:                            *
  *                                                                            *
  *                    y ~ sqrt(x)                                             *
  *              y^2 - x ~ 0                                                   *
  *                 f(y) = y^2 - x                                             *
  *                f'(y) = 2y                                                  *
+ *               f''(y) = 2                                                   *
  *                                                                            *
- *          Apply Newton's method for 1 iteration:                            *
+ *          Apply Halley's method for 1 iteration:                            *
  *                                                                            *
- *                  out = y - f(y)/f'(y)                                      *
- *                      = y - (y^{2} - x)/(2y)                                *
- *                      = (2y^{2} - y^{2} + x)/(2y)                           *
- *                      = (y^{2} + x)/(2y)                                    *
- *                      = 0.5*(y + x/y)                                       *
+ *                  out = y - 2 f(y) f'(y) / (2 f'(y)^2 - f(y) f''(y))        *
+ *                      = y - 2 (y^2 - x) (2y) / (8y^2 - 2(y^2 - x)           *
+ *                      = y - 2y (y^2 - x) / (3y^2 + x)                       *
+ *                      = y + 2y (x - y^2) / (3y^2 + x)                       *
  *                                                                            *
  *          Lastly, since 2^{b/2} is not an integer for odd valued b, use the *
  *          fact that for odd b we have b = 2k+1, so b/2 = k+1/2, and thus:   *
@@ -99,12 +101,13 @@
  *          Precompute sqrt(2) and multiply the result by this if b is odd.   *
  *      Error:                                                                *
  *          Based on 788,968,857 samples with 0 < x < 10^6.                   *
- *              max relative error: 2.2204458790400593e-16                    *
- *              rms relative error: 7.6278794886592282e-17                    *
- *              max absolute error: 1.1368683772161603e-13                    *
- *              rms absolute error: 5.0530250157640175e-14                    *
- *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
- *          less than 1 ULP (~2 x 10^-16).                                    *
+ *              max relative error: 0.0000000000000000E+00                    *
+ *              rms relative error: 0.0000000000000000E+00                    *
+ *              max absolute error: 0.0000000000000000E+00                    *
+ *              rms absolute error: 0.0000000000000000E+00                    *
+ *          Values assume hardware FMA is available. Errors were computed     *
+ *          by comparing against a hardware sqrt instruction. If FMA is not   *
+ *          available, the peak error is bounded by 1 ULP.                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_math.h:                                                      *
@@ -156,13 +159,17 @@
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
+/*  Functions that guard against aggressive optimizations found here.         */
+#include <libtmpl/include/tmpl_split.h>
+
+/*  Common math constants like sqrt(2) found here.                            */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
+/*  Auxiliary helper functions found here.                                    */
+#include <libtmpl/include/tmpl_math_auxiliary.h>
+
 /*  Function prototype / forward declaration found here.                      */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  The values 2^{0} and 2^{1/2}, used for scaling the end result.            */
-static const double tmpl_double_sqrt_data[2] = {
-    1.0, 1.4142135623730950488016887242097
-};
 
 /*  Check for IEEE-754 support. This is significantly faster.                 */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -173,9 +180,6 @@ static const double tmpl_double_sqrt_data[2] = {
 
 /*  Lookup table of pre-computed values for sqrt(x).                          */
 #include "auxiliary/tmpl_sqrt_table_double.h"
-
-/*  Remez minimax polynomial for sqrt(x) near x = 1.                          */
-#include "auxiliary/tmpl_sqrt_remez_double.h"
 
 /*  Function for computing square roots at double precision.                  */
 TMPL_CONST_FUNC
@@ -330,15 +334,19 @@ TMPL_UNSEQUENCED
     /*  Get the correctly rounded down integer exponent / 2.                  */
     w.bits.expo = exponent & 0x7FFU;
 
+    /*  We wrote u = ut/t = (u/t) * t and have thus far computed sqrt(u/t).   *
+     *  Scale the result by sqrt(t), which is given in the lookup table.      */
+    w.r *= tmpl_double_sqrt_table[ind];
+
     /*  If the exponent is odd, expo/2 is not an integer. Writing expo = 2k+1 *
      *  we have expo/2 = k + 1/2, so 2^{expo/2} = 2^{k+1/2} = 2^{k} * 2^{1/2} *
      *  which is equal to sqrt(2) * 2^{k}. We need to multiply the result by  *
-     *  sqrt(2) in the case that exponent is odd. Also, multiply the result   *
-     *  sqrt(u/t) by sqrt(t) using the table, giving us sqrt(u).              */
-    w.r *= tmpl_double_sqrt_data[parity] * tmpl_double_sqrt_table[ind];
+     *  sqrt(2) in the case that exponent is odd.                             */
+    if (parity)
+        w.r *= tmpl_double_sqrt_two;
 
-    /*  Apply 1 iteration of Newton's method and return.                      */
-    return 0.5 * (w.r + x / w.r);
+    /*  Apply 1 iteration of Halley's method and return.                      */
+    return w.r + 2.0 * w.r * (x - w.r * w.r) / (3.0 * w.r * w.r + x);
 }
 /*  End of tmpl_Double_Sqrt.                                                  */
 
@@ -400,8 +408,8 @@ TMPL_UNSEQUENCED
     /*  Since sqrt(m * 2^b) = sqrt(m) * 2^{b/3}, multiply by 2^{b/3}.         */
     out *= tmpl_Double_Pow2(expo) * tmpl_double_sqrt_data[parity];
 
-    /*  Apply 1 iteration of Newton's method and return.                      */
-    return 0.5 * (out + x / out);
+    /*  Apply 1 iteration of Halley's method and return.                      */
+    return out + 2.0 * out * (x - out * out) / (3.0 * out * out + x);
 }
 /*  End of tmpl_Double_Sqrt.                                                  */
 
