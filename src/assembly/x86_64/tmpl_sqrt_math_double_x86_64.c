@@ -65,7 +65,7 @@ TMPL_UNSEQUENCED
 
     /*  Modern CPUs provide a VEX-encoded version of sqrt.                    */
 #if defined(__AVX512F__) || defined(__AVX__) || defined(__AVX2__)
-    __asm__("vsqrtsd %0, %0, %0" : "=x" (sqrt_x) : "x" (x));
+    __asm__("vsqrtsd %1, %1, %0" : "=x" (sqrt_x) : "x" (x));
 
     /*  The scalar square root function has been provided as an instruction   *
      *  since SSE 2, released in 2000.                                        */
