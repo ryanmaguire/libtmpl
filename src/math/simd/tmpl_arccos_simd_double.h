@@ -166,7 +166,7 @@ TMPL_UNSEQUENCED
 #ifdef __GNUC__
     const double sqrt_u = __builtin_sqrt(u);
 #else
-    const double sqrt_u = tmpl_Double_Sqrt(x);
+    const double sqrt_u = tmpl_Double_Sqrt(u);
 #endif
 
     /*  The rest of the tail-end formula can be computed from the variables   *
