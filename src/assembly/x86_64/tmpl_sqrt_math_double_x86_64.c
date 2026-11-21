@@ -48,6 +48,9 @@
  *  Date:       November 20, 2026                                             *
  ******************************************************************************/
 
+/*  TMPL_ALWAYS_INLINE macro found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Macros providing C23 attributes (for optimization) are found here.        */
 #include <libtmpl/include/tmpl_attributes.h>
 
@@ -55,6 +58,7 @@
 extern double tmpl_Double_Sqrt(const double x);
 
 /*  Function for computing square roots at double precision.                  */
+TMPL_ALWAYS_INLINE
 TMPL_CONST_FUNC
 double
 tmpl_Double_Sqrt(const double x)
