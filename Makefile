@@ -372,9 +372,14 @@ else
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.S)
 EXCLUDE += $(patsubst %_x86_64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
+# We need to evaluate the exclude variable immediately since ASM_SRCS is going
+# to be modified in the next few steps depending on compiler features and
+# whether SIMD_FAST_MATH is enabled.
+EXCLUDE := $(EXCLUDE)
+
 # If SIMD clones are being generated, add the relevant assembly files.
 ifdef SIMD_FAST_MATH
-SIMD_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.S)
+ASM_SRCS += $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.S)
 endif
 
 # If GNU-style inline assembly is supported, and if link-time optimization is
@@ -385,7 +390,11 @@ HAVE_GNU_ASM := $(shell $(DET_INLINE_ASM_CMD) && echo yes)
 # Remove the corresponding .S files if the .c files are being used instead.
 ifeq ($(HAVE_GNU_ASM), yes)
 INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.c)
-EXCLUDE += $(patsubst %_x86_64.c, ! -name "*%.c", $(notdir $(INLINE_ASM_SRCS)))
+
+ifdef SIMD_FAST_MATH
+INLINE_ASM_SRCS += $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.c)
+endif
+
 ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
 endif
 
@@ -437,9 +446,6 @@ endif
 C_SRCS = $(shell find $(SRC_DIR) $(EXCLUDE) -name "*.c") $(INLINE_ASM_SRCS)
 C_OBJS = $(C_SRCS:%=$(BUILD_DIR)/%.o)
 ASM_OBJS = $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
-ifdef SIMD_FAST_MATH
-ASM_OBJS += $(SIMD_ASM_SRCS:%=$(BUILD_DIR)/%.o)
-endif
 FASM_OBJS = $(FASM_SRCS:%=$(BUILD_DIR)/%.o)
 OBJS = $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
 
