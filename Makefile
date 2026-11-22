@@ -432,6 +432,7 @@ EXCLUDE += $(patsubst %_ppc64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 # TODO:
 #    This is the same check as in x86-64, but with pcc64 instead of x86_64.
 #    Simplify the Makefile and combine these.
+EXCLUDE := $(EXCLUDE)
 ifeq ($(HAVE_GNU_ASM), yes)
 ifndef SIMD_FAST_MATH
 INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.c)
