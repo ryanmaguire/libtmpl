@@ -353,6 +353,11 @@ INLINE_ASM_SRCS =
 # assembly code. GCC, Clang, and PCC can. TCC cannot.
 ifndef NO_ASM
 
+# If GNU-style inline assembly is supported, and if link-time optimization is
+# enabled, then it is better to use the C files found in src/assembly/ instead
+# of the plain asm files. Check if inline assembly is supported.
+HAVE_GNU_ASM := $(shell $(DET_INLINE_ASM_CMD) && echo yes)
+
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
 ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
@@ -381,11 +386,6 @@ EXCLUDE := $(EXCLUDE)
 ifdef SIMD_FAST_MATH
 ASM_SRCS += $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.S)
 endif
-
-# If GNU-style inline assembly is supported, and if link-time optimization is
-# enabled, then it is better to use the C files found in src/assembly/ instead
-# of the plain asm files. Check if inline assembly is supported.
-HAVE_GNU_ASM := $(shell $(DET_INLINE_ASM_CMD) && echo yes)
 
 # Remove the corresponding .S files if the .c files are being used instead.
 ifeq ($(HAVE_GNU_ASM), yes)
@@ -428,6 +428,18 @@ else ifeq ($(ARCH), $(filter $(ARCH), ppc64 ppc64le))
 
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.S)
 EXCLUDE += $(patsubst %_ppc64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
+
+# TODO:
+#    This is the same check as in x86-64, but with pcc64 instead of x86_64.
+#    Simplify the Makefile and combine these.
+ifeq ($(HAVE_GNU_ASM), yes)
+ifndef SIMD_FAST_MATH
+INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.c)
+ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
+endif
+
+endif
+# End of ifeq ($(HAVE_GNU_ASM), yes).
 
 # Big-endian IBM s390x architecture.
 else ifeq ($(ARCH), $(filter $(ARCH), s390x))
