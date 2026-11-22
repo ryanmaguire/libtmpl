@@ -76,7 +76,7 @@ TMPL_UNSEQUENCED
     /*  PowerPC defines the fsqrt instruction for both little and big endian  *
      *  machines. fsqrt is optional for machines to implement, if it is       *
      *  missing then the user will need to disable assembly code for libtmpl. */
-    __asm__("fsqrt 1, 1" : "=f" (sqrt_x) : "f" (x));
+    __asm__("fsqrt %0, %1" : "=f" (sqrt_x) : "f" (x));
 
     return sqrt_x;
 }
