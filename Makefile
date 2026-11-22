@@ -389,14 +389,18 @@ HAVE_GNU_ASM := $(shell $(DET_INLINE_ASM_CMD) && echo yes)
 
 # Remove the corresponding .S files if the .c files are being used instead.
 ifeq ($(HAVE_GNU_ASM), yes)
+
+# C files with inline assembly are only used if SIMD_FAST_MATH mode is not
+# enabled. With link-time optimization (LTO) enabled the compiler will always
+# select the version of a function found in the .c file, and will ignore the
+# SIMD clones. Choosing the .S version prevents this.
+ifndef SIMD_FAST_MATH
 INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.c)
-
-ifdef SIMD_FAST_MATH
-INLINE_ASM_SRCS += $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.c)
-endif
-
 ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
 endif
+
+endif
+# End of ifeq ($(HAVE_GNU_ASM), yes).
 
 endif
 # End of ifdef FASM.
@@ -419,17 +423,11 @@ else ifeq ($(ARCH), $(filter $(ARCH), armv7l))
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/armv7l/*.S)
 EXCLUDE += $(patsubst %_armv7l.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
-# PowerPC 64-bit big endian.
-else ifeq ($(ARCH), $(filter $(ARCH), ppc64))
+# PowerPC 64-bit, little of big endian.
+else ifeq ($(ARCH), $(filter $(ARCH), ppc64 ppc64le))
 
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.S)
 EXCLUDE += $(patsubst %_ppc64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
-
-# PowerPC 64-bit little endian. Some assembly functions are provided.
-else ifeq ($(ARCH), $(filter $(ARCH), ppc64le))
-
-ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64le/*.S)
-EXCLUDE += $(patsubst %_ppc64le.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # Big-endian IBM s390x architecture.
 else ifeq ($(ARCH), $(filter $(ARCH), s390x))
