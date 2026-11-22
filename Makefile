@@ -448,6 +448,15 @@ else ifeq ($(ARCH), $(filter $(ARCH), s390x))
 ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/s390x/*.S)
 EXCLUDE += $(patsubst %_s390x.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
+# TODO:
+#    Combine this with the x86-64 and ppc64 equivalents above.
+EXCLUDE := $(EXCLUDE)
+ifeq ($(HAVE_GNU_ASM), yes)
+ifndef SIMD_FAST_MATH
+INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/s390x/*.c)
+ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
+endif
+
 endif
 # End of ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
 
