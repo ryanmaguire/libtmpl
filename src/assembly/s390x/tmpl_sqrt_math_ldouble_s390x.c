@@ -35,7 +35,7 @@
  *      sqrt_x (long double):                                                 *
  *          The square root of x at long double precision.                    *
  *  Called Functions:                                                         *
- *      sqebr (s390x instructions).                                           *
+ *      sqxbr (s390x instructions).                                           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -73,8 +73,8 @@ TMPL_UNSEQUENCED
     /*  Variable for the output, sqrt(x).                                     */
     long double sqrt_x;
 
-    /*  s390x provides the sqebr instruction for computing square roots.      */
-    __asm__("sqebr %0, %1" : "=f" (sqrt_x) : "f" (x));
+    /*  s390x provides the sqxbr instruction for computing square roots.      */
+    __asm__("sqxbr %0, %1" : "=f" (sqrt_x) : "f" (x));
 
     return sqrt_x;
 }
