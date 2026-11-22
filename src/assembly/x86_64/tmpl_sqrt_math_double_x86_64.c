@@ -58,8 +58,14 @@
 extern double tmpl_Double_Sqrt(const double x);
 
 /*  Function for computing square roots at double precision.                  */
-TMPL_ALWAYS_INLINE
 TMPL_CONST_FUNC
+
+/*  If SIMD_FAST_MATH mode is enabled, do not use always_inline. This will    *
+ *  prevent the compiler from selecting the SIMD versions.                    */
+#if TMPL_USE_SIMD_FAST_MATH != 1
+TMPL_ALWAYS_INLINE
+#endif
+
 double
 tmpl_Double_Sqrt(const double x)
 TMPL_UNSEQUENCED

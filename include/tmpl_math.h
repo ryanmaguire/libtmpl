@@ -1222,9 +1222,21 @@ tmpl_LDouble_Falling_Factorial(unsigned int x, unsigned int N);
 #define tmpl_Double_Floor floor
 #define tmpl_LDouble_Floor floorl
 #else
-extern float tmpl_Float_Floor(float x);
-extern double tmpl_Double_Floor(double x);
-extern long double tmpl_LDouble_Floor(long double x);
+
+TMPL_SIMD_DECL
+TMPL_CONST_FUNC
+extern float
+tmpl_Float_Floor(const float x)
+TMPL_UNSEQUENCED;
+
+TMPL_SIMD_DECL
+TMPL_CONST_FUNC
+extern double
+tmpl_Double_Floor(const double x)
+TMPL_UNSEQUENCED;
+
+extern long double
+tmpl_LDouble_Floor(const long double x);
 #endif
 
 /******************************************************************************
