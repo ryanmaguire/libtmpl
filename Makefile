@@ -456,6 +456,7 @@ ifndef SIMD_FAST_MATH
 INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/s390x/*.c)
 ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
 endif
+endif
 
 endif
 # End of ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
