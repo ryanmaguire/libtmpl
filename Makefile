@@ -144,11 +144,20 @@
 #           (mips, for example) enabling this flag does nothing as the C code
 #           will be selected automatically. Enable with:
 #               make NO_ASM=1 [other-options]
-#       FASM:
+#       NO_INLINE_ASM:
+#           Some of the functions in src/assembly/ are implemented twice:
+#           once as an assembly file (.S), and once as a C file that uses
+#           GNU-style inline assembly (.c). If your compiler supports GNU inline
+#           assembly, the .c files are used, since with link-time optimization
+#           they can be inlined across translation units. To use the .S files
+#           instead, enable this option. SIMD_FAST_MATH always uses the .S
+#           files, and NO_ASM disables both. Enable with:
+#               make NO_INLINE_ASM=1 [other-options]
+#       USE_FASM:
 #           For x86_64 / amd64 you can use either GNU Assembly code (GAS) or
 #           flat assembly code (FASM). GAS is the default. To use FASM, enable
 #           this option. Enable with:
-#               make FASM=1 [other-options]
+#               make USE_FASM=1 [other-options]
 #       USE_MEMCPY:
 #           Some functions copy data by using a simple for-loop.
 #           Depending on several things (compiler, libc implementation,
@@ -212,10 +221,10 @@ CONFIG_FLAGS = $(EXTRA_FLAGS)
 EXCLUDE =
 
 # If the compiler supports GNU inline assembly, then various .S files in
-# src/assembly/ will be replaced by their .c counterparts. This allows
-# cross-translation unit inlining when link time optimization (LTO) is enabled.
-# By default we do not assume GNU inline assembly is supported. This will be
-# checked later in the Makefile.
+# src/assembly/ will be replaced by their .c counterparts (unless NO_INLINE_ASM
+# is set). This allows cross-translation unit inlining when link time
+# optimization (LTO) is enabled. By default we do not assume GNU inline assembly
+# is supported. This will be checked later in the Makefile.
 EXCLUDE += ! -path "$(SRC_DIR)/assembly/*"
 
 # Default C flags. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
@@ -353,14 +362,30 @@ INLINE_ASM_SRCS =
 # assembly code. GCC, Clang, and PCC can. TCC cannot.
 ifndef NO_ASM
 
-# If GNU-style inline assembly is supported, and if link-time optimization is
-# enabled, then it is better to use the C files found in src/assembly/ instead
-# of the plain asm files. Check if inline assembly is supported.
-HAVE_GNU_ASM := $(shell $(DET_INLINE_ASM_CMD) && echo yes)
+# Various architectures have assembly support for functions that map directly
+# to instructions, like sqrt -> sqrtsd on x86-64. The architecture that the
+# user is running is detected via "uname -m". Equivalent architectures may
+# return different values with this command, such as amd64 and x86_64 for the
+# x86-64 architecture, or aarch64 / arm64 for the armv8 architecture. The
+# variables below allow us to generically select the correct assembly code.
+ASM_ARCH_x86_64 := x86_64
+ASM_ARCH_amd64 := x86_64
+ASM_ARCH_i386 := i386
+ASM_ARCH_x86 := i386
+ASM_ARCH_aarch64 := aarch64
+ASM_ARCH_arm64 := aarch64
+ASM_ARCH_armv7l := armv7l
+ASM_ARCH_ppc64 := ppc64
+ASM_ARCH_ppc64le := ppc64
+ASM_ARCH_s390x := s390x
+ASM_ARCH := $(ASM_ARCH_$(ARCH))
 
-# amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
-# if possible for performance boosts.
-ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
+# FASM is only available for x86_64 / amd64. It is ignored everywhere else.
+ifeq ($(ASM_ARCH), x86_64)
+ifdef USE_FASM
+FASM := 1
+endif
+endif
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
@@ -372,10 +397,11 @@ EXCLUDE += $(patsubst %_x86_64.fasm, ! -name "*%.c", $(notdir $(FASM_SRCS)))
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to use this, tested on
 # Debian GNU/Linux 11, 12, and 13.
-else
+else ifneq ($(ASM_ARCH),)
 
-ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.S)
-EXCLUDE += $(patsubst %_x86_64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
+ASM_DIR := $(SRC_DIR)/assembly/$(ASM_ARCH)
+ASM_SRCS := $(wildcard $(ASM_DIR)/*.S)
+EXCLUDE += $(patsubst %_$(ASM_ARCH).S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 
 # We need to evaluate the exclude variable immediately since ASM_SRCS is going
 # to be modified in the next few steps depending on compiler features and
@@ -384,82 +410,31 @@ EXCLUDE := $(EXCLUDE)
 
 # If SIMD clones are being generated, add the relevant assembly files.
 ifdef SIMD_FAST_MATH
-ASM_SRCS += $(wildcard $(SRC_DIR)/assembly/x86_64/simd/*.S)
-endif
 
-# Remove the corresponding .S files if the .c files are being used instead.
-ifeq ($(HAVE_GNU_ASM), yes)
+ASM_SRCS += $(wildcard $(ASM_DIR)/simd/*.S)
 
 # C files with inline assembly are only used if SIMD_FAST_MATH mode is not
 # enabled. With link-time optimization (LTO) enabled the compiler will always
 # select the version of a function found in the .c file, and will ignore the
 # SIMD clones. Choosing the .S version prevents this.
-ifndef SIMD_FAST_MATH
-INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/x86_64/*.c)
+else ifndef NO_INLINE_ASM
+
+# If GNU-style inline assembly is supported, and if link-time optimization is
+# enabled, then it is better to use the C files found in src/assembly/ instead
+# of the plain asm files. Check if inline assembly is supported.
+HAVE_GNU_ASM := $(shell $(DET_INLINE_ASM_CMD) && echo yes)
+
+# Remove the corresponding .S files if the .c files are being used instead.
+ifeq ($(HAVE_GNU_ASM), yes)
+INLINE_ASM_SRCS := $(wildcard $(ASM_DIR)/*.c)
 ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
 endif
 
 endif
-# End of ifeq ($(HAVE_GNU_ASM), yes).
+# End of ifdef SIMD_FAST_MATH.
 
 endif
 # End of ifdef FASM.
-
-# x86 / i386 assembly is also available using GNU assembly (GAS).
-else ifeq ($(ARCH), $(filter $(ARCH), i386 x86))
-
-ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/i386/*.S)
-EXCLUDE += $(patsubst %_i386.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
-
-# Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
-else ifeq ($(ARCH), $(filter $(ARCH), aarch64 arm64))
-
-ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/aarch64/*.S)
-EXCLUDE += $(patsubst %_aarch64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
-
-# Same idea, but for armv7l (armhf). sqrt is also a built-in function.
-else ifeq ($(ARCH), $(filter $(ARCH), armv7l))
-
-ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/armv7l/*.S)
-EXCLUDE += $(patsubst %_armv7l.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
-
-# PowerPC 64-bit, little of big endian.
-else ifeq ($(ARCH), $(filter $(ARCH), ppc64 ppc64le))
-
-ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.S)
-EXCLUDE += $(patsubst %_ppc64.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
-
-# TODO:
-#    This is the same check as in x86-64, but with pcc64 instead of x86_64.
-#    Simplify the Makefile and combine these.
-EXCLUDE := $(EXCLUDE)
-ifeq ($(HAVE_GNU_ASM), yes)
-ifndef SIMD_FAST_MATH
-INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/ppc64/*.c)
-ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
-endif
-
-endif
-# End of ifeq ($(HAVE_GNU_ASM), yes).
-
-# Big-endian IBM s390x architecture.
-else ifeq ($(ARCH), $(filter $(ARCH), s390x))
-
-ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/s390x/*.S)
-EXCLUDE += $(patsubst %_s390x.S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
-
-# TODO:
-#    Combine this with the x86-64 and ppc64 equivalents above.
-EXCLUDE := $(EXCLUDE)
-ifeq ($(HAVE_GNU_ASM), yes)
-ifndef SIMD_FAST_MATH
-INLINE_ASM_SRCS = $(wildcard $(SRC_DIR)/assembly/s390x/*.c)
-ASM_SRCS := $(filter-out $(INLINE_ASM_SRCS:.c=.S), $(ASM_SRCS))
-endif
-endif
-
-endif
-# End of ifeq ($(ARCH), $(filter $(ARCH), x86_64 amd64))
 
 endif
 # End of ifndef NO_ASM.
@@ -632,10 +607,15 @@ help:
 	@echo "\033[0;91m\t\t\tThis is because the Makefile assumes armv7l"
 	@echo "\033[0;91m\t\t\tmachines will have hardware floats, even"
 	@echo "\033[0;91m\t\t\tthough this is not required."
+	@echo "\033[0;96m\tNO_INLINE_ASM:"
+	@echo "\033[0;96m\t\tUse the .S files in src/assembly/ instead of the"
+	@echo "\033[0;96m\t\tC files written with GNU inline assembly. This is"
+	@echo "\033[0;96m\t\talways the case if SIMD_FAST_MATH is set."
+	@echo "\033[0;96m\t\tExample: make NO_INLINE_ASM=1"
 	@echo "\033[0;96m\tFASM (x86_64 / amd64 only):"
 	@echo "\033[0;96m\t\tUse Flat Assembly (FASM) code instead of"
 	@echo "\033[0;96m\t\tGNU Assembly (GAS). Requires fasm to be installed."
-	@echo "\033[0;96m\t\tExample: make FASM=1"
+	@echo "\033[0;96m\t\tExample: make USE_FASM=1"
 	@echo "\033[0;96m\tUSE_MEMCPY:"
 	@echo "\033[0;96m\t\tUse memcpy for copying data instead of for-loops."
 	@echo "\033[0;96m\t\tExample: make USE_MEMCPY=1"
@@ -652,4 +632,3 @@ help:
 	@echo "\033[0;96m\tEXTRA_FLAGS:"
 	@echo "\033[0;96m\t\tAdd extra flags for the C compiler."
 	@echo "\033[0;96m\t\tExample: make EXTRA_FLAGS=\"-Wno-float-equal\""
-
