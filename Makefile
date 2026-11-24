@@ -27,7 +27,7 @@
 #       BUILD_SHARED_LIBS:
 #           Build a shared object (libtmpl.so) instead of a static one
 #           (libtmpl.a). Enable with:
-#               make BUILD_SHARED_LIBS=1 [other-options]
+#               make BUILD_SHARED_LIBS=ON [other-options]
 #       CC:
 #           C compiler to be used. Tested with:
 #               gcc:   GNU C compiler.
@@ -53,12 +53,12 @@
 #           uname -m still outputs x86_64. Enabling ARCH=i386 will cause the
 #           Makefile to select the correct assembly code (the code for i386,
 #           instead of the code for x86_64). Note that if you disable assembly
-#           code by passing NO_ASM=1 to the Makefile, this keyword has no
+#           code by passing NO_ASM=ON to the Makefile, this keyword has no
 #           effect. Enable with:
 #               make ARCH=name_of_architecture [other-options]
 #       DEBUG_BUILD:
 #           Compile with debug symbols. Enable with:
-#               make DEBUG_BUILD=1 [other-options]
+#               make DEBUG_BUILD=ON [other-options]
 #       SIMD_FAST_MATH:
 #           Enable very aggressive optimizations and use OpenMP to create SIMD
 #           versions of several of libtmpl's functions. This option is only
@@ -68,53 +68,53 @@
 #           2Prod from these aggressive compiler options. With appropriate
 #           hardware, this option can double the speed of some functions.
 #           Enable with:
-#               make SIMD_FAST_MATH=1 [other-options]
+#               make SIMD_FAST_MATH=ON [other-options]
 #           NOTE:
 #               Library functions usually have 1-2 ULP error.
 #               The vectorized versions have roughly twice the amount
 #               of error, about 1-4 ULP.
-#       OMP:
+#       USE_OMP:
 #           Set OpenMP flags. Useful if you want to build libtmpyl, the Python
 #           wrapper for libtmpl, and use with numpy arrays for parallel
 #           computing. Enable with:
-#               make OMP=1 [other-options]
+#               make USE_OMP=ON [other-options]
 #       NO_LTO:
 #           Disable the -flto flag (link-time optimization). Some compilers
 #           do not support -flto and hence this needs to be enabled. For
 #           NVIDIA's C compiler (nvc) this option is automatically set for you.
 #           Enable with:
-#               make NO_LTO=1 [other-options]
+#               make NO_LTO=ON [other-options]
 #       NO_MATH:
 #           Do not use libtmpl's implementation of libm, the C standard
 #           mathematical library. You must have C99 or higher support if you
 #           wish to enable this. The original C89 standard does not require
 #           float and long double versions of various functions, whereas
 #           libtmpl makes use of these.
-#               make NO_MATH=1 [other-options]
+#               make NO_MATH=ON [other-options]
 #       NO_LONGLONG:
 #           libtmpl provides many functions for integer data types. The config.c
 #           file will examine the __STDC_VERSION__ macro to check if long long
 #           is available. If you do not wish to build long long functions at
 #           all, set this option (for example, you're on a GNU/Linux machine
 #           where the long and long long data types are the same). Enable with:
-#               make NO_LONGLONG=1 [other-options]
+#               make NO_LONGLONG=ON [other-options]
 #       NO_INLINE:
 #           libtmpl allows many smaller functions to be inlined, resulting in
 #           significant speed boosts in several cases (tmpl_Double_Abs is about
 #           2x faster when inlined, for example). The config.c file will check
 #           the __STDC_VERSION__ macro to see if inline support is available.
 #           If you do not wish to use inlined code, set this option. Enable via:
-#               make NO_INLINE=1 [other-options]
+#               make NO_INLINE=ON [other-options]
 #       ALWAYS_INLINE:
 #           Enable the C23 attributes [[gnu::always_inline]] or
 #           [[clang::always_inline]] for inlined functions. Your compiler
 #           must support C23 attributes if you want to use this.
 #           Enable with:
-#               make ALWAYS_INLINE=1 [other-options]
+#               make ALWAYS_INLINE=ON [other-options]
 #       NATIVE:
 #           Enable native CPU instructions if the compiler supports them.
 #           Enable with:
-#               make NATIVE=1 [other-options]
+#               make NATIVE=ON [other-options]
 #       NO_IEEE:
 #           Many functions use unions to take advantage of the IEEE-754
 #           format for floating-point numbers. This behavior is implementation
@@ -125,14 +125,14 @@
 #           code to be used, set this option. Note, the portable algorithms are
 #           significantly slower, in some cases about 10x or worse. Note, in
 #           C11 and C23, type-punning via unions is well-defined behavior.
-#               make NO_IEEE=1 [other-options]
+#               make NO_IEEE=ON [other-options]
 #       NO_INT:
 #           It is sometimes useful to have fixed-width (8, 16, 32, and 64) bit
 #           integers. The C standard does not require these widths be available
 #           but rather specifies the minimum widths allowed by certain data
 #           types. The config.c file will try to find the widths of various
 #           integer types. To skip this, set this option. Enable with:
-#               make NO_INT=1 [other-options]
+#               make NO_INT=ON [other-options]
 #       NO_ASM:
 #           Disable all assembly code when building libtmpl. This is not
 #           recommended. On several architectures, x86_64 / amd64,
@@ -143,7 +143,7 @@
 #           architecture that libtmpl does not have assembly code for
 #           (mips, for example) enabling this flag does nothing as the C code
 #           will be selected automatically. Enable with:
-#               make NO_ASM=1 [other-options]
+#               make NO_ASM=ON [other-options]
 #       NO_INLINE_ASM:
 #           Some of the functions in src/assembly/ are implemented twice:
 #           once as an assembly file (.S), and once as a C file that uses
@@ -152,12 +152,12 @@
 #           they can be inlined across translation units. To use the .S files
 #           instead, enable this option. SIMD_FAST_MATH always uses the .S
 #           files, and NO_ASM disables both. Enable with:
-#               make NO_INLINE_ASM=1 [other-options]
+#               make NO_INLINE_ASM=ON [other-options]
 #       USE_FASM:
 #           For x86_64 / amd64 you can use either GNU Assembly code (GAS) or
 #           flat assembly code (FASM). GAS is the default. To use FASM, enable
 #           this option. Enable with:
-#               make USE_FASM=1 [other-options]
+#               make USE_FASM=ON [other-options]
 #       USE_MEMCPY:
 #           Some functions copy data by using a simple for-loop.
 #           Depending on several things (compiler, libc implementation,
@@ -166,7 +166,7 @@
 #           compilers optimize the for-loop very well, and this outperforms the
 #           memcpy call in many speed tests. If you would to like to force
 #           use of the memcpy function, enable this option. Enable with:
-#               make USE_MEMCPY=1 [other-options]
+#               make USE_MEMCPY=ON [other-options]
 #       USE_VOLATILE:
 #           Set the TMPL_VOLATILE macro to "volatile" instead of being empty.
 #           This may be necessary for libtmpl's double-double arithmetic
@@ -175,7 +175,7 @@
 #           not need to enable this option. The necessary functions will set
 #           the "no-associative-math" and "fp-contract=off" options to prevent
 #           aggressive optimizations from ruining them. Enable with:
-#               make USE_VOLATILE=1 [other-options]
+#               make USE_VOLATILE=ON [other-options]
 #       EXTRA_FLAGS:
 #           Any extra flags you wish to pass to the C compiler.
 #           For example, with clang you can enable -Weverything via:
@@ -183,6 +183,25 @@
 #                   EXTRA_FLAGS="-Weverything -Wno-float-equal -Wno-padded"
 #           In general, enable with:
 #               make EXTRA_FLAGS="flags" [other-options]
+
+# Default options.
+BUILD_SHARED_LIBS = OFF
+DEBUG_BUILD = OFF
+SIMD_FAST_MATH = OFF
+USE_OMP = OFF
+NO_LTO = OFF
+NO_MATH = OFF
+NO_LONGLONG = OFF
+NO_INLINE = OFF
+ALWAYS_INLINE = ON
+NATIVE = ON
+NO_IEEE = OFF
+NO_INT = OFF
+NO_ASM = OFF
+NO_INLINE_ASM = OFF
+USE_FASM = OFF
+USE_MEMCPY = OFF
+USE_VOLATILE = OFF
 
 # Name of the library.
 TARGET_LIB_SHARED = libtmpl.so
@@ -228,7 +247,7 @@ EXCLUDE =
 EXCLUDE += ! -path "$(SRC_DIR)/assembly/*"
 
 # Default C flags. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
-ifdef DEBUG_BUILD
+ifneq ($(filter $(DEBUG_BUILD), ON on TRUE true 1),)
 CFLAGS = -I../ -g -fPIC -c
 LFLAGS = -fPIC -g -shared
 else ifdef SUNCC
@@ -247,39 +266,39 @@ CFLAGS := $(filter-out -flto, $(CFLAGS))
 LFLAGS := $(filter-out -flto, $(LFLAGS))
 endif
 
-ifdef NO_LTO
+ifneq ($(filter $(NO_LTO), ON on TRUE true 1),)
 CFLAGS := $(filter-out -flto, $(CFLAGS))
 LFLAGS := $(filter-out -flto, $(LFLAGS))
 endif
 
-ifdef BUILD_SHARED_LIBS
+ifneq ($(filter $(BUILD_SHARED_LIBS), ON on TRUE true 1),)
 TARGET_LIB = $(TARGET_LIB_SHARED)
 else
 TARGET_LIB = $(TARGET_LIB_STATIC)
 endif
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
-ifdef OMP
+ifneq ($(filter $(USE_OMP), ON on TRUE true 1),)
 CFLAGS += -fopenmp
 LFLAGS += -fopenmp
 endif
 
 # If libtmpl's libm implementation is not being used, we need to link with libm.
-ifdef NO_MATH
+ifneq ($(filter $(NO_MATH), ON on TRUE true 1),)
 LFLAGS += -lm
 endif
 
 # libtmpl will check if long long is available in config.c. If you do not want
 # long long functions compiled (for example, you're on a GNU/Linux machine where
 # long and long long are the same thing), set this option.
-ifdef NO_LONGLONG
+ifneq ($(filter $(NO_LONGLONG), ON on TRUE true 1),)
 CONFIG_FLAGS += -DTMPL_SET_LONGLONG_FALSE
 EXCLUDE += ! -name "*llong.c"
 endif
 
 # libtmpl provides its own implementation of libm. If you wish to use the
 # default libm implementation (if it exists) for your system enable this option.
-ifdef NO_MATH
+ifneq ($(filter $(NO_MATH), ON on TRUE true 1),)
 EXCLUDE += ! -name "*_math_*.c" ! -name "*_math_*.S"
 else
 CONFIG_FLAGS += -DTMPL_SET_USE_MATH_TRUE
@@ -287,34 +306,34 @@ endif
 
 # libtmpl will check if inline support is available in config.c. If you do not
 # want to inline functions, set this option.
-ifndef NO_INLINE
+ifneq ($(filter $(NO_INLINE), OFF off FALSE false 0),)
 CONFIG_FLAGS += -DTMPL_SET_INLINE_TRUE
 EXCLUDE += ! -name "*_no_inline_*.c"
 endif
 
 # Users may wish to force inlining functions. The config.c file will only do
 # this if the appropriate macro is set.
-ifdef ALWAYS_INLINE
+ifneq ($(filter $(ALWAYS_INLINE), ON on TRUE true 1),)
 CONFIG_FLAGS += -DTMPL_SET_ALWAYS_INLINE_TRUE
 endif
 
 # Whether or not to use the strictly portable code, or IEEE-754 compliant code.
-ifdef NO_IEEE
+ifneq ($(filter $(NO_IEEE), ON on TRUE true 1),)
 CONFIG_FLAGS += -DTMPL_SET_TMPL_USE_IEEE_FALSE
 endif
 
 # Whether to use memcpy or for-loops for copying data.
-ifdef USE_MEMCPY
+ifneq ($(filter $(USE_MEMCPY), ON on TRUE true 1),)
 CONFIG_FLAGS += -DTMPL_SET_USE_MEMCPY_TRUE
 endif
 
 # Whether or not to try and find fixed-width integer data types.
-ifdef NO_INT
+ifneq ($(filter $(NO_INT), ON on TRUE true 1),)
 CONFIG_FLAGS += -DTMPL_SET_NO_INT
 endif
 
 # Whether or not to force some computations to use the volatile keyword.
-ifdef USE_VOLATILE
+ifneq ($(filter $(USE_VOLATILE), ON on TRUE true 1),)
 CONFIG_FLAGS += -DTMPL_USE_VOLATILE
 endif
 
@@ -337,7 +356,7 @@ NATIVE_FLAGS := $(shell                                                        \
 # Currently only GCC and Clang are supported when using this option.
 # Other compilers may work with this option, so long as they support
 # -ffast-math, -march / -mcpu, and -fopenmp-simd.
-ifdef SIMD_FAST_MATH
+ifneq ($(filter $(SIMD_FAST_MATH), ON on TRUE true 1),)
 
 CFLAGS += $(NATIVE_FLAGS) -ffast-math -fopenmp-simd
 LFLAGS += $(NATIVE_FLAGS) -ffast-math -fopenmp-simd
@@ -346,7 +365,7 @@ CONFIG_FLAGS += $(NATIVE_FLAGS) -ffast-math
 
 # The user may want to use native instructions without
 # enabling SIMD vectorization.
-else ifdef NATIVE
+else ifneq ($(filter $(NATIVE), ON on TRUE true 1),)
 CFLAGS += $(NATIVE_FLAGS)
 LFLAGS += $(NATIVE_FLAGS)
 CONFIG_FLAGS += $(NATIVE_FLAGS)
@@ -360,7 +379,7 @@ INLINE_ASM_SRCS =
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
 # and armv7l (armhf) this is only advised if your C compiler cannot handle
 # assembly code. GCC, Clang, and PCC can. TCC cannot.
-ifndef NO_ASM
+ifneq ($(filter $(SIMD_FAST_MATH), OFF off FALSE false 0),)
 
 # Various architectures have assembly support for functions that map directly
 # to instructions, like sqrt -> sqrtsd on x86-64. The architecture that the
@@ -382,7 +401,7 @@ ASM_ARCH := $(ASM_ARCH_$(ARCH))
 
 # FASM is only available for x86_64 / amd64. It is ignored everywhere else.
 ifeq ($(ASM_ARCH), x86_64)
-ifdef USE_FASM
+ifneq ($(filter $(USE_FASM), ON on TRUE true 1),)
 FASM := 1
 endif
 endif
@@ -409,7 +428,7 @@ EXCLUDE += $(patsubst %_$(ASM_ARCH).S, ! -name "*%.c", $(notdir $(ASM_SRCS)))
 EXCLUDE := $(EXCLUDE)
 
 # If SIMD clones are being generated, add the relevant assembly files.
-ifdef SIMD_FAST_MATH
+ifneq ($(filter $(SIMD_FAST_MATH), ON on TRUE true 1),)
 
 ASM_SRCS += $(wildcard $(ASM_DIR)/simd/*.S)
 
@@ -417,7 +436,7 @@ ASM_SRCS += $(wildcard $(ASM_DIR)/simd/*.S)
 # enabled. With link-time optimization (LTO) enabled the compiler will always
 # select the version of a function found in the .c file, and will ignore the
 # SIMD clones. Choosing the .S version prevents this.
-else ifndef NO_INLINE_ASM
+else ifneq ($(filter $(NO_INLINE_ASM), OFF off FALSE false 0),)
 
 # If GNU-style inline assembly is supported, and if link-time optimization is
 # enabled, then it is better to use the C files found in src/assembly/ instead
@@ -526,7 +545,7 @@ help:
 	@echo "\033[0;96m\tBUILD_SHARED_LIBS:"
 	@echo "\033[0;96m\t\tCreate a shared object (libtmpl.so) instead of a"
 	@echo "\033[0;96m\t\tstatic library (libtmpl.a)."
-	@echo "\033[0;96m\t\tExample: make BUILD_SHARED_LIBS=1"
+	@echo "\033[0;96m\t\tExample: make BUILD_SHARED_LIBS=ON"
 	@echo "\033[0;96m\tCC:"
 	@echo "\033[0;96m\t\tSet the C compiler."
 	@echo "\033[0;96m\t\tExample: make CC=gcc"
@@ -538,7 +557,7 @@ help:
 	@echo "\033[0;96m\t\tExample: make ARCH=i386"
 	@echo "\033[0;96m\tDEBUG_BUILD:"
 	@echo "\033[0;96m\t\tAdd debug symbols to the build."
-	@echo "\033[0;96m\t\tExample: make DEBUG_BUILD=1"
+	@echo "\033[0;96m\t\tExample: make DEBUG_BUILD=ON"
 	@echo "\033[0;96m\tSIMD_FAST_MATH:"
 	@echo "\033[0;96m\t\tEnable aggressive math optimizations and compile"
 	@echo "\033[0;96m\t\tthe branchless SIMD versions of functions."
@@ -563,47 +582,47 @@ help:
 	@echo "\033[0;91m\t\t\tsupport the C23 standard, and if it does not"
 	@echo "\033[0;91m\t\t\tsupport attributes / pragmas that disable"
 	@echo "\033[0;91m\t\t\toptimizations, do not enable SIMD_FAST_MATH."
-	@echo "\033[0;96m\t\tExample: make SIMD_FAST_MATH=1"
+	@echo "\033[0;96m\t\tExample: make SIMD_FAST_MATH=ON"
 	@echo "\033[0;96m\tOMP:"
 	@echo "\033[0;96m\t\tCompile with OpenMP support."
-	@echo "\033[0;96m\t\tExample: make OMP=1"
+	@echo "\033[0;96m\t\tExample: make OMP=ON"
 	@echo "\033[0;96m\tNO_LTO:"
 	@echo "\033[0;96m\t\tDisable the -flto flag (link-time optimization)."
-	@echo "\033[0;96m\t\tExample: make NO_LTO=1"
+	@echo "\033[0;96m\t\tExample: make NO_LTO=ON"
 	@echo "\033[0;96m\tNO_MATH:"
 	@echo "\033[0;96m\t\tUse the system libm instead of libtmpl's."
-	@echo "\033[0;96m\t\tExample: make NO_MATH=1"
+	@echo "\033[0;96m\t\tExample: make NO_MATH=ON"
 	@echo "\033[0;96m\tNO_LONGLONG:"
 	@echo "\033[0;96m\t\tDo not compile any code for long long or"
 	@echo "\033[0;96m\t\tunsigned long long."
-	@echo "\033[0;96m\t\tExample: make NO_LONGLONG=1"
+	@echo "\033[0;96m\t\tExample: make NO_LONGLONG=ON"
 	@echo "\033[0;96m\tNO_INLINE:"
 	@echo "\033[0;96m\t\tDo not inline any code."
-	@echo "\033[0;96m\t\tExample: make NO_INLINE=1"
+	@echo "\033[0;96m\t\tExample: make NO_INLINE=ON"
 	@echo "\033[0;96m\tALWAYS_INLINE:"
 	@echo "\033[0;96m\t\tSet the C23 vendor-specific attributes"
 	@echo "\033[0;96m\t\t[[gnu::always_inline]] or [[llvm::always_inline]]"
 	@echo "\033[0;96m\t\tfor inlined functions. Requires C23 support."
 	@echo "\033[0;96m\t\tIgnored by compilers that do not support the"
 	@echo "\033[0;96m\t\talways_inline attribute."
-	@echo "\033[0;96m\t\tExample: make ALWAYS_INLINE=1"
+	@echo "\033[0;96m\t\tExample: make ALWAYS_INLINE=ON"
 	@echo "\033[0;96m\tNO_IEEE:"
 	@echo "\033[0;96m\t\tDo not probe for IEEE-754 support and instead only"
 	@echo "\033[0;96m\t\tonly use portable C code (NOT RECOMMENDED)."
-	@echo "\033[0;96m\t\tExample: make NO_IEEE=1"
+	@echo "\033[0;96m\t\tExample: make NO_IEEE=ON"
 	@echo "\033[0;96m\tNO_INT:"
 	@echo "\033[0;96m\t\tDo not probe for fixed-width integers and do not"
 	@echo "\033[0;96m\t\tattempt any type punning (NOT RECOMMENDED)."
-	@echo "\033[0;96m\t\tExample: make NO_INT=1"
+	@echo "\033[0;96m\t\tExample: make NO_INT=ON"
 	@echo "\033[0;96m\tNO_ASM:"
 	@echo "\033[0;96m\t\tDo not use any assembly code."
-	@echo "\033[0;96m\t\tExample: make NO_ASM=1"
+	@echo "\033[0;96m\t\tExample: make NO_ASM=ON"
 	@echo "\033[0;91m\t\tNOTE:"
 	@echo "\033[0;91m\t\t\tThis is NOT recommended on most architectures"
 	@echo "\033[0;91m\t\t\tsince the assembly code outperforms the C code."
 	@echo "\033[0;91m\t\t\tSome architectures require this to be set."
 	@echo "\033[0;91m\t\t\tIf you are on armv7l and lack floating point"
-	@echo "\033[0;91m\t\t\thardware support, you MUST set NO_ASM=1."
+	@echo "\033[0;91m\t\t\thardware support, you MUST set NO_ASM=ON."
 	@echo "\033[0;91m\t\t\tThis is because the Makefile assumes armv7l"
 	@echo "\033[0;91m\t\t\tmachines will have hardware floats, even"
 	@echo "\033[0;91m\t\t\tthough this is not required."
@@ -611,14 +630,14 @@ help:
 	@echo "\033[0;96m\t\tUse the .S files in src/assembly/ instead of the"
 	@echo "\033[0;96m\t\tC files written with GNU inline assembly. This is"
 	@echo "\033[0;96m\t\talways the case if SIMD_FAST_MATH is set."
-	@echo "\033[0;96m\t\tExample: make NO_INLINE_ASM=1"
+	@echo "\033[0;96m\t\tExample: make NO_INLINE_ASM=ON"
 	@echo "\033[0;96m\tFASM (x86_64 / amd64 only):"
 	@echo "\033[0;96m\t\tUse Flat Assembly (FASM) code instead of"
 	@echo "\033[0;96m\t\tGNU Assembly (GAS). Requires fasm to be installed."
-	@echo "\033[0;96m\t\tExample: make USE_FASM=1"
+	@echo "\033[0;96m\t\tExample: make USE_FASM=ON"
 	@echo "\033[0;96m\tUSE_MEMCPY:"
 	@echo "\033[0;96m\t\tUse memcpy for copying data instead of for-loops."
-	@echo "\033[0;96m\t\tExample: make USE_MEMCPY=1"
+	@echo "\033[0;96m\t\tExample: make USE_MEMCPY=ON"
 	@echo "\033[0;96m\tUSE_VOLATILE:"
 	@echo "\033[0;96m\t\tMake the macro TMPL_VOLATILE expand to 'volatile'"
 	@echo "\033[0;96m\t\tinstead of nothing. Certain functions like 2Sum"
@@ -628,7 +647,7 @@ help:
 	@echo "\033[0;96m\t\tthat respect the C standards requirements for"
 	@echo "\033[0;96m\t\tfloating-point arithmetic (GCC, Clang, MSVC), but"
 	@echo "\033[0;96m\t\tit is necessary on other compilers (ICC)."
-	@echo "\033[0;96m\t\tExample: make USE_VOLATILE=1"
+	@echo "\033[0;96m\t\tExample: make USE_VOLATILE=ON"
 	@echo "\033[0;96m\tEXTRA_FLAGS:"
 	@echo "\033[0;96m\t\tAdd extra flags for the C compiler."
 	@echo "\033[0;96m\t\tExample: make EXTRA_FLAGS=\"-Wno-float-equal\""
