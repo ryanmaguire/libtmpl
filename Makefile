@@ -585,7 +585,7 @@ help:
 	@echo "\033[0;96m\t\tExample: make SIMD_FAST_MATH=ON"
 	@echo "\033[0;96m\tOMP:"
 	@echo "\033[0;96m\t\tCompile with OpenMP support."
-	@echo "\033[0;96m\t\tExample: make OMP=ON"
+	@echo "\033[0;96m\t\tExample: make USE_OMP=ON"
 	@echo "\033[0;96m\tNO_LTO:"
 	@echo "\033[0;96m\t\tDisable the -flto flag (link-time optimization)."
 	@echo "\033[0;96m\t\tExample: make NO_LTO=ON"
