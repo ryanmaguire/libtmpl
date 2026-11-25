@@ -70,7 +70,7 @@
 #           Enable with:
 #               make SIMD_FAST_MATH=ON [other-options]
 #           NOTE:
-#               Library functions usually have 1-2 ULP error.
+#               Library functions usually have 1 ULP error.
 #               The vectorized versions have roughly twice the amount
 #               of error, about 1-4 ULP.
 #       USE_OMP:
@@ -564,7 +564,7 @@ help:
 	@echo "\033[0;91m\t\tNOTE:"
 	@echo "\033[0;91m\t\t\tThe SIMD versions of functions have slightly"
 	@echo "\033[0;91m\t\t\tworse errors than their scalar counterparts,"
-	@echo "\033[0;91m\t\t\tusually 2-4 ULP instead of 1-2. With appropriate"
+	@echo "\033[0;91m\t\t\tusually 2-4 ULP instead of 1. With appropriate"
 	@echo "\033[0;91m\t\t\thardware this produces a 2-4x boost in speed."
 	@echo "\033[0;91m\t\t\tA modern compiler is required for this option"
 	@echo "\033[0;91m\t\t\tto be useful (GCC 15+, for example), and the"
@@ -583,7 +583,7 @@ help:
 	@echo "\033[0;91m\t\t\tsupport attributes / pragmas that disable"
 	@echo "\033[0;91m\t\t\toptimizations, do not enable SIMD_FAST_MATH."
 	@echo "\033[0;96m\t\tExample: make SIMD_FAST_MATH=ON"
-	@echo "\033[0;96m\tOMP:"
+	@echo "\033[0;96m\tUSE_OMP:"
 	@echo "\033[0;96m\t\tCompile with OpenMP support."
 	@echo "\033[0;96m\t\tExample: make USE_OMP=ON"
 	@echo "\033[0;96m\tNO_LTO:"
