@@ -507,7 +507,7 @@ clean:
 	rm -f $(TARGET_LIB_SHARED)
 	rm -f $(TARGET_LIB_STATIC)
 
-install: $(TARGET_LIB)
+install:
 	mkdir -p $(prefix)/lib/
 	mkdir -p $(prefix)/include/libtmpl/
 	cp -r ./include $(prefix)/include/libtmpl/
