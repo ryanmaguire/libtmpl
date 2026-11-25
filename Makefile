@@ -72,7 +72,7 @@
 #           NOTE:
 #               Library functions usually have 1 ULP error.
 #               The vectorized versions have roughly twice the amount
-#               of error, about 1-4 ULP.
+#               of error, about 2-4 ULP.
 #       USE_OMP:
 #           Set OpenMP flags. Useful if you want to build libtmpyl, the Python
 #           wrapper for libtmpl, and use with numpy arrays for parallel
@@ -164,7 +164,7 @@
 #           architecture), it may be faster to use a single call to the memcpy
 #           function, which is found in the C standard library. Modern
 #           compilers optimize the for-loop very well, and this outperforms the
-#           memcpy call in many speed tests. If you would to like to force
+#           memcpy call in many speed tests. If you would like to force
 #           use of the memcpy function, enable this option. Enable with:
 #               make USE_MEMCPY=ON [other-options]
 #       USE_VOLATILE:
@@ -458,11 +458,11 @@ endif
 endif
 # End of ifndef NO_ASM.
 
-C_SRCS = $(shell find $(SRC_DIR) $(EXCLUDE) -name "*.c") $(INLINE_ASM_SRCS)
-C_OBJS = $(C_SRCS:%=$(BUILD_DIR)/%.o)
-ASM_OBJS = $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
-FASM_OBJS = $(FASM_SRCS:%=$(BUILD_DIR)/%.o)
-OBJS = $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
+C_SRCS := $(shell find $(SRC_DIR) $(EXCLUDE) -name "*.c") $(INLINE_ASM_SRCS)
+C_OBJS := $(C_SRCS:%=$(BUILD_DIR)/%.o)
+ASM_OBJS := $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
+FASM_OBJS := $(FASM_SRCS:%=$(BUILD_DIR)/%.o)
+OBJS := $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
 
 .PHONY: clean install uninstall all help
 
@@ -470,7 +470,7 @@ all: $(TARGET_LIB)
 
 include/tmpl_config.h: config.c $(wildcard config/*.h)
 ifeq ($(CC), emcc)
-	bash emscripten.sh $(CONFIG_FLAGS)
+	$(SHELL) emscripten.sh $(CONFIG_FLAGS)
 else
 	$(CC) $(CONFIG_FLAGS) config.c -o config.out
 	./config.out
@@ -517,7 +517,7 @@ else
 	cp $(TARGET_LIB_STATIC) $(prefix)/lib/$(TARGET_LIB_STATIC)
 endif
 
-uninstall: clean
+uninstall:
 	rm -rf $(prefix)/include/libtmpl/
 	rm -f $(prefix)/lib/$(TARGET_LIB_SHARED)
 	rm -f $(prefix)/lib/$(TARGET_LIB_STATIC)
@@ -601,7 +601,7 @@ help:
 	@echo "\033[0;96m\t\tExample: make NO_INLINE=ON"
 	@echo "\033[0;96m\tALWAYS_INLINE:"
 	@echo "\033[0;96m\t\tSet the C23 vendor-specific attributes"
-	@echo "\033[0;96m\t\t[[gnu::always_inline]] or [[llvm::always_inline]]"
+	@echo "\033[0;96m\t\t[[gnu::always_inline]] or [[clang::always_inline]]"
 	@echo "\033[0;96m\t\tfor inlined functions. Requires C23 support."
 	@echo "\033[0;96m\t\tIgnored by compilers that do not support the"
 	@echo "\033[0;96m\t\talways_inline attribute."
