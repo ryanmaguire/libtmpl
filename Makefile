@@ -293,7 +293,7 @@ endif
 # long and long long are the same thing), set this option.
 ifneq ($(filter $(NO_LONGLONG), ON on TRUE true 1),)
 CONFIG_FLAGS += -DTMPL_SET_LONGLONG_FALSE
-EXCLUDE += ! -name "*llong.c"
+EXCLUDE += ! -name "*llong.c" ! -name "*llong*.S"
 endif
 
 # libtmpl provides its own implementation of libm. If you wish to use the
@@ -389,6 +389,7 @@ ifneq ($(filter $(NO_ASM), OFF off FALSE false 0),)
 ASM_ARCH_x86_64 := x86_64
 ASM_ARCH_amd64 := x86_64
 ASM_ARCH_i386 := i386
+ASM_ARCH_i686 := i386
 ASM_ARCH_x86 := i386
 ASM_ARCH_aarch64 := aarch64
 ASM_ARCH_arm64 := aarch64
@@ -486,18 +487,18 @@ $(TARGET_LIB_STATIC): $(OBJS) include/tmpl_config.h
 
 $(BUILD_DIR)/%.c.o: %.c include/tmpl_config.h
 	@mkdir -p $(@D)
-	$(CC) $(CWARN) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(CWARN) $< -o $@
 
 $(BUILD_DIR)/%.S.o: %.S include/tmpl_config.h
 	@mkdir -p $(@D)
-	$(CC) $(CWARN) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(CWARN) $< -o $@
 
 $(BUILD_DIR)/%.fasm.o: %.fasm include/tmpl_config.h
 	@mkdir -p $(@D)
 	fasm $< $@
 
 clean:
-	rm -f *.o
+	rm -f config.out *.o
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
 	rm -f include/tmpl_inttype.h
@@ -506,7 +507,7 @@ clean:
 	rm -f $(TARGET_LIB_SHARED)
 	rm -f $(TARGET_LIB_STATIC)
 
-install:
+install: $(TARGET_LIB)
 	mkdir -p $(prefix)/lib/
 	mkdir -p $(prefix)/include/libtmpl/
 	cp -r ./include $(prefix)/include/libtmpl/
