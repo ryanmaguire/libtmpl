@@ -402,13 +402,13 @@ ASM_ARCH := $(ASM_ARCH_$(ARCH))
 # FASM is only available for x86_64 / amd64. It is ignored everywhere else.
 ifeq ($(ASM_ARCH), x86_64)
 ifneq ($(filter $(USE_FASM), ON on TRUE true 1),)
-FASM := 1
+USE_FASM_ASSEMBLY := 1
 endif
 endif
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
-ifdef FASM
+ifdef USE_FASM_ASSEMBLY
 
 FASM_SRCS = $(wildcard $(SRC_DIR)/assembly/fasm/*.fasm)
 EXCLUDE += $(patsubst %_x86_64.fasm, ! -name "*%.c", $(notdir $(FASM_SRCS)))
@@ -453,7 +453,7 @@ endif
 # End of ifdef SIMD_FAST_MATH.
 
 endif
-# End of ifdef FASM.
+# End of ifdef USE_FASM_ASSEMBLY.
 
 endif
 # End of ifndef NO_ASM.
@@ -631,7 +631,7 @@ help:
 	@echo "\033[0;96m\t\tC files written with GNU inline assembly. This is"
 	@echo "\033[0;96m\t\talways the case if SIMD_FAST_MATH is set."
 	@echo "\033[0;96m\t\tExample: make NO_INLINE_ASM=ON"
-	@echo "\033[0;96m\tFASM (x86_64 / amd64 only):"
+	@echo "\033[0;96m\tUSE_FASM (x86_64 / amd64 only):"
 	@echo "\033[0;96m\t\tUse Flat Assembly (FASM) code instead of"
 	@echo "\033[0;96m\t\tGNU Assembly (GAS). Requires fasm to be installed."
 	@echo "\033[0;96m\t\tExample: make USE_FASM=ON"
