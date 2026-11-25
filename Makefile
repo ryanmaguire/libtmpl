@@ -359,9 +359,8 @@ NATIVE_FLAGS := $(shell                                                        \
 ifneq ($(filter $(SIMD_FAST_MATH), ON on TRUE true 1),)
 
 CFLAGS += $(NATIVE_FLAGS) -ffast-math -fopenmp-simd
-LFLAGS += $(NATIVE_FLAGS) -ffast-math -fopenmp-simd
+LFLAGS += $(NATIVE_FLAGS) -fopenmp-simd
 CONFIG_FLAGS += -DTMPL_SET_USE_SIMD_FAST_MATH_TRUE
-CONFIG_FLAGS += $(NATIVE_FLAGS) -ffast-math
 
 # The user may want to use native instructions without
 # enabling SIMD vectorization.
@@ -379,7 +378,7 @@ INLINE_ASM_SRCS =
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
 # and armv7l (armhf) this is only advised if your C compiler cannot handle
 # assembly code. GCC, Clang, and PCC can. TCC cannot.
-ifneq ($(filter $(SIMD_FAST_MATH), OFF off FALSE false 0),)
+ifneq ($(filter $(NO_ASM), OFF off FALSE false 0),)
 
 # Various architectures have assembly support for functions that map directly
 # to instructions, like sqrt -> sqrtsd on x86-64. The architecture that the
@@ -468,7 +467,7 @@ OBJS = $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
 
 all: $(TARGET_LIB)
 
-include/tmpl_config.h: ./config.c
+include/tmpl_config.h: config.c $(wildcard config/*.h)
 ifeq ($(CC), emcc)
 	bash emscripten.sh $(CONFIG_FLAGS)
 else
@@ -479,11 +478,11 @@ endif
 
 $(TARGET_LIB_SHARED): $(OBJS) include/tmpl_config.h
 	@echo "Building libtmpl.so ..."
-	@-$(CC) $(OBJS) $(LFLAGS) -o $@
+	@$(CC) $(OBJS) $(LFLAGS) -o $@
 
 $(TARGET_LIB_STATIC): $(OBJS) include/tmpl_config.h
 	@echo "Building libtmpl.a ..."
-	@-$(AR) rcs $@ $(OBJS)
+	@$(AR) rcs $@ $(OBJS)
 
 $(BUILD_DIR)/%.c.o: %.c include/tmpl_config.h
 	@mkdir -p $(@D)
