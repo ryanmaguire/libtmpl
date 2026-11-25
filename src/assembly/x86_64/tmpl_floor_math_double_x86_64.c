@@ -96,14 +96,14 @@ TMPL_UNSEQUENCED
      *  but is a bit more general. Using this instruction with rounding mode  *
      *  "9" is equivalent to computing floor(x) without raising inexact.      */
 #if defined(__AVX512F__)
-    __asm__("vrndscalesd $0x09, %0, %0, %0" : "=x" (floor_x) : "x" (x));
+    __asm__("vrndscalesd $0x09, %1, %1, %0" : "=x" (floor_x) : "x" (x));
 
     /*  AVX supports the vroundsd instruction.                                */
 #elif defined(__AVX__) || defined(__AVX2__)
 
     /*  VEX.128 encoded version of the roundsd instruction used below. This   *
      *  is available on CPUs that support AVX, introduced in 2011.            */
-    __asm__("vroundsd $0x09, %0, %0, %0" : "=x" (floor_x) : "x" (x));
+    __asm__("vroundsd $0x09, %1, %1, %0" : "=x" (floor_x) : "x" (x));
 
     /*  Use SSE4.1 instructions as a fallback. SSE4.1 support is very common. */
 #else
