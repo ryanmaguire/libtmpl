@@ -46,13 +46,14 @@
  *          Performs bit-wise and on a register.                              *
  *      orb:                                                                  *
  *          Performs bit-wise or on a register.                               *
- *      frndint:                                                              *
- *          Round to an integer using the current rounding mode.              *
  *  Method:                                                                   *
  *      Set the rounding mode to "towards negative infinity", and then round  *
  *      the input to an integer.                                              *
  *  Notes:                                                                    *
  *      1.) frndint correctly handles NaN, infinity, and signed zero.         *
+ *                                                                            *
+ *      2.) This function uses the frndint instruction which will raise the   *
+ *          inexact flag.                                                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -62,7 +63,7 @@
  *          Provides macros for C23 attributes (for optimization).            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 25, 2024                                             *
+ *  Date:       November 25, 2026                                             *
  ******************************************************************************/
 
 /*  TMPL_ALWAYS_INLINE macro found here.                                      */
@@ -105,24 +106,25 @@ TMPL_UNSEQUENCED
         "fnstcw %[original_control_word]\n\t"
 
         /*  Edit the control word so that the rounding mode in the FPU is     *
-         *  towards negative infinity. First, pull the control word into the  *
-         *  eax register so we can edit it. This is equivalent to %eax.       */
+         *  towards negative infinity. First, copy the control word into the  *
+         *  scratch register so we can edit it. %k prints the 32-bit name of  *
+         *  the register the compiler chose, such as %eax.                    */
         "movzwl %[original_control_word], %k[scratch]\n\t"
 
         /*  The rounding mode is governed by the 11th and 12th bits, which    *
          *  correspond to the 3rd and 4th bits of the high part. Clear these  *
          *  bits. This corresponds to the bit-mask 11110011_2, which is 0xF3  *
-         *  in hexadecimal. Use bit-wise and with this value. %h is used for  *
-         *  16-bit half-word FP/SIMD registers. This allows us to access %ah. */
+         *  in hexadecimal. Use bit-wise and with this value. %h prints the   *
+         *  name of the high byte of the scratch register (%ah, %bh, %ch, or  *
+         *  %dh), which is why scratch uses the "Q" constraint.               */
         "andb $0xF3, %h[scratch]\n\t"
 
         /*  Set the 3rd bit, which sets the rounding mode to round towards    *
          *  negative infinity.                                                */
         "orb $0x04, %h[scratch]\n\t"
 
-        /*  Store the modified control word so that the FPU can use it. %w is *
-         *  used for 32-bit general-purpose registers. %w allows us to access *
-         *  a register, equivalent to %ax.                                    */
+        /*  Store the modified control word so that the FPU can use it. %w    *
+         *  prints the 16-bit name of the scratch register, such as %ax.      */
         "movw %w[scratch], %[floor_control_word]\n\t"
 
         /*  Set the FPU to round towards negative infinity.                   */
