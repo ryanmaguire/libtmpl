@@ -44,7 +44,7 @@ TMPL_UNSEQUENCED
 #ifdef __BMI__
 
     /*  Count the number of trailing zeros in n and store this in count.      */
-    __asm__("tzcntl %0, %0" : "=r" (count) : "r" (n) : "cc");
+    __asm__("tzcntl %1, %0" : "=r" (count) : "r" (n) : "cc");
 
     /*  Unlike bit-scan-forward (bsf), the trailing-zero-count instruction    *
      *  (tzcnt) does accept zero as an input and sets the result to the       *
