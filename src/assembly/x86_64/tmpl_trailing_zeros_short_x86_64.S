@@ -21,10 +21,18 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_Short_Trailing_Zeros)
-    movswl   %di, %eax
-    xorl     %edx, %edx
-    rep bsfl %eax, %eax
-    testw    %di, %di
-    cmove    %edx, %eax
+
+#ifdef __BMI__
+    rep bsfl %edi, %ecx
+    xorl %eax, %eax
+    testw %di, %di
+    cmovnel %ecx, %eax
+#else
+    tzcntl %edi, %ecx
+    xorl %eax, %eax
+    testw %di, %di
+    cmovnel %ecx, %eax
+#endif
+
     ret
 ASM_END(tmpl_Short_Trailing_Zeros)

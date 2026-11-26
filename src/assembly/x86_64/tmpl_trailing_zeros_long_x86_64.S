@@ -21,10 +21,16 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_Long_Trailing_Zeros)
-    xorl     %edx, %edx
-    xorl     %eax, %eax
-    rep bsfq %rdi, %rdx
-    testq    %rdi, %rdi
-    cmovne   %edx, %eax
+
+#ifdef __BMI__
+    xorl %ecx, %ecx
+    tzcntq %rdi, %rax
+    cmovbl %ecx, %eax
+#else
+    xorl %ecx, %ecx
+    bsfq %rdi, %rax
+    cmovel %ecx, %eax
+#endif
+
     ret
 ASM_END(tmpl_Long_Trailing_Zeros)

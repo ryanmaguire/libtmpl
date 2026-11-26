@@ -21,9 +21,14 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_UChar_Trailing_Zeros)
-    bsfl    %edi, %ecx
-    xorl    %eax, %eax
-    testb   %dil, %dil
-    cmovnel %ecx, %eax
+
+#ifdef __BMI__
+    tzcntl %edi, %eax
+    cmovbl %edi, %eax
+#else
+    bsfl %edi, %eax
+    cmovel %edi, %eax
+#endif
+
     ret
 ASM_END(tmpl_UChar_Trailing_Zeros)
