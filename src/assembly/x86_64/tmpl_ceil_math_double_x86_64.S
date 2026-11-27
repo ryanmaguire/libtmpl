@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Ceil                                                      *
  *  Purpose:                                                                  *
- *      Computes y = ceil(x), the smallest integer greater than or equal to x.*
+ *      Computes ceil(x), the smallest integer greater than or equal to x.    *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -38,7 +38,8 @@
  *          Rounds a double-precision floating-point number in the requested  *
  *          rounding mode. If AVX-512 support is available, then vrndscalesd  *
  *          is used, and if AVX support is available, then vroundsd is used.  *
- *          All three of these instructions can compute ceil(x).              *
+ *          Otherwise the SSE4.1 instruciton roundsd is used. All three of    *
+ *          these instructions can be used to compute ceil(x).                *
  *  Method:                                                                   *
  *      The roundsd instruction with 10 passed to it computes ceil(x). The    *
  *      same is true of the vrndscalesd and vroundsd instructions.            *
@@ -48,7 +49,7 @@
  *                                                                            *
  *      2.) roundsd is part of SSE4.1. Use of this file requires a CPU that   *
  *          supports SSE4.1 (introduced in 2007). For older x86_64 CPUs, use  *
- *          the C code instead (set NO_ASM=1 when using the Makefile).        *
+ *          the C code instead (set NO_ASM=ON when using the Makefile).       *
  *                                                                            *
  *      3.) vrndscalesd requires AVX-512, and vroundsd requires AVX support.  *
  *          While most modern CPUs support SSE4.1, AVX-512 support is not as  *

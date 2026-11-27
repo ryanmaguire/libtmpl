@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_LDouble_Ceil                                                     *
  *  Purpose:                                                                  *
- *      Computes y = ceil(x), the smallest integer greater than or equal to x.*
+ *      Computes ceil(x), the smallest integer greater than or equal to x.    *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
@@ -80,7 +80,7 @@ ASM_BEGIN(tmpl_LDouble_Ceil)
     /*  When using MinGW, MSYS2, or Cygwin on Microsoft Windows, the          *
      *  implementation of long double differs from regular GNU / Linux,       *
      *  FreeBSD, or macOS systems. Check for this.                            */
-#ifdef _WIN64
+#if defined(_WIN64) || defined(__CYGWIN__)
 
     /*  MinGW has the following ABI for 80-bit long double precision:         *
      *      rdx = pointer to the input.                                       *

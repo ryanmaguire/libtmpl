@@ -30,6 +30,7 @@
 #define GNU_STACK_PROTECTION .section .note.GNU-stack, "", @progbits
 
 #ifdef __CET__
+#include <cet.h>
 #define ASM_ENDBR endbr64
 #else
 #define ASM_ENDBR
